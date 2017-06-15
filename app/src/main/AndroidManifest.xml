@@ -10,13 +10,15 @@
 
         <activity android:name=".ActivitySplash">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
-                <category android:name="android.intent.category.LAUNCHER"/>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
 
-        <activity android:name=".ActivityTileHome"/>
-        <activity android:name=".ActivityTileQuestions"/>
+        <activity android:name=".ActivityTileHome" />
+        <activity android:name=".ActivityTileQuestions" />
+        <activity android:name=".ActivityRegister" />
+        <activity android:name=".ActivityMigrantList" />
 
     </application>
 

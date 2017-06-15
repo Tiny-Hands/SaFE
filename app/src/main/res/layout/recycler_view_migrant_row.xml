@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:cardCornerRadius="@dimen/card_view_tile_radius"
+    app:cardUseCompatPadding="true">
+
+    <RelativeLayout
+        android:padding="@dimen/medium_margin"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/ivUserLogo"
+            android:layout_width="54dp"
+            android:layout_height="54dp"
+            android:src="@drawable/ic_male" />
+
+        <LinearLayout
+            android:id="@+id/llName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/ivUserLogo"
+            android:layout_alignTop="@id/ivUserLogo"
+            android:layout_marginStart="16sp"
+            android:layout_toEndOf="@+id/ivUserLogo"
+            android:gravity="center_vertical"
+            android:orientation="vertical">
+
+            <com.vysh.subairoma.utils.CustomTextView
+                android:id="@+id/tvMigrantName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Vishal Shrestha"
+                android:textSize="18sp"
+                app:font="gotham_bold.ttf" />
+
+            <com.vysh.subairoma.utils.CustomTextView
+                android:id="@+id/tvMigrantDetails"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:text="23, Male"
+                android:textColor="@color/grey"
+                android:textSize="16sp"
+                app:font="gotham_medium.ttf" />
+        </LinearLayout>
+
+        <com.vysh.subairoma.utils.CustomTextView
+            android:id="@+id/tvPercentComplete"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/ivUserLogo"
+            android:layout_marginTop="@dimen/default_margin"
+            android:text="27% Complete"
+            app:font="gotham_bold.ttf" />
+
+        <com.vysh.subairoma.utils.CustomTextView
+            android:id="@+id/tvErrorCount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_below="@+id/ivUserLogo"
+            android:layout_marginTop="@dimen/default_margin"
+            android:text="2 Warnings"
+            android:textColor="@color/colorError"
+            app:font="gotham_bold.ttf" />
+    </RelativeLayout>
+
+</android.support.v7.widget.CardView>

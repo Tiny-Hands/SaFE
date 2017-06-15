@@ -26,7 +26,7 @@ public class ActivitySplash extends AppCompatActivity {
                 } catch (Exception ex) {
                     Log.d("mylog", "Sleeping exception");
                 } finally {
-                    Intent intent = new Intent(ActivitySplash.this, ActivityTileHome.class);
+                    Intent intent = new Intent(ActivitySplash.this, ActivityRegister.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                     startActivity(intent);
                 }
