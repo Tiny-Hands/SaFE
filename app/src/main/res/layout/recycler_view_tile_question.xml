@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="@dimen/card_small_margin"
+    android:orientation="vertical"
+    app:cardCornerRadius="@dimen/card_view_tile_radius"
+    app:cardUseCompatPadding="true">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="@dimen/card_in_padding">
+
+        <TextView
+            android:id="@+id/tvStep"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:layout_toStartOf="@+id/questionMarker"
+            android:text="काम छान्ने र आवेदन दिने"
+            android:textColor="@color/grey"
+            android:textSize="@dimen/tile_step_text" />
+
+        <ImageView
+            android:id="@+id/questionMarker"
+            android:layout_width="@dimen/card_view_markers_dimen"
+            android:layout_height="@dimen/card_view_markers_dimen"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="4dp"
+            android:src="@drawable/ic_error" />
+
+        <TextView
+            android:id="@+id/tvDetail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tvStep"
+            android:layout_marginTop="8dp"
+            android:visibility="gone"
+            android:text="आफ्नो योग्यता अनुसारको रोजगार अवसरहरू कान्तिपुर र नागरिक जस्ता पत्रपत्रिकामा हेर्नुहोस् र कुनै काम मनपरेपछि सिधै म्यानपावरलाई सम्पर्क गर्नुहोस् । तपाईँले अनलाइन www.baideshikrojgari.com मा पनि विज्ञापनहरू हेर्नसक्नुहुन्छ । त्यस विज्ञापनको एक प्रति आफूसँग राख्नुहोस् र तपाईँले त्यस विज्ञापनमा दिएका कामहरूको पूर्व–स्वीकृति LT No. ठीक छ कि छैन भनेर चेक गर्न पनि सक्नुहुन्छ । यो कसरी गर्ने भनेर तलको रोजगार भागमा दिइएको छ ।" />
+
+        <TextView
+            android:layout_marginTop="4dp"
+            android:id="@+id/tvQuestion"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tvDetail"
+            android:layout_toStartOf="@+id/cbResponse"
+            android:text="तपाईँले काम छानेर आवेदन दिनुभयो भने मात्रै याहाँ चिनो लगाउनुहोस् ।"
+            android:textColor="@color/darkGrey"
+            android:textStyle="bold" />
+
+        <CheckBox
+            android:id="@+id/cbResponse"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/card_view_markers_dimen"
+            android:layout_alignParentEnd="true"
+            android:layout_alignTop="@id/tvQuestion" />
+
+    </RelativeLayout>
+</android.support.v7.widget.CardView>

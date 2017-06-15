@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Component View -->
+    <dimen name="card_view_imageview_dimen">72dp</dimen>
+    <dimen name="card_view_tile_radius">8dp</dimen>
+    <dimen name="card_view_markers_dimen">24dp</dimen>
+    <dimen name="default_button_height">42dp</dimen>
+
+    <!-- Padding and Margin -->
+    <dimen name="default_margin">16dp</dimen>
+    <dimen name="medium_margin">8dp</dimen>
+    <dimen name="card_small_margin">2dp</dimen>
+    <dimen name="card_in_padding">8dp</dimen>
+    <dimen name="tile_text_margin">6dp</dimen>
+    <dimen name="bottom_button_margin">24dp</dimen>
+    <dimen name="toolbar_icon">38dp</dimen>
+
+    <!-- Text -->
+    <dimen name="card_view_marker_text">12sp</dimen>
+    <dimen name="tile_step_text">17sp</dimen>
+</resources>

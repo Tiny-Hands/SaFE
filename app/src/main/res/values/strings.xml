@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">सुबैरोमा </string>
+    <string name="user_name">विशाल श्रेष्ठ </string>
+    <array name="fep_sections">
+        <item>Manpower</item>
+        <item>Work</item>
+        <item>Contract</item>
+        <item>Government</item>
+        <item>Preparation</item>
+        <item>Passport, Visa &amp; Permit</item>
+    </array>
+</resources>
