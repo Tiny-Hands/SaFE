@@ -19,6 +19,7 @@
         <activity android:name=".ActivityTileQuestions" />
         <activity android:name=".ActivityRegister" />
         <activity android:name=".ActivityMigrantList" />
+        <activity android:name=".ActivityOTPVerification" />
 
     </application>
 

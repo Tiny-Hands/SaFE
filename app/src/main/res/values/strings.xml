@@ -1,6 +1,8 @@
 <resources>
     <string name="app_name">सुबैरोमा </string>
     <string name="user_name">विशाल श्रेष्ठ </string>
+    <string name="code">CODE</string>
+    <string name="opt_message">We are sending an SMS with a code to you phone number. Please enter it below. It may take upto 5 minutes</string>
     <array name="fep_sections">
         <item>Manpower</item>
         <item>Work</item>

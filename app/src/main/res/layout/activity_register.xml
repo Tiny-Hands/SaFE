@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/bgFaded"
+    android:background="@drawable/bg_all"
     android:orientation="vertical">
 
     <android.support.v7.widget.Toolbar
@@ -27,10 +27,11 @@
     </android.support.v7.widget.Toolbar>
 
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:layout_centerVertical="true"
+        android:gravity="center">
 
         <com.vysh.subairoma.utils.CustomTextView
             android:id="@+id/tvHint"
@@ -143,11 +144,12 @@
 
         <Button
             android:id="@+id/btnNext"
-            android:layout_width="match_parent"
+            android:layout_width="@dimen/default_button_width"
             android:layout_height="@dimen/default_button_height"
             android:layout_marginEnd="@dimen/default_margin"
             android:layout_marginStart="@dimen/default_margin"
             android:layout_marginTop="@dimen/medium_margin"
+            android:layout_marginBottom="@dimen/medium_margin"
             android:background="@drawable/default_rounded_button"
             android:text="NEXT"
             android:textColor="#fff" />

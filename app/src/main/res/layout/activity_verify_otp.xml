@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="196dp"
+        android:background="@color/colorPrimaryDark" />
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?android:attr/actionBarSize">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <com.vysh.subairoma.utils.CustomTextView
+                android:id="@+id/tvTitle"
+                style="@style/TitleText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:text="VERIFY PHONE"
+                android:textColor="#fff"
+                app:font="gotham_bold.ttf" />
+        </RelativeLayout>
+    </android.support.v7.widget.Toolbar>
+
+    <ImageView
+        android:id="@+id/ivOTP"
+        android:layout_width="136dp"
+        android:layout_height="136dp"
+        android:layout_below="@+id/toolbar"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="70dp"
+        android:src="@drawable/ic_phone_otp" />
+
+    <com.vysh.subairoma.utils.CustomTextView
+        android:id="@+id/tvOPtMessage"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/ivOTP"
+        android:gravity="center"
+        android:padding="16dp"
+        android:text="@string/opt_message"
+        app:font="gotham_light.ttf" />
+
+    <EditText
+        android:id="@+id/etCode"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tvOPtMessage"
+        android:layout_centerHorizontal="true"
+        android:layout_marginEnd="@dimen/default_margin"
+        android:layout_marginStart="@dimen/default_margin"
+        android:hint="@string/code"
+        android:padding="8dp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginLeft="@dimen/default_margin"
+        android:layout_marginRight="@dimen/default_margin"
+        android:paddingBottom="@dimen/default_margin"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/btnChangeNumber"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/default_button_height"
+            android:layout_margin="@dimen/card_small_margin"
+            android:layout_weight="1"
+            android:background="@drawable/default_rounded_button"
+            android:text="CHANGE NUMBER"
+            android:textColor="#fff" />
+
+        <Button
+            android:id="@+id/btnVerify"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/default_button_height"
+            android:layout_margin="@dimen/card_small_margin"
+            android:layout_weight="1"
+            android:background="@drawable/default_rounded_button_accent"
+            android:text="VERIFY"
+            android:textColor="#fff" />
+    </LinearLayout>
+</RelativeLayout>

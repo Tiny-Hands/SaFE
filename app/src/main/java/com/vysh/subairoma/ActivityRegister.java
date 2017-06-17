@@ -63,7 +63,7 @@ public class ActivityRegister extends AppCompatActivity {
     }
 
     private void startTilesActivity() {
-        Intent intent = new Intent(ActivityRegister.this, ActivityMigrantList.class);
+        Intent intent = new Intent(ActivityRegister.this, ActivityOTPVerification.class);
         startActivity(intent);
     }
 
