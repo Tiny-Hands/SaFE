@@ -40,7 +40,6 @@ public class ActivityRegister extends AppCompatActivity {
     @BindView(R.id.tvHint)
     TextView tvHint;
 
-
     Boolean userRegistered = false;
 
     @Override

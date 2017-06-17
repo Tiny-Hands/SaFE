@@ -9,11 +9,13 @@
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="?android:attr/actionBarSize">
+        android:layout_height="?android:attr/actionBarSize"
+        android:background="@drawable/toolbar_gradient">
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="wrap_content"
+            android:gravity="center">
 
             <com.vysh.subairoma.utils.CustomTextView
                 android:id="@+id/tvTitle"
@@ -22,6 +24,7 @@
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
                 android:text="REGISTER"
+                android:textColor="#fff"
                 app:font="gotham_bold.ttf" />
         </RelativeLayout>
     </android.support.v7.widget.Toolbar>
@@ -29,9 +32,9 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
         android:layout_centerVertical="true"
-        android:gravity="center">
+        android:gravity="center"
+        android:orientation="vertical">
 
         <com.vysh.subairoma.utils.CustomTextView
             android:id="@+id/tvHint"
@@ -146,10 +149,10 @@
             android:id="@+id/btnNext"
             android:layout_width="@dimen/default_button_width"
             android:layout_height="@dimen/default_button_height"
+            android:layout_marginBottom="@dimen/medium_margin"
             android:layout_marginEnd="@dimen/default_margin"
             android:layout_marginStart="@dimen/default_margin"
             android:layout_marginTop="@dimen/medium_margin"
-            android:layout_marginBottom="@dimen/medium_margin"
             android:background="@drawable/default_rounded_button"
             android:text="NEXT"
             android:textColor="#fff" />
