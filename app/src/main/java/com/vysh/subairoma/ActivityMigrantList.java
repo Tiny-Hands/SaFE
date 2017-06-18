@@ -1,5 +1,6 @@
 package com.vysh.subairoma;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -35,7 +36,8 @@ public class ActivityMigrantList extends AppCompatActivity {
         btnAddMigrant.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                onBackPressed();
+                Intent intent = new Intent(ActivityMigrantList.this, ActivityRegister.class);
+                startActivity(intent);
             }
         });
         setUpRecyclerView();

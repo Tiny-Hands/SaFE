@@ -42,7 +42,7 @@
             android:layout_height="@dimen/card_view_imageview_dimen"
             android:layout_below="@id/ivMarker"
             android:layout_centerInParent="true"
-            android:src="@drawable/ic_worker" />
+            android:src="@drawable/roller" />
 
         <TextView
             android:id="@+id/tvTitle"

@@ -43,7 +43,7 @@ public class ActivityTileHome extends AppCompatActivity {
         int size = tileTitles.length;
         tileIcons = new int[size];
         for (int i = 0; i < size; i++)
-            tileIcons[i] = R.drawable.ic_worker;
+            tileIcons[i] = R.drawable.roller;
     }
 
     private void setUpRecyclerView() {

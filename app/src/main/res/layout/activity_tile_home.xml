@@ -24,20 +24,22 @@
             <ImageView
                 android:layout_width="@dimen/toolbar_icon"
                 android:layout_height="@dimen/toolbar_icon"
-                android:layout_marginEnd="@dimen/default_margin"
                 android:layout_alignParentEnd="true"
                 android:layout_centerVertical="true"
+                android:layout_marginEnd="@dimen/default_margin"
                 android:src="@drawable/ic_user" />
         </RelativeLayout>
     </android.support.v7.widget.Toolbar>
 
-        <android.support.v7.widget.RecyclerView
-            android:layout_below="@id/toolbar"
-            android:id="@+id/rvTiles"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/default_margin"
-            android:layout_gravity="center_horizontal" />
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/rvTiles"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/toolbar"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="@dimen/default_margin"
+        android:layout_marginEnd="@dimen/default_margin"
+        android:layout_marginStart="@dimen/default_margin" />
 
     <Button
         android:id="@+id/btnNext"

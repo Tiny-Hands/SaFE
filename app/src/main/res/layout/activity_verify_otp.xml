@@ -6,7 +6,7 @@
 
     <View
         android:layout_width="match_parent"
-        android:layout_height="196dp"
+        android:layout_height="166dp"
         android:background="@color/colorPrimaryDark" />
 
     <android.support.v7.widget.Toolbar
@@ -34,10 +34,9 @@
         android:id="@+id/ivOTP"
         android:layout_width="136dp"
         android:layout_height="136dp"
-        android:layout_below="@+id/toolbar"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="70dp"
-        android:src="@drawable/ic_phone_otp" />
+        android:layout_marginTop="98dp"
+        android:src="@drawable/ic_phone_otp"
+        android:layout_centerHorizontal="true" />
 
     <com.vysh.subairoma.utils.CustomTextView
         android:id="@+id/tvOPtMessage"
@@ -66,8 +65,8 @@
         android:layout_alignParentBottom="true"
         android:layout_marginLeft="@dimen/default_margin"
         android:layout_marginRight="@dimen/default_margin"
-        android:paddingBottom="@dimen/default_margin"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:paddingBottom="@dimen/default_margin">
 
         <Button
             android:id="@+id/btnChangeNumber"
@@ -75,7 +74,7 @@
             android:layout_height="@dimen/default_button_height"
             android:layout_margin="@dimen/card_small_margin"
             android:layout_weight="1"
-            android:background="@drawable/default_rounded_button"
+            android:background="@drawable/default_rounded_button_accent"
             android:text="CHANGE NUMBER"
             android:textColor="#fff" />
 
@@ -85,7 +84,7 @@
             android:layout_height="@dimen/default_button_height"
             android:layout_margin="@dimen/card_small_margin"
             android:layout_weight="1"
-            android:background="@drawable/default_rounded_button_accent"
+            android:background="@drawable/default_rounded_button"
             android:text="VERIFY"
             android:textColor="#fff" />
     </LinearLayout>
