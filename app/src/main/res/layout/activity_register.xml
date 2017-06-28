@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:id="@+id/rlRoot"
     android:orientation="vertical">
 
     <View
@@ -43,9 +44,10 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/ivRegister"
         android:gravity="center"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:layout_below="@+id/ivRegister"
+        android:layout_alignParentStart="true">
 
         <com.vysh.subairoma.utils.CustomTextView
             android:id="@+id/tvHint"
@@ -115,6 +117,7 @@
                     android:layout_marginStart="@dimen/default_margin"
                     android:background="@null"
                     android:hint="Age"
+                    android:inputType="number"
                     android:imeOptions="actionDone"
                     android:maxLength="2" />
 
@@ -141,6 +144,7 @@
                         android:textSize="18sp" />
 
                     <RadioButton
+                        android:id="@+id/rbMale"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
@@ -148,6 +152,7 @@
                         android:text="Male" />
 
                     <RadioButton
+                        android:id="@+id/rbFemale"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"

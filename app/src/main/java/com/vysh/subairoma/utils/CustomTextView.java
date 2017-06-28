@@ -33,12 +33,10 @@ public class CustomTextView extends TextView {
 
     private Typeface selectTypeface(Context context, String fontName) {
         try {
-            Log.d("mylog", "sending font");
             return FontCache.getTypeface(fontName, context);
         }
         catch (Exception e)
         {
-            Log.d("mylog", "font not found");
             //Font specified in XML not found in the resources
             return null;
         }
