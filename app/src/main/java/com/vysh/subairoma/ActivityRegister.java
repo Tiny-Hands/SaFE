@@ -30,6 +30,8 @@ import com.android.volley.toolbox.StringRequest;
 import com.vysh.subairoma.utils.CustomTextView;
 import com.vysh.subairoma.volley.VolleyController;
 
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.w3c.dom.Text;
 
 import java.util.HashMap;
@@ -43,8 +45,8 @@ import butterknife.ButterKnife;
  */
 
 public class ActivityRegister extends AppCompatActivity {
-    final String apiURL = "http://192.168.184.1/subairoma/saveuser.php";
-    final String apiURLMigrant = "http://192.168.184.1/subairoma/migrant.php";
+    final String apiURL = "http://192.168.1.25/subairoma/saveuser.php";
+    final String apiURLMigrant = "http://192.168.1.25/subairoma/savemigrant.php";
 
     @BindView(R.id.btnNext)
     Button btnNext;
@@ -66,7 +68,7 @@ public class ActivityRegister extends AppCompatActivity {
     RelativeLayout rootLayout;
 
     Boolean userRegistered = false;
-    String sex;
+    String sex = "male";
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -103,32 +105,28 @@ public class ActivityRegister extends AppCompatActivity {
         String api = apiURL;
         if (userRegistered) {
             api = apiURLMigrant;
-            startTilesActivity();
-            return;
         }
         final ProgressDialog progressDialog = new ProgressDialog(ActivityRegister.this);
         progressDialog.setTitle("Please wait");
-        progressDialog.setMessage("Registering User");
+        progressDialog.setMessage("Registering...");
         progressDialog.show();
         StringRequest saveRequest = new StringRequest(Request.Method.POST, api, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 progressDialog.dismiss();
-                Log.d("mylog", "response : " + response.toString());
-                showSnackbar(response.toString());
-                if (!userRegistered) {
-                    userRegistered = true;
-                    loadMigrantView();
-                } else {
-                    startTilesActivity();
-                }
+                Log.d("mylog", "response : " + response);
+                parseResponse(response);
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
                 progressDialog.dismiss();
-                Log.d("mylog", "error : " + error.toString());
-                showSnackbar(error.toString());
+                String err = error.toString();
+                Log.d("mylog", "error : " + err);
+                if (!err.isEmpty() && err.contains("TimeoutError"))
+                    showSnackbar("Failed to connect to server :(");
+                else
+                    showSnackbar(error.toString());
             }
         }) {
             @Override
@@ -138,10 +136,40 @@ public class ActivityRegister extends AppCompatActivity {
                 params.put("phone_number", etNumber.getText().toString());
                 params.put("age", etAge.getText().toString());
                 params.put("gender", sex);
+                if (userRegistered)
+                    params.put("user_id", ApplicationClass.getInstance().getUserId() + "");
                 return params;
             }
         };
         VolleyController.getInstance(getApplicationContext()).addToRequestQueue(saveRequest);
+    }
+
+    private void parseResponse(String response) {
+        try {
+            JSONObject jsonResponse = new JSONObject(response);
+            Boolean error = jsonResponse.getBoolean("error");
+            if (!error) {
+                //Means the registered person was user
+                if (!userRegistered) {
+                    int user_id = jsonResponse.getInt("user_id");
+                    ApplicationClass.getInstance().setUserId(user_id);
+                    //Save to application class
+                    userRegistered = true;
+                    loadMigrantView();
+                }
+                //Means the registered person was migrant
+                else {
+                    int migrant_id = jsonResponse.getInt("migrant_id");
+                    ApplicationClass.getInstance().setMigrantId(migrant_id);
+                    startOTPActivity();
+                }
+            } else {
+                String message = jsonResponse.getString("message");
+                showSnackbar(message);
+            }
+        } catch (JSONException e) {
+            Log.d("mylog", "Error in parsing: " + e.getMessage());
+        }
     }
 
     private boolean validateData() {
@@ -164,12 +192,15 @@ public class ActivityRegister extends AppCompatActivity {
         return true;
     }
 
-    private void startTilesActivity() {
+    private void startOTPActivity() {
         Intent intent = new Intent(ActivityRegister.this, ActivityOTPVerification.class);
         startActivity(intent);
     }
 
     private void loadMigrantView() {
+        etNumber.setText("");
+        etAge.setText("");
+        etName.setText("");
         tvHint.setText("Please enter Migrant's details");
         tvTitle.setText("ADD MIGRANT");
         etName.setHint("Migrant's Name");
