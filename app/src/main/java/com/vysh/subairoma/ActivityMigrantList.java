@@ -23,8 +23,15 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.vysh.subairoma.adapters.MigrantListAdapter;
+import com.vysh.subairoma.models.MigrantModel;
 import com.vysh.subairoma.volley.VolleyController;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -60,7 +67,6 @@ public class ActivityMigrantList extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-        setUpRecyclerView();
     }
 
     private void getMigrants() {
@@ -74,7 +80,8 @@ public class ActivityMigrantList extends AppCompatActivity {
             public void onResponse(String response) {
                 progressDialog.dismiss();
                 Log.d("mylog", "response : " + response);
-                parseResponse(response);
+                ArrayList<MigrantModel> migrantModels = parseResponse(response);
+                setUpRecyclerView(migrantModels);
             }
         }, new Response.ErrorListener() {
             @Override
@@ -98,12 +105,36 @@ public class ActivityMigrantList extends AppCompatActivity {
         VolleyController.getInstance(getApplicationContext()).addToRequestQueue(saveRequest);
     }
 
-    private void parseResponse(String response) {
-    }
-
-    private void setUpRecyclerView() {
-        recyclerView.setLayoutManager(new LinearLayoutManager(ActivityMigrantList.this));
-        recyclerView.setAdapter(new MigrantListAdapter());
+    private ArrayList<MigrantModel> parseResponse(String response) {
+        ArrayList<MigrantModel> migrantsModels = new ArrayList<>();
+        try {
+            JSONObject jsonObject = new JSONObject(response);
+            Boolean error = jsonObject.getBoolean("error");
+            if (error) {
+                showSnackbar(jsonObject.getString("message"));
+            } else {
+                JSONArray migrantJSON = jsonObject.getJSONArray("migrants");
+                if (migrantJSON != null) {
+                    JSONObject migrantObj;
+                    for (int i = 0; i < migrantJSON.length(); i++) {
+                        migrantObj = migrantJSON.getJSONObject(i);
+                        MigrantModel migrantModel = new MigrantModel();
+                        if (migrantObj.has("migrant_id"))
+                            migrantModel.setMigrantId(migrantObj.getInt("migrant_id"));
+                        if (migrantObj.has("migrant_name"))
+                            migrantModel.setMigrantName(migrantObj.getString("migrant_name"));
+                        if (migrantObj.has("migrant_age"))
+                            migrantModel.setMigrantAge(migrantObj.getInt("migrant_age"));
+                        if (migrantObj.has("migrant_sex"))
+                            migrantModel.setMigrantSex(migrantObj.getString("migrant_sex"));
+                        migrantsModels.add(migrantModel);
+                    }
+                }
+            }
+        } catch (JSONException e) {
+            Log.d("mylog", "Error in parsing: " + e.toString());
+        }
+        return migrantsModels;
     }
 
     private void showSnackbar(String msg) {
@@ -114,5 +145,12 @@ public class ActivityMigrantList extends AppCompatActivity {
         if (Build.VERSION.SDK_INT >= 17)
             tv.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
         snack.show();
+    }
+
+    private void setUpRecyclerView(ArrayList<MigrantModel> migrantModels) {
+        recyclerView.setLayoutManager(new LinearLayoutManager(ActivityMigrantList.this));
+        MigrantListAdapter migrantListAdapter = new MigrantListAdapter();
+        migrantListAdapter.setMigrants(migrantModels);
+        recyclerView.setAdapter(migrantListAdapter);
     }
 }

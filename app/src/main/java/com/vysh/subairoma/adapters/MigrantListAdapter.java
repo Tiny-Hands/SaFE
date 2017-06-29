@@ -18,9 +18,6 @@ import java.util.ArrayList;
  */
 
 public class MigrantListAdapter extends RecyclerView.Adapter<MigrantListAdapter.MigrantHolder> {
-    public ArrayList<MigrantModel> getMigrants() {
-        return migrants;
-    }
 
     public void setMigrants(ArrayList<MigrantModel> migrants) {
         this.migrants = migrants;
@@ -43,7 +40,7 @@ public class MigrantListAdapter extends RecyclerView.Adapter<MigrantListAdapter.
 
     @Override
     public int getItemCount() {
-        return 8;
+        return migrants.size()-1;
     }
 
     public class MigrantHolder extends RecyclerView.ViewHolder {
