@@ -8,11 +8,16 @@ import android.app.Application;
 
 public class ApplicationClass extends Application {
 
+    private final String APIROOT = "http://192.168.1.25";
     private int userId, migrantId;
     private static ApplicationClass mInstance;
 
     public static ApplicationClass getInstance() {
         return mInstance;
+    }
+
+    public String getAPIROOT() {
+        return APIROOT;
     }
 
     public int getUserId() {

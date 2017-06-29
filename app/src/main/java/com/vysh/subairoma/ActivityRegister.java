@@ -45,8 +45,8 @@ import butterknife.ButterKnife;
  */
 
 public class ActivityRegister extends AppCompatActivity {
-    final String apiURL = "http://192.168.1.25/subairoma/saveuser.php";
-    final String apiURLMigrant = "http://192.168.1.25/subairoma/savemigrant.php";
+    final String apiURL = "/subairoma/saveuser.php";
+    final String apiURLMigrant = "/subairoma/savemigrant.php";
 
     @BindView(R.id.btnNext)
     Button btnNext;
@@ -102,9 +102,9 @@ public class ActivityRegister extends AppCompatActivity {
     }
 
     private void saveUser() {
-        String api = apiURL;
+        String api = ApplicationClass.getInstance().getAPIROOT() + apiURL;
         if (userRegistered) {
-            api = apiURLMigrant;
+            api = ApplicationClass.getInstance().getAPIROOT() + apiURLMigrant;
         }
         final ProgressDialog progressDialog = new ProgressDialog(ActivityRegister.this);
         progressDialog.setTitle("Please wait");
