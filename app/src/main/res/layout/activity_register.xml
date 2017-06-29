@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/rlRoot"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/rlRoot"
     android:orientation="vertical">
 
     <View
+        android:id="@+id/backdrop"
         android:layout_width="match_parent"
         android:layout_height="166dp"
         android:background="@color/colorPrimaryDark" />
@@ -41,126 +42,146 @@
         android:layout_marginTop="98dp"
         android:src="@drawable/register_green" />
 
-    <LinearLayout
+
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center"
-        android:orientation="vertical"
-        android:layout_below="@+id/ivRegister"
-        android:layout_alignParentStart="true">
+        android:layout_alignParentStart="true"
+        android:layout_above="@+id/btnAlreadyRegistered"
+        android:layout_below="@+id/ivRegister">
 
-        <com.vysh.subairoma.utils.CustomTextView
-            android:id="@+id/tvHint"
+        <LinearLayout
+            android:id="@+id/llForm"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/medium_margin"
-            android:layout_marginTop="@dimen/default_margin"
             android:gravity="center"
-            android:text="Please enter your details"
-            android:textSize="16sp"
-            app:font="gotham_light.ttf" />
+            android:orientation="vertical">
 
-        <android.support.v7.widget.CardView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginEnd="@dimen/default_margin"
-            android:layout_marginStart="@dimen/default_margin"
-            android:padding="@dimen/default_margin"
-            app:cardCornerRadius="@dimen/card_view_tile_radius"
-            app:cardUseCompatPadding="true">
-
-            <LinearLayout
+            <com.vysh.subairoma.utils.CustomTextView
+                android:id="@+id/tvHint"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:layout_marginBottom="@dimen/medium_margin"
+                android:layout_marginTop="@dimen/default_margin"
+                android:gravity="center"
+                android:text="Please enter your details"
+                android:textSize="16sp"
+                app:font="gotham_light.ttf" />
 
-                <EditText
-                    android:id="@+id/etName"
+            <android.support.v7.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginEnd="@dimen/default_margin"
+                android:layout_marginStart="@dimen/default_margin"
+                android:padding="@dimen/default_margin"
+                app:cardCornerRadius="@dimen/card_view_tile_radius"
+                app:cardUseCompatPadding="true">
+
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/default_margin"
-                    android:layout_marginTop="@dimen/default_margin"
-                    android:background="@null"
-                    android:hint="Full name"
-                    android:imeOptions="actionNext"
-                    android:inputType="text"
-                    android:maxLength="25" />
+                    android:orientation="vertical">
 
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_margin="@dimen/default_margin"
-                    android:background="@color/grey" />
-
-                <EditText
-                    android:id="@+id/etNumber"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/default_margin"
-                    android:background="@null"
-                    android:hint="Phone number"
-                    android:imeOptions="actionNext"
-                    android:inputType="number"
-                    android:maxLength="10" />
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_margin="@dimen/default_margin"
-                    android:background="@color/grey" />
-
-                <EditText
-                    android:id="@+id/etAge"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/default_margin"
-                    android:background="@null"
-                    android:hint="Age"
-                    android:inputType="number"
-                    android:imeOptions="actionDone"
-                    android:maxLength="2" />
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_margin="@dimen/default_margin"
-                    android:background="@color/grey" />
-
-                <RadioGroup
-                    android:id="@+id/rbGroup"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/default_margin"
-                    android:layout_marginEnd="@dimen/default_margin"
-                    android:layout_marginStart="@dimen/default_margin"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:layout_width="wrap_content"
+                    <EditText
+                        android:id="@+id/etName"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/default_margin"
+                        android:layout_marginTop="@dimen/default_margin"
+                        android:background="@null"
+                        android:hint="Full name"
+                        android:imeOptions="actionNext"
+                        android:inputType="text"
+                        android:maxLength="25" />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_margin="@dimen/default_margin"
+                        android:background="@color/grey" />
+
+                    <EditText
+                        android:id="@+id/etNumber"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/default_margin"
+                        android:background="@null"
+                        android:hint="Phone number"
+                        android:imeOptions="actionNext"
+                        android:inputType="number"
+                        android:maxLength="10" />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_margin="@dimen/default_margin"
+                        android:background="@color/grey" />
+
+                    <EditText
+                        android:id="@+id/etAge"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/default_margin"
+                        android:background="@null"
+                        android:hint="Age"
+                        android:imeOptions="actionDone"
+                        android:inputType="number"
+                        android:maxLength="2" />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_margin="@dimen/default_margin"
+                        android:background="@color/grey" />
+
+                    <RadioGroup
+                        android:id="@+id/rbGroup"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/default_margin"
                         android:layout_marginEnd="@dimen/default_margin"
-                        android:text="Gender"
-                        android:textSize="18sp" />
+                        android:layout_marginStart="@dimen/default_margin"
+                        android:orientation="horizontal">
 
-                    <RadioButton
-                        android:id="@+id/rbMale"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:checked="true"
-                        android:text="Male" />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="@dimen/default_margin"
+                            android:text="Gender"
+                            android:textSize="18sp" />
 
-                    <RadioButton
-                        android:id="@+id/rbFemale"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="Female" />
-                </RadioGroup>
-            </LinearLayout>
-        </android.support.v7.widget.CardView>
-    </LinearLayout>
+                        <RadioButton
+                            android:id="@+id/rbMale"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:checked="true"
+                            android:text="Male" />
+
+                        <RadioButton
+                            android:id="@+id/rbFemale"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Female" />
+                    </RadioGroup>
+                </LinearLayout>
+            </android.support.v7.widget.CardView>
+        </LinearLayout>
+    </ScrollView>
+
+    <Button
+        android:id="@+id/btnAlreadyRegistered"
+        android:layout_width="@dimen/default_button_width"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/btnNext"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="@dimen/default_margin"
+        android:background="?attr/selectableItemBackground"
+        android:text="Already Registered"
+        android:textColor="@color/grey"
+        android:textSize="12sp" />
 
     <Button
         android:id="@+id/btnNext"
@@ -168,7 +189,7 @@
         android:layout_height="@dimen/default_button_height"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_margin="@dimen/default_margin"
+        android:layout_marginBottom="@dimen/default_margin"
         android:background="@drawable/default_rounded_button"
         android:text="NEXT"
         android:textColor="#fff" />

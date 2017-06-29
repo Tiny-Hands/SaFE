@@ -1,6 +1,7 @@
 package com.vysh.subairoma;
 
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
@@ -8,10 +9,12 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.transition.Transition;
 import android.transition.TransitionManager;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
@@ -47,6 +50,7 @@ import butterknife.ButterKnife;
 public class ActivityRegister extends AppCompatActivity {
     final String apiURL = "/subairoma/saveuser.php";
     final String apiURLMigrant = "/subairoma/savemigrant.php";
+    final String apiAlreadyRegistered = "/subairoma/checkphonenumber.php";
 
     @BindView(R.id.btnNext)
     Button btnNext;
@@ -66,6 +70,8 @@ public class ActivityRegister extends AppCompatActivity {
     RadioButton rbFemale;
     @BindView(R.id.rlRoot)
     RelativeLayout rootLayout;
+    @BindView(R.id.btnAlreadyRegistered)
+    Button btnAlreadyRegistered;
 
     Boolean userRegistered = false;
     String sex = "male";
@@ -99,6 +105,89 @@ public class ActivityRegister extends AppCompatActivity {
                 }
             }
         });
+        btnAlreadyRegistered.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showRegistrationDialog();
+            }
+        });
+    }
+
+    private void showRegistrationDialog() {
+        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
+        LayoutInflater inflater = this.getLayoutInflater();
+        final View dialogView = inflater.inflate(R.layout.edittext_dialog, null);
+        dialogBuilder.setView(dialogView);
+
+        final EditText etRNumber = (EditText) dialogView.findViewById(R.id.etInput);
+        etRNumber.setHint("Phone number");
+        dialogBuilder.setTitle("Login");
+        dialogBuilder.setMessage("Enter the number that you registered");
+        dialogBuilder.setPositiveButton("Done", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+                String number = etRNumber.getText().toString();
+                if (!number.isEmpty() && number.length() == 10) {
+                    checkUserRegistration(number);
+                } else {
+                    etNumber.setError("Please enter a valid number");
+                }
+            }
+        });
+        dialogBuilder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+                dialog.dismiss();
+            }
+        });
+        AlertDialog b = dialogBuilder.create();
+        b.show();
+    }
+
+    private void checkUserRegistration(String number) {
+        final String pNumber = number;
+        String api = ApplicationClass.getInstance().getAPIROOT() + apiAlreadyRegistered;
+        final ProgressDialog progressDialog = new ProgressDialog(ActivityRegister.this);
+        progressDialog.setTitle("Please wait");
+        progressDialog.setMessage("Checking Registration...");
+        progressDialog.show();
+        StringRequest checkRequest = new StringRequest(Request.Method.POST, api, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                progressDialog.dismiss();
+                Log.d("mylog", "response : " + response);
+                try {
+                    JSONObject jsonRes = new JSONObject(response);
+                    boolean error = jsonRes.getBoolean("error");
+                    if (error) {
+                        showSnackbar(jsonRes.getString("message"));
+                    } else {
+                        ApplicationClass.getInstance().setUserId(jsonRes.getInt("user_id"));
+                        Intent intent = new Intent(ActivityRegister.this, ActivityOTPVerification.class);
+                        startActivity(intent);
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                progressDialog.dismiss();
+                String err = error.toString();
+                Log.d("mylog", "error : " + err);
+                if (!err.isEmpty() && err.contains("TimeoutError"))
+                    showSnackbar("Failed to connect to server :(");
+                else
+                    showSnackbar(error.toString());
+            }
+        }) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                HashMap<String, String> params = new HashMap<>();
+                params.put("number", pNumber);
+                return params;
+            }
+        };
+        VolleyController.getInstance(getApplicationContext()).addToRequestQueue(checkRequest);
     }
 
     private void saveUser() {
