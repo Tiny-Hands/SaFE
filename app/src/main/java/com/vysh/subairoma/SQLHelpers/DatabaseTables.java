@@ -35,6 +35,7 @@ public final class DatabaseTables {
         public static final String question_condition = "question_condition";
         public static final String response_type = "response_type";
         public static final String tile_id = "tile_id";
+        public static final String question_order= "order";
         public static final String question_title = "question_title";
     }
 
