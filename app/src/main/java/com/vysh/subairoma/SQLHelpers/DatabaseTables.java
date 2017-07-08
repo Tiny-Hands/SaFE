@@ -13,11 +13,12 @@ public final class DatabaseTables {
 
     public static class ResponseTable {
         public static final String TABLE_NAME = "tbl_response";
+        public static final String response_id = "response_id";
         public static final String question_id = "question_id";
         public static final String response = "response";
     }
 
-    public static class TitlesTable {
+    public static class TilesTable {
         public static final String TABLE_NAME = "tbl_tiles";
         public static final String tile_id = "tile_id";
         public static final String tile_type = "tile_type";
@@ -39,7 +40,7 @@ public final class DatabaseTables {
 
     public static class OptionsTable {
         public static final String TABLE_NAME = "tbl_options";
-        public static final String qptionId = "option_id";
+        public static final String optionId = "option_id";
         public static final String optionText = "option_text";
         public static final String questionId= "question_id";
     }

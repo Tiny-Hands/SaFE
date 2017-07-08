@@ -17,9 +17,30 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
     public static final String DATABASE_NAME = "SubairomaLocal.db";
     final String SQL_CREATE_ResponseTable =
             "CREATE TABLE " + DatabaseTables.ResponseTable.TABLE_NAME + " (" +
-                    DatabaseTables.ResponseTable._ID + " INTEGER PRIMARY KEY," +
+                    DatabaseTables.ResponseTable.response_id + " INTEGER PRIMARY KEY," +
                     DatabaseTables.ResponseTable.question_id + " INTEGER," +
                     DatabaseTables.ResponseTable.response + " TEXT" + ");";
+    final String SQL_CREATE_TilesTable =
+            "CREATE TABLE " + DatabaseTables.TilesTable.TABLE_NAME + " (" +
+                    DatabaseTables.TilesTable.tile_id + " INTEGER PRIMARY KEY," +
+                    DatabaseTables.TilesTable.tile_order + " INTEGER," +
+                    DatabaseTables.TilesTable.tile_description + " TEXT," +
+                    DatabaseTables.TilesTable.tile_type + " TEXT," +
+                    DatabaseTables.TilesTable.tile_title + " TEXT" + ");";
+    final String SQL_CREATE_QuestionsTable =
+            "CREATE TABLE " + DatabaseTables.QuestionsTable.TABLE_NAME + " (" +
+                    DatabaseTables.QuestionsTable.question_id + " INTEGER PRIMARY KEY," +
+                    DatabaseTables.QuestionsTable.tile_id + " INTEGER," +
+                    DatabaseTables.QuestionsTable.question_step + " TEXT," +
+                    DatabaseTables.QuestionsTable.question_description + " TEXT," +
+                    DatabaseTables.QuestionsTable.question_title + " TEXT," +
+                    DatabaseTables.QuestionsTable.question_condition + " TEXT," +
+                    DatabaseTables.QuestionsTable.response_type + " TEXT" + ");";
+    final String SQL_CREATE_OptionsTable =
+            "CREATE TABLE " + DatabaseTables.OptionsTable.TABLE_NAME + " (" +
+                    DatabaseTables.OptionsTable.optionId + " INTEGER PRIMARY KEY," +
+                    DatabaseTables.OptionsTable.questionId + " INTEGER," +
+                    DatabaseTables.OptionsTable.optionText + " TEXT" + ");";
 
     public SQLDatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -30,7 +51,10 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         db.execSQL(SQL_CREATE_ResponseTable);
-        Log.d("mylog", "Table Created");
+        db.execSQL(SQL_CREATE_TilesTable);
+        db.execSQL(SQL_CREATE_QuestionsTable);
+        db.execSQL(SQL_CREATE_OptionsTable);
+        Log.d("mylog", "Tables Created");
     }
 
     @Override

@@ -7,6 +7,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.WindowManager;
 
+import com.vysh.subairoma.SQLHelpers.SQLDatabaseHelper;
+
 /**
  * Created by Vishal on 6/12/2017.
  */
@@ -26,6 +28,8 @@ public class ActivitySplash extends AppCompatActivity {
                 } catch (Exception ex) {
                     Log.d("mylog", "Sleeping exception");
                 } finally {
+                    SQLDatabaseHelper dbHelper = new SQLDatabaseHelper(ActivitySplash.this);
+                    dbHelper.getWritableDatabase();
                     Intent intent = new Intent(ActivitySplash.this, ActivityRegister.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                     startActivity(intent);
