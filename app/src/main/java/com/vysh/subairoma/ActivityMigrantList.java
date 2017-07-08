@@ -64,6 +64,7 @@ public class ActivityMigrantList extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(ActivityMigrantList.this, ActivityRegister.class);
+                intent.putExtra("migrantmode", true);
                 startActivity(intent);
             }
         });

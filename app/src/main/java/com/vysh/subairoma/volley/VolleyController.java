@@ -34,6 +34,7 @@ public class VolleyController {
             // or else RequestQueue won't last for the lifetime of your app
             mRequestQueue = Volley.newRequestQueue(mCtx.getApplicationContext());
         }
+        mRequestQueue.getCache().clear();
         return mRequestQueue;
     }
 

@@ -8,7 +8,8 @@ import android.app.Application;
 
 public class ApplicationClass extends Application {
 
-    private final String APIROOT = "http://192.168.1.25";
+    ///private final String APIROOT = "http://192.168.1.25";
+    private final String APIROOT = "http://vishalshrestha.com.np/test-apis";
     private int userId, migrantId;
     private static ApplicationClass mInstance;
 

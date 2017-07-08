@@ -27,10 +27,16 @@ public class ActivityTileQuestions extends AppCompatActivity {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         ButterKnife.bind(ActivityTileQuestions.this);
         setUpRecyclerView();
+        getQuestions();
+    }
+
+    private void getQuestions() {
+        //Get Questions if not already in Local Database
     }
 
     private void setUpRecyclerView() {
         rvQuestions.setLayoutManager(new LinearLayoutManager(ActivityTileQuestions.this));
-        rvQuestions.setAdapter(new TileQuestionsAdapter());
+        TileQuestionsAdapter questionsAdapter = new TileQuestionsAdapter();
+        rvQuestions.setAdapter(questionsAdapter);
     }
 }

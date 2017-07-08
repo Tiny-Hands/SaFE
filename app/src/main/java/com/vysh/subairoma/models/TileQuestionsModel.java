@@ -6,7 +6,16 @@ package com.vysh.subairoma.models;
 
 public class TileQuestionsModel {
     String condition, title, description, question;
+    String[] options;
     int tileId, questionId, questionNo, responseType;
+
+    public String[] getOptions() {
+        return options;
+    }
+
+    public void setOptions(String[] questions) {
+        this.options = questions;
+    }
 
     public int getQuestionId() {
         return questionId;

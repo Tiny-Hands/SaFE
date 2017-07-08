@@ -37,6 +37,11 @@ public class ActivityTileHome extends AppCompatActivity {
         setTileIcons();
 
         setUpRecyclerView();
+        getTiles();
+    }
+
+    private void getTiles() {
+        //Get tiles here if not already in Local Database
     }
 
     private void setTileIcons() {

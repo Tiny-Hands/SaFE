@@ -83,6 +83,10 @@ public class ActivityRegister extends AppCompatActivity {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         ButterKnife.bind(this);
 
+        if (getIntent().hasExtra("migrantmode")) {
+            userRegistered = true;
+            loadMigrantView();
+        }
         rbFemale.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -166,6 +170,7 @@ public class ActivityRegister extends AppCompatActivity {
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
+                    Log.d("mylog", "Error in getting user_id: " + e.toString());
                 }
             }
         }, new Response.ErrorListener() {
@@ -195,9 +200,11 @@ public class ActivityRegister extends AppCompatActivity {
         if (userRegistered) {
             api = ApplicationClass.getInstance().getAPIROOT() + apiURLMigrant;
         }
+        Log.d("mylog", "API called: " + api);
         final ProgressDialog progressDialog = new ProgressDialog(ActivityRegister.this);
         progressDialog.setTitle("Please wait");
         progressDialog.setMessage("Registering...");
+        progressDialog.setCancelable(false);
         progressDialog.show();
         StringRequest saveRequest = new StringRequest(Request.Method.POST, api, new Response.Listener<String>() {
             @Override
@@ -219,6 +226,15 @@ public class ActivityRegister extends AppCompatActivity {
             }
         }) {
             @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> params = new HashMap<>();
+                params.put("Content-Type", "application/x-www-form-urlencoded");
+                params.put("Cache-Control", "no-cache");
+                //..add other headers
+                return params;
+            }
+
+            @Override
             protected Map<String, String> getParams() throws AuthFailureError {
                 HashMap<String, String> params = new HashMap<>();
                 params.put("full_name", etName.getText().toString());
@@ -230,6 +246,7 @@ public class ActivityRegister extends AppCompatActivity {
                 return params;
             }
         };
+        saveRequest.setShouldCache(false);
         VolleyController.getInstance(getApplicationContext()).addToRequestQueue(saveRequest);
     }
 
