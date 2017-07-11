@@ -19,6 +19,7 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
             "CREATE TABLE " + DatabaseTables.ResponseTable.TABLE_NAME + " (" +
                     DatabaseTables.ResponseTable.response_id + " INTEGER PRIMARY KEY," +
                     DatabaseTables.ResponseTable.question_id + " INTEGER," +
+                    DatabaseTables.ResponseTable.response_variable + " TEXT," +
                     DatabaseTables.ResponseTable.response + " TEXT" + ");";
     final String SQL_CREATE_TilesTable =
             "CREATE TABLE " + DatabaseTables.TilesTable.TABLE_NAME + " (" +
@@ -35,6 +36,7 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
                     DatabaseTables.QuestionsTable.question_description + " TEXT," +
                     DatabaseTables.QuestionsTable.question_title + " TEXT," +
                     DatabaseTables.QuestionsTable.question_condition + " TEXT," +
+                    DatabaseTables.QuestionsTable.question_variable + " TEXT," +
                     DatabaseTables.QuestionsTable.response_type + " TEXT" + ");";
     final String SQL_CREATE_OptionsTable =
             "CREATE TABLE " + DatabaseTables.OptionsTable.TABLE_NAME + " (" +
