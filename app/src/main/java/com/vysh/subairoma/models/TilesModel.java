@@ -6,10 +6,18 @@ package com.vysh.subairoma.models;
 
 public class TilesModel {
     String type, title, description;
-    int tileId;
+    int tileId, tileOrder;
 
     public String getType() {
         return type;
+    }
+
+    public int getTileOrder() {
+        return tileOrder;
+    }
+
+    public void setTileOrder(int tileOrder) {
+        this.tileOrder = tileOrder;
     }
 
     public void setType(String type) {

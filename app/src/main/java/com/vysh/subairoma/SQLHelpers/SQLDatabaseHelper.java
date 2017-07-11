@@ -2,9 +2,15 @@ package com.vysh.subairoma.SQLHelpers;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
+
+import com.vysh.subairoma.models.TileQuestionsModel;
+import com.vysh.subairoma.models.TilesModel;
+
+import java.util.ArrayList;
 
 
 /**
@@ -117,6 +123,51 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
 
         long newRowId = db.insert(DatabaseTables.OptionsTable.TABLE_NAME, null, values);
         Log.d("mylog", "Inserted row ID; " + newRowId);
+    }
+
+    public ArrayList<TilesModel> getTiles(String type) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        ArrayList<TilesModel> tileList = new ArrayList<>();
+        Cursor cursor = db.rawQuery("SELECT * FROM " + DatabaseTables.TilesTable.TABLE_NAME + " WHERE "
+                + DatabaseTables.TilesTable.tile_type + "=" + type, null);
+        while (cursor.moveToNext()) {
+            int id = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseTables.TilesTable.tile_id));
+            String title = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseTables.TilesTable.tile_title));
+            String desc = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseTables.TilesTable.tile_description));
+            int order = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseTables.TilesTable.tile_order));
+            TilesModel tilesModel = new TilesModel();
+            tilesModel.setTitle(title);
+            tilesModel.setDescription(desc);
+            tilesModel.setTileId(id);
+            tilesModel.setTileOrder(order);
+            tileList.add(tilesModel);
+        }
+        return tileList;
+    }
+
+    public ArrayList<TileQuestionsModel> getQuestions(int tileId) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        ArrayList<TileQuestionsModel> questionList = new ArrayList<>();
+        Cursor cursor = db.rawQuery("SELECT * FROM " + DatabaseTables.QuestionsTable.TABLE_NAME + " WHERE "
+                + DatabaseTables.QuestionsTable.tile_id + "=" + tileId, null);
+        while (cursor.moveToNext()) {
+            int id = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseTables.QuestionsTable.question_id));
+            String question = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseTables.QuestionsTable.question_title));
+            String desc = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseTables.QuestionsTable.question_description));
+            String step = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseTables.QuestionsTable.question_step));
+            String condition = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseTables.QuestionsTable.question_condition));
+            int responseType = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseTables.QuestionsTable.response_type));
+            TileQuestionsModel questionModel = new TileQuestionsModel();
+
+            //IF RESPONSE TYPE OTHER THEN 1, GET OPTIONS FROM SERVER AND POPULATE OPTIONS IN QUESTION MODEL
+            questionModel.setDescription(desc);
+            questionModel.setTitle(step);
+            questionModel.setQuestionId(id);
+            questionModel.setResponseType(responseType);
+            questionModel.setCondition(condition);
+            questionModel.setQuestion(question);
+        }
+        return questionList;
     }
 
     public void deleteAll(String tableName) {
