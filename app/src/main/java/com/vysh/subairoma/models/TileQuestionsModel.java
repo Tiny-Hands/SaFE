@@ -5,9 +5,17 @@ package com.vysh.subairoma.models;
  */
 
 public class TileQuestionsModel {
-    String condition, title, description, question;
+    String condition, title, description, question, variable;
     String[] options;
     int tileId, questionId, questionNo, responseType;
+
+    public String getVariable() {
+        return variable;
+    }
+
+    public void setVariable(String variable) {
+        this.variable = variable;
+    }
 
     public String[] getOptions() {
         return options;

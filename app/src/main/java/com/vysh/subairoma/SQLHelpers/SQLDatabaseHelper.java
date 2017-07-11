@@ -62,13 +62,14 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
 
     }
 
-    public void insertResponseTableData(String response, int question_id) {
+    public void insertResponseTableData(String response, int question_id, String variable) {
         // Gets the data repository in write mode
         SQLiteDatabase db = this.getWritableDatabase();
         // Create a new map of values, where column names are the keys
         ContentValues values = new ContentValues();
         values.put(DatabaseTables.ResponseTable.question_id, question_id);
         values.put(DatabaseTables.ResponseTable.response, response);
+        values.put(DatabaseTables.ResponseTable.response_variable, variable);
         // Insert the new row, returning the primary key value of the new row
         long newRowId = db.insert(DatabaseTables.ResponseTable.TABLE_NAME, null, values);
         Log.d("mylog", "Inserted row ID; " + newRowId);
@@ -87,7 +88,8 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
         Log.d("mylog", "Inserted row ID; " + newRowId);
     }
 
-    public void insertQuestion(int qid, int tid, int order, String step, String title, String description, String condition, int responseType) {
+    public void insertQuestion(int qid, int tid, int order, String step, String title
+            , String description, String condition, int responseType, String variable) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(DatabaseTables.QuestionsTable.question_id, qid);
@@ -98,6 +100,7 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
         values.put(DatabaseTables.QuestionsTable.question_title, title);
         values.put(DatabaseTables.QuestionsTable.response_type, responseType);
         values.put(DatabaseTables.QuestionsTable.question_condition, condition);
+        values.put(DatabaseTables.QuestionsTable.question_variable, variable);
 
         long newRowId = db.insert(DatabaseTables.QuestionsTable.TABLE_NAME, null, values);
         Log.d("mylog", "Inserted row ID; " + newRowId);
