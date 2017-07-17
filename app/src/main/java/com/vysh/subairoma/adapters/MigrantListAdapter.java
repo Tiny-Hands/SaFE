@@ -1,6 +1,11 @@
 package com.vysh.subairoma.adapters;
 
+import android.app.Activity;
+import android.app.DialogFragment;
+import android.app.FragmentManager;
 import android.content.Intent;
+import android.support.v7.app.AlertDialog;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.vysh.subairoma.ActivityTileHome;
+import com.vysh.subairoma.DialogCountryChooser;
 import com.vysh.subairoma.R;
 import com.vysh.subairoma.models.MigrantModel;
 
@@ -22,7 +28,6 @@ public class MigrantListAdapter extends RecyclerView.Adapter<MigrantListAdapter.
     public void setMigrants(ArrayList<MigrantModel> migrants) {
         this.migrants = migrants;
     }
-
     ArrayList<MigrantModel> migrants;
 
     @Override
@@ -40,7 +45,10 @@ public class MigrantListAdapter extends RecyclerView.Adapter<MigrantListAdapter.
 
     @Override
     public int getItemCount() {
-        return migrants.size()-1;
+        if (migrants == null)
+            return 7;
+        else
+            return migrants.size();
     }
 
     public class MigrantHolder extends RecyclerView.ViewHolder {
@@ -53,8 +61,8 @@ public class MigrantListAdapter extends RecyclerView.Adapter<MigrantListAdapter.
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent intent = new Intent(itemView.getContext(), ActivityTileHome.class);
-                    itemView.getContext().startActivity(intent);
+                    DialogCountryChooser dialog = DialogCountryChooser.newInstance();
+                    dialog.show(((AppCompatActivity)itemView.getContext()).getSupportFragmentManager(), "tag");
                 }
             });
         }

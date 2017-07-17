@@ -41,11 +41,19 @@ public final class DatabaseTables {
         public static final String question_variable = "question_variable";
     }
 
+    public static class CountriesTable {
+        public static final String TABLE_NAME = "tbl_countries";
+        public static final String country_id = "country_id";
+        public static final String country_name = "country_name";
+        public static final String country_status = "country_status";
+        public static final String country_blacklist = "country_blacklist";
+    }
+
     public static class OptionsTable {
         public static final String TABLE_NAME = "tbl_options";
-        public static final String optionId = "option_id";
-        public static final String optionText = "option_text";
-        public static final String questionId = "question_id";
+        public static final String option_id = "option_id";
+        public static final String option_text = "option_text";
+        public static final String question_id = "question_id";
     }
 
     //OTHER TABLES IF REQUIRED

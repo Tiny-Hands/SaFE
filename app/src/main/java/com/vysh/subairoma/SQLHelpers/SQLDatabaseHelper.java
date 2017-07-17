@@ -7,6 +7,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
+import com.vysh.subairoma.models.CountryModel;
 import com.vysh.subairoma.models.TileQuestionsModel;
 import com.vysh.subairoma.models.TilesModel;
 
@@ -46,9 +47,9 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
                     DatabaseTables.QuestionsTable.response_type + " TEXT" + ");";
     final String SQL_CREATE_OptionsTable =
             "CREATE TABLE " + DatabaseTables.OptionsTable.TABLE_NAME + " (" +
-                    DatabaseTables.OptionsTable.optionId + " INTEGER PRIMARY KEY," +
-                    DatabaseTables.OptionsTable.questionId + " INTEGER," +
-                    DatabaseTables.OptionsTable.optionText + " TEXT" + ");";
+                    DatabaseTables.OptionsTable.option_id + " INTEGER PRIMARY KEY," +
+                    DatabaseTables.OptionsTable.question_id + " INTEGER," +
+                    DatabaseTables.OptionsTable.option_text + " TEXT" + ");";
 
     public SQLDatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -83,6 +84,41 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
         Log.d("mylog", "Inserted row ID; " + newRowId);
     }
 
+    public ArrayList<TilesModel> getResponse(int migId) {
+       return null;
+    }
+
+    public void insertCountry(String id, String name, int status, int blacklist){
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(DatabaseTables.CountriesTable.country_id, id);
+        values.put(DatabaseTables.CountriesTable.country_name, name);
+        values.put(DatabaseTables.CountriesTable.country_status, status);
+        values.put(DatabaseTables.CountriesTable.country_blacklist, blacklist);
+
+        long newRowId = db.insert(DatabaseTables.CountriesTable.TABLE_NAME, null, values);
+        Log.d("mylog", "Inserted row ID; " + newRowId);
+    }
+
+    public ArrayList<CountryModel> getCountries(){
+        SQLiteDatabase db = this.getReadableDatabase();
+        ArrayList<CountryModel> countryList = new ArrayList<>();
+        Cursor cursor = db.rawQuery("SELECT * FROM " + DatabaseTables.CountriesTable.TABLE_NAME, null);
+        while (cursor.moveToNext()) {
+            String id = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseTables.CountriesTable.country_id));
+            String name = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseTables.CountriesTable.country_name));
+            int blacklist = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseTables.CountriesTable.country_blacklist));
+            int status = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseTables.CountriesTable.country_status));
+            CountryModel countryModel = new CountryModel();
+            countryModel.setCountryId(id);
+            countryModel.setCountryName(name);
+            countryModel.setCountrySatus(status);
+            countryModel.setCountryBlacklist(blacklist);
+            countryList.add(countryModel);
+        }
+        return countryList;
+    }
+
     public void insertTile(int id, String title, String description, String type, int order) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
@@ -93,35 +129,6 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
         values.put(DatabaseTables.TilesTable.tile_type, type);
 
         long newRowId = db.insert(DatabaseTables.TilesTable.TABLE_NAME, null, values);
-        Log.d("mylog", "Inserted row ID; " + newRowId);
-    }
-
-    public void insertQuestion(int qid, int tid, int order, String step, String title
-            , String description, String condition, int responseType, String variable) {
-        SQLiteDatabase db = this.getWritableDatabase();
-        ContentValues values = new ContentValues();
-        values.put(DatabaseTables.QuestionsTable.question_id, qid);
-        values.put(DatabaseTables.QuestionsTable.tile_id, tid);
-        values.put(DatabaseTables.QuestionsTable.question_order, order);
-        values.put(DatabaseTables.QuestionsTable.question_step, step);
-        values.put(DatabaseTables.QuestionsTable.question_description, description);
-        values.put(DatabaseTables.QuestionsTable.question_title, title);
-        values.put(DatabaseTables.QuestionsTable.response_type, responseType);
-        values.put(DatabaseTables.QuestionsTable.question_condition, condition);
-        values.put(DatabaseTables.QuestionsTable.question_variable, variable);
-
-        long newRowId = db.insert(DatabaseTables.QuestionsTable.TABLE_NAME, null, values);
-        Log.d("mylog", "Inserted row ID; " + newRowId);
-    }
-
-    public void insertOption(int qid, int oid, String option) {
-        SQLiteDatabase db = this.getWritableDatabase();
-        ContentValues values = new ContentValues();
-        values.put(DatabaseTables.OptionsTable.optionId, oid);
-        values.put(DatabaseTables.OptionsTable.questionId, qid);
-        values.put(DatabaseTables.OptionsTable.optionText, option);
-
-        long newRowId = db.insert(DatabaseTables.OptionsTable.TABLE_NAME, null, values);
         Log.d("mylog", "Inserted row ID; " + newRowId);
     }
 
@@ -143,6 +150,24 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
             tileList.add(tilesModel);
         }
         return tileList;
+    }
+
+    public void insertQuestion(int qid, int tid, int order, String step, String title
+            , String description, String condition, int responseType, String variable) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(DatabaseTables.QuestionsTable.question_id, qid);
+        values.put(DatabaseTables.QuestionsTable.tile_id, tid);
+        values.put(DatabaseTables.QuestionsTable.question_order, order);
+        values.put(DatabaseTables.QuestionsTable.question_step, step);
+        values.put(DatabaseTables.QuestionsTable.question_description, description);
+        values.put(DatabaseTables.QuestionsTable.question_title, title);
+        values.put(DatabaseTables.QuestionsTable.response_type, responseType);
+        values.put(DatabaseTables.QuestionsTable.question_condition, condition);
+        values.put(DatabaseTables.QuestionsTable.question_variable, variable);
+
+        long newRowId = db.insert(DatabaseTables.QuestionsTable.TABLE_NAME, null, values);
+        Log.d("mylog", "Inserted row ID; " + newRowId);
     }
 
     public ArrayList<TileQuestionsModel> getQuestions(int tileId) {
@@ -168,6 +193,17 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
             questionModel.setQuestion(question);
         }
         return questionList;
+    }
+
+    public void insertOption(int qid, int oid, String option) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(DatabaseTables.OptionsTable.option_id, oid);
+        values.put(DatabaseTables.OptionsTable.question_id, qid);
+        values.put(DatabaseTables.OptionsTable.option_text, option);
+
+        long newRowId = db.insert(DatabaseTables.OptionsTable.TABLE_NAME, null, values);
+        Log.d("mylog", "Inserted row ID; " + newRowId);
     }
 
     public void deleteAll(String tableName) {

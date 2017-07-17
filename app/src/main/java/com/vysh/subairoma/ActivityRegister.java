@@ -27,9 +27,11 @@ import android.widget.TextView;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
+import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.vysh.subairoma.utils.CustomTextView;
 import com.vysh.subairoma.volley.VolleyController;
 
@@ -48,9 +50,9 @@ import butterknife.ButterKnife;
  */
 
 public class ActivityRegister extends AppCompatActivity {
-    final String apiURL = "/subairoma/saveuser.php";
-    final String apiURLMigrant = "/subairoma/savemigrant.php";
-    final String apiAlreadyRegistered = "/subairoma/checkphonenumber.php";
+    final String apiURL = "/saveuser.php";
+    final String apiURLMigrant = "/savemigrant.php";
+    final String apiAlreadyRegistered = "/checkphonenumber.php";
 
     @BindView(R.id.btnNext)
     Button btnNext;
@@ -106,6 +108,12 @@ public class ActivityRegister extends AppCompatActivity {
             public void onClick(View v) {
                 if (validateData()) {
                     saveUser();
+                   /* if (userRegistered) {
+                        startOTPActivity();
+                    } else {
+                        userRegistered = true;
+                        loadMigrantView();
+                    }*/
                 }
             }
         });
@@ -192,7 +200,9 @@ public class ActivityRegister extends AppCompatActivity {
                 return params;
             }
         };
-        VolleyController.getInstance(getApplicationContext()).addToRequestQueue(checkRequest);
+        RequestQueue queue = Volley.newRequestQueue(ActivityRegister.this);
+        checkRequest.setShouldCache(false);
+        queue.add(checkRequest);
     }
 
     private void saveUser() {
@@ -226,15 +236,6 @@ public class ActivityRegister extends AppCompatActivity {
             }
         }) {
             @Override
-            public Map<String, String> getHeaders() throws AuthFailureError {
-                Map<String, String> params = new HashMap<>();
-                params.put("Content-Type", "application/x-www-form-urlencoded");
-                params.put("Cache-Control", "no-cache");
-                //..add other headers
-                return params;
-            }
-
-            @Override
             protected Map<String, String> getParams() throws AuthFailureError {
                 HashMap<String, String> params = new HashMap<>();
                 params.put("full_name", etName.getText().toString());
@@ -246,8 +247,9 @@ public class ActivityRegister extends AppCompatActivity {
                 return params;
             }
         };
+        RequestQueue queue = Volley.newRequestQueue(ActivityRegister.this);
         saveRequest.setShouldCache(false);
-        VolleyController.getInstance(getApplicationContext()).addToRequestQueue(saveRequest);
+        queue.add(saveRequest);
     }
 
     private void parseResponse(String response) {

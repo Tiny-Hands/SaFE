@@ -5,7 +5,8 @@ package com.vysh.subairoma.models;
  */
 
 public class CountryModel {
-    String countryId, countryName, countrySatus, countryBlacklist;
+    String countryId, countryName;
+    int countrySatus, countryBlacklist;
 
     public String getCountryId() {
         return countryId;
@@ -23,19 +24,19 @@ public class CountryModel {
         this.countryName = countryName;
     }
 
-    public String getCountrySatus() {
+    public int getCountrySatus() {
         return countrySatus;
     }
 
-    public void setCountrySatus(String countrySatus) {
+    public void setCountrySatus(int countrySatus) {
         this.countrySatus = countrySatus;
     }
 
-    public String getCountryBlacklist() {
+    public int getCountryBlacklist() {
         return countryBlacklist;
     }
 
-    public void setCountryBlacklist(String countryBlacklist) {
+    public void setCountryBlacklist(int countryBlacklist) {
         this.countryBlacklist = countryBlacklist;
     }
 }

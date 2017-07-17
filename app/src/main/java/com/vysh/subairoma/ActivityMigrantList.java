@@ -19,9 +19,11 @@ import android.widget.TextView;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
+import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.vysh.subairoma.adapters.MigrantListAdapter;
 import com.vysh.subairoma.models.MigrantModel;
 import com.vysh.subairoma.volley.VolleyController;
@@ -43,7 +45,7 @@ import butterknife.ButterKnife;
  */
 
 public class ActivityMigrantList extends AppCompatActivity {
-    private final String API = "/subairoma/getmigrants.php";
+    private final String API = "/getmigrants.php";
 
     @BindView(R.id.rvMigrants)
     RecyclerView recyclerView;
@@ -60,6 +62,7 @@ public class ActivityMigrantList extends AppCompatActivity {
         ButterKnife.bind(this);
 
         getMigrants();
+        //setUpRecyclerView(null);
         btnAddMigrant.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -76,7 +79,7 @@ public class ActivityMigrantList extends AppCompatActivity {
         progressDialog.setTitle("Please wait");
         progressDialog.setMessage("Getting migrants...");
         progressDialog.show();
-        StringRequest saveRequest = new StringRequest(Request.Method.POST, api, new Response.Listener<String>() {
+        StringRequest getRequest = new StringRequest(Request.Method.POST, api, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 progressDialog.dismiss();
@@ -103,7 +106,8 @@ public class ActivityMigrantList extends AppCompatActivity {
                 return params;
             }
         };
-        VolleyController.getInstance(getApplicationContext()).addToRequestQueue(saveRequest);
+        RequestQueue queue = Volley.newRequestQueue(ActivityMigrantList.this);
+        queue.add(getRequest);
     }
 
     private ArrayList<MigrantModel> parseResponse(String response) {
@@ -120,15 +124,13 @@ public class ActivityMigrantList extends AppCompatActivity {
                     for (int i = 0; i < migrantJSON.length(); i++) {
                         migrantObj = migrantJSON.getJSONObject(i);
                         MigrantModel migrantModel = new MigrantModel();
-                        if (migrantObj.has("migrant_id"))
+                        if (migrantObj.has("migrant_id")) {
                             migrantModel.setMigrantId(migrantObj.getInt("migrant_id"));
-                        if (migrantObj.has("migrant_name"))
                             migrantModel.setMigrantName(migrantObj.getString("migrant_name"));
-                        if (migrantObj.has("migrant_age"))
                             migrantModel.setMigrantAge(migrantObj.getInt("migrant_age"));
-                        if (migrantObj.has("migrant_sex"))
                             migrantModel.setMigrantSex(migrantObj.getString("migrant_sex"));
-                        migrantsModels.add(migrantModel);
+                            migrantsModels.add(migrantModel);
+                        }
                     }
                 }
             }
@@ -151,6 +153,7 @@ public class ActivityMigrantList extends AppCompatActivity {
     private void setUpRecyclerView(ArrayList<MigrantModel> migrantModels) {
         recyclerView.setLayoutManager(new LinearLayoutManager(ActivityMigrantList.this));
         MigrantListAdapter migrantListAdapter = new MigrantListAdapter();
+        Log.d("mylog", "Number of migrants: " + migrantModels.size());
         migrantListAdapter.setMigrants(migrantModels);
         recyclerView.setAdapter(migrantListAdapter);
     }
