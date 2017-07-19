@@ -34,20 +34,26 @@ public class ActivitySplash extends AppCompatActivity {
     private final String tilesAPI = "/getalltiles.php";
     private final String questionAPI = "/getallquestions.php";
     private final String optionsAPI = "/getalloptions.php";
-    private final String countiesAPI = "/getallcountries.php";
+    private final String countiesAPI = "/getcountries.php";
+    private int savedCount = 0;
+    private long startTime;
+    private long sleepTime;
 
     SQLDatabaseHelper dbHelper;
+    Thread sleepThread;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        Thread splashTime = new Thread(new Runnable() {
+        startTime = System.currentTimeMillis();
+        sleepThread = new Thread(new Runnable() {
             @Override
             public void run() {
                 try {
-                    Thread.sleep(2000);
+                    if (sleepTime != 0)
+                        Thread.sleep(sleepTime);
                 } catch (Exception ex) {
                     Log.d("mylog", "Sleeping exception");
                 } finally {
@@ -57,26 +63,43 @@ public class ActivitySplash extends AppCompatActivity {
                 }
             }
         });
-        // If already has data show splash
-        // else
         getAllData();
     }
 
     private void getAllData() {
         SharedPreferences sp = getSharedPreferences("subairomapreferences", MODE_PRIVATE);
-        if (!sp.getBoolean("savedall", false)) {
+        if (sp.getInt("savedcount", 0) != 4) {
+            Log.d("mylog", "Starting save");
             dbHelper = new SQLDatabaseHelper(ActivitySplash.this);
             dbHelper.getWritableDatabase();
-            if(!sp.getBoolean("savedtiles", false))
-            getTiles();
-            if(!sp.getBoolean("savedquestions", false))
-            getQuestions();
-            if(!sp.getBoolean("savedoptions", false))
-            getOptions();
-            if(!sp.getBoolean("savedcountries", false))
-            getCountries();
+            if (!sp.getBoolean("savedtiles", false)) {
+                Log.d("mylog", "Getting tiles");
+                getTiles();
+            } else incrementCount();
+            if (!sp.getBoolean("savedquestions", false)) {
+                Log.d("mylog", "Getting questions");
+                getQuestions();
+            } else incrementCount();
+            if (!sp.getBoolean("savedoptions", false)) {
+                Log.d("mylog", "Getting options");
+                getOptions();
+            } else incrementCount();
+            if (!sp.getBoolean("savedcountries", false)) {
+                Log.d("mylog", "Getting countries");
+                getCountries();
+            } else incrementCount();
         } else {
+            Log.d("mylog", "Saved already, starting");
             //Start activity directly or show splash
+            long currTime = System.currentTimeMillis();
+            sleepTime = currTime - startTime;
+            if (sleepTime > 2000) {
+                sleepTime = 0;
+                sleepThread.start();
+            } else {
+                sleepTime = 2000 - startTime;
+                sleepThread.start();
+            }
         }
     }
 
@@ -86,15 +109,18 @@ public class ActivitySplash extends AppCompatActivity {
             @Override
             public void onResponse(String response) {
                 //SAVE RESPONSE IN LOCAL DB
+                Log.d("mylog", "Got Tiles: " + response);
                 parseAndSaveTiles(response);
                 SharedPreferences sp = getSharedPreferences("subairomapreferences", MODE_PRIVATE);
                 SharedPreferences.Editor editor = sp.edit();
                 editor.putBoolean("savedtiles", true);
+                editor.commit();
+                incrementCount();
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-
+                Log.d("mylog", "Got Tiles error: " + error.toString());
             }
         });
         RequestQueue queue = Volley.newRequestQueue(ActivitySplash.this);
@@ -107,10 +133,13 @@ public class ActivitySplash extends AppCompatActivity {
             @Override
             public void onResponse(String response) {
                 //SAVE RESPONSE IN LOCAL DB
+                Log.d("mylog", "Got questions: " + response);
                 parseAndSaveQuestions(response);
                 SharedPreferences sp = getSharedPreferences("subairomapreferences", MODE_PRIVATE);
                 SharedPreferences.Editor editor = sp.edit();
                 editor.putBoolean("savedquestions", true);
+                editor.commit();
+                incrementCount();
             }
         }, new Response.ErrorListener() {
             @Override
@@ -128,10 +157,13 @@ public class ActivitySplash extends AppCompatActivity {
             @Override
             public void onResponse(String response) {
                 //SAVE RESPONSE IN LOCAL DB
+                Log.d("mylog", "Got options: " + response);
                 parseAndSaveOptions(response);
                 SharedPreferences sp = getSharedPreferences("subairomapreferences", MODE_PRIVATE);
                 SharedPreferences.Editor editor = sp.edit();
                 editor.putBoolean("savedoptions", true);
+                editor.commit();
+                incrementCount();
             }
         }, new Response.ErrorListener() {
             @Override
@@ -150,9 +182,12 @@ public class ActivitySplash extends AppCompatActivity {
             public void onResponse(String response) {
                 //SAVE RESPONSE IN LOCAL DB
                 parseAndSaveCountries(response);
+                Log.d("mylog", "Got countries: " + response);
                 SharedPreferences sp = getSharedPreferences("subairomapreferences", MODE_PRIVATE);
                 SharedPreferences.Editor editor = sp.edit();
                 editor.putBoolean("savedcountries", true);
+                editor.commit();
+                incrementCount();
             }
         }, new Response.ErrorListener() {
             @Override
@@ -162,6 +197,21 @@ public class ActivitySplash extends AppCompatActivity {
         });
         RequestQueue queue = Volley.newRequestQueue(ActivitySplash.this);
         queue.add(getRequest);
+    }
+
+    private synchronized void checkSleep() {
+        if (savedCount == 4) {
+            long currTime = System.currentTimeMillis();
+            sleepTime = currTime - startTime;
+            Log.d("mylog", "Count is 4, Sleep Time: " + sleepTime);
+            if (sleepTime > 2000) {
+                sleepTime = 0;
+                sleepThread.start();
+            } else {
+                sleepTime = 2000 - sleepTime;
+                sleepThread.start();
+            }
+        }
     }
 
     private void parseAndSaveTiles(String response) {
@@ -254,6 +304,18 @@ public class ActivitySplash extends AppCompatActivity {
             }
         } catch (JSONException e) {
             e.printStackTrace();
+        }
+    }
+
+    public synchronized void incrementCount() {
+        savedCount++;
+        Log.d("mylog", "Incremented Count: " + savedCount);
+        SharedPreferences sp = getSharedPreferences("subairomapreferences", MODE_PRIVATE);
+        SharedPreferences.Editor editor = sp.edit();
+        editor.putInt("savedcount", savedCount);
+        editor.commit();
+        if (savedCount == 4) {
+            checkSleep();
         }
     }
 }
