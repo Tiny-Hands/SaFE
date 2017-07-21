@@ -115,7 +115,6 @@ public class ActivitySplash extends AppCompatActivity {
                 SharedPreferences.Editor editor = sp.edit();
                 editor.putBoolean("savedtiles", true);
                 editor.commit();
-                incrementCount();
             }
         }, new Response.ErrorListener() {
             @Override
@@ -139,7 +138,6 @@ public class ActivitySplash extends AppCompatActivity {
                 SharedPreferences.Editor editor = sp.edit();
                 editor.putBoolean("savedquestions", true);
                 editor.commit();
-                incrementCount();
             }
         }, new Response.ErrorListener() {
             @Override
@@ -163,7 +161,6 @@ public class ActivitySplash extends AppCompatActivity {
                 SharedPreferences.Editor editor = sp.edit();
                 editor.putBoolean("savedoptions", true);
                 editor.commit();
-                incrementCount();
             }
         }, new Response.ErrorListener() {
             @Override
@@ -187,7 +184,6 @@ public class ActivitySplash extends AppCompatActivity {
                 SharedPreferences.Editor editor = sp.edit();
                 editor.putBoolean("savedcountries", true);
                 editor.commit();
-                incrementCount();
             }
         }, new Response.ErrorListener() {
             @Override
@@ -219,21 +215,22 @@ public class ActivitySplash extends AppCompatActivity {
             JSONObject jsonTiles = new JSONObject(response);
             boolean error = jsonTiles.getBoolean("error");
             if (error) {
-
+                Log.d("mylog", "Error getting tiles: " + response);
             } else {
                 JSONArray jsonTileArray = jsonTiles.getJSONArray("tiles");
                 for (int i = 0; i < jsonTileArray.length(); i++) {
                     JSONObject tempTile = jsonTileArray.getJSONObject(i);
-                    int id = tempTile.getInt("id");
-                    String tileName = tempTile.getString("title");
-                    String tileDescription = tempTile.getString("description");
-                    String tileType = tempTile.getString("type");
-                    int tileOrder = tempTile.getInt("order");
+                    int id = tempTile.getInt("tile_id");
+                    String tileName = tempTile.getString("tile_title");
+                    String tileDescription = tempTile.getString("tile_description");
+                    String tileType = tempTile.getString("tile_type");
+                    int tileOrder = tempTile.getInt("tile_order");
                     dbHelper.insertTile(id, tileName, tileDescription, tileType, tileOrder);
                 }
+                incrementCount();
             }
         } catch (JSONException e) {
-            e.printStackTrace();
+            Log.d("mylog", "Error parsing tiles: " + e.toString());
         }
     }
 
@@ -242,25 +239,26 @@ public class ActivitySplash extends AppCompatActivity {
             JSONObject jsonQuestions = new JSONObject(response);
             boolean error = jsonQuestions.getBoolean("error");
             if (error) {
-
+                Log.d("mylog", "Error getting questions: " + response);
             } else {
                 JSONArray jsonTileArray = jsonQuestions.getJSONArray("questions");
                 for (int i = 0; i < jsonTileArray.length(); i++) {
                     JSONObject tempQuestion = jsonTileArray.getJSONObject(i);
-                    int id = tempQuestion.getInt("id");
+                    int id = tempQuestion.getInt("question_id");
                     int tileId = tempQuestion.getInt("tile_id");
-                    String step = tempQuestion.getString("title");
-                    String title = tempQuestion.getString("description");
-                    String description = tempQuestion.getString("type");
+                    String step = tempQuestion.getString("question_step");
+                    String title = tempQuestion.getString("question_title");
+                    String description = tempQuestion.getString("question_description");
                     String condition = tempQuestion.getString("condition");
                     String variable = tempQuestion.getString("variable");
-                    int order = tempQuestion.getInt("order");
-                    int responseType = tempQuestion.getInt("response_type");
+                    String order = tempQuestion.getString("order");
+                    String responseType = tempQuestion.getString("response_type");
                     dbHelper.insertQuestion(id, tileId, order, step, title, description, condition, responseType, variable);
                 }
+                incrementCount();
             }
         } catch (JSONException e) {
-            e.printStackTrace();
+            Log.d("mylog", "Error parsing questions: " + e.toString());
         }
     }
 
@@ -269,19 +267,20 @@ public class ActivitySplash extends AppCompatActivity {
             JSONObject jsonOptions = new JSONObject(response);
             boolean error = jsonOptions.getBoolean("error");
             if (error) {
-
+                Log.d("mylog", "Error getting options: " + response);
             } else {
-                JSONArray jsonOptionsArray = jsonOptions.getJSONArray("options");
+                JSONArray jsonOptionsArray = jsonOptions.getJSONArray("questions");
                 for (int i = 0; i < jsonOptionsArray.length(); i++) {
                     JSONObject tempOption = jsonOptionsArray.getJSONObject(i);
                     int qid = tempOption.getInt("question_id");
-                    int oid = tempOption.getInt("id");
-                    String option = tempOption.getString("option");
+                    int oid = tempOption.getInt("option_id");
+                    String option = tempOption.getString("option_text");
                     dbHelper.insertOption(qid, oid, option);
                 }
+                incrementCount();
             }
         } catch (JSONException e) {
-            e.printStackTrace();
+            Log.d("mylog", "Error parsing options: " + e.toString());
         }
     }
 
@@ -290,20 +289,23 @@ public class ActivitySplash extends AppCompatActivity {
             JSONObject jsonCountries = new JSONObject(response);
             boolean error = jsonCountries.getBoolean("error");
             if (error) {
-
+                Log.d("mylog", "Error getting countries: " + response);
             } else {
                 JSONArray jsonTileArray = jsonCountries.getJSONArray("countries");
                 for (int i = 0; i < jsonTileArray.length(); i++) {
                     JSONObject tempCountry = jsonTileArray.getJSONObject(i);
-                    String id = tempCountry.getString("id");
-                    String name = tempCountry.getString("name");
-                    int status = tempCountry.getInt("status");
-                    int blacklist = tempCountry.getInt("blacklist");
+                    String id = tempCountry.getString("country_id");
+                    String name = tempCountry.getString("country_name");
+                    int status = tempCountry.getInt("country_status");
+                    int blacklist = tempCountry.getInt("country_blacklist");
+                    Log.d("mylog", "Country id: " + tempCountry.getString("country_id") + " Country name: " + tempCountry.getString("country_name")
+                    + " Status: " + tempCountry.getInt("country_status") + " Blacklist: "+ tempCountry.getInt("country_blacklist"));
                     dbHelper.insertCountry(id, name, status, blacklist);
                 }
             }
+            incrementCount();
         } catch (JSONException e) {
-            e.printStackTrace();
+            Log.d("mylog", "Error parsing countries: " + e.toString());
         }
     }
 

@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,6 +23,7 @@ import java.util.ArrayList;
 
 public class DialogCountryChooser extends DialogFragment {
 
+    ArrayList<CountryModel> countries;
     Spinner spinner;
     int selected = 0;
 
@@ -42,9 +44,10 @@ public class DialogCountryChooser extends DialogFragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         //String[] countries = getResources().getStringArray(R.array.countries_array);
-        ArrayList<CountryModel> countries = new SQLDatabaseHelper(view.getContext()).getCountries();
+        final ArrayList<CountryModel> countries = new SQLDatabaseHelper(view.getContext()).getCountries();
         ArrayList<String> countryNameList = new ArrayList<>();
         for (CountryModel country : countries) {
+            Log.d("mylog", "Country name: " + country.getCountryName());
             countryNameList.add(country.getCountryName());
         }
         spinner.setAdapter(new ArrayAdapter<>(view.getContext(), android.R.layout.simple_spinner_dropdown_item, countryNameList));
@@ -52,6 +55,9 @@ public class DialogCountryChooser extends DialogFragment {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 if (selected != 0) {
+                    CountryModel country = countries.get(position);
+                    Log.d("mylog", "Country code: " + country.getCountryId() + " Status: " + country.getCountrySatus()
+                            + " Blacklist: " + country.getCountryBlacklist());
                     Intent intent = new Intent(view.getContext(), ActivityTileHome.class);
                     view.getContext().startActivity(intent);
                 }
