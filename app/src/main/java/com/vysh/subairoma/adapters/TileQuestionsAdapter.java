@@ -10,12 +10,20 @@ import android.widget.CheckBox;
 import android.widget.TextView;
 
 import com.vysh.subairoma.R;
+import com.vysh.subairoma.models.TileQuestionsModel;
+
+import java.util.ArrayList;
 
 /**
  * Created by Vishal on 6/15/2017.
  */
 
 public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdapter.QuestionHolder> {
+
+    ArrayList<TileQuestionsModel> questionsList;
+    public TileQuestionsAdapter(ArrayList<TileQuestionsModel> questions) {
+        questionsList = questions;
+    }
 
     @Override
     public QuestionHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -25,6 +33,12 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
 
     @Override
     public void onBindViewHolder(final QuestionHolder holder, int position) {
+        //Values
+        holder.title.setText(questionsList.get(position).getTitle());
+        holder.question.setText(questionsList.get(position).getQuestion());
+        holder.details.setText(questionsList.get(position).getDescription());
+
+        //On Click Transition
         holder.title.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -48,7 +62,7 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
 
     @Override
     public int getItemCount() {
-        return 5;
+        return questionsList.size();
     }
 
     public class QuestionHolder extends RecyclerView.ViewHolder {

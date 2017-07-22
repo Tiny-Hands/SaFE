@@ -59,10 +59,6 @@ public class ActivityTileHome extends AppCompatActivity {
         setUpRecyclerView();
     }
 
-    private ArrayList<TilesModel> parseResponse(String response) {
-        return null;
-    }
-
     private void setTileIcons() {
         int size = tiles.size();
         tileIcons = new int[size];

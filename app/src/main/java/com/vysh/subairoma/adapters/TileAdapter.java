@@ -48,17 +48,19 @@ public class TileAdapter extends RecyclerView.Adapter<TileAdapter.TileViewHolder
     public class TileViewHolder extends RecyclerView.ViewHolder {
         public TextView tvTile;
         public ImageView ivTile;
+
         public TileViewHolder(View itemView) {
             super(itemView);
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent(v.getContext(), ActivityTileQuestions.class);
+                    intent.putExtra("tileId", tileList.get(getAdapterPosition()).getTileId());
                     v.getContext().startActivity(intent);
                 }
             });
-            tvTile = (TextView)itemView.findViewById(R.id.tvTitle);
-            ivTile = (ImageView)itemView.findViewById(R.id.ivTitle);
+            tvTile = (TextView) itemView.findViewById(R.id.tvTitle);
+            ivTile = (ImageView) itemView.findViewById(R.id.ivTitle);
         }
     }
 }

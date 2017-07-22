@@ -193,10 +193,13 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
     }
 
     public ArrayList<TileQuestionsModel> getQuestions(int tileId) {
+        Log.d("mylog", "Geting questions for tileId: " + tileId);
         SQLiteDatabase db = this.getReadableDatabase();
         ArrayList<TileQuestionsModel> questionList = new ArrayList<>();
-        Cursor cursor = db.rawQuery("SELECT * FROM " + DatabaseTables.QuestionsTable.TABLE_NAME + " WHERE "
-                + DatabaseTables.QuestionsTable.tile_id + "=" + tileId, null);
+        String statement = "SELECT * FROM " + DatabaseTables.QuestionsTable.TABLE_NAME + " WHERE "
+                + DatabaseTables.QuestionsTable.tile_id + "=" + "'"+tileId+"'";
+        Log.d("mylog", "Query: " + statement);
+        Cursor cursor = db.rawQuery(statement, null);
         while (cursor.moveToNext()) {
             int id = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseTables.QuestionsTable.question_id));
             String question = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseTables.QuestionsTable.question_title));
@@ -213,6 +216,7 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
             questionModel.setResponseType(responseType);
             questionModel.setCondition(condition);
             questionModel.setQuestion(question);
+            questionList.add(questionModel);
         }
         return questionList;
     }
