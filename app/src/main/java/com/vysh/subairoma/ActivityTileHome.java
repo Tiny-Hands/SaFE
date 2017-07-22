@@ -1,35 +1,22 @@
 package com.vysh.subairoma;
 
-import android.app.ProgressDialog;
 import android.graphics.Color;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.android.volley.AuthFailureError;
-import com.android.volley.Request;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
 import com.vysh.subairoma.SQLHelpers.SQLDatabaseHelper;
 import com.vysh.subairoma.adapters.TileAdapter;
-import com.vysh.subairoma.models.MigrantModel;
 import com.vysh.subairoma.models.TilesModel;
-import com.vysh.subairoma.volley.VolleyController;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -44,7 +31,6 @@ public class ActivityTileHome extends AppCompatActivity {
     ArrayList<TilesModel> tiles;
 
     int[] tileIcons;
-    String[] tileTitles;
 
     @BindView(R.id.rvTiles)
     RecyclerView rvTiles;
@@ -68,18 +54,9 @@ public class ActivityTileHome extends AppCompatActivity {
             //GET FEP TILES
             tiles = new SQLDatabaseHelper(ActivityTileHome.this).getTiles("'FEP'");
         }
-        //Tile titles and Icons
-        tileTitles = new String[tiles.size()];
-        for (int i = 0; i < tiles.size(); i++) {
-            tileTitles[i] = tiles.get(i).getTitle();
-        }
 
         setTileIcons();
         setUpRecyclerView();
-    }
-
-    private void getLiveTiles() {
-
     }
 
     private ArrayList<TilesModel> parseResponse(String response) {
@@ -87,7 +64,7 @@ public class ActivityTileHome extends AppCompatActivity {
     }
 
     private void setTileIcons() {
-        int size = tileTitles.length;
+        int size = tiles.size();
         tileIcons = new int[size];
         for (int i = 0; i < size; i++)
             tileIcons[i] = R.drawable.roller;
@@ -104,6 +81,6 @@ public class ActivityTileHome extends AppCompatActivity {
 
     private void setUpRecyclerView() {
         rvTiles.setLayoutManager(new GridLayoutManager(this, 2));
-        rvTiles.setAdapter(new TileAdapter(tileTitles, tileIcons));
+        rvTiles.setAdapter(new TileAdapter(tiles, tileIcons));
     }
 }

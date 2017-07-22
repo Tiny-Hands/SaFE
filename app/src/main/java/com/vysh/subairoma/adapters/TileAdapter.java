@@ -10,6 +10,9 @@ import android.widget.TextView;
 
 import com.vysh.subairoma.ActivityTileQuestions;
 import com.vysh.subairoma.R;
+import com.vysh.subairoma.models.TilesModel;
+
+import java.util.ArrayList;
 
 /**
  * Created by Vishal on 6/12/2017.
@@ -17,10 +20,10 @@ import com.vysh.subairoma.R;
 
 public class TileAdapter extends RecyclerView.Adapter<TileAdapter.TileViewHolder> {
 
-    String[] tileList;
+    ArrayList<TilesModel> tileList;
     int[] ivTiles;
 
-    public TileAdapter(String[] list, int[] tiles) {
+    public TileAdapter(ArrayList list, int[] tiles) {
         tileList = list;
         ivTiles = tiles;
     }
@@ -33,13 +36,13 @@ public class TileAdapter extends RecyclerView.Adapter<TileAdapter.TileViewHolder
 
     @Override
     public void onBindViewHolder(TileViewHolder holder, int position) {
-        holder.tvTile.setText(tileList[position]);
+        holder.tvTile.setText(tileList.get(position).getTitle());
         holder.ivTile.setBackgroundResource(ivTiles[position]);
     }
 
     @Override
     public int getItemCount() {
-        return tileList.length;
+        return tileList.size();
     }
 
     public class TileViewHolder extends RecyclerView.ViewHolder {
