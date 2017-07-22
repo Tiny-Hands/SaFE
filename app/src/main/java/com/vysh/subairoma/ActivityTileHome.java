@@ -26,6 +26,7 @@ import com.vysh.subairoma.models.MigrantModel;
 import com.vysh.subairoma.models.TilesModel;
 import com.vysh.subairoma.volley.VolleyController;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -39,6 +40,8 @@ import butterknife.ButterKnife;
 
 public class ActivityTileHome extends AppCompatActivity {
     //private final String API = "/subairoma/gettiles.php";
+
+    ArrayList<TilesModel> tiles;
 
     int[] tileIcons;
     String[] tileTitles;
@@ -57,24 +60,22 @@ public class ActivityTileHome extends AppCompatActivity {
 
         ButterKnife.bind(this);
 
+        String cid = getIntent().getStringExtra("countryId");
+        if (cid.equalsIgnoreCase("in")) {
+            //GET GIS TILES
+            tiles = new SQLDatabaseHelper(ActivityTileHome.this).getTiles("'GIS'");
+        } else {
+            //GET FEP TILES
+            tiles = new SQLDatabaseHelper(ActivityTileHome.this).getTiles("'FEP'");
+        }
         //Tile titles and Icons
-        tileTitles = getResources().getStringArray(R.array.fep_sections);
+        tileTitles = new String[tiles.size()];
+        for (int i = 0; i < tiles.size(); i++) {
+            tileTitles[i] = tiles.get(i).getTitle();
+        }
 
         setTileIcons();
         setUpRecyclerView();
-        if (!getTiles()) {
-            getLiveTiles();
-        }
-    }
-
-    private boolean getTiles() {
-        SQLDatabaseHelper dbHelper = new SQLDatabaseHelper(ActivityTileHome.this);
-
-        //dbHelper.getTiles("FEP");
-        //OR other according to country
-        //dbHelper.getTiles("OTHER");
-        //Get tiles here if not already from Local Database
-        return false;
     }
 
     private void getLiveTiles() {

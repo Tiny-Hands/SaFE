@@ -38,6 +38,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/toolbar"
         android:layout_gravity="center_horizontal"
+        android:paddingBottom="@dimen/default_button_height"
         android:layout_marginBottom="@dimen/default_margin"
         android:layout_marginEnd="@dimen/default_margin"
         android:layout_marginStart="@dimen/default_margin" />
