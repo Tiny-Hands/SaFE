@@ -1,13 +1,16 @@
 package com.vysh.subairoma;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Adapter;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
@@ -22,10 +25,7 @@ import java.util.ArrayList;
  */
 
 public class DialogCountryChooser extends DialogFragment {
-
-    ArrayList<CountryModel> countries;
     Spinner spinner;
-    int selected = 0;
 
     public static DialogCountryChooser newInstance() {
         DialogCountryChooser frag = new DialogCountryChooser();
@@ -46,27 +46,65 @@ public class DialogCountryChooser extends DialogFragment {
         //String[] countries = getResources().getStringArray(R.array.countries_array);
         final ArrayList<CountryModel> countries = new SQLDatabaseHelper(view.getContext()).getCountries();
         ArrayList<String> countryNameList = new ArrayList<>();
+        //To show in the beginning, nothing selected index 0 called by default
+        countryNameList.add("-------");
         for (CountryModel country : countries) {
             Log.d("mylog", "Country name: " + country.getCountryName());
-            countryNameList.add(country.getCountryName());
+            countryNameList.add(country.getCountryName().toUpperCase());
         }
         spinner.setAdapter(new ArrayAdapter<>(view.getContext(), android.R.layout.simple_spinner_dropdown_item, countryNameList));
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                if (selected != 0) {
-                    CountryModel country = countries.get(position);
-                    Log.d("mylog", "Country code: " + country.getCountryId() + " Status: " + country.getCountrySatus()
-                            + " Blacklist: " + country.getCountryBlacklist());
-                    Intent intent = new Intent(view.getContext(), ActivityTileHome.class);
-                    view.getContext().startActivity(intent);
+                Log.d("mylog", "Country position: " + position);
+                if (position != 0) {
+                    //Subtracted one because countryNameList has 1 extra default item but countries array doesn't
+                    CountryModel country = countries.get(position - 1);
+                    String cid = country.getCountryId();
+                    String cname = country.getCountryName();
+                    int blacklist = country.getCountryBlacklist();
+                    int status = country.getCountrySatus();
+                    Log.d("mylog", "Country code: " + cid + " Status: " + status
+                            + " Blacklist: " + blacklist);
+                    if (blacklist == 1) {
+                        showDialog("Blacklisted", "This country is Blacklisted", cid, cname);
+                    } else if (status == 1) {
+                        showDialog("Not open", "This country is not Open", cid, cname);
+                    } else {
+                        //For destination -1 is default question id as it's not identified as question currently.
+                        new SQLDatabaseHelper(getContext()).insertResponseTableData(cname, -1, ApplicationClass.getInstance().getMigrantId(), "mg_destination");
+                        Intent intent = new Intent(getContext(), ActivityTileHome.class);
+                        intent.putExtra("countryId", cid);
+                        getContext().startActivity(intent);
+                    }
                 }
-                selected++;
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
             }
         });
+    }
+
+    private void showDialog(String title, String message, final String cid, final String cname) {
+        AlertDialog.Builder mBuilder = new AlertDialog.Builder(getContext());
+        mBuilder.setTitle(title);
+        mBuilder.setMessage(message);
+        mBuilder.setNegativeButton("Go to " + cname.toUpperCase(), new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                Intent intent = new Intent(getContext(), ActivityTileHome.class);
+                intent.putExtra("countryId", cid);
+                getContext().startActivity(intent);
+                new SQLDatabaseHelper(getContext()).insertResponseTableData(cname, -1, ApplicationClass.getInstance().getMigrantId(), "mg_destination");
+            }
+        });
+        mBuilder.setPositiveButton("Choose another Country", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dismiss();
+            }
+        });
+        mBuilder.show();
     }
 }

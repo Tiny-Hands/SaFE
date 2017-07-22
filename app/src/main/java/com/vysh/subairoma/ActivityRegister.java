@@ -267,8 +267,6 @@ public class ActivityRegister extends AppCompatActivity {
                 }
                 //Means the registered person was migrant
                 else {
-                    int migrant_id = jsonResponse.getInt("migrant_id");
-                    ApplicationClass.getInstance().setMigrantId(migrant_id);
                     startOTPActivity();
                 }
             } else {

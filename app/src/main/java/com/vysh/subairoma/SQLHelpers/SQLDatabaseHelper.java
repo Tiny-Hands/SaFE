@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.provider.ContactsContract;
 import android.util.Log;
 
 import com.vysh.subairoma.models.CountryModel;
@@ -24,10 +25,12 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
     public static final String DATABASE_NAME = "SubairomaLocal.db";
     final String SQL_CREATE_ResponseTable =
             "CREATE TABLE " + DatabaseTables.ResponseTable.TABLE_NAME + " (" +
-                    DatabaseTables.ResponseTable.response_id + " INTEGER PRIMARY KEY," +
+                    DatabaseTables.ResponseTable.migrant_id + " INTEGER," +
                     DatabaseTables.ResponseTable.question_id + " INTEGER," +
                     DatabaseTables.ResponseTable.response_variable + " TEXT," +
-                    DatabaseTables.ResponseTable.response + " TEXT" + ");";
+                    DatabaseTables.ResponseTable.response + " TEXT," +
+                    " UNIQUE (" + DatabaseTables.ResponseTable.question_id +
+                    ", " + DatabaseTables.ResponseTable.migrant_id + ") ON CONFLICT REPLACE);";
     final String SQL_CREATE_TilesTable =
             "CREATE TABLE " + DatabaseTables.TilesTable.TABLE_NAME + " (" +
                     DatabaseTables.TilesTable.tile_id + " INTEGER PRIMARY KEY," +
@@ -80,11 +83,12 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
 
     }
 
-    public void insertResponseTableData(String response, int question_id, String variable) {
+    public void insertResponseTableData(String response, int question_id, int migrant_id, String variable) {
         // Gets the data repository in write mode
         SQLiteDatabase db = this.getWritableDatabase();
         // Create a new map of values, where column names are the keys
         ContentValues values = new ContentValues();
+        values.put(DatabaseTables.ResponseTable.migrant_id, migrant_id);
         values.put(DatabaseTables.ResponseTable.question_id, question_id);
         values.put(DatabaseTables.ResponseTable.response, response);
         values.put(DatabaseTables.ResponseTable.response_variable, variable);
@@ -93,7 +97,16 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
         Log.d("mylog", "Inserted row ID; " + newRowId);
     }
 
-    public ArrayList<TilesModel> getResponse(int migId) {
+    public ArrayList getResponse(int migId) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT * FROM " + DatabaseTables.ResponseTable.TABLE_NAME, null);
+        while (cursor.moveToNext()) {
+            String qvar = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseTables.ResponseTable.response_variable));
+            String rvar = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseTables.ResponseTable.response));
+            int mid = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseTables.ResponseTable.migrant_id));
+            int qid = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseTables.ResponseTable.question_id));
+            Log.d("mylog", "Mid: " + mid + " Qid: " + qid + " rvar: " + rvar);
+        }
         return null;
     }
 

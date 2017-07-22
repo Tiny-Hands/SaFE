@@ -269,7 +269,7 @@ public class ActivitySplash extends AppCompatActivity {
             if (error) {
                 Log.d("mylog", "Error getting options: " + response);
             } else {
-                JSONArray jsonOptionsArray = jsonOptions.getJSONArray("questions");
+                JSONArray jsonOptionsArray = jsonOptions.getJSONArray("options");
                 for (int i = 0; i < jsonOptionsArray.length(); i++) {
                     JSONObject tempOption = jsonOptionsArray.getJSONObject(i);
                     int qid = tempOption.getInt("question_id");

@@ -38,7 +38,7 @@ import butterknife.ButterKnife;
  */
 
 public class ActivityTileHome extends AppCompatActivity {
-    private final String API = "/subairoma/gettiles.php";
+    //private final String API = "/subairoma/gettiles.php";
 
     int[] tileIcons;
     String[] tileTitles;
@@ -78,33 +78,6 @@ public class ActivityTileHome extends AppCompatActivity {
     }
 
     private void getLiveTiles() {
-        //Get tiles from server here and save into database
-        String api = ApplicationClass.getInstance().getAPIROOT() + API;
-        StringRequest saveRequest = new StringRequest(Request.Method.POST, api, new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-                Log.d("mylog", "response : " + response);
-                ArrayList<TilesModel> migrantModels = parseResponse(response);
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                String err = error.toString();
-                Log.d("mylog", "error : " + err);
-                if (!err.isEmpty() && err.contains("TimeoutError"))
-                    showSnackbar("Failed to connect to server :(");
-                else
-                    showSnackbar(error.toString());
-            }
-        }) {
-            @Override
-            protected Map<String, String> getParams() throws AuthFailureError {
-                HashMap<String, String> params = new HashMap<>();
-                params.put("tile_type", "Some type");
-                return params;
-            }
-        };
-        VolleyController.getInstance(getApplicationContext()).addToRequestQueue(saveRequest);
 
     }
 

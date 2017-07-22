@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.vysh.subairoma.ActivityTileHome;
+import com.vysh.subairoma.ApplicationClass;
 import com.vysh.subairoma.DialogCountryChooser;
 import com.vysh.subairoma.R;
 import com.vysh.subairoma.models.MigrantModel;
@@ -28,6 +29,7 @@ public class MigrantListAdapter extends RecyclerView.Adapter<MigrantListAdapter.
     public void setMigrants(ArrayList<MigrantModel> migrants) {
         this.migrants = migrants;
     }
+
     ArrayList<MigrantModel> migrants;
 
     @Override
@@ -61,8 +63,9 @@ public class MigrantListAdapter extends RecyclerView.Adapter<MigrantListAdapter.
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    ApplicationClass.getInstance().setMigrantId(migrants.get(getAdapterPosition()).getMigrantId());
                     DialogCountryChooser dialog = DialogCountryChooser.newInstance();
-                    dialog.show(((AppCompatActivity)itemView.getContext()).getSupportFragmentManager(), "tag");
+                    dialog.show(((AppCompatActivity) itemView.getContext()).getSupportFragmentManager(), "tag");
                 }
             });
         }
