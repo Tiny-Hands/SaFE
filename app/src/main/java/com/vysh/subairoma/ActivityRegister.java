@@ -281,6 +281,9 @@ public class ActivityRegister extends AppCompatActivity {
                 if (!userRegistered) {
                     if (userType == 0) {
                         ApplicationClass.getInstance().setUserId(-1);
+                        int mig_id = jsonResponse.getInt("migrant_id");
+                        Log.d("mylog", "Migrant ID: " + mig_id);
+                        ApplicationClass.getInstance().setMigrantId(mig_id);
                         startOTPActivity();
                         return;
                     } else {

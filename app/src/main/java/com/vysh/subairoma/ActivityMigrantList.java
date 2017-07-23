@@ -63,6 +63,9 @@ public class ActivityMigrantList extends AppCompatActivity {
 
         getMigrants();
         //setUpRecyclerView(null);
+        int userType = ApplicationClass.getInstance().getUserId();
+        if (userType == -1)
+            btnAddMigrant.setVisibility(View.GONE);
         btnAddMigrant.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -102,7 +105,12 @@ public class ActivityMigrantList extends AppCompatActivity {
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
                 HashMap<String, String> params = new HashMap<>();
-                params.put("user_id", ApplicationClass.getInstance().getUserId() + "");
+                int user_id = ApplicationClass.getInstance().getUserId();
+                int mig_id = ApplicationClass.getInstance().getMigrantId();
+                Log.d("mylog", "User ID: " + user_id);
+                Log.d("mylog", "Mig ID: " + mig_id);
+                params.put("user_id", user_id + "");
+                params.put("migrant_id", mig_id + "");
                 return params;
             }
         };
