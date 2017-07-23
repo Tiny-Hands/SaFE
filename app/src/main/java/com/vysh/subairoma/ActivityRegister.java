@@ -313,11 +313,11 @@ public class ActivityRegister extends AppCompatActivity {
             return false;
         }
         if (etAge.getText().toString().isEmpty() || etAge.getText().toString().length() != 2) {
-            etAge.setError("Age must be between 18 - 60");
+            etAge.setError("Age must be between 12 - 90");
             return false;
         }
-        if (Integer.parseInt(etAge.getText().toString()) < 18 || Integer.parseInt(etAge.getText().toString()) > 60) {
-            etAge.setError("Age must be between 18 - 60");
+        if (Integer.parseInt(etAge.getText().toString()) < 12 || Integer.parseInt(etAge.getText().toString()) > 90) {
+            etAge.setError("Age must be between 12 - 90");
             return false;
         }
         if (etNumber.getText().toString().isEmpty() || etNumber.getText().toString().length() < 10) {
