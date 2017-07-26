@@ -36,10 +36,12 @@ public class ActivityOTPVerification extends AppCompatActivity implements View.O
         switch (v.getId()) {
             case R.id.btnVerify:
                 Intent intent = new Intent(ActivityOTPVerification.this, ActivityMigrantList.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(intent);
                 break;
             case R.id.btnChangeNumber:
                 Intent intent1 = new Intent(ActivityOTPVerification.this, ActivityRegister.class);
+                intent1.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(intent1);
                 break;
         }

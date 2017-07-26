@@ -44,7 +44,7 @@ public class ActivityTileQuestions extends AppCompatActivity {
 
     private void setUpRecyclerView() {
         rvQuestions.setLayoutManager(new LinearLayoutManager(ActivityTileQuestions.this));
-        TileQuestionsAdapter questionsAdapter = new TileQuestionsAdapter(questionList);
+        TileQuestionsAdapter questionsAdapter = new TileQuestionsAdapter(questionList, ActivityTileQuestions.this);
         rvQuestions.setAdapter(questionsAdapter);
     }
 }

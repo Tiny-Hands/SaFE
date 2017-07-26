@@ -97,17 +97,28 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
         Log.d("mylog", "Inserted row ID; " + newRowId);
     }
 
-    public ArrayList getResponse(int migId) {
+    public String getResponse(int migId, String variable) {
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.rawQuery("SELECT * FROM " + DatabaseTables.ResponseTable.TABLE_NAME, null);
+        String query;
+        if (variable == null) {
+            query = "SELECT * FROM " + DatabaseTables.ResponseTable.TABLE_NAME
+                    + " WHERE " + DatabaseTables.ResponseTable.migrant_id + " = " + "'" + migId + "'";
+        } else {
+            query = "SELECT * FROM " + DatabaseTables.ResponseTable.TABLE_NAME +
+                    " WHERE " + DatabaseTables.ResponseTable.migrant_id + " = " + "'" + migId + "'"
+                    + " AND " + DatabaseTables.ResponseTable.response_variable + " = " + "'" + variable + "'";
+        }
+        Log.d("mylog", "Query: " + query);
+        Cursor cursor = db.rawQuery(query, null);
+        String response = "";
         while (cursor.moveToNext()) {
             String qvar = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseTables.ResponseTable.response_variable));
-            String rvar = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseTables.ResponseTable.response));
+            response = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseTables.ResponseTable.response));
             int mid = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseTables.ResponseTable.migrant_id));
             int qid = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseTables.ResponseTable.question_id));
-            Log.d("mylog", "Mid: " + mid + " Qid: " + qid + " rvar: " + rvar);
+            Log.d("mylog", "Mid: " + mid + " Qid: " + qid + " rvar: " + response);
         }
-        return null;
+        return response;
     }
 
     public void insertCountry(String id, String name, int status, int blacklist) {
@@ -158,7 +169,7 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getReadableDatabase();
         ArrayList<TilesModel> tileList = new ArrayList<>();
         Cursor cursor = db.rawQuery("SELECT * FROM " + DatabaseTables.TilesTable.TABLE_NAME + " WHERE "
-                + DatabaseTables.TilesTable.tile_type + "=" + type, null);
+                + DatabaseTables.TilesTable.tile_type + "=" + "'" + type + "'", null);
         while (cursor.moveToNext()) {
             int id = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseTables.TilesTable.tile_id));
             String title = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseTables.TilesTable.tile_title));
@@ -197,7 +208,7 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getReadableDatabase();
         ArrayList<TileQuestionsModel> questionList = new ArrayList<>();
         String statement = "SELECT * FROM " + DatabaseTables.QuestionsTable.TABLE_NAME + " WHERE "
-                + DatabaseTables.QuestionsTable.tile_id + "=" + "'"+tileId+"'";
+                + DatabaseTables.QuestionsTable.tile_id + "=" + "'" + tileId + "'";
         Log.d("mylog", "Query: " + statement);
         Cursor cursor = db.rawQuery(statement, null);
         while (cursor.moveToNext()) {
@@ -207,6 +218,7 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
             String step = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseTables.QuestionsTable.question_step));
             String condition = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseTables.QuestionsTable.question_condition));
             int responseType = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseTables.QuestionsTable.response_type));
+            String variable = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseTables.QuestionsTable.question_variable));
             TileQuestionsModel questionModel = new TileQuestionsModel();
 
             //IF RESPONSE TYPE OTHER THEN 1, GET OPTIONS FROM SERVER AND POPULATE OPTIONS IN QUESTION MODEL
@@ -216,6 +228,8 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
             questionModel.setResponseType(responseType);
             questionModel.setCondition(condition);
             questionModel.setQuestion(question);
+            questionModel.setVariable(variable);
+
             questionList.add(questionModel);
         }
         return questionList;

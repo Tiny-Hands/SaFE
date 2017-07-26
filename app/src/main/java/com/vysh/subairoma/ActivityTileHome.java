@@ -49,10 +49,10 @@ public class ActivityTileHome extends AppCompatActivity {
         String cid = getIntent().getStringExtra("countryId");
         if (cid.equalsIgnoreCase("in")) {
             //GET GIS TILES
-            tiles = new SQLDatabaseHelper(ActivityTileHome.this).getTiles("'GIS'");
+            tiles = new SQLDatabaseHelper(ActivityTileHome.this).getTiles("GIS");
         } else {
             //GET FEP TILES
-            tiles = new SQLDatabaseHelper(ActivityTileHome.this).getTiles("'FEP'");
+            tiles = new SQLDatabaseHelper(ActivityTileHome.this).getTiles("FEP");
         }
 
         setTileIcons();
