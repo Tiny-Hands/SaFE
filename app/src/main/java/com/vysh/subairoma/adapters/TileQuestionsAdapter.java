@@ -1,6 +1,7 @@
 package com.vysh.subairoma.adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Build;
 import android.support.v7.widget.RecyclerView;
 import android.transition.TransitionManager;
@@ -36,6 +37,8 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
 
     ArrayList<String> conditionVariables;
     HashMap<String, String> conditionVariableValues;
+    HashMap<String, ArrayList<Integer>> conditionOnQuestions;
+    HashMap<Integer, Integer> conditionQuestionIndex;
 
     public TileQuestionsAdapter(ArrayList<TileQuestionsModel> questions, Context context) {
         sqlDatabaseHelper = new SQLDatabaseHelper(context);
@@ -81,18 +84,39 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 String variable = questionsList.get(position).getVariable();
-                if (conditionVariables.contains(variable)) ;
                 if (isChecked) {
                     Log.d("mylog", "Inserting: true for " + ApplicationClass.getInstance().getMigrantId() + " in " + variable);
                     sqlDatabaseHelper.insertResponseTableData("true", questionsList.get(position).getQuestionId(),
                             ApplicationClass.getInstance().getMigrantId(), variable);
+                    if (conditionVariables.contains(variable)) {
+                        Log.d("mylog", "Current variable: " + variable + " Is is condition for some question");
+                        conditionVariableValues.put(variable, "true");
+                    }
                 } else {
                     Log.d("mylog", "Inserting: false for " + ApplicationClass.getInstance().getMigrantId() + " in " + variable);
                     sqlDatabaseHelper.insertResponseTableData("false", questionsList.get(position).getQuestionId(),
                             ApplicationClass.getInstance().getMigrantId(), variable);
+                    if (conditionVariables.contains(variable)) {
+                        Log.d("mylog", "Current variable: " + variable + " Is is condition for some question");
+                        conditionVariableValues.put(variable, "false");
+                    }
+                }
+                if (conditionVariables.contains(variable)) {
+                    ArrayList<Integer> questionIds = conditionOnQuestions.get(variable);
+                    notifyConditionVariableChange(questionIds);
                 }
             }
         });
+    }
+
+    private void notifyConditionVariableChange(ArrayList<Integer> questionIds) {
+        for (int i = 0; i < questionIds.size(); i++) {
+            Log.d("mylog", "Question ID in consideration: " + questionIds.get(i));
+            int indexOnMainList = conditionQuestionIndex.get(questionIds.get(i));
+            Log.d("mylog", "Index in consideration: " + indexOnMainList);
+            Log.d("mylog", "Condition in consideration: " + questionsList.get(indexOnMainList).getCondition());
+            parseCondition(questionsList.get(indexOnMainList).getCondition());
+        }
     }
 
     @Override
@@ -124,8 +148,16 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
         }
         if (response.equalsIgnoreCase("true")) {
             checkBox.setChecked(true);
+            if (conditionVariables.contains(variable)) {
+                ArrayList<Integer> questionIds = conditionOnQuestions.get(variable);
+                notifyConditionVariableChange(questionIds);
+            }
         } else if (response.equalsIgnoreCase("false")) {
             checkBox.setChecked(false);
+            if (conditionVariables.contains(variable)) {
+                ArrayList<Integer> questionIds = conditionOnQuestions.get(variable);
+                notifyConditionVariableChange(questionIds);
+            }
         }
     }
 
@@ -133,9 +165,14 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
         String conditionString;
         JSONObject condition;
         conditionVariables = new ArrayList<>();
-        for (TileQuestionsModel question : questionsList) {
+        conditionOnQuestions = new HashMap<>();
+        conditionQuestionIndex = new HashMap<>();
+        for (int i = 0; i < questionsList.size(); i++) {
+            TileQuestionsModel question = questionsList.get(i);
             conditionString = question.getCondition();
-            if (conditionString != null) {
+            if (conditionString != null && !conditionString.isEmpty()) {
+                conditionQuestionIndex.put(question.getQuestionId(), i);
+                Log.d("mylog", "Condition on Question Index: " + i);
                 try {
                     condition = new JSONObject(conditionString);
                     JSONObject tempCondition = condition.getJSONObject("condition");
@@ -143,8 +180,23 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
                     String key;
                     while (iter.hasNext()) {
                         key = iter.next().toString();
-                        conditionVariables.add(key);
-                        Log.d("mylog", "Adding Key: " + key);
+                        if (!conditionVariables.contains(key)) {
+                            conditionVariables.add(key);
+                            ArrayList<Integer> tempQuestionList = new ArrayList<>();
+                            tempQuestionList.add(question.getQuestionId());
+                            conditionOnQuestions.put(key, tempQuestionList);
+                        } else {
+                            Log.d("mylog", "Variable: " + key + " Already added");
+                            //Get Previous Question Id and create a new arraylist and put.
+                            ArrayList<Integer> preArrayTemp = conditionOnQuestions.get(key);
+                            for (int j = 0; j < preArrayTemp.size(); j++) {
+                                Log.d("mylog", "Variable already defined for question: " + preArrayTemp.get(j));
+                            }
+                            Log.d("mylog", "New Question to add: " + question.getQuestionId());
+                            ArrayList<Integer> tempQuestionList = preArrayTemp;
+                            tempQuestionList.add(question.getQuestionId());
+                            conditionOnQuestions.put(key, tempQuestionList);
+                        }
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -161,9 +213,14 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
             if (response == null || response.isEmpty()) {
                 response = "false";
             }
-            Log.d("mylog", conditionVariables.get(i) + " response is: " + response);
+            //Log.d("mylog", conditionVariables.get(i) + " response is: " + response);
             conditionVariableValues.put(conditionVariables.get(i), response);
         }
+    }
+
+
+    private void parseCondition(String condition) {
+        Log.d("mylog", "Parse condition: " + condition);
     }
 
 }

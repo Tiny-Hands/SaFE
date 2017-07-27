@@ -108,7 +108,7 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
                     " WHERE " + DatabaseTables.ResponseTable.migrant_id + " = " + "'" + migId + "'"
                     + " AND " + DatabaseTables.ResponseTable.response_variable + " = " + "'" + variable + "'";
         }
-        Log.d("mylog", "Query: " + query);
+        //Log.d("mylog", "Query: " + query);
         Cursor cursor = db.rawQuery(query, null);
         String response = "";
         while (cursor.moveToNext()) {
@@ -116,7 +116,7 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
             response = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseTables.ResponseTable.response));
             int mid = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseTables.ResponseTable.migrant_id));
             int qid = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseTables.ResponseTable.question_id));
-            Log.d("mylog", "Mid: " + mid + " Qid: " + qid + " rvar: " + response);
+            //Log.d("mylog", "Mid: " + mid + " Qid: " + qid + " rvar: " + response);
         }
         return response;
     }
@@ -204,12 +204,12 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
     }
 
     public ArrayList<TileQuestionsModel> getQuestions(int tileId) {
-        Log.d("mylog", "Geting questions for tileId: " + tileId);
+        //Log.d("mylog", "Geting questions for tileId: " + tileId);
         SQLiteDatabase db = this.getReadableDatabase();
         ArrayList<TileQuestionsModel> questionList = new ArrayList<>();
         String statement = "SELECT * FROM " + DatabaseTables.QuestionsTable.TABLE_NAME + " WHERE "
                 + DatabaseTables.QuestionsTable.tile_id + "=" + "'" + tileId + "'";
-        Log.d("mylog", "Query: " + statement);
+        //Log.d("mylog", "Query: " + statement);
         Cursor cursor = db.rawQuery(statement, null);
         while (cursor.moveToNext()) {
             int id = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseTables.QuestionsTable.question_id));
