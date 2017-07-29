@@ -3,6 +3,7 @@ package com.vysh.subairoma;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Build;
@@ -373,6 +374,9 @@ public class ActivityRegister extends AppCompatActivity {
     }
 
     private void startOTPActivity() {
+        SharedPreferences sharedPreferences = getSharedPreferences(ApplicationClass.getInstance().getSHAREDPREFSNAME(), MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putInt("userId", ApplicationClass.getInstance().getUserId());
         Intent intent = new Intent(ActivityRegister.this, ActivityOTPVerification.class);
         startActivity(intent);
     }

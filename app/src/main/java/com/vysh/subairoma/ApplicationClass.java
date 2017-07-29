@@ -10,6 +10,7 @@ public class ApplicationClass extends Application {
 
     ///private final String APIROOT = "http://192.168.1.25";
     private final String APIROOT = "http://subairoma-mysql.azurewebsites.net";
+    private final String SHAREDPREFSNAME = "subairomasharedprefs";
     private int userId, migrantId;
     private static ApplicationClass mInstance;
 
@@ -19,6 +20,10 @@ public class ApplicationClass extends Application {
 
     public String getAPIROOT() {
         return APIROOT;
+    }
+
+    public String getSHAREDPREFSNAME() {
+        return SHAREDPREFSNAME;
     }
 
     public int getUserId() {

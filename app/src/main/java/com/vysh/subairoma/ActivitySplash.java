@@ -39,6 +39,8 @@ public class ActivitySplash extends AppCompatActivity {
     private long startTime;
     private long sleepTime;
 
+    SharedPreferences sp;
+
     SQLDatabaseHelper dbHelper;
     Thread sleepThread;
 
@@ -52,10 +54,10 @@ public class ActivitySplash extends AppCompatActivity {
             @Override
             public void run() {
                 try {
-                    if (sleepTime != 0)
+                    if (sleepTime > 0)
                         Thread.sleep(sleepTime);
                 } catch (Exception ex) {
-                    Log.d("mylog", "Sleeping exception");
+                    Log.d("mylog", "Sleeping exception: " + ex.toString());
                 } finally {
                     Intent intent = new Intent(ActivitySplash.this, ActivityRegister.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -63,11 +65,11 @@ public class ActivitySplash extends AppCompatActivity {
                 }
             }
         });
+        sp = getSharedPreferences(ApplicationClass.getInstance().getSHAREDPREFSNAME(), MODE_PRIVATE);
         getAllData();
     }
 
     private void getAllData() {
-        SharedPreferences sp = getSharedPreferences("subairomapreferences", MODE_PRIVATE);
         if (sp.getInt("savedcount", 0) != 4) {
             Log.d("mylog", "Starting save");
             dbHelper = new SQLDatabaseHelper(ActivitySplash.this);
@@ -92,14 +94,8 @@ public class ActivitySplash extends AppCompatActivity {
             Log.d("mylog", "Saved already, starting");
             //Start activity directly or show splash
             long currTime = System.currentTimeMillis();
-            sleepTime = currTime - startTime;
-            if (sleepTime > 2000) {
-                sleepTime = 0;
-                sleepThread.start();
-            } else {
-                sleepTime = 2000 - startTime;
-                sleepThread.start();
-            }
+            sleepTime = 2000;
+            sleepThread.start();
         }
     }
 
@@ -111,7 +107,6 @@ public class ActivitySplash extends AppCompatActivity {
                 //SAVE RESPONSE IN LOCAL DB
                 Log.d("mylog", "Got Tiles: " + response);
                 parseAndSaveTiles(response);
-                SharedPreferences sp = getSharedPreferences("subairomapreferences", MODE_PRIVATE);
                 SharedPreferences.Editor editor = sp.edit();
                 editor.putBoolean("savedtiles", true);
                 editor.commit();
@@ -134,7 +129,6 @@ public class ActivitySplash extends AppCompatActivity {
                 //SAVE RESPONSE IN LOCAL DB
                 Log.d("mylog", "Got questions: " + response);
                 parseAndSaveQuestions(response);
-                SharedPreferences sp = getSharedPreferences("subairomapreferences", MODE_PRIVATE);
                 SharedPreferences.Editor editor = sp.edit();
                 editor.putBoolean("savedquestions", true);
                 editor.commit();
@@ -157,7 +151,6 @@ public class ActivitySplash extends AppCompatActivity {
                 //SAVE RESPONSE IN LOCAL DB
                 Log.d("mylog", "Got options: " + response);
                 parseAndSaveOptions(response);
-                SharedPreferences sp = getSharedPreferences("subairomapreferences", MODE_PRIVATE);
                 SharedPreferences.Editor editor = sp.edit();
                 editor.putBoolean("savedoptions", true);
                 editor.commit();
@@ -180,7 +173,6 @@ public class ActivitySplash extends AppCompatActivity {
                 //SAVE RESPONSE IN LOCAL DB
                 parseAndSaveCountries(response);
                 Log.d("mylog", "Got countries: " + response);
-                SharedPreferences sp = getSharedPreferences("subairomapreferences", MODE_PRIVATE);
                 SharedPreferences.Editor editor = sp.edit();
                 editor.putBoolean("savedcountries", true);
                 editor.commit();
@@ -312,7 +304,6 @@ public class ActivitySplash extends AppCompatActivity {
     public synchronized void incrementCount() {
         savedCount++;
         Log.d("mylog", "Incremented Count: " + savedCount);
-        SharedPreferences sp = getSharedPreferences("subairomapreferences", MODE_PRIVATE);
         SharedPreferences.Editor editor = sp.edit();
         editor.putInt("savedcount", savedCount);
         editor.commit();
