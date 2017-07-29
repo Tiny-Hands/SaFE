@@ -34,9 +34,10 @@ public class ActivityTileHome extends AppCompatActivity {
 
     @BindView(R.id.rvTiles)
     RecyclerView rvTiles;
-
     @BindView(R.id.rlRoot)
     RelativeLayout rootLayout;
+    @BindView(R.id.tvMigrantName)
+    TextView tvMigrantName;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -54,6 +55,8 @@ public class ActivityTileHome extends AppCompatActivity {
             //GET FEP TILES
             tiles = new SQLDatabaseHelper(ActivityTileHome.this).getTiles("FEP");
         }
+        String migrantName = getIntent().getStringExtra("migrantName");
+        tvMigrantName.setText(migrantName);
 
         setTileIcons();
         setUpRecyclerView();

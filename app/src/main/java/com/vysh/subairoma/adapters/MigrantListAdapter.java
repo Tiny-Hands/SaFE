@@ -72,9 +72,11 @@ public class MigrantListAdapter extends RecyclerView.Adapter<MigrantListAdapter.
                     if (cid != null && !cid.isEmpty()) {
                         Intent intent = new Intent(itemView.getContext(), ActivityTileHome.class);
                         intent.putExtra("countryId", cid);
+                        intent.putExtra("migrantName", migrants.get(getAdapterPosition()).getMigrantName());
                         itemView.getContext().startActivity(intent);
                     } else {
                         DialogCountryChooser dialog = DialogCountryChooser.newInstance();
+                        dialog.setMigrantName(migrants.get(getAdapterPosition()).getMigrantName());
                         dialog.show(((AppCompatActivity) itemView.getContext()).getSupportFragmentManager(), "tag");
                     }
                 }

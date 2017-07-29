@@ -10,7 +10,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Adapter;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
@@ -26,7 +25,7 @@ import java.util.ArrayList;
 
 public class DialogCountryChooser extends DialogFragment {
     Spinner spinner;
-
+    String migName;
     public static DialogCountryChooser newInstance() {
         DialogCountryChooser frag = new DialogCountryChooser();
         return frag;
@@ -76,6 +75,7 @@ public class DialogCountryChooser extends DialogFragment {
                                 ApplicationClass.getInstance().getMigrantId(), "mg_destination");
                         Intent intent = new Intent(getContext(), ActivityTileHome.class);
                         intent.putExtra("countryId", cid);
+                        intent.putExtra("migrantName", migName);
                         dismiss();
                         getContext().startActivity(intent);
                     }
@@ -100,6 +100,7 @@ public class DialogCountryChooser extends DialogFragment {
 
                 Intent intent = new Intent(getContext(), ActivityTileHome.class);
                 intent.putExtra("countryId", cid);
+                intent.putExtra("migrantName", migName);
                 getContext().startActivity(intent);
             }
         });
@@ -110,5 +111,9 @@ public class DialogCountryChooser extends DialogFragment {
             }
         });
         mBuilder.show();
+    }
+
+    public void setMigrantName(String migrantName) {
+        migName = migrantName;
     }
 }
