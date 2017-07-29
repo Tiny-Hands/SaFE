@@ -85,6 +85,7 @@ public class ActivityMigrantList extends AppCompatActivity {
     private void getSavedMigrants() {
         SQLDatabaseHelper dbHelper = new SQLDatabaseHelper(ActivityMigrantList.this);
         migrantModels = dbHelper.getMigrants();
+        migrantListAdapter = new MigrantListAdapter();
         setUpRecyclerView(migrantModels);
     }
 
@@ -98,8 +99,9 @@ public class ActivityMigrantList extends AppCompatActivity {
             @Override
             public void onResponse(String response) {
                 progressDialog.dismiss();
-                parseResponse(response);
-                migrantListAdapter.notifyDataSetChanged();
+                migrantModels = parseResponse(response);
+                //migrantListAdapter.notifyDataSetChanged();
+                setUpRecyclerView(migrantModels);
                 Log.d("mylog", "response : " + response);
             }
         }, new Response.ErrorListener() {
@@ -185,7 +187,6 @@ public class ActivityMigrantList extends AppCompatActivity {
 
     private void setUpRecyclerView(ArrayList<MigrantModel> migrantModels) {
         recyclerView.setLayoutManager(new LinearLayoutManager(ActivityMigrantList.this));
-        migrantListAdapter = new MigrantListAdapter();
         Log.d("mylog", "Number of migrants: " + migrantModels.size());
         migrantListAdapter.setMigrants(migrantModels);
         recyclerView.setAdapter(migrantListAdapter);

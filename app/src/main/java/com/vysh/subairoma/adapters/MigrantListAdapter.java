@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +17,7 @@ import com.vysh.subairoma.ActivityTileHome;
 import com.vysh.subairoma.ApplicationClass;
 import com.vysh.subairoma.DialogCountryChooser;
 import com.vysh.subairoma.R;
+import com.vysh.subairoma.SQLHelpers.SQLDatabaseHelper;
 import com.vysh.subairoma.models.MigrantModel;
 
 import java.util.ArrayList;
@@ -63,9 +65,18 @@ public class MigrantListAdapter extends RecyclerView.Adapter<MigrantListAdapter.
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    ApplicationClass.getInstance().setMigrantId(migrants.get(getAdapterPosition()).getMigrantId());
-                    DialogCountryChooser dialog = DialogCountryChooser.newInstance();
-                    dialog.show(((AppCompatActivity) itemView.getContext()).getSupportFragmentManager(), "tag");
+                    int migId = migrants.get(getAdapterPosition()).getMigrantId();
+                    ApplicationClass.getInstance().setMigrantId(migId);
+                    String cid = new SQLDatabaseHelper(itemView.getContext()).getResponse(migId, "mg_destination");
+                    Log.d("mylog", "Country ID: " + cid);
+                    if (cid != null && !cid.isEmpty()) {
+                        Intent intent = new Intent(itemView.getContext(), ActivityTileHome.class);
+                        intent.putExtra("countryId", cid);
+                        itemView.getContext().startActivity(intent);
+                    } else {
+                        DialogCountryChooser dialog = DialogCountryChooser.newInstance();
+                        dialog.show(((AppCompatActivity) itemView.getContext()).getSupportFragmentManager(), "tag");
+                    }
                 }
             });
         }

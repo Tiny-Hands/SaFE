@@ -72,9 +72,11 @@ public class DialogCountryChooser extends DialogFragment {
                         showDialog("Not open", "This country is not Open", cid, cname);
                     } else {
                         //For destination -1 is default question id as it's not identified as question currently.
-                        new SQLDatabaseHelper(getContext()).insertResponseTableData(cname, -1, ApplicationClass.getInstance().getMigrantId(), "mg_destination");
+                        new SQLDatabaseHelper(getContext()).insertResponseTableData(cid, -1,
+                                ApplicationClass.getInstance().getMigrantId(), "mg_destination");
                         Intent intent = new Intent(getContext(), ActivityTileHome.class);
                         intent.putExtra("countryId", cid);
+                        dismiss();
                         getContext().startActivity(intent);
                     }
                 }
@@ -93,10 +95,12 @@ public class DialogCountryChooser extends DialogFragment {
         mBuilder.setNegativeButton("Go to " + cname.toUpperCase(), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
+                new SQLDatabaseHelper(getContext()).insertResponseTableData(cid, -1,
+                        ApplicationClass.getInstance().getMigrantId(), "mg_destination");
+
                 Intent intent = new Intent(getContext(), ActivityTileHome.class);
                 intent.putExtra("countryId", cid);
                 getContext().startActivity(intent);
-                new SQLDatabaseHelper(getContext()).insertResponseTableData(cname, -1, ApplicationClass.getInstance().getMigrantId(), "mg_destination");
             }
         });
         mBuilder.setPositiveButton("Choose another Country", new DialogInterface.OnClickListener() {
