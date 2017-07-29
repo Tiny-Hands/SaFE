@@ -83,6 +83,14 @@ public class ActivityRegister extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        //Checking if already logged in on current device
+        if (checkUserExists()) {
+            Intent intent = new Intent(ActivityRegister.this, ActivityMigrantList.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(intent);
+            return;
+        }
+
         setContentView(R.layout.activity_register);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         ButterKnife.bind(this);
@@ -110,12 +118,6 @@ public class ActivityRegister extends AppCompatActivity {
             public void onClick(View v) {
                 if (validateData()) {
                     saveUser();
-                   /* if (userRegistered) {
-                        startOTPActivity();
-                    } else {
-                        userRegistered = true;
-                        loadMigrantView();
-                    }*/
                 }
             }
         });
@@ -125,6 +127,22 @@ public class ActivityRegister extends AppCompatActivity {
                 showRegistrationDialog();
             }
         });
+    }
+
+    private boolean checkUserExists() {
+        SharedPreferences sharedPreferences = getSharedPreferences(ApplicationClass.getInstance().getSHAREDPREFSNAME(), MODE_PRIVATE);
+        int userId = sharedPreferences.getInt("id", -10);
+        String type = sharedPreferences.getString("type", "");
+        Log.d("mylog", "User id: " + userId + " Type: " + type);
+        if (userId != -10) {
+            if (type.equalsIgnoreCase("helper"))
+                ApplicationClass.getInstance().setUserId(userId);
+            else {
+                ApplicationClass.getInstance().setMigrantId(userId);
+                ApplicationClass.getInstance().setUserId(-1);
+            }
+            return true;
+        } else return false;
     }
 
     private void showRegistrationDialog() {
@@ -175,8 +193,7 @@ public class ActivityRegister extends AppCompatActivity {
                         showSnackbar(jsonRes.getString("message"));
                     } else {
                         ApplicationClass.getInstance().setUserId(jsonRes.getInt("user_id"));
-                        Intent intent = new Intent(ActivityRegister.this, ActivityOTPVerification.class);
-                        startActivity(intent);
+                        startOTPActivity();
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -374,9 +391,15 @@ public class ActivityRegister extends AppCompatActivity {
     }
 
     private void startOTPActivity() {
+        String type;
+        if (ApplicationClass.getInstance().getUserId() != -1) {
+            type = "helper";
+        } else type = "migrant";
         SharedPreferences sharedPreferences = getSharedPreferences(ApplicationClass.getInstance().getSHAREDPREFSNAME(), MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putInt("userId", ApplicationClass.getInstance().getUserId());
+        editor.putInt("id", ApplicationClass.getInstance().getUserId());
+        editor.putString("type", type);
+        editor.commit();
         Intent intent = new Intent(ActivityRegister.this, ActivityOTPVerification.class);
         startActivity(intent);
     }
