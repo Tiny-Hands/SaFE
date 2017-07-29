@@ -8,7 +8,9 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.provider.ContactsContract;
 import android.util.Log;
 
+import com.vysh.subairoma.ApplicationClass;
 import com.vysh.subairoma.models.CountryModel;
+import com.vysh.subairoma.models.MigrantModel;
 import com.vysh.subairoma.models.TileQuestionsModel;
 import com.vysh.subairoma.models.TilesModel;
 
@@ -60,6 +62,16 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
                     DatabaseTables.CountriesTable.country_blacklist + " INTEGER," +
                     DatabaseTables.CountriesTable.country_status + " INTEGER," +
                     DatabaseTables.CountriesTable.country_name + " TEXT" + ");";
+    final String SQL_CREATE_MigrantsTable =
+            "CREATE TABLE " + DatabaseTables.MigrantsTable.TABLE_NAME + " (" +
+                    DatabaseTables.MigrantsTable.migrant_id + " INTEGER PRIMARY KEY," +
+                    DatabaseTables.MigrantsTable.name + " TEXT," +
+                    DatabaseTables.MigrantsTable.age + " INTEGER," +
+                    DatabaseTables.MigrantsTable.user_id + " INTEGER," +
+                    DatabaseTables.MigrantsTable.sex + " TEXT," +
+                    DatabaseTables.MigrantsTable.phone_number + " TEXT," +
+                    " UNIQUE (" + DatabaseTables.MigrantsTable.migrant_id +
+                    ", " + DatabaseTables.MigrantsTable.user_id + ") ON CONFLICT IGNORE);";
 
     public SQLDatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -73,9 +85,8 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
         db.execSQL(SQL_CREATE_TilesTable);
         db.execSQL(SQL_CREATE_QuestionsTable);
         db.execSQL(SQL_CREATE_OptionsTable);
-        Log.d("mylog", "Countries tbl: " + SQL_CREATE_CountriesTable);
         db.execSQL(SQL_CREATE_CountriesTable);
-        Log.d("mylog", "Tables Created");
+        db.execSQL(SQL_CREATE_MigrantsTable);
     }
 
     @Override
@@ -250,5 +261,44 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         db.execSQL("delete from " + tableName);
         db.close();
+    }
+
+    public void insertMigrants(int id, String name, int age, String phone, String sex, int userId) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(DatabaseTables.MigrantsTable.migrant_id, id);
+        values.put(DatabaseTables.MigrantsTable.name, name);
+        values.put(DatabaseTables.MigrantsTable.age, age);
+        values.put(DatabaseTables.MigrantsTable.sex, sex);
+        values.put(DatabaseTables.MigrantsTable.name, name);
+        values.put(DatabaseTables.MigrantsTable.user_id, userId);
+        values.put(DatabaseTables.MigrantsTable.phone_number, phone);
+
+        long newRowId = db.insert(DatabaseTables.MigrantsTable.TABLE_NAME, null, values);
+        Log.d("mylog", "Inserted row ID; " + newRowId);
+    }
+
+    public ArrayList<MigrantModel> getMigrants() {
+        SQLiteDatabase db = this.getReadableDatabase();
+        ArrayList<MigrantModel>  migrantModels = new ArrayList<>();
+        Cursor cursor = db.rawQuery("SELECT * FROM " + DatabaseTables.MigrantsTable.TABLE_NAME + " WHERE "
+                + DatabaseTables.MigrantsTable.user_id + "=" + "'" + ApplicationClass.getInstance().getUserId() + "'", null);
+        while (cursor.moveToNext()) {
+            int id = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseTables.MigrantsTable.migrant_id));
+            int uid = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseTables.MigrantsTable.user_id));
+            String name = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseTables.MigrantsTable.name));
+            String phone = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseTables.MigrantsTable.phone_number));
+            String sex = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseTables.MigrantsTable.sex));
+            int age = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseTables.MigrantsTable.age));
+            MigrantModel migrantModel = new MigrantModel();
+            migrantModel.setMigrantName(name);
+            migrantModel.setUserId(uid);
+            migrantModel.setMigrantAge(age);
+            migrantModel.setMigrantPhone(phone);
+            migrantModel.setMigrantId(id);
+            migrantModel.setMigrantSex(sex);
+            migrantModels.add(migrantModel);
+        }
+        return migrantModels;
     }
 }

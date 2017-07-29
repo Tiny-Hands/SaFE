@@ -282,7 +282,6 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                     String variable = questionsList.get(getAdapterPosition()).getVariable();
                     if (isChecked) {
-                        Log.d("mylog", "Inserting: true for " + ApplicationClass.getInstance().getMigrantId() + " in " + variable);
                         sqlDatabaseHelper.insertResponseTableData("true", questionsListDisplay.get(getAdapterPosition()).getQuestionId(),
                                 ApplicationClass.getInstance().getMigrantId(), variable);
                         if (conditionVariables.contains(variable)) {
@@ -290,7 +289,6 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
                             conditionVariableValues.put(variable, "true");
                         }
                     } else {
-                        Log.d("mylog", "Inserting: false for " + ApplicationClass.getInstance().getMigrantId() + " in " + variable);
                         sqlDatabaseHelper.insertResponseTableData("false", questionsListDisplay.get(getAdapterPosition()).getQuestionId(),
                                 ApplicationClass.getInstance().getMigrantId(), variable);
                         if (conditionVariables.contains(variable)) {
@@ -304,7 +302,6 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
                     }
                 }
             });
-            Log.d("mylog", "Position: " + getAdapterPosition());
         }
     }
 }

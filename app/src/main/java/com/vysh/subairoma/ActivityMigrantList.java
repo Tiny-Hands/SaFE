@@ -24,6 +24,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.vysh.subairoma.SQLHelpers.SQLDatabaseHelper;
 import com.vysh.subairoma.adapters.MigrantListAdapter;
 import com.vysh.subairoma.models.MigrantModel;
 import com.vysh.subairoma.volley.VolleyController;
@@ -54,6 +55,9 @@ public class ActivityMigrantList extends AppCompatActivity {
     @BindView(R.id.rlRoot)
     RelativeLayout rootLayout;
 
+    ArrayList<MigrantModel> migrantModels;
+    MigrantListAdapter migrantListAdapter;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -61,6 +65,8 @@ public class ActivityMigrantList extends AppCompatActivity {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         ButterKnife.bind(this);
 
+        migrantModels = new ArrayList();
+        getSavedMigrants();
         getMigrants();
         //setUpRecyclerView(null);
         int userType = ApplicationClass.getInstance().getUserId();
@@ -76,6 +82,12 @@ public class ActivityMigrantList extends AppCompatActivity {
         });
     }
 
+    private void getSavedMigrants() {
+        SQLDatabaseHelper dbHelper = new SQLDatabaseHelper(ActivityMigrantList.this);
+        migrantModels = dbHelper.getMigrants();
+        setUpRecyclerView(migrantModels);
+    }
+
     private void getMigrants() {
         String api = ApplicationClass.getInstance().getAPIROOT() + API;
         final ProgressDialog progressDialog = new ProgressDialog(ActivityMigrantList.this);
@@ -86,9 +98,9 @@ public class ActivityMigrantList extends AppCompatActivity {
             @Override
             public void onResponse(String response) {
                 progressDialog.dismiss();
+                parseResponse(response);
+                migrantListAdapter.notifyDataSetChanged();
                 Log.d("mylog", "response : " + response);
-                ArrayList<MigrantModel> migrantModels = parseResponse(response);
-                setUpRecyclerView(migrantModels);
             }
         }, new Response.ErrorListener() {
             @Override
@@ -98,6 +110,8 @@ public class ActivityMigrantList extends AppCompatActivity {
                 Log.d("mylog", "error : " + err);
                 if (!err.isEmpty() && err.contains("TimeoutError"))
                     showSnackbar("Failed to connect to server :(");
+                else if (!err.isEmpty() && err.contains("NoConnection"))
+                    showSnackbar("Please connect to Internet for new Data :(");
                 else
                     showSnackbar(error.toString());
             }
@@ -119,7 +133,7 @@ public class ActivityMigrantList extends AppCompatActivity {
     }
 
     private ArrayList<MigrantModel> parseResponse(String response) {
-        ArrayList<MigrantModel> migrantsModels = new ArrayList<>();
+        ArrayList<MigrantModel> migrantModelsTemp = new ArrayList<>();
         try {
             JSONObject jsonObject = new JSONObject(response);
             Boolean error = jsonObject.getBoolean("error");
@@ -129,15 +143,26 @@ public class ActivityMigrantList extends AppCompatActivity {
                 JSONArray migrantJSON = jsonObject.getJSONArray("migrants");
                 if (migrantJSON != null) {
                     JSONObject migrantObj;
+                    SQLDatabaseHelper dbHelper = new SQLDatabaseHelper(ActivityMigrantList.this);
                     for (int i = 0; i < migrantJSON.length(); i++) {
                         migrantObj = migrantJSON.getJSONObject(i);
                         MigrantModel migrantModel = new MigrantModel();
                         if (migrantObj.has("migrant_id")) {
-                            migrantModel.setMigrantId(migrantObj.getInt("migrant_id"));
-                            migrantModel.setMigrantName(migrantObj.getString("migrant_name"));
-                            migrantModel.setMigrantAge(migrantObj.getInt("migrant_age"));
-                            migrantModel.setMigrantSex(migrantObj.getString("migrant_sex"));
-                            migrantsModels.add(migrantModel);
+                            int id = migrantObj.getInt("migrant_id");
+                            migrantModel.setMigrantId(id);
+                            String name = migrantObj.getString("migrant_name");
+                            migrantModel.setMigrantName(name);
+                            int age = migrantObj.getInt("migrant_age");
+                            migrantModel.setMigrantAge(age);
+                            String sex = migrantObj.getString("migrant_sex");
+                            migrantModel.setMigrantSex(sex);
+                            String phone = migrantObj.getString("migrant_phone");
+                            migrantModel.setMigrantPhone(phone);
+                            migrantModel.setUserId(ApplicationClass.getInstance().getUserId());
+
+                            migrantModelsTemp.add(migrantModel);
+                            //Saving in Database
+                            dbHelper.insertMigrants(id, name, age, phone, sex, ApplicationClass.getInstance().getUserId());
                         }
                     }
                 }
@@ -145,7 +170,7 @@ public class ActivityMigrantList extends AppCompatActivity {
         } catch (JSONException e) {
             Log.d("mylog", "Error in parsing: " + e.toString());
         }
-        return migrantsModels;
+        return migrantModelsTemp;
     }
 
     private void showSnackbar(String msg) {
@@ -160,7 +185,7 @@ public class ActivityMigrantList extends AppCompatActivity {
 
     private void setUpRecyclerView(ArrayList<MigrantModel> migrantModels) {
         recyclerView.setLayoutManager(new LinearLayoutManager(ActivityMigrantList.this));
-        MigrantListAdapter migrantListAdapter = new MigrantListAdapter();
+        migrantListAdapter = new MigrantListAdapter();
         Log.d("mylog", "Number of migrants: " + migrantModels.size());
         migrantListAdapter.setMigrants(migrantModels);
         recyclerView.setAdapter(migrantListAdapter);

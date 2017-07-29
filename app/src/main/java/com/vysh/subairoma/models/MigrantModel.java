@@ -6,10 +6,18 @@ package com.vysh.subairoma.models;
 
 public class MigrantModel {
     String migrantName, migrantPhone, migrantSex;
-    int migrantAge, migrantId;
+    int migrantAge, migrantId, userId;
 
     public int getMigrantId() {
         return migrantId;
+    }
+
+    public int getUserId() {
+        return userId;
+    }
+
+    public void setUserId(int userId) {
+        this.userId = userId;
     }
 
     public void setMigrantId(int migrantId) {
