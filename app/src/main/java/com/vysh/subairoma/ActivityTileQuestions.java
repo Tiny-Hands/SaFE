@@ -5,6 +5,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.WindowManager;
 
 import com.vysh.subairoma.SQLHelpers.SQLDatabaseHelper;
@@ -26,7 +27,6 @@ public class ActivityTileQuestions extends AppCompatActivity {
     public RecyclerView rvQuestions;
 
     public ArrayList<TileQuestionsModel> questionList;
-    public ArrayList<TileQuestionsModel> questionListDisplay;
 
     public TileQuestionsAdapter questionsAdapter;
     @Override
@@ -43,34 +43,18 @@ public class ActivityTileQuestions extends AppCompatActivity {
     private void getQuestions(int tileId) {
         //Get Questions if not already in Local Database
         questionList = new SQLDatabaseHelper(ActivityTileQuestions.this).getQuestions(tileId);
-        setDisplayQuestions();
-    }
-
-    public void notifyDataChange(){
-        questionsAdapter.notifyDataSetChanged();
-    }
-
-    public void setDisplayQuestions(){
-        questionListDisplay = new ArrayList<>();
-        for (TileQuestionsModel questionModel : questionList) {
-            TileQuestionsModel question = new TileQuestionsModel();
-            question.setTitle(questionModel.getTitle());
-            question.setCondition(questionModel.getCondition());
-            question.setVariable(questionModel.getVariable());
-            question.setQuestion(questionModel.getQuestion());
-            question.setQuestionId(questionModel.getQuestionId());
-            question.setDescription(questionModel.getDescription());
-            question.setOptions(questionModel.getOptions());
-            question.setQuestionNo(questionModel.getQuestionNo());
-            question.setTileId(questionModel.getTileId());
-            question.setResponseType(questionModel.getResponseType());
-            questionListDisplay.add(question);
+        SQLDatabaseHelper sqlDatabaseHelper = new SQLDatabaseHelper(ActivityTileQuestions.this);
+        for(TileQuestionsModel question: questionList){
+            if(question.getResponseType()==2){
+                String[] options = sqlDatabaseHelper.getOptions(question.getQuestionId());
+                question.setOptions(options);
+            }
         }
     }
 
     private void setUpRecyclerView() {
         rvQuestions.setLayoutManager(new LinearLayoutManager(ActivityTileQuestions.this));
-        questionsAdapter = new TileQuestionsAdapter(questionList, questionListDisplay, ActivityTileQuestions.this);
+        questionsAdapter = new TileQuestionsAdapter(questionList, ActivityTileQuestions.this);
         rvQuestions.setAdapter(questionsAdapter);
     }
 }

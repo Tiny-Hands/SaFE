@@ -257,6 +257,21 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
         Log.d("mylog", "Inserted row ID; " + newRowId);
     }
 
+    public String[] getOptions(int qid) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT * FROM " + DatabaseTables.OptionsTable.TABLE_NAME + " WHERE "
+                + DatabaseTables.OptionsTable.question_id + "=" + "'" + qid + "'", null);
+        int i = 0;
+        String[] options = new String[cursor.getCount()];
+        while (cursor.moveToNext()) {
+            int id = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseTables.OptionsTable.option_id));
+            String title = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseTables.OptionsTable.option_text));
+            options[i] = title.toUpperCase();
+            i++;
+        }
+        return options;
+    }
+
     public void deleteAll(String tableName) {
         SQLiteDatabase db = this.getWritableDatabase();
         db.execSQL("delete from " + tableName);
@@ -280,7 +295,7 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
 
     public ArrayList<MigrantModel> getMigrants() {
         SQLiteDatabase db = this.getReadableDatabase();
-        ArrayList<MigrantModel>  migrantModels = new ArrayList<>();
+        ArrayList<MigrantModel> migrantModels = new ArrayList<>();
         Cursor cursor = db.rawQuery("SELECT * FROM " + DatabaseTables.MigrantsTable.TABLE_NAME + " WHERE "
                 + DatabaseTables.MigrantsTable.user_id + "=" + "'" + ApplicationClass.getInstance().getUserId() + "'", null);
         while (cursor.moveToNext()) {

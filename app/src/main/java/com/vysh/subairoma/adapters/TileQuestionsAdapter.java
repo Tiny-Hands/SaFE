@@ -6,11 +6,21 @@ import android.os.Build;
 import android.support.v7.widget.RecyclerView;
 import android.transition.TransitionManager;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.Adapter;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.Spinner;
+import android.widget.SpinnerAdapter;
 import android.widget.TextView;
 
 import com.vysh.subairoma.ApplicationClass;
@@ -25,6 +35,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 
+import static android.view.View.GONE;
+
 /**
  * Created by Vishal on 6/15/2017.
  */
@@ -32,7 +44,6 @@ import java.util.Iterator;
 public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdapter.QuestionHolder> {
 
     boolean fromSetView;
-
     ArrayList<TileQuestionsModel> questionsList;
     ArrayList<TileQuestionsModel> questionsListDisplay;
     SQLDatabaseHelper sqlDatabaseHelper;
@@ -45,7 +56,6 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
     Context context;
 
     public TileQuestionsAdapter(ArrayList<TileQuestionsModel> questions,
-                                ArrayList<TileQuestionsModel> displayList,
                                 Context context) {
         sqlDatabaseHelper = new SQLDatabaseHelper(context);
         this.context = context;
@@ -54,7 +64,7 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
         setConditionVariableValues();
 
         questionsListDisplay = new ArrayList<>();
-        for (TileQuestionsModel questionModel : displayList) {
+        for (TileQuestionsModel questionModel : questions) {
             TileQuestionsModel question = new TileQuestionsModel();
             question.setTitle(questionModel.getTitle());
             question.setCondition(questionModel.getCondition());
@@ -99,7 +109,7 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
 
     @Override
     public QuestionHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.recycler_view_tile_question, parent, false);
+        View view = LayoutInflater.from(context).inflate(R.layout.recycler_view_tile_question, parent, false);
         return new QuestionHolder(view);
     }
 
@@ -107,20 +117,41 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
     @Override
     public void onBindViewHolder(final QuestionHolder holder, final int position) {
         //Values
-        holder.title.setText(questionsListDisplay.get(position).getTitle());
-        holder.question.setText(questionsListDisplay.get(position).getQuestion());
-        holder.details.setText(questionsListDisplay.get(position).getDescription());
-        setValue(holder.checkbox, position);
+        TileQuestionsModel question = questionsListDisplay.get(position);
+        holder.title.setText(question.getTitle());
+        holder.question.setText(question.getQuestion());
+        holder.details.setText(question.getDescription());
+        if (question.getResponseType() == 1) {
+            holder.checkbox.setVisibility(GONE);
+            holder.question.setVisibility(GONE);
+            holder.etResponse.setVisibility(View.VISIBLE);
+        } else if (question.getResponseType() == 2) {
+            holder.checkbox.setVisibility(GONE);
+            holder.question.setVisibility(GONE);
+            holder.etResponse.setVisibility(View.GONE);
+            holder.spinnerOptions.setVisibility(View.VISIBLE);
+            String[] options = question.getOptions();
+            //Showing ---- if nothing selected
+            options[0] = "---------";
+            for (int i = 1; i < options.length; i++) {
+                Log.d("mylog", "Options: " + options[i]);
+            }
+            SpinnerAdapter adapter = new ArrayAdapter<>(context, R.layout.support_simple_spinner_dropdown_item, options);
+            holder.spinnerOptions.setAdapter(adapter);
+        }
+        setValue(holder.checkbox, holder.etResponse, holder.spinnerOptions, position);
     }
 
-    private void notifyConditionVariableChange(ArrayList<Integer> questionIds) {
+    private boolean notifyConditionVariableChange(ArrayList<Integer> questionIds) {
+        boolean error = false;
         for (int i = 0; i < questionIds.size(); i++) {
             Log.d("mylog", "Question ID in consideration: " + questionIds.get(i));
             int indexOnMainList = conditionQuestionIndex.get(questionIds.get(i));
             Log.d("mylog", "Index in consideration: " + indexOnMainList);
             Log.d("mylog", "Condition in consideration: " + questionsList.get(indexOnMainList).getCondition());
-            parseCondition(questionsList.get(indexOnMainList).getCondition(), indexOnMainList);
+            error = parseCondition(questionsList.get(indexOnMainList).getCondition(), indexOnMainList);
         }
+        return error;
     }
 
     @Override
@@ -128,19 +159,33 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
         return questionsListDisplay.size();
     }
 
-    private void setValue(CheckBox checkBox, int position) {
+    private void setValue(CheckBox checkBox, EditText etResponse, Spinner spinner, int position) {
         int migrantId = ApplicationClass.getInstance().getMigrantId();
-        String variable = questionsList.get(position).getVariable();
+        String variable = questionsListDisplay.get(position).getVariable();
         String response = sqlDatabaseHelper.getResponse(migrantId, variable);
-        if (response == null || response.isEmpty()) {
-            response = "false";
-        }
-        if (response.equalsIgnoreCase("true")) {
+        int responseType = questionsListDisplay.get(position).getResponseType();
+        if (responseType == 0) {
+            if (response == null || response.isEmpty()) {
+                response = "false";
+            }
+            if (response.equalsIgnoreCase("true")) {
+                fromSetView = true;
+                checkBox.setChecked(true);
+            } else if (response.equalsIgnoreCase("false")) {
+                fromSetView = true;
+                checkBox.setChecked(false);
+            }
+        } else if (responseType == 1) {
             fromSetView = true;
-            checkBox.setChecked(true);
-        } else if (response.equalsIgnoreCase("false")) {
+            etResponse.setText(response);
+        } else if (responseType == 2) {
             fromSetView = true;
-            checkBox.setChecked(false);
+            for (int i = 0; i < spinner.getCount(); i++) {
+                if (response.equalsIgnoreCase(spinner.getItemAtPosition(i).toString())) {
+                    spinner.setSelection(i);
+                    break;
+                }
+            }
         }
         fromSetView = false;
     }
@@ -203,7 +248,7 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
     }
 
 
-    private void parseCondition(String condition, int mainIndex) {
+    private boolean parseCondition(String condition, int mainIndex) {
         Log.d("mylog", "Parse condition: " + condition);
         try {
             JSONObject conditionJson = new JSONObject(condition);
@@ -232,27 +277,41 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
                                 break;
                             }
                         }
+                    } else if (conditionType.equalsIgnoreCase("error")) {
+                        break;
                     }
                 } else {
                     Log.d("mylog", "Condition match, Perform the action");
                     if (conditionType.equalsIgnoreCase("visibility")) {
                         questionsListDisplay.add(mainIndex, questionsList.get(mainIndex));
                         notifyDataSetChanged();
+                    } else if (conditionType.equalsIgnoreCase("error")) {
+                        return true;
                     }
                 }
             }
         } catch (JSONException e) {
             e.printStackTrace();
         }
+        return false;
     }
 
     public class QuestionHolder extends RecyclerView.ViewHolder {
         TextView title, details, question;
         CheckBox checkbox;
+        EditText etResponse;
         Boolean isExpanded = false;
+        ImageView ivWarning;
+        Spinner spinnerOptions;
 
-        public QuestionHolder(View itemView) {
+        public QuestionHolder(final View itemView) {
             super(itemView);
+
+            ivWarning = (ImageView) itemView.findViewById(R.id.questionMarker);
+            details = (TextView) itemView.findViewById(R.id.tvDetail);
+            details.setVisibility(GONE);
+            question = (TextView) itemView.findViewById(R.id.tvQuestion);
+            checkbox = (CheckBox) itemView.findViewById(R.id.cbResponse);
             title = (TextView) itemView.findViewById(R.id.tvStep);
             title.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -268,15 +327,47 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
                         if (Build.VERSION.SDK_INT >= 19) {
                             TransitionManager.beginDelayedTransition((ViewGroup) details.getParent());
                         }
-                        details.setVisibility(View.GONE);
+                        details.setVisibility(GONE);
                         isExpanded = false;
                     }
                 }
             });
-            details = (TextView) itemView.findViewById(R.id.tvDetail);
-            details.setVisibility(View.GONE);
-            question = (TextView) itemView.findViewById(R.id.tvQuestion);
-            checkbox = (CheckBox) itemView.findViewById(R.id.cbResponse);
+            etResponse = (EditText) itemView.findViewById(R.id.etResponse);
+            etResponse.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+                @Override
+                public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                    if (actionId == EditorInfo.IME_ACTION_DONE) {
+                        String response = etResponse.getText().toString();
+                        String variable = questionsList.get(getAdapterPosition()).getVariable();
+                        if (!response.isEmpty()) {
+                            sqlDatabaseHelper.insertResponseTableData(response,
+                                    questionsListDisplay.get(getAdapterPosition()).getQuestionId(),
+                                    ApplicationClass.getInstance().getMigrantId(), variable);
+                        }
+                        InputMethodManager inputMethodManager = (InputMethodManager) context.
+                                getSystemService(Context.INPUT_METHOD_SERVICE);
+                        inputMethodManager.hideSoftInputFromWindow(itemView.getWindowToken(), 0);
+                        return true;
+                    }
+                    return false;
+                }
+            });
+            spinnerOptions = (Spinner) itemView.findViewById(R.id.spinnerOptions);
+            spinnerOptions.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                    String variable = questionsList.get(getAdapterPosition()).getVariable();
+                    String response = spinnerOptions.getSelectedItem().toString();
+                    sqlDatabaseHelper.insertResponseTableData(response,
+                            questionsListDisplay.get(getAdapterPosition()).getQuestionId(),
+                            ApplicationClass.getInstance().getMigrantId(), variable);
+                }
+
+                @Override
+                public void onNothingSelected(AdapterView<?> parent) {
+
+                }
+            });
             checkbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -298,7 +389,9 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
                     }
                     if (conditionVariables.contains(variable) && !fromSetView) {
                         ArrayList<Integer> questionIds = conditionOnQuestions.get(variable);
-                        notifyConditionVariableChange(questionIds);
+                        boolean error = notifyConditionVariableChange(questionIds);
+                        if (error) ivWarning.setVisibility(View.VISIBLE);
+                        else ivWarning.setVisibility(View.INVISIBLE);
                     }
                 }
             });
