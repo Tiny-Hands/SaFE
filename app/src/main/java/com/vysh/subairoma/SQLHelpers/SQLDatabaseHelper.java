@@ -163,6 +163,24 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
         return countryList;
     }
 
+    public CountryModel getCountry(String cid) {
+        String statement = "SELECT * FROM " + DatabaseTables.CountriesTable.TABLE_NAME + " WHERE "
+                + DatabaseTables.CountriesTable.country_id + "=" + "'" + cid + "'";
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery(statement, null);
+        while (cursor.moveToNext()) {
+            String name = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseTables.CountriesTable.country_name));
+            int status = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseTables.CountriesTable.country_name));
+            int blacklist = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseTables.CountriesTable.country_name));
+            CountryModel countryModel = new CountryModel();
+            countryModel.setCountryName(name);
+            countryModel.setCountryBlacklist(blacklist);
+            countryModel.setCountrySatus(status);
+            return countryModel;
+        }
+        return null;
+    }
+
     public void insertTile(int id, String title, String description, String type, int order) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();

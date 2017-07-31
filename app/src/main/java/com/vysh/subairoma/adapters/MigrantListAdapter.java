@@ -18,6 +18,7 @@ import com.vysh.subairoma.ApplicationClass;
 import com.vysh.subairoma.DialogCountryChooser;
 import com.vysh.subairoma.R;
 import com.vysh.subairoma.SQLHelpers.SQLDatabaseHelper;
+import com.vysh.subairoma.models.CountryModel;
 import com.vysh.subairoma.models.MigrantModel;
 
 import java.util.ArrayList;
@@ -73,6 +74,11 @@ public class MigrantListAdapter extends RecyclerView.Adapter<MigrantListAdapter.
                         Intent intent = new Intent(itemView.getContext(), ActivityTileHome.class);
                         intent.putExtra("countryId", cid);
                         intent.putExtra("migrantName", migrants.get(getAdapterPosition()).getMigrantName());
+                        CountryModel savedCountry = new SQLDatabaseHelper(itemView.getContext()).getCountry(cid);
+                        Log.d("mylog", "Country name: " + savedCountry.getCountryName());
+                        intent.putExtra("countryName", savedCountry.getCountryName().toUpperCase());
+                        intent.putExtra("countryStatus", savedCountry.getCountrySatus());
+                        intent.putExtra("countryBlacklist", savedCountry.getCountryBlacklist());
                         itemView.getContext().startActivity(intent);
                     } else {
                         DialogCountryChooser dialog = DialogCountryChooser.newInstance();

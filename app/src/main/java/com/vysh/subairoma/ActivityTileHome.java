@@ -37,6 +37,8 @@ public class ActivityTileHome extends AppCompatActivity {
     RelativeLayout rootLayout;
     @BindView(R.id.tvMigrantName)
     TextView tvMigrantName;
+    @BindView(R.id.tvCountry)
+    TextView tvCountry;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -54,9 +56,16 @@ public class ActivityTileHome extends AppCompatActivity {
             //GET FEP TILES
             tiles = new SQLDatabaseHelper(ActivityTileHome.this).getTiles("FEP");
         }
-        String migrantName = getIntent().getStringExtra("migrantName");
+        String migrantName = getIntent().getStringExtra("migrantName").toUpperCase();
         tvMigrantName.setText(migrantName);
-
+        tvCountry.setText(getIntent().getStringExtra("countryName"));
+        int status = getIntent().getIntExtra("countryStatus", -1);
+        int blacklist = getIntent().getIntExtra("countryBlacklist", -1);
+        if (status == 1) {
+            tvCountry.setTextColor(getResources().getColor(R.color.colorNeutral));
+        } else if (blacklist == 1) {
+            tvCountry.setTextColor(getResources().getColor(R.color.colorError));
+        }
         setTileIcons();
         setUpRecyclerView();
     }

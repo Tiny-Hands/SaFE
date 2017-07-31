@@ -76,6 +76,7 @@ public class DialogCountryChooser extends DialogFragment {
                         Intent intent = new Intent(getContext(), ActivityTileHome.class);
                         intent.putExtra("countryId", cid);
                         intent.putExtra("migrantName", migName);
+                        intent.putExtra("countryName", cname.toUpperCase());
                         dismiss();
                         getContext().startActivity(intent);
                     }

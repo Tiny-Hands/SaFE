@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/rlRoot"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -9,27 +10,44 @@
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="?android:attr/actionBarSize">
+        android:layout_height="wrap_content">
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/default_margin">
 
-            <TextView
+            <com.vysh.subairoma.utils.CustomTextView
                 android:id="@+id/tvMigrantName"
-                style="@style/TitleText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:text="@string/user_name" />
+                android:layout_alignParentTop="true"
+                android:text="Test User"
+                android:textSize="22sp"
+                app:font="gotham_regular.ttf" />
 
-            <ImageView
-                android:layout_width="@dimen/toolbar_icon"
-                android:layout_height="@dimen/toolbar_icon"
-                android:layout_alignParentEnd="true"
-                android:layout_centerVertical="true"
-                android:layout_marginEnd="@dimen/default_margin"
-                android:src="@drawable/ic_user" />
+            <com.vysh.subairoma.utils.CustomTextView
+                android:id="@+id/tvGoingTo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/tvMigrantName"
+                android:text="Going to: "
+                android:textSize="18sp"
+                app:font="gotham_light.ttf" />
+
+            <com.vysh.subairoma.utils.CustomTextView
+                android:id="@+id/tvCountry"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@+id/tvGoingTo"
+                android:layout_below="@+id/tvMigrantName"
+                android:layout_toEndOf="@+id/tvGoingTo"
+                android:gravity="bottom"
+                android:text="Some Country"
+                android:textColor="@color/colorPrimaryDark"
+                android:textSize="18sp"
+                app:font="gotham_bold.ttf" />
+
         </RelativeLayout>
     </android.support.v7.widget.Toolbar>
 
@@ -37,12 +55,10 @@
         android:id="@+id/rvTiles"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/toolbar"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/toolbar"
         android:layout_gravity="center_horizontal"
-        android:paddingBottom="@dimen/default_button_height"
-        android:layout_marginBottom="@dimen/default_margin"
-        android:layout_marginEnd="@dimen/default_margin"
-        android:layout_marginStart="@dimen/default_margin" />
+        android:paddingBottom="@dimen/default_button_height" />
 
     <Button
         android:id="@+id/btnNext"
