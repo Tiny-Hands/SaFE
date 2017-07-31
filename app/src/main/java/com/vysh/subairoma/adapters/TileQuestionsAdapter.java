@@ -15,13 +15,16 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Adapter;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.SpinnerAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.vysh.subairoma.ApplicationClass;
 import com.vysh.subairoma.R;
@@ -43,7 +46,10 @@ import static android.view.View.GONE;
 
 public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdapter.QuestionHolder> {
 
+    int previousClickedPos = -1;
+    int currentClickedPos = -1;
     boolean fromSetView;
+    Boolean isExpanded = false;
     ArrayList<TileQuestionsModel> questionsList;
     ArrayList<TileQuestionsModel> questionsListDisplay;
     SQLDatabaseHelper sqlDatabaseHelper;
@@ -116,18 +122,27 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
 
     @Override
     public void onBindViewHolder(final QuestionHolder holder, final int position) {
-        //Values
+        Log.d("mylog", "Position: " + position + " Previous pos: " + previousClickedPos);
+        holder.hideExpandView();
         TileQuestionsModel question = questionsListDisplay.get(position);
         holder.title.setText(question.getTitle());
         holder.question.setText(question.getQuestion());
         holder.details.setText(question.getDescription());
-        if (question.getResponseType() == 1) {
+        Log.d("mylog", "Response type: " + question.getResponseType());
+        //Check else if for every view as notifyItemChanged giving problems otherwise
+        if (question.getResponseType() == 0) {
+            holder.checkbox.setVisibility(View.VISIBLE);
+            holder.question.setVisibility(View.VISIBLE);
+            holder.spinnerOptions.setVisibility(View.INVISIBLE);
+            holder.etResponse.setVisibility(View.INVISIBLE);
+        } else if (question.getResponseType() == 1) {
             holder.checkbox.setVisibility(GONE);
-            holder.question.setVisibility(GONE);
+            holder.question.setVisibility(View.INVISIBLE);
+            holder.spinnerOptions.setVisibility(View.INVISIBLE);
             holder.etResponse.setVisibility(View.VISIBLE);
         } else if (question.getResponseType() == 2) {
             holder.checkbox.setVisibility(GONE);
-            holder.question.setVisibility(GONE);
+            holder.question.setVisibility(View.INVISIBLE);
             holder.etResponse.setVisibility(View.GONE);
             holder.spinnerOptions.setVisibility(View.VISIBLE);
             String[] options = question.getOptions();
@@ -296,13 +311,15 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
         return false;
     }
 
-    public class QuestionHolder extends RecyclerView.ViewHolder {
+    public class QuestionHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         TextView title, details, question;
         CheckBox checkbox;
         EditText etResponse;
-        Boolean isExpanded = false;
         ImageView ivWarning;
         Spinner spinnerOptions;
+        Button btnCall, btnHelp, btnVideo;
+
+        LinearLayout helpLayout;
 
         public QuestionHolder(final View itemView) {
             super(itemView);
@@ -312,24 +329,18 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
             details.setVisibility(GONE);
             question = (TextView) itemView.findViewById(R.id.tvQuestion);
             checkbox = (CheckBox) itemView.findViewById(R.id.cbResponse);
+            helpLayout = (LinearLayout) itemView.findViewById(R.id.llHelp);
+            btnCall = (Button) itemView.findViewById(R.id.btnCall);
+            btnCall.setOnClickListener(this);
+            btnHelp = (Button) itemView.findViewById(R.id.btnHelp);
+            btnHelp.setOnClickListener(this);
+            btnVideo = (Button) itemView.findViewById(R.id.btnVideo);
+            btnVideo.setOnClickListener(this);
             title = (TextView) itemView.findViewById(R.id.tvStep);
             title.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (!isExpanded) {
-                        // Start recording changes to the view hierarchy
-                        if (Build.VERSION.SDK_INT >= 19) {
-                            TransitionManager.beginDelayedTransition((ViewGroup) details.getParent());
-                        }
-                        details.setVisibility(View.VISIBLE);
-                        isExpanded = true;
-                    } else {
-                        if (Build.VERSION.SDK_INT >= 19) {
-                            TransitionManager.beginDelayedTransition((ViewGroup) details.getParent());
-                        }
-                        details.setVisibility(GONE);
-                        isExpanded = false;
-                    }
+                    toggleExpandView();
                 }
             });
             etResponse = (EditText) itemView.findViewById(R.id.etResponse);
@@ -395,6 +406,55 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
                     }
                 }
             });
+        }
+
+        private void toggleExpandView() {
+            previousClickedPos = currentClickedPos;
+            currentClickedPos = getAdapterPosition();
+            if (previousClickedPos != currentClickedPos && previousClickedPos != -1) {
+                isExpanded = false;
+                notifyItemChanged(previousClickedPos);
+            }
+            Log.d("mylog", "Is Expanded: " + isExpanded);
+            if (!isExpanded) {
+                showExpandView();
+            } else {
+                hideExpandView();
+            }
+        }
+
+        private void hideExpandView() {
+            if (Build.VERSION.SDK_INT >= 19) {
+                TransitionManager.beginDelayedTransition((ViewGroup) details.getParent());
+            }
+            details.setVisibility(GONE);
+            helpLayout.setVisibility(View.GONE);
+            isExpanded = false;
+        }
+
+        private void showExpandView() {
+            // Start Expanding
+            if (Build.VERSION.SDK_INT >= 19) {
+                TransitionManager.beginDelayedTransition((ViewGroup) details.getParent());
+            }
+            details.setVisibility(View.VISIBLE);
+            helpLayout.setVisibility(View.VISIBLE);
+            isExpanded = true;
+        }
+
+        @Override
+        public void onClick(View v) {
+            switch (v.getId()) {
+                case R.id.btnCall:
+                    Toast.makeText(context, "Call helpline", Toast.LENGTH_SHORT).show();
+                    break;
+                case R.id.btnHelp:
+                    Toast.makeText(context, "Help Link or Help Text", Toast.LENGTH_SHORT).show();
+                    break;
+                case R.id.btnVideo:
+                    Toast.makeText(context, "Open Video Link", Toast.LENGTH_SHORT).show();
+                    break;
+            }
         }
     }
 }

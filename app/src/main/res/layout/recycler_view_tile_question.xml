@@ -11,7 +11,7 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:padding="@dimen/card_in_padding">
 
         <TextView
@@ -62,7 +62,6 @@
             android:layout_alignStart="@+id/tvStep"
             android:layout_below="@+id/tvDetail"
             android:layout_marginTop="12dp"
-            android:visibility="gone"
             android:layout_toStartOf="@+id/questionMarker"
             android:imeOptions="actionDone"
             android:inputType="text" />
@@ -73,8 +72,7 @@
             android:layout_height="wrap_content"
             android:layout_alignStart="@+id/tvStep"
             android:layout_below="@+id/tvDetail"
-            android:layout_marginTop="12dp"
-            android:visibility="gone" />
+            android:layout_marginTop="12dp" />
 
         <CheckBox
             android:id="@+id/cbResponse"
@@ -82,6 +80,57 @@
             android:layout_height="@dimen/card_view_markers_dimen"
             android:layout_alignParentEnd="true"
             android:layout_alignTop="@id/tvQuestion" />
+
+        <LinearLayout
+            android:id="@+id/llHelp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tvQuestion"
+            android:gravity="bottom|center"
+            android:orientation="vertical">
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:layout_marginBottom="@dimen/question_row_help_bottom_margin"
+                android:layout_marginTop="@dimen/question_row_help_top_margin"
+                android:background="#363636" />
+
+            <com.vysh.subairoma.utils.CustomTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:text="Need Help?"
+                android:textColor="@color/colorNeutral"
+                app:font="gotham_bold.ttf" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="bottom|center"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/btnCall"
+                    android:layout_width="@dimen/help_dimen"
+                    android:layout_height="@dimen/help_dimen"
+                    android:background="@drawable/ic_call" />
+
+                <Button
+                    android:id="@+id/btnHelp"
+                    android:layout_width="@dimen/help_dimen"
+                    android:layout_height="@dimen/help_dimen"
+                    android:layout_marginEnd="32dp"
+                    android:layout_marginStart="32dp"
+                    android:background="@drawable/ic_help" />
+
+                <Button
+                    android:id="@+id/btnVideo"
+                    android:layout_width="@dimen/help_dimen"
+                    android:layout_height="@dimen/help_dimen"
+                    android:background="@drawable/ic_video" />
+            </LinearLayout>
+        </LinearLayout>
 
     </RelativeLayout>
 </android.support.v7.widget.CardView>

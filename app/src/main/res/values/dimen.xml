@@ -20,4 +20,9 @@
     <!-- Text -->
     <dimen name="card_view_marker_text">12sp</dimen>
     <dimen name="tile_step_text">17sp</dimen>
+
+    <!-- Help Icons -->
+    <dimen name="help_dimen">36dp</dimen>
+    <dimen name="question_row_help_bottom_margin">24dp</dimen>
+    <dimen name="question_row_help_top_margin">32dp</dimen>
 </resources>
