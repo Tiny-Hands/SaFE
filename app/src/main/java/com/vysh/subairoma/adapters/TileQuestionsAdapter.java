@@ -167,7 +167,7 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
             holder.spinnerOptions.setAdapter(adapter);
         }
 
-        if (showErrorList.contains(position)) {
+        if (showErrorList.contains(position) && !onCheckClick) {
             Log.d("mylog", "Holder position: " + position);
             Log.d("mylog", "Error index: " + showErrorList.get(0));
             holder.ivError.setVisibility(View.VISIBLE);
@@ -341,7 +341,6 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
                 if (conditionValid) {
                     Log.d("mylog", "All variables match, showing error");
                     showError = true;
-                    onCheckClick = true;
                     notifyItemChanged(mainIndex);
                 }
             }
@@ -440,6 +439,7 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
                         }
                     }
                     if (conditionVariables.contains(variable) && !fromSetView) {
+                        onCheckClick = true;
                         ArrayList<Integer> questionIds = conditionOnQuestions.get(variable);
                         notifyConditionVariableChange(questionIds);
                     }
