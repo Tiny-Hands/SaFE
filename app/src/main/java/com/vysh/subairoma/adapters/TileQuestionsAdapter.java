@@ -50,6 +50,7 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
     int currentClickedPos = -1;
     boolean fromSetView;
     Boolean isExpanded = false;
+    Boolean showError = false, onCheckClick = false;
     ArrayList<TileQuestionsModel> questionsList;
     ArrayList<TileQuestionsModel> questionsListDisplay;
     SQLDatabaseHelper sqlDatabaseHelper;
@@ -58,6 +59,7 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
     HashMap<String, String> conditionVariableValues;
     HashMap<String, ArrayList<Integer>> conditionOnQuestions;
     HashMap<Integer, Integer> conditionQuestionIndex;
+    ArrayList<Integer> showErrorList;
 
     Context context;
 
@@ -70,7 +72,9 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
         setConditionVariableValues();
 
         questionsListDisplay = new ArrayList<>();
-        for (TileQuestionsModel questionModel : questions) {
+        showErrorList = new ArrayList<>();
+        for (int i = 0; i < questions.size(); i++) {
+            TileQuestionsModel questionModel = questions.get(i);
             TileQuestionsModel question = new TileQuestionsModel();
             question.setTitle(questionModel.getTitle());
             question.setCondition(questionModel.getCondition());
@@ -91,23 +95,31 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
                     JSONObject jsonCondition = new JSONObject(condition);
                     String type = jsonCondition.getString("type");
                     Log.d("mylog", "Condition type: " + type);
-                    if (type.equalsIgnoreCase("error")) {
-                        questionsListDisplay.add(question);
-                    } else {
-                        JSONObject conditionVars = jsonCondition.getJSONObject("condition");
-                        Iterator iter = conditionVars.keys();
-                        while (iter.hasNext()) {
-                            String key = iter.next().toString();
-                            boolean curValue = Boolean.parseBoolean(conditionVariableValues.get(key));
-                            if (!curValue) break;
-                            if (!iter.hasNext()) {
-                                questionsListDisplay.add(question);
-                            }
+                    JSONObject conditionVars = jsonCondition.getJSONObject("condition");
+                    Iterator iter = conditionVars.keys();
+                    boolean conditionMatch = false;
+                    while (iter.hasNext()) {
+                        String key = iter.next().toString();
+                        boolean curValue = Boolean.parseBoolean(conditionVariableValues.get(key));
+                        if (!curValue) {
+                            conditionMatch = false;
+                            break;
+                        } else {
+                            conditionMatch = true;
                         }
                     }
+                    if (type.equalsIgnoreCase("error")) {
+                        questionsListDisplay.add(question);
+                        if (conditionMatch) {
+                            Log.d("mylog", "Added to error list: " + i);
+                            showErrorList.add(i);
+                        }
+                    } else if (type.equalsIgnoreCase("visibility")) {
+                        if (conditionMatch) questionsListDisplay.add(question);
+                    }
+
                 } catch (JSONException e) {
                     Log.d("mylog", "Error: " + e.toString());
-                    e.printStackTrace();
                 }
             } else questionsListDisplay.add(question);
         }
@@ -154,19 +166,31 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
             SpinnerAdapter adapter = new ArrayAdapter<>(context, R.layout.support_simple_spinner_dropdown_item, options);
             holder.spinnerOptions.setAdapter(adapter);
         }
+
+        if (showErrorList.contains(position)) {
+            Log.d("mylog", "Holder position: " + position);
+            Log.d("mylog", "Error index: " + showErrorList.get(0));
+            holder.ivError.setVisibility(View.VISIBLE);
+        }
+
+        //For showing/hiding error on condition variable change
+        if (showError && onCheckClick) {
+            holder.ivError.setVisibility(View.VISIBLE);
+            showError = false;
+        } else if (onCheckClick) {
+            holder.ivError.setVisibility(View.INVISIBLE);
+        }
         setValue(holder.checkbox, holder.etResponse, holder.spinnerOptions, position);
     }
 
-    private boolean notifyConditionVariableChange(ArrayList<Integer> questionIds) {
-        boolean error = false;
+    private void notifyConditionVariableChange(ArrayList<Integer> questionIds) {
         for (int i = 0; i < questionIds.size(); i++) {
             Log.d("mylog", "Question ID in consideration: " + questionIds.get(i));
             int indexOnMainList = conditionQuestionIndex.get(questionIds.get(i));
             Log.d("mylog", "Index in consideration: " + indexOnMainList);
             Log.d("mylog", "Condition in consideration: " + questionsList.get(indexOnMainList).getCondition());
-            error = parseCondition(questionsList.get(indexOnMainList).getCondition(), indexOnMainList);
+            parseCondition(questionsList.get(indexOnMainList).getCondition(), indexOnMainList);
         }
-        return error;
     }
 
     @Override
@@ -263,7 +287,7 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
     }
 
 
-    private boolean parseCondition(String condition, int mainIndex) {
+    private void parseCondition(String condition, int mainIndex) {
         Log.d("mylog", "Parse condition: " + condition);
         try {
             JSONObject conditionJson = new JSONObject(condition);
@@ -273,49 +297,64 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
             String key;
             boolean reqValue;
             boolean currValue;
+            boolean conditionValid = false;
             while (iter.hasNext()) {
                 key = iter.next().toString();
                 reqValue = varsJson.getBoolean(key);
                 currValue = Boolean.parseBoolean(conditionVariableValues.get(key));
                 if (reqValue != currValue) {
                     Log.d("mylog", "Condition failed, do not perform the action");
-                    if (conditionType.equalsIgnoreCase("visibility")) {
+                    int changedId = -1;
+                    for (int i = 0; i < questionsListDisplay.size(); i++) {
                         int id = questionsList.get(mainIndex).getQuestionId();
-                        for (int i = 0; i < questionsListDisplay.size(); i++) {
-                            int j = questionsListDisplay.get(i).getQuestionId();
-                            Log.d("mylog", "Main qid: " + id + " Got qid: " + j);
-                            if (id == j) {
-                                Log.d("mylog", "Removing from display list: " + i);
-                                questionsListDisplay.remove(i);
-                                notifyItemRemoved(i);
-                                notifyDataSetChanged();
-                                break;
-                            }
+                        int j = questionsListDisplay.get(i).getQuestionId();
+                        Log.d("mylog", "Main qid: " + id + " Got qid: " + j);
+                        if (id == j) {
+                            Log.d("mylog", "Taking action for Item: " + i);
+                            changedId = i;
                         }
+                    }
+                    if (conditionType.equalsIgnoreCase("visibility")) {
+                        //If even one condition is not satisfied, break out of while loop
+                        questionsListDisplay.remove(changedId);
+                        conditionValid = false;
+                        notifyItemRemoved(changedId);
+                        break;
                     } else if (conditionType.equalsIgnoreCase("error")) {
+                        showError = false;
+                        conditionValid = false;
+                        notifyItemChanged(changedId);
                         break;
                     }
                 } else {
-                    Log.d("mylog", "Condition match, Perform the action");
-                    if (conditionType.equalsIgnoreCase("visibility")) {
-                        questionsListDisplay.add(mainIndex, questionsList.get(mainIndex));
-                        notifyDataSetChanged();
-                    } else if (conditionType.equalsIgnoreCase("error")) {
-                        return true;
-                    }
+                    Log.d("mylog", "Current condition variable value match");
+                    conditionValid = true;
+                }
+            }
+            if (conditionType.equalsIgnoreCase("visibility")) {
+                if (conditionValid) {
+                    Log.d("mylog", "All variables match, showing view");
+                    questionsListDisplay.add(mainIndex, questionsList.get(mainIndex));
+                    notifyDataSetChanged();
+                }
+            } else if (conditionType.equalsIgnoreCase("error")) {
+                if (conditionValid) {
+                    Log.d("mylog", "All variables match, showing error");
+                    showError = true;
+                    onCheckClick = true;
+                    notifyItemChanged(mainIndex);
                 }
             }
         } catch (JSONException e) {
-            e.printStackTrace();
+            Log.d("mylog", "Parsing condition error: " + e.toString());
         }
-        return false;
     }
 
     public class QuestionHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         TextView title, details, question;
         CheckBox checkbox;
         EditText etResponse;
-        ImageView ivWarning;
+        ImageView ivError;
         Spinner spinnerOptions;
         Button btnCall, btnHelp, btnVideo;
 
@@ -324,7 +363,7 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
         public QuestionHolder(final View itemView) {
             super(itemView);
 
-            ivWarning = (ImageView) itemView.findViewById(R.id.questionMarker);
+            ivError = (ImageView) itemView.findViewById(R.id.questionMarker);
             details = (TextView) itemView.findViewById(R.id.tvDetail);
             details.setVisibility(GONE);
             question = (TextView) itemView.findViewById(R.id.tvQuestion);
@@ -384,15 +423,17 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                     String variable = questionsList.get(getAdapterPosition()).getVariable();
                     if (isChecked) {
-                        sqlDatabaseHelper.insertResponseTableData("true", questionsListDisplay.get(getAdapterPosition()).getQuestionId(),
-                                ApplicationClass.getInstance().getMigrantId(), variable);
+                        if (!fromSetView)
+                            sqlDatabaseHelper.insertResponseTableData("true", questionsListDisplay.get(getAdapterPosition()).getQuestionId(),
+                                    ApplicationClass.getInstance().getMigrantId(), variable);
                         if (conditionVariables.contains(variable)) {
                             Log.d("mylog", "Current variable: " + variable + " Is is condition for some question");
                             conditionVariableValues.put(variable, "true");
                         }
                     } else {
-                        sqlDatabaseHelper.insertResponseTableData("false", questionsListDisplay.get(getAdapterPosition()).getQuestionId(),
-                                ApplicationClass.getInstance().getMigrantId(), variable);
+                        if (!fromSetView)
+                            sqlDatabaseHelper.insertResponseTableData("false", questionsListDisplay.get(getAdapterPosition()).getQuestionId(),
+                                    ApplicationClass.getInstance().getMigrantId(), variable);
                         if (conditionVariables.contains(variable)) {
                             Log.d("mylog", "Current variable: " + variable + " Is is condition for some question");
                             conditionVariableValues.put(variable, "false");
@@ -400,9 +441,7 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
                     }
                     if (conditionVariables.contains(variable) && !fromSetView) {
                         ArrayList<Integer> questionIds = conditionOnQuestions.get(variable);
-                        boolean error = notifyConditionVariableChange(questionIds);
-                        if (error) ivWarning.setVisibility(View.VISIBLE);
-                        else ivWarning.setVisibility(View.INVISIBLE);
+                        notifyConditionVariableChange(questionIds);
                     }
                 }
             });

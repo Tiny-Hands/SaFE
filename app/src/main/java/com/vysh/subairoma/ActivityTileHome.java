@@ -7,6 +7,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
@@ -63,7 +64,8 @@ public class ActivityTileHome extends AppCompatActivity {
         int blacklist = getIntent().getIntExtra("countryBlacklist", -1);
         if (status == 1) {
             tvCountry.setTextColor(getResources().getColor(R.color.colorNeutral));
-        } else if (blacklist == 1) {
+        }
+        if (blacklist == 1) {
             tvCountry.setTextColor(getResources().getColor(R.color.colorError));
         }
         setTileIcons();
