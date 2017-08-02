@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="@dimen/default_margin"
+    android:gravity="center_horizontal"
+    android:orientation="vertical">
+
+    <com.vysh.subairoma.utils.CustomTextView
+        android:id="@+id/tvTermHeader"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Before Moving On"
+        android:textColor="@color/colorAccent"
+        android:textSize="24sp"
+        app:font="gotham_bold.ttf" />
+
+    <com.vysh.subairoma.utils.CustomTextView
+        android:id="@+id/tvTerms"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/default_margin"
+        android:lineSpacingExtra="5sp"
+        android:text="@string/finalAnswerVerification"
+        android:textSize="16sp"
+        app:font="gotham_medium.ttf" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:layout_marginBottom="32dp"
+        android:layout_marginTop="32dp"
+        android:background="@color/darkGrey" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <CheckBox
+            android:id="@+id/checkboxTermsAccept"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <com.vysh.subairoma.utils.CustomTextView
+            android:id="@+id/tvCheckTerm"
+            android:gravity="center"
+            android:padding="4dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="I agree to not change the answers"
+            android:textColor="@color/colorAccent"
+            app:font="gotham_bold.ttf" />
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/btnProceed"
+        android:layout_width="@dimen/default_button_width"
+        android:layout_height="@dimen/default_button_height"
+        android:layout_margin="@dimen/default_margin"
+        android:background="@drawable/default_rounded_button"
+        android:text="PROCEED"
+        android:textColor="@color/bgFaded" />
+
+    <Button
+        android:id="@+id/btnBack"
+        android:layout_width="@dimen/default_button_width"
+        android:layout_height="@dimen/default_button_height"
+        android:background="@drawable/default_rounded_button_accent"
+        android:text="BACK"
+        android:textColor="@color/bgFaded" />
+</LinearLayout>

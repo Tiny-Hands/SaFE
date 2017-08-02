@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -40,6 +41,8 @@ public class ActivityTileHome extends AppCompatActivity {
     TextView tvMigrantName;
     @BindView(R.id.tvCountry)
     TextView tvCountry;
+    @BindView(R.id.btnNext)
+    Button btnNext;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -57,6 +60,12 @@ public class ActivityTileHome extends AppCompatActivity {
             //GET FEP TILES
             tiles = new SQLDatabaseHelper(ActivityTileHome.this).getTiles("FEP");
         }
+        btnNext.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new DialogAnswersVerification().show(getSupportFragmentManager(), "dialog");
+            }
+        });
         String migrantName = getIntent().getStringExtra("migrantName").toUpperCase();
         tvMigrantName.setText(migrantName);
         tvCountry.setText(getIntent().getStringExtra("countryName"));

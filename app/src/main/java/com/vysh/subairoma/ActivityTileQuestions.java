@@ -7,6 +7,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.WindowManager;
+import android.widget.TextView;
 
 import com.vysh.subairoma.SQLHelpers.SQLDatabaseHelper;
 import com.vysh.subairoma.adapters.TileQuestionsAdapter;
@@ -26,9 +27,13 @@ public class ActivityTileQuestions extends AppCompatActivity {
     @BindView(R.id.rvTileQuestions)
     public RecyclerView rvQuestions;
 
+    @BindView(R.id.tvTitle)
+    public TextView tvTitle;
+
     public ArrayList<TileQuestionsModel> questionList;
 
     public TileQuestionsAdapter questionsAdapter;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -36,6 +41,7 @@ public class ActivityTileQuestions extends AppCompatActivity {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         ButterKnife.bind(ActivityTileQuestions.this);
 
+        tvTitle.setText(getIntent().getStringExtra("tileName").toUpperCase());
         getQuestions(getIntent().getIntExtra("tileId", -1));
         setUpRecyclerView();
     }
@@ -44,8 +50,8 @@ public class ActivityTileQuestions extends AppCompatActivity {
         //Get Questions if not already in Local Database
         questionList = new SQLDatabaseHelper(ActivityTileQuestions.this).getQuestions(tileId);
         SQLDatabaseHelper sqlDatabaseHelper = new SQLDatabaseHelper(ActivityTileQuestions.this);
-        for(TileQuestionsModel question: questionList){
-            if(question.getResponseType()==2){
+        for (TileQuestionsModel question : questionList) {
+            if (question.getResponseType() == 2) {
                 String[] options = sqlDatabaseHelper.getOptions(question.getQuestionId());
                 question.setOptions(options);
             }

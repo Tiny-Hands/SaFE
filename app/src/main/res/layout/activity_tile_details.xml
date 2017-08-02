@@ -2,24 +2,24 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/bgFaded"
     android:orientation="vertical">
 
     <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar2"
         android:layout_width="match_parent"
         android:layout_height="?android:attr/actionBarSize">
 
-        <RelativeLayout
+        <com.vysh.subairoma.utils.CustomTextView
+            android:id="@+id/tvTitle"
+            android:textSize="22sp"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <TextView
-                style="@style/TitleText"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:text="@string/app_name" />
-        </RelativeLayout>
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="12dp"
+            android:gravity="center_horizontal"
+            android:layout_marginTop="16dp"
+            android:text="Travel and Some very long text" />
     </android.support.v7.widget.Toolbar>
 
     <android.support.v7.widget.RecyclerView

@@ -56,6 +56,7 @@ public class TileAdapter extends RecyclerView.Adapter<TileAdapter.TileViewHolder
                 public void onClick(View v) {
                     Intent intent = new Intent(v.getContext(), ActivityTileQuestions.class);
                     intent.putExtra("tileId", tileList.get(getAdapterPosition()).getTileId());
+                    intent.putExtra("tileName", tileList.get(getAdapterPosition()).getTitle());
                     v.getContext().startActivity(intent);
                 }
             });
