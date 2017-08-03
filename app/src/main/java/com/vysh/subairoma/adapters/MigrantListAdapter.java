@@ -5,6 +5,8 @@ import android.app.DialogFragment;
 import android.app.FragmentManager;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
@@ -12,6 +14,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.vysh.subairoma.ActivityTileHome;
@@ -49,6 +52,8 @@ public class MigrantListAdapter extends RecyclerView.Adapter<MigrantListAdapter.
         MigrantModel migrantModel = migrants.get(position);
         holder.textViewName.setText(migrantModel.getMigrantName());
         holder.sex.setText(migrantModel.getMigrantSex() + ", " + migrantModel.getMigrantAge());
+        if (migrantModel.getMigrantSex().equalsIgnoreCase("female"))
+            holder.ivAvatar.setImageBitmap(BitmapFactory.decodeResource(mContext.getResources(), R.drawable.ic_female));
 
         //Showing going to country
         String cid = new SQLDatabaseHelper(mContext).getResponse(migrants.get(position).getMigrantId(), "mg_destination");
@@ -89,12 +94,14 @@ public class MigrantListAdapter extends RecyclerView.Adapter<MigrantListAdapter.
 
     public class MigrantHolder extends RecyclerView.ViewHolder {
         public TextView textViewName, sex, tvErrorCount, tvGoingCountry;
+        public ImageView ivAvatar;
 
         public MigrantHolder(final View itemView) {
             super(itemView);
             tvErrorCount = (TextView) itemView.findViewById(R.id.tvErrorCount);
             textViewName = (TextView) itemView.findViewById(R.id.tvMigrantName);
             tvGoingCountry = (TextView) itemView.findViewById(R.id.tvCountryGoing);
+            ivAvatar = (ImageView) itemView.findViewById(R.id.ivUserLogo);
             sex = (TextView) itemView.findViewById(R.id.tvMigrantAgeSex);
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
