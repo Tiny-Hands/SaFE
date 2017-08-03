@@ -1,5 +1,6 @@
 package com.vysh.subairoma;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -87,6 +88,14 @@ public class ActivityTileHome extends AppCompatActivity {
         tileIcons = new int[size];
         for (int i = 0; i < size; i++)
             tileIcons[i] = R.drawable.roller;
+    }
+
+    @Override
+    public void onBackPressed() {
+        //super.onBackPressed();
+        Intent intent = new Intent(ActivityTileHome.this, ActivityMigrantList.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
     }
 
     private void showSnackbar(String msg) {
