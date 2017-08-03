@@ -63,7 +63,7 @@
             android:layout_alignParentRight="true"
             android:layout_below="@+id/ivUserLogo"
             android:layout_marginTop="@dimen/default_margin"
-            android:text="2 Warnings"
+            android:text=""
             android:textColor="@color/colorError"
             app:font="gotham_bold.ttf" />
     </RelativeLayout>

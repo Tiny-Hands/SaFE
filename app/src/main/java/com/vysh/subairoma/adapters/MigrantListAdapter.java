@@ -50,19 +50,6 @@ public class MigrantListAdapter extends RecyclerView.Adapter<MigrantListAdapter.
         holder.textViewName.setText(migrantModel.getMigrantName());
         holder.sex.setText(migrantModel.getMigrantSex() + ", " + migrantModel.getMigrantAge());
 
-        //Showing error count
-        int errorCount = new SQLDatabaseHelper(mContext).getMigrantErrorCount(migrantModel.getMigrantId());
-        if (errorCount > 0) {
-            if (errorCount == 1)
-                holder.tvErrorCount.setText(errorCount + " Error");
-            else
-                holder.tvErrorCount.setText(errorCount + " Errors");
-            holder.tvErrorCount.setTextColor(mContext.getResources().getColor(R.color.colorError));
-        } else {
-            holder.tvErrorCount.setTextColor(mContext.getResources().getColor(R.color.colorPrimary));
-            holder.tvErrorCount.setText("No errors");
-        }
-
         //Showing going to country
         String cid = new SQLDatabaseHelper(mContext).getResponse(migrants.get(position).getMigrantId(), "mg_destination");
         if (cid == null || cid.isEmpty()) {
@@ -76,6 +63,19 @@ public class MigrantListAdapter extends RecyclerView.Adapter<MigrantListAdapter.
                 holder.tvGoingCountry.setTextColor(mContext.getResources().getColor(R.color.colorNeutral));
             else
                 holder.tvGoingCountry.setTextColor(mContext.getResources().getColor(R.color.colorPrimary));
+
+            //Showing error count
+            int errorCount = new SQLDatabaseHelper(mContext).getMigrantErrorCount(migrantModel.getMigrantId());
+            if (errorCount > 0) {
+                if (errorCount == 1)
+                    holder.tvErrorCount.setText(errorCount + " Error");
+                else
+                    holder.tvErrorCount.setText(errorCount + " Errors");
+                holder.tvErrorCount.setTextColor(mContext.getResources().getColor(R.color.colorError));
+            } else {
+                holder.tvErrorCount.setTextColor(mContext.getResources().getColor(R.color.colorPrimary));
+                holder.tvErrorCount.setText("No errors");
+            }
         }
     }
 

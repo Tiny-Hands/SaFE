@@ -377,6 +377,20 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
         return cursor.getCount();
     }
 
+    public ArrayList<Integer> getErrorTileIds(int migId) {
+      /*  SQLiteDatabase db = this.getReadableDatabase();
+        String query = "SELECT * FROM " + DatabaseTables.ResponseTable.TABLE_NAME + " WHERE "
+                + DatabaseTables.ResponseTable.migrant_id + "=" + "'" + migId + "'" +
+                " AND " + DatabaseTables.ResponseTable.is_error + "='true'";
+        Cursor cursor = db.rawQuery(query, null);
+        while (cursor.moveToNext()) {
+            String isError = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseTables.ResponseTable.is_error));
+            String variable = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseTables.ResponseTable.response_variable));
+            Log.d("mylog", "Got error: " + isError + " FOR: " + variable);
+        }*/
+        return null;
+    }
+
     public ArrayList<MigrantModel> getMigrants() {
         SQLiteDatabase db = this.getReadableDatabase();
         ArrayList<MigrantModel> migrantModels = new ArrayList<>();
