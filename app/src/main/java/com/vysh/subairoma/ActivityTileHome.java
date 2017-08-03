@@ -71,7 +71,7 @@ public class ActivityTileHome extends AppCompatActivity {
             }
         });
         tvMigrantName.setText(migName.toUpperCase());
-        tvCountry.setText(countryName);
+        tvCountry.setText(countryName.toUpperCase());
         if (status == 1) {
             tvCountry.setTextColor(getResources().getColor(R.color.colorNeutral));
         }

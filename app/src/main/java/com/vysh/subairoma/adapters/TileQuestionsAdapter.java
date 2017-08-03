@@ -1,7 +1,6 @@
 package com.vysh.subairoma.adapters;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.Build;
 import android.support.v7.widget.RecyclerView;
 import android.transition.TransitionManager;
@@ -12,7 +11,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.Adapter;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -45,6 +43,8 @@ import static android.view.View.GONE;
  */
 
 public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdapter.QuestionHolder> {
+
+    final int migrantId = ApplicationClass.getInstance().getMigrantId();
 
     int previousClickedPos = -1;
     int currentClickedPos = -1;
@@ -199,7 +199,6 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
     }
 
     private void setValue(CheckBox checkBox, EditText etResponse, Spinner spinner, int position) {
-        int migrantId = ApplicationClass.getInstance().getMigrantId();
         String variable = questionsListDisplay.get(position).getVariable();
         String response = sqlDatabaseHelper.getResponse(migrantId, variable);
         int responseType = questionsListDisplay.get(position).getResponseType();
@@ -274,7 +273,6 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
     }
 
     private void setConditionVariableValues() {
-        int migrantId = ApplicationClass.getInstance().getMigrantId();
         conditionVariableValues = new HashMap<>();
         for (int i = 0; i < conditionVariables.size(); i++) {
             String response = sqlDatabaseHelper.getResponse(migrantId, conditionVariables.get(i));
@@ -294,7 +292,7 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
             String conditionType = conditionJson.getString("type");
             JSONObject varsJson = conditionJson.getJSONObject("condition");
             Iterator iter = varsJson.keys();
-            String key;
+            String key = "";
             boolean reqValue;
             boolean currValue;
             boolean conditionValid = false;
@@ -324,6 +322,15 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
                         showError = false;
                         conditionValid = false;
                         notifyItemChanged(changedId);
+                        //Save no error for the question in database for migrantId and variable
+                        Log.d("mylog", "Inserting no error for: " + migrantId + " AND " + key);
+
+                        //Set error false for all the related keys of the condition
+                        Iterator setToFalseKeys = varsJson.keys();
+                        while (setToFalseKeys.hasNext()) {
+                            String var = setToFalseKeys.next().toString();
+                            sqlDatabaseHelper.insertIsError(migrantId, var, "false");
+                        }
                         break;
                     }
                 } else {
@@ -342,6 +349,11 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
                     Log.d("mylog", "All variables match, showing error");
                     showError = true;
                     notifyItemChanged(mainIndex);
+                    //Save error for the question in database for migrantId and variable
+                    if (key != null) {
+                        Log.d("mylog", "Inserting error for: " + migrantId + " AND " + key);
+                        sqlDatabaseHelper.insertIsError(migrantId, key, "true");
+                    }
                 }
             }
         } catch (JSONException e) {
@@ -391,7 +403,7 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
                         if (!response.isEmpty()) {
                             sqlDatabaseHelper.insertResponseTableData(response,
                                     questionsListDisplay.get(getAdapterPosition()).getQuestionId(),
-                                    ApplicationClass.getInstance().getMigrantId(), variable);
+                                    migrantId, variable);
                         }
                         InputMethodManager inputMethodManager = (InputMethodManager) context.
                                 getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -407,9 +419,10 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
                 public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                     String variable = questionsList.get(getAdapterPosition()).getVariable();
                     String response = spinnerOptions.getSelectedItem().toString();
-                    sqlDatabaseHelper.insertResponseTableData(response,
-                            questionsListDisplay.get(getAdapterPosition()).getQuestionId(),
-                            ApplicationClass.getInstance().getMigrantId(), variable);
+                    if (!fromSetView)
+                        sqlDatabaseHelper.insertResponseTableData(response,
+                                questionsListDisplay.get(getAdapterPosition()).getQuestionId(),
+                                migrantId, variable);
                 }
 
                 @Override
@@ -424,7 +437,7 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
                     if (isChecked) {
                         if (!fromSetView)
                             sqlDatabaseHelper.insertResponseTableData("true", questionsListDisplay.get(getAdapterPosition()).getQuestionId(),
-                                    ApplicationClass.getInstance().getMigrantId(), variable);
+                                    migrantId, variable);
                         if (conditionVariables.contains(variable)) {
                             Log.d("mylog", "Current variable: " + variable + " Is is condition for some question");
                             conditionVariableValues.put(variable, "true");
@@ -432,7 +445,7 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
                     } else {
                         if (!fromSetView)
                             sqlDatabaseHelper.insertResponseTableData("false", questionsListDisplay.get(getAdapterPosition()).getQuestionId(),
-                                    ApplicationClass.getInstance().getMigrantId(), variable);
+                                    migrantId, variable);
                         if (conditionVariables.contains(variable)) {
                             Log.d("mylog", "Current variable: " + variable + " Is is condition for some question");
                             conditionVariableValues.put(variable, "false");

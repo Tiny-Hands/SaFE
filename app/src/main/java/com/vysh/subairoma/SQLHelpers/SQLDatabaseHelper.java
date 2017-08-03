@@ -29,10 +29,11 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
             "CREATE TABLE " + DatabaseTables.ResponseTable.TABLE_NAME + " (" +
                     DatabaseTables.ResponseTable.migrant_id + " INTEGER," +
                     DatabaseTables.ResponseTable.question_id + " INTEGER," +
+                    DatabaseTables.ResponseTable.is_error + " TEXT," +
                     DatabaseTables.ResponseTable.response_variable + " TEXT," +
                     DatabaseTables.ResponseTable.response + " TEXT," +
                     " UNIQUE (" + DatabaseTables.ResponseTable.question_id +
-                    ", " + DatabaseTables.ResponseTable.migrant_id + ") ON CONFLICT REPLACE);";
+                    ", " + DatabaseTables.ResponseTable.migrant_id + "));";
     final String SQL_CREATE_TilesTable =
             "CREATE TABLE " + DatabaseTables.TilesTable.TABLE_NAME + " (" +
                     DatabaseTables.TilesTable.tile_id + " INTEGER PRIMARY KEY," +
@@ -99,13 +100,64 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         // Create a new map of values, where column names are the keys
         ContentValues values = new ContentValues();
-        values.put(DatabaseTables.ResponseTable.migrant_id, migrant_id);
-        values.put(DatabaseTables.ResponseTable.question_id, question_id);
         values.put(DatabaseTables.ResponseTable.response, response);
         values.put(DatabaseTables.ResponseTable.response_variable, variable);
-        // Insert the new row, returning the primary key value of the new row
-        long newRowId = db.insert(DatabaseTables.ResponseTable.TABLE_NAME, null, values);
-        Log.d("mylog", "Inserted row ID; " + newRowId);
+
+        //If already exist the Update
+        String whereClause = DatabaseTables.ResponseTable.migrant_id + " = " + migrant_id + " AND " +
+                DatabaseTables.ResponseTable.question_id + " = " + question_id;
+        long updateCount = db.update(DatabaseTables.ResponseTable.TABLE_NAME, values, whereClause, null);
+        Log.d("mylog", "Updated row count: " + updateCount);
+        //If not update then insert
+        if (updateCount < 1) {
+            // Insert the new row, returning the primary key value of the new row
+            values.put(DatabaseTables.ResponseTable.migrant_id, migrant_id);
+            values.put(DatabaseTables.ResponseTable.question_id, question_id);
+            long newRowId = db.insert(DatabaseTables.ResponseTable.TABLE_NAME, null, values);
+            Log.d("mylog", "Inserted row ID: " + newRowId);
+        }
+    }
+
+    public void insertIsError(int migId, String variable, String isError) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        Log.d("mylog", "Inserting isError: " + isError);
+        //Update row where MigrantId = migId and Variable = variable
+        /*String query = "UPDATE " + DatabaseTables.ResponseTable.TABLE_NAME + " SET " +
+                DatabaseTables.ResponseTable.is_error + "=" + "'" + isError + "'" + " WHERE " +
+                DatabaseTables.ResponseTable.migrant_id + "=" + "'" + migId + "'" + " AND " +
+                DatabaseTables.ResponseTable.response_variable + "=" + "'" + variable + "'";
+        Log.d("mylog", "Update query: " + query);
+        db.execSQL(query);*/
+
+        ContentValues newValue = new ContentValues();
+        if (isError.equalsIgnoreCase("false"))
+            newValue.put(DatabaseTables.ResponseTable.is_error, "false");
+        else
+            newValue.put(DatabaseTables.ResponseTable.is_error, "true");
+        String selection = DatabaseTables.ResponseTable.migrant_id + " = " + "'" + migId + "'" + " AND " +
+                DatabaseTables.ResponseTable.response_variable + " = " + "'" + variable + "'";
+        int updateCount = db.update(DatabaseTables.ResponseTable.TABLE_NAME, newValue, selection, null);
+        Log.d("mylog", "Updated iserror rows: " + updateCount);
+    }
+
+    public void getAllResponse(int migId) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String query;
+
+        query = "SELECT * FROM " + DatabaseTables.ResponseTable.TABLE_NAME + " WHERE " +
+                DatabaseTables.ResponseTable.migrant_id + "=" + "'" + migId + "'";
+        //Log.d("mylog", "Query: " + query);
+        Cursor cursor = db.rawQuery(query, null);
+        String response = "";
+        Log.d("mylog", "Response for Migrant ID: " + migId);
+        while (cursor.moveToNext()) {
+            String qvar = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseTables.ResponseTable.response_variable));
+            response = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseTables.ResponseTable.response));
+            int mid = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseTables.ResponseTable.migrant_id));
+            int qid = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseTables.ResponseTable.question_id));
+            String error = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseTables.ResponseTable.is_error));
+            Log.d("mylog", "Mid: " + mid + " Qid: " + qid + " Response: " + response + " Variable: " + qvar + " isError: " + error);
+        }
     }
 
     public String getResponse(int migId, String variable) {
@@ -309,6 +361,20 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
 
         long newRowId = db.insert(DatabaseTables.MigrantsTable.TABLE_NAME, null, values);
         Log.d("mylog", "Inserted row ID; " + newRowId);
+    }
+
+    public int getMigrantErrorCount(int migId) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String query = "SELECT * FROM " + DatabaseTables.ResponseTable.TABLE_NAME + " WHERE "
+                + DatabaseTables.ResponseTable.migrant_id + "=" + "'" + migId + "'" +
+                " AND " + DatabaseTables.ResponseTable.is_error + "='true'";
+        Cursor cursor = db.rawQuery(query, null);
+        while (cursor.moveToNext()) {
+            String isError = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseTables.ResponseTable.is_error));
+            String variable = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseTables.ResponseTable.response_variable));
+            Log.d("mylog", "Got error: " + isError + " FOR: " + variable);
+        }
+        return cursor.getCount();
     }
 
     public ArrayList<MigrantModel> getMigrants() {

@@ -16,6 +16,7 @@ public final class DatabaseTables {
         public static final String question_id = "question_id";
         public static final String response = "response";
         public static final String response_variable = "response_variable";
+        public static final String is_error = "is_error";
     }
 
     public static class TilesTable {

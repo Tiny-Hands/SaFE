@@ -3,6 +3,7 @@ package com.vysh.subairoma.adapters;
 import android.app.Activity;
 import android.app.DialogFragment;
 import android.app.FragmentManager;
+import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -34,10 +35,12 @@ public class MigrantListAdapter extends RecyclerView.Adapter<MigrantListAdapter.
     }
 
     ArrayList<MigrantModel> migrants;
+    Context mContext;
 
     @Override
     public MigrantHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        return new MigrantHolder(LayoutInflater.from(parent.getContext()).
+        mContext = parent.getContext();
+        return new MigrantHolder(LayoutInflater.from(mContext).
                 inflate(R.layout.recycler_view_migrant_row, parent, false));
     }
 
@@ -46,6 +49,34 @@ public class MigrantListAdapter extends RecyclerView.Adapter<MigrantListAdapter.
         MigrantModel migrantModel = migrants.get(position);
         holder.textViewName.setText(migrantModel.getMigrantName());
         holder.sex.setText(migrantModel.getMigrantSex() + ", " + migrantModel.getMigrantAge());
+
+        //Showing error count
+        int errorCount = new SQLDatabaseHelper(mContext).getMigrantErrorCount(migrantModel.getMigrantId());
+        if (errorCount > 0) {
+            if (errorCount == 1)
+                holder.tvErrorCount.setText(errorCount + " Error");
+            else
+                holder.tvErrorCount.setText(errorCount + " Errors");
+            holder.tvErrorCount.setTextColor(mContext.getResources().getColor(R.color.colorError));
+        } else {
+            holder.tvErrorCount.setTextColor(mContext.getResources().getColor(R.color.colorPrimary));
+            holder.tvErrorCount.setText("No errors");
+        }
+
+        //Showing going to country
+        String cid = new SQLDatabaseHelper(mContext).getResponse(migrants.get(position).getMigrantId(), "mg_destination");
+        if (cid == null || cid.isEmpty()) {
+            holder.tvGoingCountry.setText("Not Started Yet");
+        } else {
+            CountryModel goingTo = new SQLDatabaseHelper(mContext).getCountry(cid);
+            holder.tvGoingCountry.setText(goingTo.getCountryName().toUpperCase());
+            if (goingTo.getCountryBlacklist() == 1)
+                holder.tvGoingCountry.setTextColor(mContext.getResources().getColor(R.color.colorError));
+            else if (goingTo.getCountrySatus() == 1)
+                holder.tvGoingCountry.setTextColor(mContext.getResources().getColor(R.color.colorNeutral));
+            else
+                holder.tvGoingCountry.setTextColor(mContext.getResources().getColor(R.color.colorPrimary));
+        }
     }
 
     @Override
@@ -57,11 +88,13 @@ public class MigrantListAdapter extends RecyclerView.Adapter<MigrantListAdapter.
     }
 
     public class MigrantHolder extends RecyclerView.ViewHolder {
-        public TextView textViewName, sex;
+        public TextView textViewName, sex, tvErrorCount, tvGoingCountry;
 
         public MigrantHolder(final View itemView) {
             super(itemView);
+            tvErrorCount = (TextView) itemView.findViewById(R.id.tvErrorCount);
             textViewName = (TextView) itemView.findViewById(R.id.tvMigrantName);
+            tvGoingCountry = (TextView) itemView.findViewById(R.id.tvCountryGoing);
             sex = (TextView) itemView.findViewById(R.id.tvMigrantAgeSex);
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override

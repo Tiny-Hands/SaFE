@@ -26,6 +26,7 @@ import java.util.ArrayList;
 public class DialogCountryChooser extends DialogFragment {
     Spinner spinner;
     String migName;
+    int status, blacklist;
     public static DialogCountryChooser newInstance() {
         DialogCountryChooser frag = new DialogCountryChooser();
         return frag;
@@ -61,8 +62,8 @@ public class DialogCountryChooser extends DialogFragment {
                     CountryModel country = countries.get(position - 1);
                     String cid = country.getCountryId();
                     String cname = country.getCountryName();
-                    int blacklist = country.getCountryBlacklist();
-                    int status = country.getCountrySatus();
+                    blacklist = country.getCountryBlacklist();
+                    status = country.getCountrySatus();
                     Log.d("mylog", "Country code: " + cid + " Status: " + status
                             + " Blacklist: " + blacklist);
                     if (blacklist == 1) {
@@ -76,7 +77,9 @@ public class DialogCountryChooser extends DialogFragment {
                         Intent intent = new Intent(getContext(), ActivityTileHome.class);
                         intent.putExtra("countryId", cid);
                         intent.putExtra("migrantName", migName);
-                        intent.putExtra("countryName", cname.toUpperCase());
+                        intent.putExtra("countryName", cname);
+                        intent.putExtra("countryStatus", status);
+                        intent.putExtra("countryBlacklist", blacklist);
                         dismiss();
                         getContext().startActivity(intent);
                     }
@@ -103,6 +106,8 @@ public class DialogCountryChooser extends DialogFragment {
                 intent.putExtra("countryId", cid);
                 intent.putExtra("migrantName", migName);
                 intent.putExtra("countryName", cname);
+                intent.putExtra("countryStatus", status);
+                intent.putExtra("countryBlacklist", blacklist);
                 dismiss();
                 getContext().startActivity(intent);
             }

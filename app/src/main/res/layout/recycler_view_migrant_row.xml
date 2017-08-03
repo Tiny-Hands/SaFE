@@ -48,12 +48,12 @@
         </LinearLayout>
 
         <com.vysh.subairoma.utils.CustomTextView
-            android:id="@+id/tvPercentComplete"
+            android:id="@+id/tvCountryGoing"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/ivUserLogo"
             android:layout_marginTop="@dimen/default_margin"
-            android:text="27% Complete"
+            android:text="Country"
             app:font="gotham_bold.ttf" />
 
         <com.vysh.subairoma.utils.CustomTextView
