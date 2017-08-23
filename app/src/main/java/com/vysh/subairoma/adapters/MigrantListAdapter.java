@@ -1,13 +1,8 @@
 package com.vysh.subairoma.adapters;
 
-import android.app.Activity;
-import android.app.DialogFragment;
-import android.app.FragmentManager;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -17,9 +12,9 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.vysh.subairoma.ActivityTileHome;
+import com.vysh.subairoma.activities.ActivityTileHome;
 import com.vysh.subairoma.ApplicationClass;
-import com.vysh.subairoma.DialogCountryChooser;
+import com.vysh.subairoma.dialogs.DialogCountryChooser;
 import com.vysh.subairoma.R;
 import com.vysh.subairoma.SQLHelpers.SQLDatabaseHelper;
 import com.vysh.subairoma.models.CountryModel;

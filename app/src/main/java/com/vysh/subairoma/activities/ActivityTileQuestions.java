@@ -1,14 +1,14 @@
-package com.vysh.subairoma;
+package com.vysh.subairoma.activities;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.WindowManager;
 import android.widget.TextView;
 
+import com.vysh.subairoma.R;
 import com.vysh.subairoma.SQLHelpers.SQLDatabaseHelper;
 import com.vysh.subairoma.adapters.TileQuestionsAdapter;
 import com.vysh.subairoma.models.TileQuestionsModel;

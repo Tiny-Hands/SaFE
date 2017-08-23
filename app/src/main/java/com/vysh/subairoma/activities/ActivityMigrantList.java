@@ -1,4 +1,4 @@
-package com.vysh.subairoma;
+package com.vysh.subairoma.activities;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -24,16 +24,16 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.vysh.subairoma.ApplicationClass;
+import com.vysh.subairoma.R;
 import com.vysh.subairoma.SQLHelpers.SQLDatabaseHelper;
 import com.vysh.subairoma.adapters.MigrantListAdapter;
 import com.vysh.subairoma.models.MigrantModel;
-import com.vysh.subairoma.volley.VolleyController;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;

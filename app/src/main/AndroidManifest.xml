@@ -10,23 +10,23 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
-        <activity android:name=".ActivitySplash">
+        <activity android:name=".activities.ActivitySplash">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
 
-        <activity android:name=".ActivityTileHome" />
+        <activity android:name=".activities.ActivityTileHome" />
         <activity
-            android:name=".ActivityTileQuestions"
+            android:name=".activities.ActivityTileQuestions"
             android:windowSoftInputMode="stateHidden" />
         <activity
-            android:name=".ActivityRegister"
+            android:name=".activities.ActivityRegister"
             android:windowSoftInputMode="stateHidden" />
-        <activity android:name=".ActivityMigrantList" />
-        <activity android:name=".ActivityOTPVerification" />
-        <activity android:name=".ActivityGasSection"/>
+        <activity android:name=".activities.ActivityMigrantList" />
+        <activity android:name=".activities.ActivityOTPVerification" />
+        <activity android:name=".activities.ActivityGasSection"/>
     </application>
 
 </manifest>

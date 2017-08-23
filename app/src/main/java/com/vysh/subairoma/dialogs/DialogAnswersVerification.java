@@ -1,22 +1,19 @@
-package com.vysh.subairoma;
+package com.vysh.subairoma.dialogs;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.vysh.subairoma.SQLHelpers.SQLDatabaseHelper;
-import com.vysh.subairoma.models.CountryModel;
-
-import org.w3c.dom.Text;
+import com.vysh.subairoma.R;
+import com.vysh.subairoma.activities.ActivityGasSection;
+import com.vysh.subairoma.activities.ActivityTileHome;
 
 /**
  * Created by Vishal on 8/1/2017.

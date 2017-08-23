@@ -1,5 +1,6 @@
-package com.vysh.subairoma;
+package com.vysh.subairoma.activities;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -12,8 +13,9 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
+import com.vysh.subairoma.dialogs.DialogAnswersVerification;
+import com.vysh.subairoma.R;
 import com.vysh.subairoma.SQLHelpers.SQLDatabaseHelper;
 import com.vysh.subairoma.adapters.TileAdapter;
 import com.vysh.subairoma.models.TilesModel;
@@ -24,14 +26,14 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 /**
- * Created by Vishal on 8/2/2017.
+ * Created by Vishal on 6/12/2017.
  */
 
-public class ActivityGasSection extends AppCompatActivity {
+public class ActivityTileHome extends AppCompatActivity {
     ArrayList<TilesModel> tiles;
-
+    public String migName, countryName, countryId;
+    public int blacklist, status;
     int[] tileIcons;
-
     @BindView(R.id.rvTiles)
     RecyclerView rvTiles;
     @BindView(R.id.rlRoot)
@@ -51,26 +53,26 @@ public class ActivityGasSection extends AppCompatActivity {
 
         ButterKnife.bind(this);
 
-        String cid = getIntent().getStringExtra("countryId");
-        if (cid.equalsIgnoreCase("in")) {
+        countryId = getIntent().getStringExtra("countryId");
+        migName = getIntent().getStringExtra("migrantName");
+        countryName = getIntent().getStringExtra("countryName");
+        status = getIntent().getIntExtra("countryStatus", -1);
+        blacklist = getIntent().getIntExtra("countryBlacklist", -1);
+        if (countryId.equalsIgnoreCase("in")) {
             //GET GIS TILES
-            tiles = new SQLDatabaseHelper(ActivityGasSection.this).getTiles("GAS");
+            tiles = new SQLDatabaseHelper(ActivityTileHome.this).getTiles("GIS");
         } else {
             //GET FEP TILES
-            tiles = new SQLDatabaseHelper(ActivityGasSection.this).getTiles("GAS");
+            tiles = new SQLDatabaseHelper(ActivityTileHome.this).getTiles("FEP");
         }
-        btnNext.setText("Complete");
         btnNext.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(ActivityGasSection.this, "The Process is Completed", Toast.LENGTH_SHORT).show();
+                new DialogAnswersVerification().show(getSupportFragmentManager(), "dialog");
             }
         });
-        String migrantName = getIntent().getStringExtra("migrantName").toUpperCase();
-        tvMigrantName.setText(migrantName);
-        tvCountry.setText(getIntent().getStringExtra("countryName"));
-        int status = getIntent().getIntExtra("countryStatus", -1);
-        int blacklist = getIntent().getIntExtra("countryBlacklist", -1);
+        tvMigrantName.setText(migName.toUpperCase());
+        tvCountry.setText(countryName.toUpperCase());
         if (status == 1) {
             tvCountry.setTextColor(getResources().getColor(R.color.colorNeutral));
         }
@@ -86,6 +88,14 @@ public class ActivityGasSection extends AppCompatActivity {
         tileIcons = new int[size];
         for (int i = 0; i < size; i++)
             tileIcons[i] = R.drawable.roller;
+    }
+
+    @Override
+    public void onBackPressed() {
+        //super.onBackPressed();
+        Intent intent = new Intent(ActivityTileHome.this, ActivityMigrantList.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
     }
 
     private void showSnackbar(String msg) {

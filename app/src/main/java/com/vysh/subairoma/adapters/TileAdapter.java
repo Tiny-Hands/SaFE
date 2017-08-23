@@ -8,7 +8,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.vysh.subairoma.ActivityTileQuestions;
+import com.vysh.subairoma.activities.ActivityTileQuestions;
 import com.vysh.subairoma.R;
 import com.vysh.subairoma.models.TilesModel;
 

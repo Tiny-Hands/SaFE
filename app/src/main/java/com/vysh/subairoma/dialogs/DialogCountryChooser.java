@@ -1,4 +1,4 @@
-package com.vysh.subairoma;
+package com.vysh.subairoma.dialogs;
 
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -14,7 +14,10 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 
+import com.vysh.subairoma.ApplicationClass;
+import com.vysh.subairoma.R;
 import com.vysh.subairoma.SQLHelpers.SQLDatabaseHelper;
+import com.vysh.subairoma.activities.ActivityTileHome;
 import com.vysh.subairoma.models.CountryModel;
 
 import java.util.ArrayList;

@@ -1,4 +1,4 @@
-package com.vysh.subairoma;
+package com.vysh.subairoma.activities;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -8,23 +8,19 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.WindowManager;
 
-import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.vysh.subairoma.ApplicationClass;
+import com.vysh.subairoma.R;
 import com.vysh.subairoma.SQLHelpers.SQLDatabaseHelper;
-import com.vysh.subairoma.models.MigrantModel;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Created by Vishal on 6/12/2017.
