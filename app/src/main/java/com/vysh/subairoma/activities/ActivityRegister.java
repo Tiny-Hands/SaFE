@@ -79,7 +79,8 @@ public class ActivityRegister extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         //Checking if already logged in on current device
-        if (checkUserExists()) {
+
+        if (checkUserExists() && !getIntent().hasExtra("migrantmode")) {
             Intent intent = new Intent(ActivityRegister.this, ActivityMigrantList.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);
@@ -90,10 +91,6 @@ public class ActivityRegister extends AppCompatActivity {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         ButterKnife.bind(this);
 
-        if (getIntent().hasExtra("migrantmode")) {
-            userRegistered = true;
-            loadMigrantView();
-        }
         rbFemale.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -122,6 +119,11 @@ public class ActivityRegister extends AppCompatActivity {
                 showRegistrationDialog();
             }
         });
+        if (getIntent().hasExtra("migrantmode")) {
+            userRegistered = true;
+            Log.d("mylog", "Loading migrant view");
+            loadMigrantView();
+        }
     }
 
     private boolean checkUserExists() {
@@ -317,10 +319,14 @@ public class ActivityRegister extends AppCompatActivity {
                     params.put("phone_number", etNumber.getText().toString());
                     params.put("age", etAge.getText().toString());
                     params.put("gender", sex);
-                    if (userType == 0) {
-                        params.put("user_id", "-1");
-                    } else if (userRegistered)
+                    if (userRegistered) {
                         params.put("user_id", ApplicationClass.getInstance().getUserId() + "");
+                        Log.d("mylog", "User ID: " + ApplicationClass.getInstance().getUserId());
+                    }
+                    else if (userType == 0) {
+                        params.put("user_id", "-1");
+                        Log.d("mylog", "User ID: " + -1);
+                    }
                     return params;
                 }
             };
@@ -350,11 +356,16 @@ public class ActivityRegister extends AppCompatActivity {
                     }
                     //Save to application class
                     userRegistered = true;
-                    loadMigrantView();
+                    startOTPActivity();
+                    return;
+                    //loadMigrantView();
                 }
                 //Means the registered person was migrant
                 else {
-                    startOTPActivity();
+                    //startOTPActivity();
+                    Intent intent = new Intent(ActivityRegister.this, ActivityMigrantList.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    startActivity(intent);
                 }
             } else {
                 String message = jsonResponse.getString("message");
@@ -408,6 +419,7 @@ public class ActivityRegister extends AppCompatActivity {
         etName.setHint("Migrant's Name");
         etAge.setHint("Migrant's Age");
         etNumber.setHint("Migrant's Phone Number");
+        btnAlreadyRegistered.setVisibility(View.INVISIBLE);
     }
 
     private void showSnackbar(String msg) {
