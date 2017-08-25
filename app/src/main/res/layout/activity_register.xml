@@ -46,9 +46,8 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_above="@+id/btnAlreadyRegistered"
-        android:layout_below="@+id/ivRegister">
+        android:layout_below="@+id/ivRegister"
+        android:layout_alignParentStart="true">
 
         <LinearLayout
             android:id="@+id/llForm"
@@ -175,13 +174,12 @@
         android:id="@+id/btnAlreadyRegistered"
         android:layout_width="@dimen/default_button_width"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/btnNext"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="@dimen/default_margin"
         android:background="?attr/selectableItemBackground"
         android:text="Already Registered"
         android:textColor="@color/grey"
-        android:textSize="12sp" />
+        android:textSize="12sp"
+        android:layout_above="@+id/btnNext"
+        android:layout_alignStart="@+id/btnNext" />
 
     <Button
         android:id="@+id/btnNext"
