@@ -6,6 +6,7 @@
     <dimen name="card_view_markers_dimen">24dp</dimen>
     <dimen name="default_button_height">42dp</dimen>
     <dimen name="default_button_width">196dp</dimen>
+    <dimen name="avatar_dimen">42dp</dimen>
     <dimen name="fab_dimen">52dp</dimen>
 
     <!-- Padding and Margin -->
@@ -16,6 +17,7 @@
     <dimen name="tile_text_margin">6dp</dimen>
     <dimen name="bottom_button_margin">24dp</dimen>
     <dimen name="toolbar_icon">38dp</dimen>
+    <dimen name="avatar_margin">8dp</dimen>
 
     <!-- Text -->
     <dimen name="card_view_marker_text">12sp</dimen>
