@@ -1,6 +1,7 @@
 package com.vysh.subairoma.activities;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
@@ -9,6 +10,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioButton;
@@ -30,6 +32,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import butterknife.BindView;
+import butterknife.ButterKnife;
 
 /**
  * Created by Vishal on 8/25/2017.
@@ -37,8 +40,8 @@ import butterknife.BindView;
 
 public class ActivityProfileEdit extends AppCompatActivity implements View.OnClickListener {
 
-    final String apiUpdateUser = "/saveuser.php";
-    final String apiUpdateMigrant = "/savemigrant.php";
+    final String apiUpdateUser = "/updateuser.php";
+    final String apiUpdateMigrant = "/updatemigrant.php";
 
     @BindView(R.id.btnNext)
     Button btnNext;
@@ -67,7 +70,8 @@ public class ActivityProfileEdit extends AppCompatActivity implements View.OnCli
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
-
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        ButterKnife.bind(this);
         userType = getIntent().getIntExtra("userType", 0);
 
         tvHint.setText("Edit Details");
@@ -95,10 +99,10 @@ public class ActivityProfileEdit extends AppCompatActivity implements View.OnCli
         String API = "";
         int id = -2;
         if (userType == 1) {
-            API = apiUpdateUser;
+            API = ApplicationClass.getInstance().getAPIROOT() + apiUpdateUser;
             id = ApplicationClass.getInstance().getUserId();
         } else if (userType == 2) {
-            API = apiUpdateMigrant;
+            API = ApplicationClass.getInstance().getAPIROOT() + apiUpdateMigrant;
             id = ApplicationClass.getInstance().getMigrantId();
         }
         String name = etName.getText().toString();
@@ -120,6 +124,9 @@ public class ActivityProfileEdit extends AppCompatActivity implements View.OnCli
             @Override
             public void onResponse(String response) {
                 progressDialog.dismiss();
+                Intent intent = new Intent(ActivityProfileEdit.this, ActivityMigrantList.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intent);
                 Log.d("mylog", "response : " + response);
             }
         }, new Response.ErrorListener() {

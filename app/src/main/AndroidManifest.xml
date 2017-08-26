@@ -26,7 +26,10 @@
             android:windowSoftInputMode="stateHidden" />
         <activity android:name=".activities.ActivityMigrantList" />
         <activity android:name=".activities.ActivityOTPVerification" />
-        <activity android:name=".activities.ActivityGasSection"/>
+        <activity android:name=".activities.ActivityGasSection" />
+        <activity
+            android:name=".activities.ActivityProfileEdit"
+            android:windowSoftInputMode="stateHidden" />
     </application>
 
 </manifest>

@@ -14,6 +14,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -54,6 +55,8 @@ public class ActivityMigrantList extends AppCompatActivity {
     Button btnAddMigrant;
     @BindView(R.id.rlRoot)
     RelativeLayout rootLayout;
+    @BindView(R.id.ivAvatar)
+    ImageView ivAvatar;
 
     ArrayList<MigrantModel> migrantModels;
     MigrantListAdapter migrantListAdapter;
@@ -77,6 +80,14 @@ public class ActivityMigrantList extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(ActivityMigrantList.this, ActivityRegister.class);
                 intent.putExtra("migrantmode", true);
+                startActivity(intent);
+            }
+        });
+        ivAvatar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(ActivityMigrantList.this, ActivityProfileEdit.class);
+                intent.putExtra("userType", 1);
                 startActivity(intent);
             }
         });

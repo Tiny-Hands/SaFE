@@ -11,6 +11,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -44,6 +45,8 @@ public class ActivityTileHome extends AppCompatActivity {
     TextView tvCountry;
     @BindView(R.id.btnNext)
     Button btnNext;
+    @BindView(R.id.ivAvatar)
+    ImageView ivAvatar;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -69,6 +72,14 @@ public class ActivityTileHome extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 new DialogAnswersVerification().show(getSupportFragmentManager(), "dialog");
+            }
+        });
+        ivAvatar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(ActivityTileHome.this, ActivityProfileEdit.class);
+                intent.putExtra("userType", 2);
+                startActivity(intent);
             }
         });
         tvMigrantName.setText(migName.toUpperCase());
