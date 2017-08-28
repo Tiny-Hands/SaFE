@@ -29,6 +29,8 @@ import com.vysh.subairoma.ApplicationClass;
 import com.vysh.subairoma.R;
 import com.vysh.subairoma.SQLHelpers.SQLDatabaseHelper;
 import com.vysh.subairoma.adapters.MigrantListAdapter;
+import com.vysh.subairoma.dialogs.DialogCountryChooser;
+import com.vysh.subairoma.models.CountryModel;
 import com.vysh.subairoma.models.MigrantModel;
 
 import org.json.JSONArray;
@@ -58,6 +60,7 @@ public class ActivityMigrantList extends AppCompatActivity {
     @BindView(R.id.ivAvatar)
     ImageView ivAvatar;
 
+    int userType;
     ArrayList<MigrantModel> migrantModels;
     MigrantListAdapter migrantListAdapter;
 
@@ -68,11 +71,12 @@ public class ActivityMigrantList extends AppCompatActivity {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         ButterKnife.bind(this);
 
+
+        userType = ApplicationClass.getInstance().getUserId();
         migrantModels = new ArrayList();
         getSavedMigrants();
         getMigrants();
         //setUpRecyclerView(null);
-        int userType = ApplicationClass.getInstance().getUserId();
         if (userType == -1)
             btnAddMigrant.setVisibility(View.GONE);
         btnAddMigrant.setOnClickListener(new View.OnClickListener() {
@@ -97,7 +101,33 @@ public class ActivityMigrantList extends AppCompatActivity {
         SQLDatabaseHelper dbHelper = new SQLDatabaseHelper(ActivityMigrantList.this);
         migrantModels = dbHelper.getMigrants();
         migrantListAdapter = new MigrantListAdapter();
-        setUpRecyclerView(migrantModels);
+        if (userType != -1) {
+            Log.d("mylog", "Usertype: " + userType);
+            setUpRecyclerView(migrantModels);
+        } else if (userType == -1) {
+            int migId = migrantModels.get(0).getMigrantId();
+            ApplicationClass.getInstance().setMigrantId(migId);
+            String cid = new SQLDatabaseHelper(ActivityMigrantList.this).getResponse(migId, "mg_destination");
+            Log.d("mylog", "Country ID: " + cid);
+            if (cid != null && !cid.isEmpty()) {
+                Intent intent = new Intent(ActivityMigrantList.this, ActivityTileHome.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                intent.putExtra("countryId", cid);
+                intent.putExtra("migrantName", migrantModels.get(0).getMigrantName());
+                CountryModel savedCountry = new SQLDatabaseHelper(ActivityMigrantList.this).getCountry(cid);
+                Log.d("mylog", "Country name: " + savedCountry.getCountryName());
+                intent.putExtra("countryName", savedCountry.getCountryName().toUpperCase());
+                intent.putExtra("countryStatus", savedCountry.getCountrySatus());
+                intent.putExtra("countryBlacklist", savedCountry.getCountryBlacklist());
+                startActivity(intent);
+            } else {
+                DialogCountryChooser dialog = DialogCountryChooser.newInstance();
+                dialog.setMigrantName(migrantModels.get(0).getMigrantName());
+                Log.d("mylog", "Migrant name: " + migrantModels.get(0).getMigrantName() + " : " + migrantModels.get(0).getMigrantId());
+                dialog.show(getSupportFragmentManager(), "countrychooser");
+                recyclerView.setVisibility(View.INVISIBLE);
+            }
+        }
     }
 
     private void getMigrants() {

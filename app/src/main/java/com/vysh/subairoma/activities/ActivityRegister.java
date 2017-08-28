@@ -132,9 +132,12 @@ public class ActivityRegister extends AppCompatActivity {
         String type = sharedPreferences.getString("type", "");
         Log.d("mylog", "User id: " + userId + " Type: " + type);
         if (userId != -10) {
-            if (type.equalsIgnoreCase("helper"))
+            if (type.equalsIgnoreCase("helper")) {
+                Log.d("mylog", "User already exists with ID: " + userId);
                 ApplicationClass.getInstance().setUserId(userId);
+            }
             else {
+                Log.d("mylog", "Migrant already exists, setting user ID: " + -1);
                 ApplicationClass.getInstance().setMigrantId(userId);
                 ApplicationClass.getInstance().setUserId(-1);
             }
@@ -322,8 +325,7 @@ public class ActivityRegister extends AppCompatActivity {
                     if (userRegistered) {
                         params.put("user_id", ApplicationClass.getInstance().getUserId() + "");
                         Log.d("mylog", "User ID: " + ApplicationClass.getInstance().getUserId());
-                    }
-                    else if (userType == 0) {
+                    } else if (userType == 0) {
                         params.put("user_id", "-1");
                         Log.d("mylog", "User ID: " + -1);
                     }
@@ -403,7 +405,10 @@ public class ActivityRegister extends AppCompatActivity {
         } else type = "migrant";
         SharedPreferences sharedPreferences = getSharedPreferences(ApplicationClass.getInstance().getSHAREDPREFSNAME(), MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putInt("id", ApplicationClass.getInstance().getUserId());
+        if (type.equalsIgnoreCase("helper"))
+            editor.putInt("id", ApplicationClass.getInstance().getUserId());
+        else if(type.equalsIgnoreCase("migrant"))
+            editor.putInt("id", ApplicationClass.getInstance().getMigrantId());
         editor.putString("type", type);
         editor.commit();
         Intent intent = new Intent(ActivityRegister.this, ActivityOTPVerification.class);
