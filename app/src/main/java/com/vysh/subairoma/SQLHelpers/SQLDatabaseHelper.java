@@ -72,7 +72,7 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
                     DatabaseTables.MigrantsTable.sex + " TEXT," +
                     DatabaseTables.MigrantsTable.phone_number + " TEXT," +
                     " UNIQUE (" + DatabaseTables.MigrantsTable.migrant_id +
-                    ", " + DatabaseTables.MigrantsTable.user_id + ") ON CONFLICT IGNORE);";
+                    ", " + DatabaseTables.MigrantsTable.user_id + "));";
 
     public SQLDatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -121,14 +121,6 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
     public void insertIsError(int migId, String variable, String isError) {
         SQLiteDatabase db = this.getWritableDatabase();
         Log.d("mylog", "Inserting isError: " + isError);
-        //Update row where MigrantId = migId and Variable = variable
-        /*String query = "UPDATE " + DatabaseTables.ResponseTable.TABLE_NAME + " SET " +
-                DatabaseTables.ResponseTable.is_error + "=" + "'" + isError + "'" + " WHERE " +
-                DatabaseTables.ResponseTable.migrant_id + "=" + "'" + migId + "'" + " AND " +
-                DatabaseTables.ResponseTable.response_variable + "=" + "'" + variable + "'";
-        Log.d("mylog", "Update query: " + query);
-        db.execSQL(query);*/
-
         ContentValues newValue = new ContentValues();
         if (isError.equalsIgnoreCase("false"))
             newValue.put(DatabaseTables.ResponseTable.is_error, "false");
@@ -140,7 +132,7 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
         Log.d("mylog", "Updated iserror rows: " + updateCount);
     }
 
-    public void getAllResponse(int migId) {
+    private void getAllResponse(int migId) {
         SQLiteDatabase db = this.getReadableDatabase();
         String query;
 
@@ -351,16 +343,24 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
     public void insertMigrants(int id, String name, int age, String phone, String sex, int userId) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
-        values.put(DatabaseTables.MigrantsTable.migrant_id, id);
         values.put(DatabaseTables.MigrantsTable.name, name);
         values.put(DatabaseTables.MigrantsTable.age, age);
         values.put(DatabaseTables.MigrantsTable.sex, sex);
         values.put(DatabaseTables.MigrantsTable.name, name);
-        values.put(DatabaseTables.MigrantsTable.user_id, userId);
         values.put(DatabaseTables.MigrantsTable.phone_number, phone);
-
-        long newRowId = db.insert(DatabaseTables.MigrantsTable.TABLE_NAME, null, values);
-        Log.d("mylog", "Inserted row ID; " + newRowId);
+        //If already exist the Update
+        String whereClause = DatabaseTables.MigrantsTable.migrant_id + " = " + id + " AND " +
+                DatabaseTables.MigrantsTable.user_id + " = " + userId;
+        long updateCount = db.update(DatabaseTables.MigrantsTable.TABLE_NAME, values, whereClause, null);
+        Log.d("mylog", "Updated row count: " + updateCount);
+        //If not update then insert
+        if (updateCount < 1) {
+            // Insert the new row, returning the primary key value of the new row
+            values.put(DatabaseTables.MigrantsTable.migrant_id, id);
+            values.put(DatabaseTables.MigrantsTable.user_id, userId);
+            long newRowId = db.insert(DatabaseTables.MigrantsTable.TABLE_NAME, null, values);
+            Log.d("mylog", "Inserted row ID: " + newRowId);
+        }
     }
 
     public int getMigrantErrorCount(int migId) {
