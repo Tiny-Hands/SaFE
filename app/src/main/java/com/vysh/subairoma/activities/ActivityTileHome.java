@@ -116,7 +116,7 @@ public class ActivityTileHome extends AppCompatActivity {
     public void onBackPressed() {
         //super.onBackPressed();
         Intent intent = new Intent(ActivityTileHome.this, ActivityMigrantList.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP|Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent);
     }
 
