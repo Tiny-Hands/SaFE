@@ -26,6 +26,8 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.vysh.subairoma.ApplicationClass;
 import com.vysh.subairoma.R;
+import com.vysh.subairoma.SQLHelpers.SQLDatabaseHelper;
+import com.vysh.subairoma.models.MigrantModel;
 import com.vysh.subairoma.utils.CustomTextView;
 
 import java.util.HashMap;
@@ -76,16 +78,23 @@ public class ActivityProfileEdit extends AppCompatActivity implements View.OnCli
 
         tvHint.setText("Edit Details");
         btnAlreadyRegistered.setVisibility(View.GONE);
-        getData();
+        btnNext.setOnClickListener(this);
+        if (userType == 2)
+            getData();
     }
 
     private void getData() {
         //Get Data
-        etNumber.setText("Saved Number");
-        etName.setText("Saved Number");
-        etAge.setText("Saved Age");
+        MigrantModel migrantModel = new SQLDatabaseHelper(ActivityProfileEdit.this).getMigrantDetails();
+        etName.setText(migrantModel.getMigrantName());
+        etNumber.setText(migrantModel.getMigrantPhone());
+        Log.d("mylog", "Age: " + migrantModel.getMigrantAge());
+        etAge.setText(migrantModel.getMigrantAge() + "");
+        String sex = migrantModel.getMigrantSex();
+        if (sex.equalsIgnoreCase("male")) {
+            rbMale.setChecked(true);
+        } else rbFemale.setChecked(true);
         tvTitle.setText("PROFILE");
-        btnNext.setOnClickListener(this);
     }
 
     @Override

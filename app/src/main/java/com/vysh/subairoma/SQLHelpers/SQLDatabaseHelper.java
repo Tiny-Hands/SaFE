@@ -414,4 +414,28 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
         }
         return migrantModels;
     }
+
+    public MigrantModel getMigrantDetails() {
+        SQLiteDatabase db = this.getReadableDatabase();
+        ArrayList<MigrantModel> migrantModels = new ArrayList<>();
+        Cursor cursor = db.rawQuery("SELECT * FROM " + DatabaseTables.MigrantsTable.TABLE_NAME + " WHERE "
+                + DatabaseTables.MigrantsTable.user_id + "=" + "'" + ApplicationClass.getInstance().getUserId() + "'" + " AND " +
+                DatabaseTables.MigrantsTable.migrant_id + "=" + "'" + ApplicationClass.getInstance().getMigrantId() + "'", null);
+        cursor.moveToNext();
+        int id = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseTables.MigrantsTable.migrant_id));
+        int uid = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseTables.MigrantsTable.user_id));
+        String name = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseTables.MigrantsTable.name));
+        String phone = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseTables.MigrantsTable.phone_number));
+        String sex = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseTables.MigrantsTable.sex));
+        int age = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseTables.MigrantsTable.age));
+        MigrantModel migrantModel = new MigrantModel();
+        migrantModel.setMigrantName(name);
+        migrantModel.setUserId(uid);
+        migrantModel.setMigrantAge(age);
+        migrantModel.setMigrantPhone(phone);
+        migrantModel.setMigrantId(id);
+        migrantModel.setMigrantSex(sex);
+        migrantModels.add(migrantModel);
+        return migrantModel;
+    }
 }
