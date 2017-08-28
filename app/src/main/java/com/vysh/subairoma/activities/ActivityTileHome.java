@@ -8,6 +8,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
@@ -19,6 +20,7 @@ import com.vysh.subairoma.dialogs.DialogAnswersVerification;
 import com.vysh.subairoma.R;
 import com.vysh.subairoma.SQLHelpers.SQLDatabaseHelper;
 import com.vysh.subairoma.adapters.TileAdapter;
+import com.vysh.subairoma.dialogs.DialogCountryChooser;
 import com.vysh.subairoma.models.TilesModel;
 
 import java.util.ArrayList;
@@ -84,6 +86,15 @@ public class ActivityTileHome extends AppCompatActivity {
         });
         tvMigrantName.setText(migName.toUpperCase());
         tvCountry.setText(countryName.toUpperCase());
+        tvCountry.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d("mylog", "Country change required");
+                DialogCountryChooser dialog = DialogCountryChooser.newInstance();
+                dialog.setMigrantName(migName.toUpperCase());
+                dialog.show(getSupportFragmentManager(), "countrydialog");
+            }
+        });
         if (status == 1) {
             tvCountry.setTextColor(getResources().getColor(R.color.colorNeutral));
         }
