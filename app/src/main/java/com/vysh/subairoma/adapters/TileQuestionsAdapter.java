@@ -31,6 +31,7 @@ import com.vysh.subairoma.models.TileQuestionsModel;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -145,16 +146,16 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
         if (question.getResponseType() == 0) {
             holder.checkbox.setVisibility(View.VISIBLE);
             holder.question.setVisibility(View.VISIBLE);
-            holder.spinnerOptions.setVisibility(View.INVISIBLE);
-            holder.etResponse.setVisibility(View.INVISIBLE);
+            holder.spinnerOptions.setVisibility(View.GONE);
+            holder.etResponse.setVisibility(View.GONE);
         } else if (question.getResponseType() == 1) {
             holder.checkbox.setVisibility(GONE);
-            holder.question.setVisibility(View.INVISIBLE);
-            holder.spinnerOptions.setVisibility(View.INVISIBLE);
+            holder.question.setVisibility(View.GONE);
+            holder.spinnerOptions.setVisibility(View.GONE);
             holder.etResponse.setVisibility(View.VISIBLE);
         } else if (question.getResponseType() == 2) {
             holder.checkbox.setVisibility(GONE);
-            holder.question.setVisibility(View.INVISIBLE);
+            holder.question.setVisibility(View.GONE);
             holder.etResponse.setVisibility(View.GONE);
             holder.spinnerOptions.setVisibility(View.VISIBLE);
             String[] options = question.getOptions();
@@ -180,7 +181,7 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
         } else if (onCheckClick) {
             holder.ivError.setVisibility(View.INVISIBLE);
         }
-        setValue(holder.checkbox, holder.etResponse, holder.spinnerOptions, position);
+        setValue(holder.checkbox, holder.etResponse, holder.spinnerOptions, holder.question, position);
     }
 
     private void notifyConditionVariableChange(ArrayList<Integer> questionIds) {
@@ -198,12 +199,15 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
         return questionsListDisplay.size();
     }
 
-    private void setValue(CheckBox checkBox, EditText etResponse, Spinner spinner, int position) {
+    private void setValue(CheckBox checkBox, EditText etResponse, Spinner spinner, TextView question, int position) {
         String variable = questionsListDisplay.get(position).getVariable();
         String response = sqlDatabaseHelper.getResponse(migrantId, variable);
         int responseType = questionsListDisplay.get(position).getResponseType();
         if (responseType == 0) {
             if (response == null || response.isEmpty()) {
+                Log.d("mylog", "0 Response: " + response);
+                question.setVisibility(View.GONE);
+                checkBox.setVisibility(View.GONE);
                 response = "false";
             }
             if (response.equalsIgnoreCase("true")) {
@@ -214,14 +218,26 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
                 checkBox.setChecked(false);
             }
         } else if (responseType == 1) {
-            fromSetView = true;
-            etResponse.setText(response);
+            if (response == null || response.isEmpty()) {
+                Log.d("mylog", "1 Response: " + response);
+                question.setVisibility(GONE);
+                etResponse.setVisibility(GONE);
+            } else {
+                fromSetView = true;
+                etResponse.setText(response);
+            }
         } else if (responseType == 2) {
-            fromSetView = true;
-            for (int i = 0; i < spinner.getCount(); i++) {
-                if (response.equalsIgnoreCase(spinner.getItemAtPosition(i).toString())) {
-                    spinner.setSelection(i);
-                    break;
+            if (response == null || response.isEmpty()) {
+                Log.d("mylog", "2 Response: " + response);
+                question.setVisibility(GONE);
+                spinner.setVisibility(GONE);
+            } else {
+                fromSetView = true;
+                for (int i = 0; i < spinner.getCount(); i++) {
+                    if (response.equalsIgnoreCase(spinner.getItemAtPosition(i).toString())) {
+                        spinner.setSelection(i);
+                        break;
+                    }
                 }
             }
         }
@@ -481,6 +497,7 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
             }
             details.setVisibility(GONE);
             helpLayout.setVisibility(View.GONE);
+
             isExpanded = false;
         }
 
@@ -491,6 +508,19 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
             }
             details.setVisibility(View.VISIBLE);
             helpLayout.setVisibility(View.VISIBLE);
+            int responseType = questionsListDisplay.get(getAdapterPosition()).getResponseType();
+            if(responseType == 0){
+                question.setVisibility(View.VISIBLE);
+                checkbox.setVisibility(View.VISIBLE);
+            }
+            else if(responseType == 1){
+                question.setVisibility(View.VISIBLE);
+                etResponse.setVisibility(View.VISIBLE);
+            }
+            else if(responseType == 2){
+                question.setVisibility(View.VISIBLE);
+                spinnerOptions.setVisibility(View.VISIBLE);
+            }
             isExpanded = true;
         }
 

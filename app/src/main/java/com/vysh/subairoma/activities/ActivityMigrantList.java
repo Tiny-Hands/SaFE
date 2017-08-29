@@ -139,24 +139,34 @@ public class ActivityMigrantList extends AppCompatActivity {
         StringRequest getRequest = new StringRequest(Request.Method.POST, api, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
-                progressDialog.dismiss();
-                migrantModels = parseResponse(response);
-                //migrantListAdapter.notifyDataSetChanged();
-                setUpRecyclerView(migrantModels);
-                Log.d("mylog", "response : " + response);
+                try {
+                    progressDialog.dismiss();
+                    migrantModels = parseResponse(response);
+                    //migrantListAdapter.notifyDataSetChanged();
+                    setUpRecyclerView(migrantModels);
+                    Log.d("mylog", "response : " + response);
+                }
+                catch (Exception ex){
+                    Log.d("mylog", "response exception: " + ex.toString());
+                }
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                progressDialog.dismiss();
-                String err = error.toString();
-                Log.d("mylog", "error : " + err);
-                if (!err.isEmpty() && err.contains("TimeoutError"))
-                    showSnackbar("Failed to connect to server :(");
-                else if (!err.isEmpty() && err.contains("NoConnection"))
-                    showSnackbar("Please connect to Internet for new Data :(");
-                else
-                    showSnackbar(error.toString());
+                try {
+                    progressDialog.dismiss();
+                    String err = error.toString();
+                    Log.d("mylog", "error : " + err);
+                    if (!err.isEmpty() && err.contains("TimeoutError"))
+                        showSnackbar("Failed to connect to server :(");
+                    else if (!err.isEmpty() && err.contains("NoConnection"))
+                        showSnackbar("Please connect to Internet for new Data :(");
+                    else
+                        showSnackbar(error.toString());
+                }
+                catch (Exception ex){
+                    Log.d("mylog", "Error exception: " + ex.toString());
+                }
             }
         }) {
             @Override
