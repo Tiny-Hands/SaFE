@@ -105,27 +105,29 @@ public class ActivityMigrantList extends AppCompatActivity {
             Log.d("mylog", "Usertype: " + userType);
             setUpRecyclerView(migrantModels);
         } else if (userType == -1) {
-            int migId = migrantModels.get(0).getMigrantId();
-            ApplicationClass.getInstance().setMigrantId(migId);
-            String cid = new SQLDatabaseHelper(ActivityMigrantList.this).getResponse(migId, "mg_destination");
-            Log.d("mylog", "Country ID: " + cid);
-            if (cid != null && !cid.isEmpty()) {
-                Intent intent = new Intent(ActivityMigrantList.this, ActivityTileHome.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                intent.putExtra("countryId", cid);
-                intent.putExtra("migrantName", migrantModels.get(0).getMigrantName());
-                CountryModel savedCountry = new SQLDatabaseHelper(ActivityMigrantList.this).getCountry(cid);
-                Log.d("mylog", "Country name: " + savedCountry.getCountryName());
-                intent.putExtra("countryName", savedCountry.getCountryName().toUpperCase());
-                intent.putExtra("countryStatus", savedCountry.getCountrySatus());
-                intent.putExtra("countryBlacklist", savedCountry.getCountryBlacklist());
-                startActivity(intent);
-            } else {
-                DialogCountryChooser dialog = DialogCountryChooser.newInstance();
-                dialog.setMigrantName(migrantModels.get(0).getMigrantName());
-                Log.d("mylog", "Migrant name: " + migrantModels.get(0).getMigrantName() + " : " + migrantModels.get(0).getMigrantId());
-                dialog.show(getSupportFragmentManager(), "countrychooser");
-                recyclerView.setVisibility(View.INVISIBLE);
+            if (migrantModels.size() > 0) {
+                int migId = migrantModels.get(0).getMigrantId();
+                ApplicationClass.getInstance().setMigrantId(migId);
+                String cid = new SQLDatabaseHelper(ActivityMigrantList.this).getResponse(migId, "mg_destination");
+                Log.d("mylog", "Country ID: " + cid);
+                if (cid != null && !cid.isEmpty()) {
+                    Intent intent = new Intent(ActivityMigrantList.this, ActivityTileHome.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    intent.putExtra("countryId", cid);
+                    intent.putExtra("migrantName", migrantModels.get(0).getMigrantName());
+                    CountryModel savedCountry = new SQLDatabaseHelper(ActivityMigrantList.this).getCountry(cid);
+                    Log.d("mylog", "Country name: " + savedCountry.getCountryName());
+                    intent.putExtra("countryName", savedCountry.getCountryName().toUpperCase());
+                    intent.putExtra("countryStatus", savedCountry.getCountrySatus());
+                    intent.putExtra("countryBlacklist", savedCountry.getCountryBlacklist());
+                    startActivity(intent);
+                } else {
+                    DialogCountryChooser dialog = DialogCountryChooser.newInstance();
+                    dialog.setMigrantName(migrantModels.get(0).getMigrantName());
+                    Log.d("mylog", "Migrant name: " + migrantModels.get(0).getMigrantName() + " : " + migrantModels.get(0).getMigrantId());
+                    dialog.show(getSupportFragmentManager(), "countrychooser");
+                    recyclerView.setVisibility(View.INVISIBLE);
+                }
             }
         }
     }
@@ -141,12 +143,21 @@ public class ActivityMigrantList extends AppCompatActivity {
             public void onResponse(String response) {
                 try {
                     progressDialog.dismiss();
+                    boolean firstRun = false;
+                    if (migrantModels == null || migrantModels.size() < 1) firstRun = true;
                     migrantModels = parseResponse(response);
                     //migrantListAdapter.notifyDataSetChanged();
-                    setUpRecyclerView(migrantModels);
+                    if (userType == -1 && firstRun) {
+                        DialogCountryChooser dialog = DialogCountryChooser.newInstance();
+                        dialog.setMigrantName(migrantModels.get(0).getMigrantName());
+                        Log.d("mylog", "Migrant name: " + migrantModels.get(0).getMigrantName() + " : " + migrantModels.get(0).getMigrantId());
+                        dialog.show(getSupportFragmentManager(), "countrychooser");
+                        recyclerView.setVisibility(View.INVISIBLE);
+                    } else {
+                        setUpRecyclerView(migrantModels);
+                    }
                     Log.d("mylog", "response : " + response);
-                }
-                catch (Exception ex){
+                } catch (Exception ex) {
                     Log.d("mylog", "response exception: " + ex.toString());
                 }
             }
@@ -163,8 +174,7 @@ public class ActivityMigrantList extends AppCompatActivity {
                         showSnackbar("Please connect to Internet for new Data :(");
                     else
                         showSnackbar(error.toString());
-                }
-                catch (Exception ex){
+                } catch (Exception ex) {
                     Log.d("mylog", "Error exception: " + ex.toString());
                 }
             }

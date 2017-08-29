@@ -30,6 +30,7 @@ public class DialogCountryChooser extends DialogFragment {
     Spinner spinner;
     String migName;
     int status, blacklist;
+
     public static DialogCountryChooser newInstance() {
         DialogCountryChooser frag = new DialogCountryChooser();
         return frag;
@@ -84,6 +85,8 @@ public class DialogCountryChooser extends DialogFragment {
                         intent.putExtra("countryStatus", status);
                         intent.putExtra("countryBlacklist", blacklist);
                         dismiss();
+                        if (ApplicationClass.getInstance().getUserId() == -1)
+                            intent = intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                         getContext().startActivity(intent);
                     }
                 }
@@ -112,13 +115,15 @@ public class DialogCountryChooser extends DialogFragment {
                 intent.putExtra("countryStatus", status);
                 intent.putExtra("countryBlacklist", blacklist);
                 dismiss();
+                if (ApplicationClass.getInstance().getUserId() == -1)
+                    intent = intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 getContext().startActivity(intent);
             }
         });
         mBuilder.setPositiveButton("Choose another Country", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                dismiss();
+                dialog.dismiss();
             }
         });
         mBuilder.show();
