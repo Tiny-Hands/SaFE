@@ -15,6 +15,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.vysh.subairoma.ApplicationClass;
 import com.vysh.subairoma.dialogs.DialogAnswersVerification;
@@ -34,10 +35,13 @@ import butterknife.ButterKnife;
  */
 
 public class ActivityTileHome extends AppCompatActivity {
-    ArrayList<TilesModel> tiles;
+    ArrayList<TilesModel> tiles, tilesGAS;
     public String migName, countryName, countryId;
     public int blacklist, status;
     int[] tileIcons;
+    TileAdapter tileAdapter;
+    Boolean finalSection = false;
+
     @BindView(R.id.rvTiles)
     RecyclerView rvTiles;
     @BindView(R.id.rlRoot)
@@ -59,6 +63,7 @@ public class ActivityTileHome extends AppCompatActivity {
 
         ButterKnife.bind(this);
 
+
         countryId = getIntent().getStringExtra("countryId");
         migName = getIntent().getStringExtra("migrantName");
         countryName = getIntent().getStringExtra("countryName");
@@ -70,11 +75,15 @@ public class ActivityTileHome extends AppCompatActivity {
         } else {
             //GET FEP TILES
             tiles = new SQLDatabaseHelper(ActivityTileHome.this).getTiles("FEP");
+            tilesGAS = new SQLDatabaseHelper(ActivityTileHome.this).getTiles("GAS");
         }
         btnNext.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new DialogAnswersVerification().show(getSupportFragmentManager(), "dialog");
+                if (!finalSection)
+                    new DialogAnswersVerification().show(getSupportFragmentManager(), "dialog");
+                else
+                    Toast.makeText(ActivityTileHome.this, "Completed", Toast.LENGTH_SHORT).show();
             }
         });
         ivAvatar.setOnClickListener(new View.OnClickListener() {
@@ -91,9 +100,9 @@ public class ActivityTileHome extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Log.d("mylog", "Country change required");
-                DialogCountryChooser dialog = DialogCountryChooser.newInstance();
+               /* DialogCountryChooser dialog = DialogCountryChooser.newInstance();
                 dialog.setMigrantName(migName.toUpperCase());
-                dialog.show(getSupportFragmentManager(), "countrydialog");
+                dialog.show(getSupportFragmentManager(), "countrydialog");*/
             }
         });
         if (status == 1) {
@@ -136,6 +145,17 @@ public class ActivityTileHome extends AppCompatActivity {
 
     private void setUpRecyclerView() {
         rvTiles.setLayoutManager(new GridLayoutManager(this, 2));
-        rvTiles.setAdapter(new TileAdapter(tiles, tileIcons));
+        tileAdapter = new TileAdapter(tiles, tileIcons);
+        rvTiles.setAdapter(tileAdapter);
+
+    }
+
+    public void setUpGasSections() {
+        for (int i = 0; i < tilesGAS.size(); i++) {
+            tiles.add(i, tilesGAS.get(i));
+        }
+        finalSection = true;
+        tileAdapter.notifyDataSetChanged();
+        rvTiles.scrollToPosition(tiles.size() - 1);
     }
 }

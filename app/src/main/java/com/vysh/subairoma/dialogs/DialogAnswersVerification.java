@@ -53,7 +53,8 @@ public class DialogAnswersVerification extends DialogFragment implements View.On
                     intent.putExtra("countryStatus", activity.status);
                     intent.putExtra("countryBlacklist", activity.blacklist);
                     dismiss();
-                    startActivity(intent);
+                    //startActivity(intent);
+                    activity.setUpGasSections();
                 } else {
                     tvCheckTerm.setTextColor(getResources().getColor(R.color.colorError));
                 }

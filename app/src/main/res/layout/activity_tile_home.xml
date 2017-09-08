@@ -58,7 +58,7 @@
 
     </android.support.v7.widget.Toolbar>
 
-    <ScrollView
+    <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/toolbar">
@@ -73,10 +73,10 @@
                 android:id="@+id/rvTiles"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:nestedScrollingEnabled="false"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginBottom="@dimen/medium_margin"
-                android:clipToPadding="false" />
+                android:clipToPadding="false"
+                android:nestedScrollingEnabled="false" />
 
             <Button
                 android:id="@+id/btnNext"
@@ -88,6 +88,6 @@
                 android:text="NEXT"
                 android:textColor="#fff" />
         </LinearLayout>
-    </ScrollView>
+    </android.support.v4.widget.NestedScrollView>
 
 </RelativeLayout>

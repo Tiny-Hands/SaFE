@@ -37,7 +37,7 @@ public class TileAdapter extends RecyclerView.Adapter<TileAdapter.TileViewHolder
     @Override
     public void onBindViewHolder(TileViewHolder holder, int position) {
         holder.tvTile.setText(tileList.get(position).getTitle());
-        holder.ivTile.setBackgroundResource(ivTiles[position]);
+        //holder.ivTile.setBackgroundResource(ivTiles[position]);
     }
 
     @Override
