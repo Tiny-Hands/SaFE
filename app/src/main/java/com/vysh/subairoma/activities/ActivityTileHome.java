@@ -40,7 +40,7 @@ public class ActivityTileHome extends AppCompatActivity {
     public int blacklist, status;
     int[] tileIcons;
     TileAdapter tileAdapter;
-    Boolean finalSection = false;
+    public static Boolean finalSection = false;
 
     @BindView(R.id.rvTiles)
     RecyclerView rvTiles;
@@ -125,6 +125,7 @@ public class ActivityTileHome extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         //super.onBackPressed();
+        finalSection = false;
         if (ApplicationClass.getInstance().getUserId() == -1)
             super.onBackPressed();
         else {

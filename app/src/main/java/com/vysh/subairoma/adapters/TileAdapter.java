@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.vysh.subairoma.activities.ActivityTileHome;
 import com.vysh.subairoma.activities.ActivityTileQuestions;
 import com.vysh.subairoma.R;
 import com.vysh.subairoma.models.TilesModel;
@@ -35,8 +36,15 @@ public class TileAdapter extends RecyclerView.Adapter<TileAdapter.TileViewHolder
     }
 
     @Override
-    public void onBindViewHolder(TileViewHolder holder, int position) {
+    public void onBindViewHolder(TileViewHolder holder, final int position) {
         holder.tvTile.setText(tileList.get(position).getTitle());
+        if (ActivityTileHome.finalSection) {
+            if (tileList.get(position).getType().equalsIgnoreCase("GAS")) {
+                holder.viewDisabled.setVisibility(View.GONE);
+            } else {
+                holder.viewDisabled.setVisibility(View.VISIBLE);
+            }
+        }
         //holder.ivTile.setBackgroundResource(ivTiles[position]);
     }
 
@@ -48,20 +56,31 @@ public class TileAdapter extends RecyclerView.Adapter<TileAdapter.TileViewHolder
     public class TileViewHolder extends RecyclerView.ViewHolder {
         public TextView tvTile;
         public ImageView ivTile;
+        public View viewDisabled;
 
         public TileViewHolder(View itemView) {
             super(itemView);
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent intent = new Intent(v.getContext(), ActivityTileQuestions.class);
-                    intent.putExtra("tileId", tileList.get(getAdapterPosition()).getTileId());
-                    intent.putExtra("tileName", tileList.get(getAdapterPosition()).getTitle());
-                    v.getContext().startActivity(intent);
+                    if (ActivityTileHome.finalSection) {
+                        if (tileList.get(getAdapterPosition()).getType().equalsIgnoreCase("GAS")) {
+                            Intent intent = new Intent(v.getContext(), ActivityTileQuestions.class);
+                            intent.putExtra("tileId", tileList.get(getAdapterPosition()).getTileId());
+                            intent.putExtra("tileName", tileList.get(getAdapterPosition()).getTitle());
+                            v.getContext().startActivity(intent);
+                        }
+                    } else {
+                        Intent intent = new Intent(v.getContext(), ActivityTileQuestions.class);
+                        intent.putExtra("tileId", tileList.get(getAdapterPosition()).getTileId());
+                        intent.putExtra("tileName", tileList.get(getAdapterPosition()).getTitle());
+                        v.getContext().startActivity(intent);
+                    }
                 }
             });
             tvTile = (TextView) itemView.findViewById(R.id.tvTitle);
             ivTile = (ImageView) itemView.findViewById(R.id.ivTitle);
+            viewDisabled = itemView.findViewById(R.id.viewDisabled);
         }
     }
 }

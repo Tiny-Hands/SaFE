@@ -253,6 +253,8 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
             tilesModel.setDescription(desc);
             tilesModel.setTileId(id);
             tilesModel.setTileOrder(order);
+            tilesModel.setType(type
+            );
             tileList.add(tilesModel);
         }
         return tileList;
