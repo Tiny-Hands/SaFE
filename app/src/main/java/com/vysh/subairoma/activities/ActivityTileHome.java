@@ -17,6 +17,13 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.vysh.subairoma.ApplicationClass;
 import com.vysh.subairoma.dialogs.DialogAnswersVerification;
 import com.vysh.subairoma.R;
@@ -26,6 +33,8 @@ import com.vysh.subairoma.dialogs.DialogCountryChooser;
 import com.vysh.subairoma.models.TilesModel;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -35,6 +44,7 @@ import butterknife.ButterKnife;
  */
 
 public class ActivityTileHome extends AppCompatActivity {
+    private final String saveAPI = "/saveresponse.php";
     ArrayList<TilesModel> tiles, tilesGAS;
     public String migName, countryName, countryId;
     public int blacklist, status;
@@ -63,7 +73,6 @@ public class ActivityTileHome extends AppCompatActivity {
 
         ButterKnife.bind(this);
 
-
         countryId = getIntent().getStringExtra("countryId");
         migName = getIntent().getStringExtra("migrantName");
         countryName = getIntent().getStringExtra("countryName");
@@ -77,23 +86,7 @@ public class ActivityTileHome extends AppCompatActivity {
             tiles = new SQLDatabaseHelper(ActivityTileHome.this).getTiles("FEP");
             tilesGAS = new SQLDatabaseHelper(ActivityTileHome.this).getTiles("GAS");
         }
-        btnNext.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (!finalSection)
-                    new DialogAnswersVerification().show(getSupportFragmentManager(), "dialog");
-                else
-                    Toast.makeText(ActivityTileHome.this, "Completed", Toast.LENGTH_SHORT).show();
-            }
-        });
-        ivAvatar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(ActivityTileHome.this, ActivityProfileEdit.class);
-                intent.putExtra("userType", 2);
-                startActivity(intent);
-            }
-        });
+
         tvMigrantName.setText(migName.toUpperCase());
         tvCountry.setText(countryName.toUpperCase());
         tvCountry.setOnClickListener(new View.OnClickListener() {
@@ -108,11 +101,35 @@ public class ActivityTileHome extends AppCompatActivity {
         if (status == 1) {
             tvCountry.setTextColor(getResources().getColor(R.color.colorNeutral));
         }
+
         if (blacklist == 1) {
             tvCountry.setTextColor(getResources().getColor(R.color.colorError));
         }
+        setUpListeners();
         setTileIcons();
         setUpRecyclerView();
+    }
+
+    private void setUpListeners() {
+        btnNext.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!finalSection)
+                    new DialogAnswersVerification().show(getSupportFragmentManager(), "dialog");
+                else
+                    Toast.makeText(ActivityTileHome.this, "Completed", Toast.LENGTH_SHORT).show();
+                getAllResponses();
+            }
+        });
+
+        ivAvatar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(ActivityTileHome.this, ActivityProfileEdit.class);
+                intent.putExtra("userType", 2);
+                startActivity(intent);
+            }
+        });
     }
 
     private void setTileIcons() {
@@ -159,4 +176,41 @@ public class ActivityTileHome extends AppCompatActivity {
         tileAdapter.notifyDataSetChanged();
         rvTiles.scrollToPosition(tiles.size() - 1);
     }
+
+    private void getAllResponses() {
+        ArrayList<HashMap> allParams = new SQLDatabaseHelper(ActivityTileHome.this)
+                .getAllResponse(ApplicationClass.getInstance().getMigrantId());
+        RequestQueue queue = Volley.newRequestQueue(ActivityTileHome.this);
+        for (int i = 0; i < allParams.size(); i++) {
+            saveResponseToServer(allParams.get(i), queue);
+        }
+    }
+
+    private void saveResponseToServer(final HashMap<String, String> fParams, RequestQueue queue) {
+        String api = ApplicationClass.getInstance().getAPIROOT() + saveAPI;
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, api, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                Log.d("mylog", "Response: " + response);
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                String err = error.toString();
+                if (!err.isEmpty() && err.contains("NoConnection"))
+                    showSnackbar("Response cannot be saved at the moment, please check your Intenet connection.");
+            }
+        }) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                for(Object key: fParams.keySet()){
+                    Log.d("mylog", key + ": " + fParams.get(key));
+                }
+                return fParams;
+            }
+        };
+
+        queue.add(stringRequest);
+    }
+
 }

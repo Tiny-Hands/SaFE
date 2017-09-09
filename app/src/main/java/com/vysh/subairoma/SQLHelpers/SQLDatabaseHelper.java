@@ -1,5 +1,6 @@
 package com.vysh.subairoma.SQLHelpers;
 
+import android.app.Application;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -15,6 +16,7 @@ import com.vysh.subairoma.models.TileQuestionsModel;
 import com.vysh.subairoma.models.TilesModel;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 
 /**
@@ -132,24 +134,36 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
         Log.d("mylog", "Updated iserror rows: " + updateCount);
     }
 
-    private void getAllResponse(int migId) {
+    public ArrayList<HashMap> getAllResponse(int migId) {
         SQLiteDatabase db = this.getReadableDatabase();
         String query;
-
+        ArrayList<HashMap> allResponses = new ArrayList<>();
         query = "SELECT * FROM " + DatabaseTables.ResponseTable.TABLE_NAME + " WHERE " +
                 DatabaseTables.ResponseTable.migrant_id + "=" + "'" + migId + "'";
         //Log.d("mylog", "Query: " + query);
         Cursor cursor = db.rawQuery(query, null);
         String response = "";
         Log.d("mylog", "Response for Migrant ID: " + migId);
+        int userId = ApplicationClass.getInstance().getUserId();
         while (cursor.moveToNext()) {
             String qvar = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseTables.ResponseTable.response_variable));
             response = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseTables.ResponseTable.response));
             int mid = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseTables.ResponseTable.migrant_id));
             int qid = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseTables.ResponseTable.question_id));
             String error = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseTables.ResponseTable.is_error));
-            Log.d("mylog", "Mid: " + mid + " Qid: " + qid + " Response: " + response + " Variable: " + qvar + " isError: " + error);
+            Log.d("mylog", "Uid: " + userId + " Mid: " + mid + " Qid: " + qid + " Response: " + response + " Variable: " + qvar + " isError: " + error);
+            HashMap<String, String> params = new HashMap<>();
+            params.put("user_id", "" + userId);
+            params.put("migrant_id", "" + mid);
+            params.put("question_id", "" + qid);
+            params.put("response", response);
+            params.put("response_variable", qvar);
+            if (error == null)
+                error = "false";
+            params.put("is_error", error);
+            allResponses.add(params);
         }
+        return allResponses;
     }
 
     public String getResponse(int migId, String variable) {

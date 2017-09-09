@@ -132,7 +132,7 @@ public class ActivitySplash extends AppCompatActivity {
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-
+                Log.d("mylog", "Error getting questions: " + error.toString());
             }
         });
         RequestQueue queue = Volley.newRequestQueue(ActivitySplash.this);
@@ -154,7 +154,7 @@ public class ActivitySplash extends AppCompatActivity {
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-
+                Log.d("mylog", "Error getting options: " + error.toString());
             }
         });
         RequestQueue queue = Volley.newRequestQueue(ActivitySplash.this);
@@ -176,7 +176,7 @@ public class ActivitySplash extends AppCompatActivity {
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-
+                Log.d("mylog", "Error getting countries: " + error.toString());
             }
         });
         RequestQueue queue = Volley.newRequestQueue(ActivitySplash.this);
@@ -287,7 +287,7 @@ public class ActivitySplash extends AppCompatActivity {
                     int status = tempCountry.getInt("country_status");
                     int blacklist = tempCountry.getInt("country_blacklist");
                     Log.d("mylog", "Country id: " + tempCountry.getString("country_id") + " Country name: " + tempCountry.getString("country_name")
-                    + " Status: " + tempCountry.getInt("country_status") + " Blacklist: "+ tempCountry.getInt("country_blacklist"));
+                            + " Status: " + tempCountry.getInt("country_status") + " Blacklist: " + tempCountry.getInt("country_blacklist"));
                     dbHelper.insertCountry(id, name, status, blacklist);
                 }
             }
