@@ -1,5 +1,6 @@
 package com.vysh.subairoma.activities;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -30,8 +31,10 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.vysh.subairoma.ApplicationClass;
 import com.vysh.subairoma.R;
+import com.vysh.subairoma.SQLHelpers.SQLDatabaseHelper;
 import com.vysh.subairoma.utils.CustomTextView;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -48,6 +51,7 @@ import butterknife.ButterKnife;
 public class ActivityRegister extends AppCompatActivity {
     final String apiURL = "/saveuser.php";
     final String apiURLMigrant = "/savemigrant.php";
+    final String apiGetAllResponses = "/getallresponses.php";
     final String apiAlreadyRegistered = "/checkphonenumber.php";
     int userType;
 
@@ -135,8 +139,7 @@ public class ActivityRegister extends AppCompatActivity {
             if (type.equalsIgnoreCase("helper")) {
                 Log.d("mylog", "User already exists with ID: " + userId);
                 ApplicationClass.getInstance().setUserId(userId);
-            }
-            else {
+            } else {
                 Log.d("mylog", "Migrant already exists, setting user ID: " + -1);
                 ApplicationClass.getInstance().setMigrantId(userId);
                 ApplicationClass.getInstance().setUserId(-1);
@@ -193,7 +196,8 @@ public class ActivityRegister extends AppCompatActivity {
                         showSnackbar(jsonRes.getString("message"));
                     } else {
                         ApplicationClass.getInstance().setUserId(jsonRes.getInt("user_id"));
-                        startOTPActivity();
+                        //Getting all the saved responses for the user
+                        getAllResponses();
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -407,7 +411,7 @@ public class ActivityRegister extends AppCompatActivity {
         SharedPreferences.Editor editor = sharedPreferences.edit();
         if (type.equalsIgnoreCase("helper"))
             editor.putInt("id", ApplicationClass.getInstance().getUserId());
-        else if(type.equalsIgnoreCase("migrant"))
+        else if (type.equalsIgnoreCase("migrant"))
             editor.putInt("id", ApplicationClass.getInstance().getMigrantId());
         editor.putString("type", type);
         editor.commit();
@@ -435,5 +439,61 @@ public class ActivityRegister extends AppCompatActivity {
         if (Build.VERSION.SDK_INT >= 17)
             tv.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
         snack.show();
+    }
+
+    public void getAllResponses() {
+        String api = ApplicationClass.getInstance().getAPIROOT() + apiGetAllResponses;
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, api, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                Log.d("mylog", "Responses from migrants: " + response);
+                parseAllResponses(response);
+                startOTPActivity();
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.d("mylog", "Error getting all responses: " + error.toString());
+            }
+        }) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                HashMap<String, String> params = new HashMap<>();
+                params.put("user_id", ApplicationClass.getInstance().getUserId() + "");
+                return params;
+            }
+        };
+
+        RequestQueue queue = Volley.newRequestQueue(ActivityRegister.this);
+        queue.add(stringRequest);
+    }
+
+    private void parseAllResponses(String res) {
+        JSONObject jsonResponse = null;
+        try {
+            jsonResponse = new JSONObject(res);
+            Boolean error = jsonResponse.getBoolean("error");
+            if (!error) {
+                Log.d("mylog", "NO error sorting responses");
+                JSONArray responsesJsonArray = jsonResponse.getJSONArray("responses");
+                JSONObject tempResponse;
+                SQLDatabaseHelper dbHelper = new SQLDatabaseHelper(ActivityRegister.this);
+                for (int i = 0; i < responsesJsonArray.length(); i++) {
+                    tempResponse = responsesJsonArray.getJSONObject(i);
+                    int migrantId = tempResponse.getInt("migrant_id");
+                    int questionId = tempResponse.getInt("question_id");
+                    String responseVariable = tempResponse.getString("response_variable");
+                    String response = tempResponse.getString("response");
+                    String isError = tempResponse.getString("is_error");
+                    Log.d("mylog", "Inserting");
+                    dbHelper.insertAllResponses(response, questionId, migrantId, responseVariable, isError);
+                }
+            } else {
+                Log.d("mylog", "No responses found");
+            }
+        } catch (JSONException e) {
+            Log.d("mylog", "Error in user response: " + e.toString());
+        }
+
     }
 }

@@ -120,6 +120,20 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
         }
     }
 
+    public void insertAllResponses(String response, int question_id, int migrant_id, String variable, String isError) {
+        // Gets the data repository in write mode
+        SQLiteDatabase db = this.getWritableDatabase();
+        // Create a new map of values, where column names are the keys
+        ContentValues values = new ContentValues();
+        values.put(DatabaseTables.ResponseTable.response, response);
+        values.put(DatabaseTables.ResponseTable.migrant_id, migrant_id);
+        values.put(DatabaseTables.ResponseTable.response_variable, variable);
+        values.put(DatabaseTables.ResponseTable.question_id, question_id);
+        values.put(DatabaseTables.ResponseTable.is_error, isError);
+        long newRowId = db.insert(DatabaseTables.ResponseTable.TABLE_NAME, null, values);
+        Log.d("mylog", "Inserted row ID: " + newRowId);
+    }
+
     public void insertIsError(int migId, String variable, String isError) {
         SQLiteDatabase db = this.getWritableDatabase();
         Log.d("mylog", "Inserting isError: " + isError);
