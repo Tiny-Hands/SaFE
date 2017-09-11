@@ -32,6 +32,7 @@ import com.android.volley.toolbox.Volley;
 import com.vysh.subairoma.ApplicationClass;
 import com.vysh.subairoma.R;
 import com.vysh.subairoma.SQLHelpers.SQLDatabaseHelper;
+import com.vysh.subairoma.dialogs.DialogCountryChooser;
 import com.vysh.subairoma.utils.CustomTextView;
 
 import org.json.JSONArray;
@@ -52,7 +53,9 @@ public class ActivityRegister extends AppCompatActivity {
     final String apiURL = "/saveuser.php";
     final String apiURLMigrant = "/savemigrant.php";
     final String apiGetAllResponses = "/getallresponses.php";
+    final String apiGetResponses = "/getresponses.php";
     final String apiAlreadyRegistered = "/checkphonenumber.php";
+    private final String apiGetMigrants = "/getmigrants.php";
     int userType;
 
     @BindView(R.id.btnNext)
@@ -160,9 +163,25 @@ public class ActivityRegister extends AppCompatActivity {
         dialogBuilder.setMessage("Enter the number that you registered");
         dialogBuilder.setPositiveButton("Done", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
-                String number = etRNumber.getText().toString();
+                final String number = etRNumber.getText().toString();
                 if (!number.isEmpty() && number.length() == 10) {
-                    checkUserRegistration(number);
+                    AlertDialog.Builder builder = new AlertDialog.Builder(ActivityRegister.this);
+                    builder.setTitle("Select User Type");
+                    builder.setPositiveButton("I am Helping Others", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            checkUserRegistration(number, 0);
+                            dialog.dismiss();
+                        }
+                    });
+                    builder.setNegativeButton("I am an Aspiring Migrant", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            checkUserRegistration(number, 1);
+                            dialog.dismiss();
+                        }
+                    });
+                    builder.show();
                 } else {
                     etNumber.setError("Please enter a valid number");
                 }
@@ -177,7 +196,7 @@ public class ActivityRegister extends AppCompatActivity {
         b.show();
     }
 
-    private void checkUserRegistration(String number) {
+    private void checkUserRegistration(String number, final int userType) {
         final String pNumber = number;
         String api = ApplicationClass.getInstance().getAPIROOT() + apiAlreadyRegistered;
         final ProgressDialog progressDialog = new ProgressDialog(ActivityRegister.this);
@@ -195,9 +214,15 @@ public class ActivityRegister extends AppCompatActivity {
                     if (error) {
                         showSnackbar(jsonRes.getString("message"));
                     } else {
-                        ApplicationClass.getInstance().setUserId(jsonRes.getInt("user_id"));
+                        if (userType == 1) {
+                            ApplicationClass.getInstance().setUserId(-1);
+                            ApplicationClass.getInstance().setMigrantId(jsonRes.getInt("id"));
+                            getMigrantDetails();
+                        } else {
+                            ApplicationClass.getInstance().setUserId(jsonRes.getInt("id"));
+                        }
                         //Getting all the saved responses for the user
-                        getAllResponses();
+                        getAllResponses(userType);
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -220,6 +245,7 @@ public class ActivityRegister extends AppCompatActivity {
             protected Map<String, String> getParams() throws AuthFailureError {
                 HashMap<String, String> params = new HashMap<>();
                 params.put("number", pNumber);
+                params.put("user_type", userType + "");
                 return params;
             }
         };
@@ -228,118 +254,191 @@ public class ActivityRegister extends AppCompatActivity {
         queue.add(checkRequest);
     }
 
-    private void saveUser() {
-        if (!userRegistered) {
-            userType = 0;
-            AlertDialog.Builder builder = new AlertDialog.Builder(ActivityRegister.this);
-            builder.setPositiveButton("REGISTER", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    String api;
-                    if (userType == 0) {
-                        api = ApplicationClass.getInstance().getAPIROOT() + apiURLMigrant;
-                    } else {
-                        api = ApplicationClass.getInstance().getAPIROOT() + apiURL;
-                    }
-                    Log.d("mylog", "API called: " + api);
-                    final ProgressDialog progressDialog = new ProgressDialog(ActivityRegister.this);
-                    progressDialog.setTitle("Please wait");
-                    progressDialog.setMessage("Registering...");
-                    progressDialog.setCancelable(false);
-                    progressDialog.show();
-                    StringRequest saveRequest = new StringRequest(Request.Method.POST, api, new Response.Listener<String>() {
-                        @Override
-                        public void onResponse(String response) {
-                            progressDialog.dismiss();
-                            Log.d("mylog", "response : " + response);
-                            parseResponse(response);
-                        }
-                    }, new Response.ErrorListener() {
-                        @Override
-                        public void onErrorResponse(VolleyError error) {
-                            progressDialog.dismiss();
-                            String err = error.toString();
-                            Log.d("mylog", "error : " + err);
-                            if (!err.isEmpty() && err.contains("TimeoutError"))
-                                showSnackbar("Failed to connect to server :(");
-                            else
-                                showSnackbar(error.toString());
-                        }
-                    }) {
-                        @Override
-                        protected Map<String, String> getParams() throws AuthFailureError {
-                            HashMap<String, String> params = new HashMap<>();
-                            params.put("full_name", etName.getText().toString());
-                            params.put("phone_number", etNumber.getText().toString());
-                            params.put("age", etAge.getText().toString());
-                            params.put("gender", sex);
-                            if (userType == 0) {
-                                params.put("user_id", "-1");
-                            } else if (userRegistered)
-                                params.put("user_id", ApplicationClass.getInstance().getUserId() + "");
-                            return params;
-                        }
-                    };
-                    RequestQueue queue = Volley.newRequestQueue(ActivityRegister.this);
-                    saveRequest.setShouldCache(false);
-                    queue.add(saveRequest);
-                }
-            });
-            builder.setSingleChoiceItems(new String[]{"I am an aspiring Migrant", "I am helping others"}, 0, new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    Log.d("mylog", "Which: " + which);
-                    userType = which;
-                }
-            });
-            builder.show();
-        } else {
-            String api = ApplicationClass.getInstance().getAPIROOT() + apiURLMigrant;
-            final ProgressDialog progressDialog = new ProgressDialog(ActivityRegister.this);
-            progressDialog.setTitle("Please wait");
-            progressDialog.setMessage("Registering...");
-            progressDialog.setCancelable(false);
-            progressDialog.show();
-            StringRequest saveRequest = new StringRequest(Request.Method.POST, api, new Response.Listener<String>() {
-                @Override
-                public void onResponse(String response) {
+    private void getMigrantDetails() {
+        String api = ApplicationClass.getInstance().getAPIROOT() + apiGetMigrants;
+        final ProgressDialog progressDialog = new ProgressDialog(ActivityRegister.this);
+        progressDialog.setTitle("Please wait");
+        progressDialog.setMessage("Getting Migrant Details");
+        progressDialog.show();
+        StringRequest getRequest = new StringRequest(Request.Method.POST, api, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                try {
                     progressDialog.dismiss();
                     Log.d("mylog", "response : " + response);
-                    parseResponse(response);
+                    JSONObject responseJson = new JSONObject(response);
+                    Boolean error = Boolean.parseBoolean(responseJson.getString("error"));
+                    if (!error) {
+                        JSONArray jsonArray = responseJson.getJSONArray("migrants");
+                        if (jsonArray.length() > 0) {
+                            JSONObject currMig = jsonArray.getJSONObject(0);
+                            int id = currMig.getInt("migrant_id");
+                            String migName = currMig.getString("migrant_name");
+                            String migSex = currMig.getString("migrant_sex");
+                            String migPhone = currMig.getString("migrant_phone");
+                            int migAge = currMig.getInt("migrant_age");
+                            new SQLDatabaseHelper(ActivityRegister.this).
+                                    insertMigrants(id, migName, migAge, migPhone, migSex, ApplicationClass.getInstance().getUserId());
+                        }
+                    }
+                } catch (Exception ex) {
+                    Log.d("mylog", "response exception: " + ex.toString());
                 }
-            }, new Response.ErrorListener() {
-                @Override
-                public void onErrorResponse(VolleyError error) {
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                try {
                     progressDialog.dismiss();
                     String err = error.toString();
                     Log.d("mylog", "error : " + err);
                     if (!err.isEmpty() && err.contains("TimeoutError"))
                         showSnackbar("Failed to connect to server :(");
+                    else if (!err.isEmpty() && err.contains("NoConnection"))
+                        showSnackbar("Please connect to Internet for new Data :(");
                     else
                         showSnackbar(error.toString());
+                } catch (Exception ex) {
+                    Log.d("mylog", "Error exception: " + ex.toString());
                 }
-            }) {
-                @Override
-                protected Map<String, String> getParams() throws AuthFailureError {
-                    HashMap<String, String> params = new HashMap<>();
-                    params.put("full_name", etName.getText().toString());
-                    params.put("phone_number", etNumber.getText().toString());
-                    params.put("age", etAge.getText().toString());
-                    params.put("gender", sex);
-                    if (userRegistered) {
-                        params.put("user_id", ApplicationClass.getInstance().getUserId() + "");
-                        Log.d("mylog", "User ID: " + ApplicationClass.getInstance().getUserId());
-                    } else if (userType == 0) {
-                        params.put("user_id", "-1");
-                        Log.d("mylog", "User ID: " + -1);
-                    }
-                    return params;
-                }
-            };
-            RequestQueue queue = Volley.newRequestQueue(ActivityRegister.this);
-            saveRequest.setShouldCache(false);
-            queue.add(saveRequest);
+            }
+        }) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                HashMap<String, String> params = new HashMap<>();
+                int user_id = ApplicationClass.getInstance().getUserId();
+                int mig_id = ApplicationClass.getInstance().getMigrantId();
+                Log.d("mylog", "User ID: " + user_id);
+                Log.d("mylog", "Mig ID: " + mig_id);
+                params.put("user_id", user_id + "");
+                params.put("migrant_id", mig_id + "");
+                return params;
+            }
+        };
+        RequestQueue queue = Volley.newRequestQueue(ActivityRegister.this);
+        queue.add(getRequest);
+    }
+
+    private void saveUser() {
+        if (!userRegistered) {
+            showUserTypeDialogAndRegister();
+        } else {
+            registerMigrant();
         }
+    }
+
+    private void registerMigrant() {
+        String api = ApplicationClass.getInstance().getAPIROOT() + apiURLMigrant;
+        final ProgressDialog progressDialog = new ProgressDialog(ActivityRegister.this);
+        progressDialog.setTitle("Please wait");
+        progressDialog.setMessage("Registering...");
+        progressDialog.setCancelable(false);
+        progressDialog.show();
+        StringRequest saveRequest = new StringRequest(Request.Method.POST, api, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                progressDialog.dismiss();
+                Log.d("mylog", "response : " + response);
+                parseResponse(response);
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                progressDialog.dismiss();
+                String err = error.toString();
+                Log.d("mylog", "error : " + err);
+                if (!err.isEmpty() && err.contains("TimeoutError"))
+                    showSnackbar("Failed to connect to server :(");
+                else
+                    showSnackbar(error.toString());
+            }
+        }) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                HashMap<String, String> params = new HashMap<>();
+                params.put("full_name", etName.getText().toString());
+                params.put("phone_number", etNumber.getText().toString());
+                params.put("age", etAge.getText().toString());
+                params.put("gender", sex);
+                if (userRegistered) {
+                    params.put("user_id", ApplicationClass.getInstance().getUserId() + "");
+                    Log.d("mylog", "User ID: " + ApplicationClass.getInstance().getUserId());
+                } else if (userType == 0) {
+                    params.put("user_id", "-1");
+                    Log.d("mylog", "User ID: " + -1);
+                }
+                return params;
+            }
+        };
+        RequestQueue queue = Volley.newRequestQueue(ActivityRegister.this);
+        saveRequest.setShouldCache(false);
+        queue.add(saveRequest);
+    }
+
+    private void showUserTypeDialogAndRegister() {
+        userType = 0;
+        AlertDialog.Builder builder = new AlertDialog.Builder(ActivityRegister.this);
+        builder.setPositiveButton("REGISTER", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                String api;
+                if (userType == 0) {
+                    api = ApplicationClass.getInstance().getAPIROOT() + apiURLMigrant;
+                } else {
+                    api = ApplicationClass.getInstance().getAPIROOT() + apiURL;
+                }
+                Log.d("mylog", "API called: " + api);
+                final ProgressDialog progressDialog = new ProgressDialog(ActivityRegister.this);
+                progressDialog.setTitle("Please wait");
+                progressDialog.setMessage("Registering...");
+                progressDialog.setCancelable(false);
+                progressDialog.show();
+                StringRequest saveRequest = new StringRequest(Request.Method.POST, api, new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        progressDialog.dismiss();
+                        Log.d("mylog", "response : " + response);
+                        parseResponse(response);
+                    }
+                }, new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        progressDialog.dismiss();
+                        String err = error.toString();
+                        Log.d("mylog", "error : " + err);
+                        if (!err.isEmpty() && err.contains("TimeoutError"))
+                            showSnackbar("Failed to connect to server :(");
+                        else
+                            showSnackbar(error.toString());
+                    }
+                }) {
+                    @Override
+                    protected Map<String, String> getParams() throws AuthFailureError {
+                        HashMap<String, String> params = new HashMap<>();
+                        params.put("full_name", etName.getText().toString());
+                        params.put("phone_number", etNumber.getText().toString());
+                        params.put("age", etAge.getText().toString());
+                        params.put("gender", sex);
+                        if (userType == 0) {
+                            params.put("user_id", "-1");
+                        } else if (userRegistered)
+                            params.put("user_id", ApplicationClass.getInstance().getUserId() + "");
+                        return params;
+                    }
+                };
+                RequestQueue queue = Volley.newRequestQueue(ActivityRegister.this);
+                saveRequest.setShouldCache(false);
+                queue.add(saveRequest);
+            }
+        });
+        builder.setSingleChoiceItems(new String[]{"I am an aspiring Migrant", "I am helping others"}, 0, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                Log.d("mylog", "Which: " + which);
+                userType = which;
+            }
+        });
+        builder.show();
     }
 
     private void parseResponse(String response) {
@@ -441,18 +540,28 @@ public class ActivityRegister extends AppCompatActivity {
         snack.show();
     }
 
-    public void getAllResponses() {
-        String api = ApplicationClass.getInstance().getAPIROOT() + apiGetAllResponses;
+    public void getAllResponses(final int uType) {
+        String api;
+        if (uType == 0)
+            api = ApplicationClass.getInstance().getAPIROOT() + apiGetAllResponses;
+        else
+            api = ApplicationClass.getInstance().getAPIROOT() + apiGetResponses;
+        final ProgressDialog pdialog = new ProgressDialog(ActivityRegister.this);
+        pdialog.setTitle("Setting Up");
+        pdialog.setMessage("Getting Migrant Responses");
+        pdialog.show();
         StringRequest stringRequest = new StringRequest(Request.Method.POST, api, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 Log.d("mylog", "Responses from migrants: " + response);
+                pdialog.dismiss();
                 parseAllResponses(response);
                 startOTPActivity();
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
+                pdialog.dismiss();
                 Log.d("mylog", "Error getting all responses: " + error.toString());
             }
         }) {
@@ -460,6 +569,8 @@ public class ActivityRegister extends AppCompatActivity {
             protected Map<String, String> getParams() throws AuthFailureError {
                 HashMap<String, String> params = new HashMap<>();
                 params.put("user_id", ApplicationClass.getInstance().getUserId() + "");
+                if (uType == 1)
+                    params.put("migrant_id", ApplicationClass.getInstance().getMigrantId() + "");
                 return params;
             }
         };
