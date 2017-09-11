@@ -120,6 +120,7 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
         }
     }
 
+    //This is used when we have isError, when response is fetched from server
     public void insertAllResponses(String response, int question_id, int migrant_id, String variable, String isError) {
         // Gets the data repository in write mode
         SQLiteDatabase db = this.getWritableDatabase();

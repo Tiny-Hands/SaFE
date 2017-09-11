@@ -446,13 +446,14 @@ public class ActivityRegister extends AppCompatActivity {
             JSONObject jsonResponse = new JSONObject(response);
             Boolean error = jsonResponse.getBoolean("error");
             if (!error) {
-                //Means the registered person was user
+                //Means the registered person might be user
                 if (!userRegistered) {
                     if (userType == 0) {
                         ApplicationClass.getInstance().setUserId(-1);
                         int mig_id = jsonResponse.getInt("migrant_id");
                         Log.d("mylog", "Migrant ID: " + mig_id);
                         ApplicationClass.getInstance().setMigrantId(mig_id);
+                        new SQLDatabaseHelper(ActivityRegister.this).insertResponseTableData(sex, -2, mig_id, "mg_sex");
                         startOTPActivity();
                         return;
                     } else {
@@ -468,6 +469,8 @@ public class ActivityRegister extends AppCompatActivity {
                 //Means the registered person was migrant
                 else {
                     //startOTPActivity();
+                    int mig_id = jsonResponse.getInt("migrant_id");
+                    new SQLDatabaseHelper(ActivityRegister.this).insertResponseTableData(sex, -2, mig_id, "mg_sex");
                     Intent intent = new Intent(ActivityRegister.this, ActivityMigrantList.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     startActivity(intent);

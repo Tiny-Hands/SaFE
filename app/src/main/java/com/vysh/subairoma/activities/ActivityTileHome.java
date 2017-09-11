@@ -81,6 +81,7 @@ public class ActivityTileHome extends AppCompatActivity {
         if (countryId.equalsIgnoreCase("in")) {
             //GET GIS TILES
             tiles = new SQLDatabaseHelper(ActivityTileHome.this).getTiles("GIS");
+            tilesGAS = new ArrayList<>();
         } else {
             //GET FEP TILES
             tiles = new SQLDatabaseHelper(ActivityTileHome.this).getTiles("FEP");
