@@ -29,9 +29,9 @@ import com.vysh.subairoma.R;
 import com.vysh.subairoma.SQLHelpers.SQLDatabaseHelper;
 import com.vysh.subairoma.models.TileQuestionsModel;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -90,38 +90,42 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
 
             //To Display in beginning or not
             String condition = questionModel.getCondition();
-            if (condition != null && condition.contains("type")) {
+            if (condition != null && !condition.isEmpty()) {
                 try {
                     Log.d("mylog", "Condition : " + condition);
-                    JSONObject jsonCondition = new JSONObject(condition);
-                    String type = jsonCondition.getString("type");
-                    Log.d("mylog", "Condition type: " + type);
-                    JSONObject conditionVars = jsonCondition.getJSONObject("condition");
-                    Iterator iter = conditionVars.keys();
-                    boolean conditionMatch = false;
-                    while (iter.hasNext()) {
-                        String key = iter.next().toString();
-                        boolean curValue = Boolean.parseBoolean(conditionVariableValues.get(key));
-                        if (!curValue) {
-                            conditionMatch = false;
-                            break;
-                        } else {
-                            conditionMatch = true;
+                    JSONObject jsonObject = new JSONObject(condition);
+                    JSONArray conditionsArray = jsonObject.getJSONArray("conditions");
+                    for (int j = 0; j < conditionsArray.length(); j++) {
+                        JSONObject jsonCondition = conditionsArray.getJSONObject(j);
+                        String type = jsonCondition.getString("type");
+                        Log.d("mylog", "Condition type: " + type);
+                        JSONObject conditionVars = jsonCondition.getJSONObject("condition");
+                        Iterator iter = conditionVars.keys();
+                        boolean conditionMatch = false;
+                        while (iter.hasNext()) {
+                            String key = iter.next().toString();
+                            boolean curValue = Boolean.parseBoolean(conditionVariableValues.get(key));
+                            if (!curValue) {
+                                conditionMatch = false;
+                                break;
+                            } else {
+                                conditionMatch = true;
+                            }
+                        }
+                        if (type.equalsIgnoreCase("error")) {
+                            questionsListDisplay.add(question);
+                            if (conditionMatch) {
+                                Log.d("mylog", "Added to error list: " + i);
+                                showErrorList.add(i);
+                            }
+                        } else if (type.equalsIgnoreCase("visibility")) {
+                            if (conditionMatch) questionsListDisplay.add(question);
                         }
                     }
-                    if (type.equalsIgnoreCase("error")) {
-                        questionsListDisplay.add(question);
-                        if (conditionMatch) {
-                            Log.d("mylog", "Added to error list: " + i);
-                            showErrorList.add(i);
-                        }
-                    } else if (type.equalsIgnoreCase("visibility")) {
-                        if (conditionMatch) questionsListDisplay.add(question);
-                    }
-
                 } catch (JSONException e) {
                     Log.d("mylog", "Error: " + e.toString());
                 }
+
             } else questionsListDisplay.add(question);
         }
     }
@@ -258,27 +262,32 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
                 Log.d("mylog", "Condition on Question Index: " + i);
                 try {
                     condition = new JSONObject(conditionString);
-                    JSONObject tempCondition = condition.getJSONObject("condition");
-                    Iterator iter = tempCondition.keys();
-                    String key;
-                    while (iter.hasNext()) {
-                        key = iter.next().toString();
-                        if (!conditionVariables.contains(key)) {
-                            conditionVariables.add(key);
-                            ArrayList<Integer> tempQuestionList = new ArrayList<>();
-                            tempQuestionList.add(question.getQuestionId());
-                            conditionOnQuestions.put(key, tempQuestionList);
-                        } else {
-                            Log.d("mylog", "Variable: " + key + " Already added");
-                            //Get Previous Question Id and create a new arraylist and put.
-                            ArrayList<Integer> preArrayTemp = conditionOnQuestions.get(key);
-                            for (int j = 0; j < preArrayTemp.size(); j++) {
-                                Log.d("mylog", "Variable already defined for question: " + preArrayTemp.get(j));
+                    JSONArray conditionList = condition.getJSONArray("conditions");
+                    for (int k = 0; k < conditionList.length(); k++) {
+                        JSONObject tempJson = conditionList.getJSONObject(k);
+                        JSONObject tempCondition = tempJson.getJSONObject("condition");
+                        Iterator iter = tempCondition.keys();
+                        String key;
+
+                        while (iter.hasNext()) {
+                            key = iter.next().toString();
+                            if (!conditionVariables.contains(key)) {
+                                conditionVariables.add(key);
+                                ArrayList<Integer> tempQuestionList = new ArrayList<>();
+                                tempQuestionList.add(question.getQuestionId());
+                                conditionOnQuestions.put(key, tempQuestionList);
+                            } else {
+                                Log.d("mylog", "Variable: " + key + " Already added");
+                                //Get Previous Question Id and create a new arraylist and put.
+                                ArrayList<Integer> preArrayTemp = conditionOnQuestions.get(key);
+                                for (int j = 0; j < preArrayTemp.size(); j++) {
+                                    Log.d("mylog", "Variable already defined for question: " + preArrayTemp.get(j));
+                                }
+                                Log.d("mylog", "New Question to add: " + question.getQuestionId());
+                                ArrayList<Integer> tempQuestionList = preArrayTemp;
+                                tempQuestionList.add(question.getQuestionId());
+                                conditionOnQuestions.put(key, tempQuestionList);
                             }
-                            Log.d("mylog", "New Question to add: " + question.getQuestionId());
-                            ArrayList<Integer> tempQuestionList = preArrayTemp;
-                            tempQuestionList.add(question.getQuestionId());
-                            conditionOnQuestions.put(key, tempQuestionList);
                         }
                     }
                 } catch (JSONException e) {
@@ -304,71 +313,82 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
     private void parseCondition(String condition, int mainIndex) {
         Log.d("mylog", "Parse condition: " + condition);
         try {
-            JSONObject conditionJson = new JSONObject(condition);
-            String conditionType = conditionJson.getString("type");
-            JSONObject varsJson = conditionJson.getJSONObject("condition");
-            Iterator iter = varsJson.keys();
-            String key = "";
-            boolean reqValue;
-            boolean currValue;
-            boolean conditionValid = false;
-            while (iter.hasNext()) {
-                key = iter.next().toString();
-                reqValue = varsJson.getBoolean(key);
-                currValue = Boolean.parseBoolean(conditionVariableValues.get(key));
-                if (reqValue != currValue) {
-                    Log.d("mylog", "Condition failed, do not perform the action");
-                    int changedId = -1;
-                    for (int i = 0; i < questionsListDisplay.size(); i++) {
-                        int id = questionsList.get(mainIndex).getQuestionId();
-                        int j = questionsListDisplay.get(i).getQuestionId();
-                        Log.d("mylog", "Main qid: " + id + " Got qid: " + j);
-                        if (id == j) {
-                            Log.d("mylog", "Taking action for Item: " + i);
-                            changedId = i;
+            JSONObject jsonObject = new JSONObject(condition);
+            JSONArray conditionsArray = jsonObject.getJSONArray("conditions");
+            boolean errorAlready = false;
+            for (int i = 0; i < conditionsArray.length(); i++) {
+                JSONObject conditionJson = conditionsArray.getJSONObject(i);
+                String conditionType = conditionJson.getString("type");
+                JSONObject varsJson = conditionJson.getJSONObject("condition");
+                Iterator iter = varsJson.keys();
+                String key = "";
+                boolean reqValue;
+                boolean currValue;
+                boolean conditionValid = false;
+                while (iter.hasNext()) {
+                    key = iter.next().toString();
+                    reqValue = varsJson.getBoolean(key);
+                    currValue = Boolean.parseBoolean(conditionVariableValues.get(key));
+                    if (reqValue != currValue) {
+                        Log.d("mylog", "Condition failed, do not perform the action");
+                        int changedId = -1;
+                        for (int j = 0; j < questionsListDisplay.size(); j++) {
+                            int id = questionsList.get(mainIndex).getQuestionId();
+                            int k = questionsListDisplay.get(j).getQuestionId();
+                            Log.d("mylog", "Main qid: " + id + " Got qid: " + k);
+                            if (id == k) {
+                                Log.d("mylog", "Taking action for Item: " + j);
+                                changedId = j;
+                            }
                         }
-                    }
-                    if (conditionType.equalsIgnoreCase("visibility")) {
-                        //If even one condition is not satisfied, break out of while loop
-                        questionsListDisplay.remove(changedId);
-                        conditionValid = false;
-                        notifyItemRemoved(changedId);
-                        break;
-                    } else if (conditionType.equalsIgnoreCase("error")) {
-                        showError = false;
-                        conditionValid = false;
-                        notifyItemChanged(changedId);
-                        //Save no error for the question in database for migrantId and variable
-                        Log.d("mylog", "Inserting no error for: " + migrantId + " AND " + key);
+                        if (conditionType.equalsIgnoreCase("visibility")) {
+                            //If even one condition is not satisfied, break out of while loop
+                            questionsListDisplay.remove(changedId);
+                            conditionValid = false;
+                            notifyItemRemoved(changedId);
+                            break;
+                        } else if (conditionType.equalsIgnoreCase("error")) {
+                            //There was already an error in previous condition so don't hide error
+                            if (!errorAlready)
+                                showError = false;
+                            conditionValid = false;
+                            notifyItemChanged(changedId);
+                            //Save no error for the question in database for migrantId and variable
+                            Log.d("mylog", "Inserting no error for: " + migrantId + " AND " + key);
 
-                        //Set error false for all the related keys of the condition
-                        Iterator setToFalseKeys = varsJson.keys();
-                        while (setToFalseKeys.hasNext()) {
-                            String var = setToFalseKeys.next().toString();
-                            sqlDatabaseHelper.insertIsError(migrantId, var, "false");
+                            //Set error false for all the related keys of the condition
+                            Iterator setToFalseKeys = varsJson.keys();
+                            while (setToFalseKeys.hasNext()) {
+                                String var = setToFalseKeys.next().toString();
+                                sqlDatabaseHelper.insertIsError(migrantId, var, "false");
+                            }
+                            break;
                         }
-                        break;
+                    } else {
+                        Log.d("mylog", "Current condition variable value match");
+                        conditionValid = true;
                     }
-                } else {
-                    Log.d("mylog", "Current condition variable value match");
-                    conditionValid = true;
                 }
-            }
-            if (conditionType.equalsIgnoreCase("visibility")) {
-                if (conditionValid) {
-                    Log.d("mylog", "All variables match, showing view");
-                    questionsListDisplay.add(mainIndex, questionsList.get(mainIndex));
-                    notifyDataSetChanged();
-                }
-            } else if (conditionType.equalsIgnoreCase("error")) {
-                if (conditionValid) {
-                    Log.d("mylog", "All variables match, showing error");
-                    showError = true;
-                    notifyItemChanged(mainIndex);
-                    //Save error for the question in database for migrantId and variable
-                    if (key != null) {
-                        Log.d("mylog", "Inserting error for: " + migrantId + " AND " + key);
-                        sqlDatabaseHelper.insertIsError(migrantId, key, "true");
+                if (conditionType.equalsIgnoreCase("visibility")) {
+                    if (conditionValid) {
+                        Log.d("mylog", "All variables match, showing view");
+                        questionsListDisplay.add(mainIndex, questionsList.get(mainIndex));
+                        notifyDataSetChanged();
+                        //If any further conditions just check but do now remove error if no error
+                        errorAlready = true;
+                    }
+                } else if (conditionType.equalsIgnoreCase("error")) {
+                    if (conditionValid) {
+                        Log.d("mylog", "All variables match, showing error");
+                        showError = true;
+                        notifyItemChanged(mainIndex);
+                        //Save error for the question in database for migrantId and variable
+                        if (key != null) {
+                            Log.d("mylog", "Inserting error for: " + migrantId + " AND " + key);
+                            sqlDatabaseHelper.insertIsError(migrantId, key, "true");
+                        }
+                        //If any further conditions just check but do now remove error if no error
+                        errorAlready = true;
                     }
                 }
             }
@@ -509,15 +529,13 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
             details.setVisibility(View.VISIBLE);
             helpLayout.setVisibility(View.VISIBLE);
             int responseType = questionsListDisplay.get(getAdapterPosition()).getResponseType();
-            if(responseType == 0){
+            if (responseType == 0) {
                 question.setVisibility(View.VISIBLE);
                 checkbox.setVisibility(View.VISIBLE);
-            }
-            else if(responseType == 1){
+            } else if (responseType == 1) {
                 question.setVisibility(View.VISIBLE);
                 etResponse.setVisibility(View.VISIBLE);
-            }
-            else if(responseType == 2){
+            } else if (responseType == 2) {
                 question.setVisibility(View.VISIBLE);
                 spinnerOptions.setVisibility(View.VISIBLE);
             }
