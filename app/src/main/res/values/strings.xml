@@ -4,6 +4,11 @@
     <string name="code">CODE</string>
     <string name="finalAnswerVerification">You have completed the foreign employment preparation part of the app. To continue forward please agree to not to change the previous answers. If you have to change your answers please go back and do it now, otherwise please check. I agree to not change my answers.</string>
     <string name="opt_message">We are sending an SMS with a code to you phone number. Please enter it below. It may take upto 5 minutes</string>
+
+    <!-- Required for facebook Login -->
+    <string name="facebook_app_id">118900038809550</string>
+    <string name="fb_login_protocol_scheme">fb118900038809550</string>
+
     <array name="fep_sections">
         <item>Manpower</item>
         <item>Work</item>

@@ -29,6 +29,12 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.facebook.CallbackManager;
+import com.facebook.FacebookCallback;
+import com.facebook.FacebookException;
+import com.facebook.Profile;
+import com.facebook.login.LoginResult;
+import com.facebook.login.widget.LoginButton;
 import com.vysh.subairoma.ApplicationClass;
 import com.vysh.subairoma.R;
 import com.vysh.subairoma.SQLHelpers.SQLDatabaseHelper;
@@ -56,7 +62,10 @@ public class ActivityRegister extends AppCompatActivity {
     final String apiGetResponses = "/getresponses.php";
     final String apiAlreadyRegistered = "/checkphonenumber.php";
     private final String apiGetMigrants = "/getmigrants.php";
+
     int userType;
+    Boolean userRegistered = false;
+    String sex = "male";
 
     @BindView(R.id.btnNext)
     Button btnNext;
@@ -78,9 +87,10 @@ public class ActivityRegister extends AppCompatActivity {
     RelativeLayout rootLayout;
     @BindView(R.id.btnAlreadyRegistered)
     Button btnAlreadyRegistered;
+    @BindView(R.id.login_button)
 
-    Boolean userRegistered = false;
-    String sex = "male";
+    LoginButton loginButton;
+    CallbackManager callbackManager;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -95,8 +105,45 @@ public class ActivityRegister extends AppCompatActivity {
         }
 
         setContentView(R.layout.activity_register);
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         ButterKnife.bind(this);
+
+        setUpComponentListeners();
+        if (getIntent().hasExtra("migrantmode")) {
+            userRegistered = true;
+            Log.d("mylog", "Loading migrant view");
+            loadMigrantView();
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        callbackManager.onActivityResult(requestCode, resultCode, data);
+    }
+
+    private void setUpComponentListeners() {
+        loginButton.setReadPermissions("email");
+        callbackManager = CallbackManager.Factory.create();
+        // Callback registration
+        loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
+            @Override
+            public void onSuccess(LoginResult loginResult) {
+                // App code
+                Log.d("mylog", "Successful, User ID: " + Profile.getCurrentProfile().getId());
+            }
+
+            @Override
+            public void onCancel() {
+                // App code
+                Log.d("mylog", "Canceled");
+            }
+
+            @Override
+            public void onError(FacebookException exception) {
+                // App code
+                Log.d("mylog", "Error: " + exception.toString());
+            }
+        });
 
         rbFemale.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -126,11 +173,6 @@ public class ActivityRegister extends AppCompatActivity {
                 showRegistrationDialog();
             }
         });
-        if (getIntent().hasExtra("migrantmode")) {
-            userRegistered = true;
-            Log.d("mylog", "Loading migrant view");
-            loadMigrantView();
-        }
     }
 
     private boolean checkUserExists() {
