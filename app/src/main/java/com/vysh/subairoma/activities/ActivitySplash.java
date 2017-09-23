@@ -213,6 +213,7 @@ public class ActivitySplash extends AppCompatActivity {
                     String tileDescription = tempTile.getString("tile_description");
                     String tileType = tempTile.getString("tile_type");
                     int tileOrder = tempTile.getInt("tile_order");
+                    Log.d("mylog", tileName);
                     dbHelper.insertTile(id, tileName, tileDescription, tileType, tileOrder);
                 }
                 incrementCount();

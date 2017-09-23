@@ -9,7 +9,7 @@
     <View
         android:id="@+id/backdrop"
         android:layout_width="match_parent"
-        android:layout_height="166dp"
+        android:layout_height="148dp"
         android:background="@color/colorPrimaryDark" />
 
     <android.support.v7.widget.Toolbar
@@ -36,17 +36,18 @@
 
     <ImageView
         android:id="@+id/ivRegister"
-        android:layout_width="136dp"
-        android:layout_height="136dp"
+        android:layout_width="124dp"
+        android:layout_height="124dp"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="98dp"
+        android:layout_marginTop="84dp"
         android:src="@drawable/register_green" />
 
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_alignParentStart="true"
+        android:fillViewport="true"
         android:layout_below="@+id/ivRegister">
 
         <LinearLayout
@@ -56,7 +57,7 @@
             android:gravity="center"
             android:orientation="vertical">
 
-            <com.vysh.subairoma.utils.CustomTextView
+            <!--<com.vysh.subairoma.utils.CustomTextView
                 android:id="@+id/tvHint"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -65,7 +66,7 @@
                 android:gravity="center"
                 android:text="Please enter your details"
                 android:textSize="16sp"
-                app:font="gotham_light.ttf" />
+                app:font="gotham_light.ttf" />-->
 
             <android.support.v7.widget.CardView
                 android:layout_width="match_parent"

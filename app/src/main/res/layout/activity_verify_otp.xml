@@ -61,18 +61,18 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="52dp"
         android:layout_alignParentBottom="true"
         android:layout_marginLeft="@dimen/default_margin"
         android:layout_marginRight="@dimen/default_margin"
-        android:orientation="horizontal"
-        android:paddingBottom="@dimen/default_margin">
+        android:layout_marginBottom="12dp"
+        android:orientation="horizontal">
 
         <Button
             android:id="@+id/btnChangeNumber"
             android:layout_width="0dp"
             android:layout_height="@dimen/default_button_height"
-            android:layout_margin="@dimen/card_small_margin"
+            android:layout_marginRight="@dimen/card_small_margin"
             android:layout_weight="1"
             android:background="@drawable/default_rounded_button_accent"
             android:text="CHANGE NUMBER"
@@ -82,7 +82,7 @@
             android:id="@+id/btnVerify"
             android:layout_width="0dp"
             android:layout_height="@dimen/default_button_height"
-            android:layout_margin="@dimen/card_small_margin"
+            android:layout_marginLeft="@dimen/card_small_margin"
             android:layout_weight="1"
             android:background="@drawable/default_rounded_button"
             android:text="VERIFY"

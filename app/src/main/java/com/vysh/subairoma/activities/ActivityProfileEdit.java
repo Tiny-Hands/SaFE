@@ -55,8 +55,8 @@ public class ActivityProfileEdit extends AppCompatActivity implements View.OnCli
     EditText etAge;
     @BindView(R.id.etNumber)
     EditText etNumber;
-    @BindView(R.id.tvHint)
-    TextView tvHint;
+    /*@BindView(R.id.tvHint)
+    TextView tvHint;*/
     @BindView(R.id.rbMale)
     RadioButton rbMale;
     @BindView(R.id.rbFemale)
@@ -75,7 +75,7 @@ public class ActivityProfileEdit extends AppCompatActivity implements View.OnCli
         ButterKnife.bind(this);
         userType = getIntent().getIntExtra("userType", 0);
 
-        tvHint.setText("Edit Details");
+        //tvHint.setText("Edit Details");
         btnAlreadyRegistered.setVisibility(View.GONE);
         btnNext.setOnClickListener(this);
         if (userType == 2)

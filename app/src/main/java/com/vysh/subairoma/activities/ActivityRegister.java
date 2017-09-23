@@ -77,8 +77,8 @@ public class ActivityRegister extends AppCompatActivity {
     EditText etAge;
     @BindView(R.id.etNumber)
     EditText etNumber;
-    @BindView(R.id.tvHint)
-    TextView tvHint;
+    /*@BindView(R.id.tvHint)
+    TextView tvHint;*/
     @BindView(R.id.rbMale)
     RadioButton rbMale;
     @BindView(R.id.rbFemale)
@@ -567,7 +567,7 @@ public class ActivityRegister extends AppCompatActivity {
         etNumber.setText("");
         etAge.setText("");
         etName.setText("");
-        tvHint.setText("Please enter Migrant's details");
+        //tvHint.setText("Please enter Migrant's details");
         tvTitle.setText("ADD MIGRANT");
         etName.setHint("Migrant's Name");
         etAge.setHint("Migrant's Age");
