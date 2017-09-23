@@ -9,10 +9,11 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -45,6 +46,8 @@ import java.util.Map;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+import static android.view.View.GONE;
+
 /**
  * Created by Vishal on 8/25/2017.
  */
@@ -75,8 +78,12 @@ public class ActivityProfileEdit extends AppCompatActivity implements View.OnCli
     RelativeLayout rootLayout;
     @BindView(R.id.btnAlreadyRegistered)
     Button btnAlreadyRegistered;
-    @BindView(R.id.login_button)
+    @BindView(R.id.login_button_edit)
     LoginButton loginButton;
+    @BindView(R.id.login_button)
+    LoginButton loginButtonToHide;
+    @BindView(R.id.tvOR)
+    TextView tvOr;
 
     CallbackManager callbackManager;
 
@@ -90,13 +97,15 @@ public class ActivityProfileEdit extends AppCompatActivity implements View.OnCli
         userType = getIntent().getIntExtra("userType", -1);
 
         //tvHint.setText("Edit Details");
-        btnAlreadyRegistered.setVisibility(View.GONE);
+        btnAlreadyRegistered.setVisibility(GONE);
         btnNext.setOnClickListener(this);
         if (userType == 1) {
             tvTitle.setText("EDIT MIGRANT");
-            if (ApplicationClass.getInstance().getUserId() != -1)
-                loginButton.setVisibility(View.GONE);
-            else
+            if (ApplicationClass.getInstance().getUserId() != -1) {
+                loginButton.setVisibility(GONE);
+                loginButtonToHide.setVisibility(GONE);
+                tvOr.setVisibility(GONE);
+            } else
                 setUpFBLogin();
             getData();
         } else if (userType == 0) {
@@ -106,7 +115,14 @@ public class ActivityProfileEdit extends AppCompatActivity implements View.OnCli
     }
 
     private void setUpFBLogin() {
+        loginButtonToHide.setVisibility(GONE);
+        loginButton.setVisibility(View.VISIBLE);
+        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT
+                , LinearLayout.LayoutParams.WRAP_CONTENT);
+        float px = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 16, getResources().getDisplayMetrics());
+        layoutParams.setMargins(0, (int)px, 0, 0);
         loginButton.setReadPermissions("email");
+        loginButton.setLayoutParams(layoutParams);
         callbackManager = CallbackManager.Factory.create();
         // Callback registration
         loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {

@@ -47,8 +47,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_alignParentStart="true"
-        android:fillViewport="true"
-        android:layout_below="@+id/ivRegister">
+        android:layout_below="@+id/ivRegister"
+        android:fillViewport="true">
 
         <LinearLayout
             android:id="@+id/llForm"
@@ -170,6 +170,23 @@
             </android.support.v7.widget.CardView>
 
             <Button
+                android:id="@+id/btnNext"
+                android:layout_width="@dimen/default_button_width"
+                android:layout_height="@dimen/default_button_height"
+                android:layout_marginTop="@dimen/medium_margin"
+                android:background="@drawable/default_rounded_button"
+                android:text="NEXT"
+                android:textColor="#fff" />
+
+            <com.vysh.subairoma.utils.CustomTextView
+                android:text="OR"
+                android:id="@+id/tvOR"
+                app:font="gotham_light.ttf"
+                android:layout_marginTop="@dimen/medium_large_margin"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+            <Button
                 android:id="@+id/btnAlreadyRegistered"
                 android:layout_width="@dimen/default_button_width"
                 android:layout_height="wrap_content"
@@ -179,19 +196,23 @@
                 android:textSize="12sp" />
 
             <com.facebook.login.widget.LoginButton
+                xmlns:facebook="http://schemas.android.com/apk/res-auto"
                 android:id="@+id/login_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/default_margin" />
-
-            <Button
-                android:id="@+id/btnNext"
-                android:layout_width="@dimen/default_button_width"
-                android:layout_height="@dimen/default_button_height"
                 android:layout_marginBottom="@dimen/default_margin"
-                android:background="@drawable/default_rounded_button"
-                android:text="NEXT"
-                android:textColor="#fff" />
+                facebook:com_facebook_login_text="LOGIN WITH FACEBOOK"
+                facebook:com_facebook_logout_text="Log Out" />
+
+            <com.facebook.login.widget.LoginButton
+                xmlns:facebook="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/login_button_edit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                android:layout_marginBottom="@dimen/default_margin"
+                facebook:com_facebook_login_text="Connect with Facebook"
+                facebook:com_facebook_logout_text="Log Out" />
         </LinearLayout>
     </ScrollView>
 
