@@ -90,7 +90,7 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
 
             //To Display in beginning or not
             String condition = questionModel.getCondition();
-            if (condition != null && !condition.isEmpty()) {
+            if (!condition.equalsIgnoreCase("null") && !condition.isEmpty()) {
                 try {
                     Log.d("mylog", "Condition : " + condition);
                     JSONObject jsonObject = new JSONObject(condition);
@@ -257,7 +257,7 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
         for (int i = 0; i < questionsList.size(); i++) {
             TileQuestionsModel question = questionsList.get(i);
             conditionString = question.getCondition();
-            if (conditionString != null && !conditionString.isEmpty()) {
+            if (!conditionString.equalsIgnoreCase("null") && !conditionString.isEmpty()) {
                 conditionQuestionIndex.put(question.getQuestionId(), i);
                 Log.d("mylog", "Condition on Question Index: " + i);
                 try {
