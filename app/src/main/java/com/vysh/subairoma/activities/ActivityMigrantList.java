@@ -91,7 +91,7 @@ public class ActivityMigrantList extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(ActivityMigrantList.this, ActivityProfileEdit.class);
-                intent.putExtra("userType", 1);
+                intent.putExtra("userType", 0);
                 startActivity(intent);
             }
         });

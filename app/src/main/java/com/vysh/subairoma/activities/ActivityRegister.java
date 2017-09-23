@@ -61,6 +61,7 @@ public class ActivityRegister extends AppCompatActivity {
     final String apiGetAllResponses = "/getallresponses.php";
     final String apiGetResponses = "/getresponses.php";
     final String apiAlreadyRegistered = "/checkphonenumber.php";
+    final String checkFbId = "/checkfbuid.php";
     private final String apiGetMigrants = "/getmigrants.php";
 
     int userType;
@@ -88,8 +89,8 @@ public class ActivityRegister extends AppCompatActivity {
     @BindView(R.id.btnAlreadyRegistered)
     Button btnAlreadyRegistered;
     @BindView(R.id.login_button)
-
     LoginButton loginButton;
+
     CallbackManager callbackManager;
 
     @Override
@@ -128,13 +129,12 @@ public class ActivityRegister extends AppCompatActivity {
         loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(LoginResult loginResult) {
-                // App code
                 Log.d("mylog", "Successful, User ID: " + Profile.getCurrentProfile().getId());
+                checkIfFBUserExists(Profile.getCurrentProfile().getId());
             }
 
             @Override
             public void onCancel() {
-                // App code
                 Log.d("mylog", "Canceled");
             }
 
@@ -173,6 +173,64 @@ public class ActivityRegister extends AppCompatActivity {
                 showRegistrationDialog();
             }
         });
+    }
+
+    private void checkIfFBUserExists(String fid) {
+        final String fbId = fid;
+        String api = ApplicationClass.getInstance().getAPIROOT() + checkFbId;
+        final ProgressDialog progressDialog = new ProgressDialog(ActivityRegister.this);
+        progressDialog.setTitle("Please wait");
+        progressDialog.setMessage("Checking Registration...");
+        progressDialog.show();
+        StringRequest checkRequest = new StringRequest(Request.Method.POST, api, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                progressDialog.dismiss();
+                Log.d("mylog", "response : " + response);
+                try {
+                    JSONObject jsonRes = new JSONObject(response);
+                    boolean error = jsonRes.getBoolean("error");
+                    if (error) {
+                        showSnackbar(jsonRes.getString("message"));
+                    } else {
+                        int userType = jsonRes.getInt("user_type");
+                        if (userType == 1) {
+                            ApplicationClass.getInstance().setUserId(-1);
+                            ApplicationClass.getInstance().setMigrantId(jsonRes.getInt("migrant_id"));
+                            getMigrantDetails();
+                        } else {
+                            ApplicationClass.getInstance().setUserId(jsonRes.getInt("user_id"));
+                        }
+                        //Getting all the saved responses for the user
+                        getAllResponses(userType);
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                    Log.d("mylog", "Error in check FB connection: " + e.toString());
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                progressDialog.dismiss();
+                String err = error.toString();
+                Log.d("mylog", "error : " + err);
+                if (!err.isEmpty() && err.contains("TimeoutError"))
+                    showSnackbar("Failed to connect to server :(");
+                else
+                    showSnackbar(error.toString());
+            }
+        }) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                HashMap<String, String> params = new HashMap<>();
+                params.put("fb_id", fbId);
+                return params;
+            }
+        };
+        RequestQueue queue = Volley.newRequestQueue(ActivityRegister.this);
+        checkRequest.setShouldCache(false);
+        queue.add(checkRequest);
     }
 
     private boolean checkUserExists() {
@@ -568,6 +626,7 @@ public class ActivityRegister extends AppCompatActivity {
         etAge.setText("");
         etName.setText("");
         //tvHint.setText("Please enter Migrant's details");
+        loginButton.setVisibility(View.GONE);
         tvTitle.setText("ADD MIGRANT");
         etName.setHint("Migrant's Name");
         etAge.setHint("Migrant's Age");

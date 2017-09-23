@@ -24,11 +24,20 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.facebook.CallbackManager;
+import com.facebook.FacebookCallback;
+import com.facebook.FacebookException;
+import com.facebook.Profile;
+import com.facebook.login.LoginResult;
+import com.facebook.login.widget.LoginButton;
 import com.vysh.subairoma.ApplicationClass;
 import com.vysh.subairoma.R;
 import com.vysh.subairoma.SQLHelpers.SQLDatabaseHelper;
 import com.vysh.subairoma.models.MigrantModel;
 import com.vysh.subairoma.utils.CustomTextView;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -44,6 +53,7 @@ public class ActivityProfileEdit extends AppCompatActivity implements View.OnCli
 
     final String apiUpdateUser = "/updateuser.php";
     final String apiUpdateMigrant = "/updatemigrant.php";
+    final String apiaddFbId = "/savefbid.php";
 
     @BindView(R.id.btnNext)
     Button btnNext;
@@ -65,21 +75,119 @@ public class ActivityProfileEdit extends AppCompatActivity implements View.OnCli
     RelativeLayout rootLayout;
     @BindView(R.id.btnAlreadyRegistered)
     Button btnAlreadyRegistered;
+    @BindView(R.id.login_button)
+    LoginButton loginButton;
 
-    int userType = 0;
+    CallbackManager callbackManager;
+
+    int userType = -1;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
         ButterKnife.bind(this);
-        userType = getIntent().getIntExtra("userType", 0);
+        userType = getIntent().getIntExtra("userType", -1);
 
         //tvHint.setText("Edit Details");
         btnAlreadyRegistered.setVisibility(View.GONE);
         btnNext.setOnClickListener(this);
-        if (userType == 2)
+        if (userType == 1) {
+            tvTitle.setText("EDIT MIGRANT");
+            if (ApplicationClass.getInstance().getUserId() != -1)
+                loginButton.setVisibility(View.GONE);
+            else
+                setUpFBLogin();
             getData();
+        } else if (userType == 0) {
+            tvTitle.setText("EDIT PROFILE");
+            setUpFBLogin();
+        }
+    }
+
+    private void setUpFBLogin() {
+        loginButton.setReadPermissions("email");
+        callbackManager = CallbackManager.Factory.create();
+        // Callback registration
+        loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
+            @Override
+            public void onSuccess(LoginResult loginResult) {
+                Log.d("mylog", "Successful, User ID: " + Profile.getCurrentProfile().getId());
+                addFbIDToUID(Profile.getCurrentProfile().getId());
+            }
+
+            @Override
+            public void onCancel() {
+                Log.d("mylog", "Canceled");
+            }
+
+            @Override
+            public void onError(FacebookException exception) {
+                // App code
+                Log.d("mylog", "Error: " + exception.toString());
+            }
+        });
+    }
+
+    private void addFbIDToUID(String id) {
+        final String fbId = id;
+        String api = ApplicationClass.getInstance().getAPIROOT() + apiaddFbId;
+        final ProgressDialog progressDialog = new ProgressDialog(ActivityProfileEdit.this);
+        progressDialog.setTitle("Please wait");
+        progressDialog.setMessage("Associating with Facebook Account...");
+        progressDialog.show();
+        StringRequest checkRequest = new StringRequest(Request.Method.POST, api, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                progressDialog.dismiss();
+                Log.d("mylog", "response : " + response);
+                try {
+                    JSONObject jsonRes = new JSONObject(response);
+                    boolean error = jsonRes.getBoolean("error");
+                    String message = jsonRes.getString("message");
+                    if (error) {
+                        showSnackbar(message);
+                    } else
+                        showSnackbar("Facebook Account Added Successfully");
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                    Log.d("mylog", "Error in check FB connection: " + e.toString());
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                progressDialog.dismiss();
+                String err = error.toString();
+                Log.d("mylog", "error : " + err);
+                if (!err.isEmpty() && err.contains("TimeoutError"))
+                    showSnackbar("Failed to connect to server :(");
+                else
+                    showSnackbar(error.toString());
+            }
+        }) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                HashMap<String, String> params = new HashMap<>();
+                params.put("fb_id", fbId);
+                if (userType == 1) {
+                    params.put("user_type", userType + "");
+                    params.put("uid", ApplicationClass.getInstance().getMigrantId() + "");
+                } else {
+                    int userType = 0;
+                    params.put("user_type", userType + "");
+                    params.put("uid", ApplicationClass.getInstance().getUserId() + "");
+                }
+                for (Object obj : params.keySet()) {
+                    Log.d("mylog", "KEY: " + obj + " VALUE: " + params.get(obj));
+                }
+                return params;
+            }
+        };
+        RequestQueue queue = Volley.newRequestQueue(ActivityProfileEdit.this);
+        checkRequest.setShouldCache(false);
+        queue.add(checkRequest);
     }
 
     private void getData() {
@@ -93,7 +201,6 @@ public class ActivityProfileEdit extends AppCompatActivity implements View.OnCli
         if (sex.equalsIgnoreCase("male")) {
             rbMale.setChecked(true);
         } else rbFemale.setChecked(true);
-        tvTitle.setText("PROFILE");
     }
 
     @Override
@@ -103,13 +210,19 @@ public class ActivityProfileEdit extends AppCompatActivity implements View.OnCli
         }
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        callbackManager.onActivityResult(requestCode, resultCode, data);
+    }
+
     private void updateUser() {
         String API = "";
         int id = -2;
-        if (userType == 1) {
+        if (userType == 0) {
             API = ApplicationClass.getInstance().getAPIROOT() + apiUpdateUser;
             id = ApplicationClass.getInstance().getUserId();
-        } else if (userType == 2) {
+        } else if (userType == 1) {
             API = ApplicationClass.getInstance().getAPIROOT() + apiUpdateMigrant;
             id = ApplicationClass.getInstance().getMigrantId();
         }
@@ -156,9 +269,9 @@ public class ActivityProfileEdit extends AppCompatActivity implements View.OnCli
                 params.put("phone_number", number);
                 params.put("age", age);
                 params.put("gender", sex);
-                if (userType == 1) {
+                if (userType == 0) {
                     params.put("user_id", id + "");
-                } else if (userType == 2) {
+                } else if (userType == 1) {
                     params.put("migrant_id", id + "");
                 }
                 return params;

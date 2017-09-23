@@ -127,7 +127,7 @@ public class ActivityTileHome extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(ActivityTileHome.this, ActivityProfileEdit.class);
-                intent.putExtra("userType", 2);
+                intent.putExtra("userType", 1);
                 startActivity(intent);
             }
         });
