@@ -2,7 +2,6 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/bgFaded"
     android:orientation="vertical">
 
@@ -11,14 +10,14 @@
         android:layout_width="match_parent"
         android:layout_height="?android:attr/actionBarSize">
 
-        <com.vysh.subairoma.utils.CustomTextView
+        <TextView
             android:id="@+id/tvTitle"
-            android:textSize="22sp"
+            android:textSize="@dimen/tile_title_size"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="12dp"
+            android:layout_marginEnd="@dimen/medium_large_margin"
             android:gravity="center_horizontal"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="@dimen/default_margin"
             android:text="Travel and Some very long text" />
     </android.support.v7.widget.Toolbar>
 

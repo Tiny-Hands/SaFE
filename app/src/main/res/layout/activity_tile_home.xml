@@ -61,6 +61,7 @@
     <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_marginTop="@dimen/medium_margin"
         android:layout_below="@+id/toolbar">
 
         <LinearLayout
