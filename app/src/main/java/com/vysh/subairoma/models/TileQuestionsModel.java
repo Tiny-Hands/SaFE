@@ -1,12 +1,14 @@
 package com.vysh.subairoma.models;
 
+import java.util.ArrayList;
+
 /**
  * Created by Vishal on 6/15/2017.
  */
 
 public class TileQuestionsModel {
     String condition, title, description, question, variable;
-    String[] options;
+    ArrayList<String> options;
     int tileId, questionId, questionNo, responseType;
 
     public String getVariable() {
@@ -17,12 +19,14 @@ public class TileQuestionsModel {
         this.variable = variable;
     }
 
-    public String[] getOptions() {
+    public ArrayList<String> getOptions() {
         return options;
     }
 
-    public void setOptions(String[] questions) {
-        this.options = questions;
+    public void setOptions(ArrayList questions) {
+        options = new ArrayList<>();
+        if (questions != null)
+            options.addAll(questions);
     }
 
     public int getQuestionId() {

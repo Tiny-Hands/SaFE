@@ -11,8 +11,11 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.TextView;
 
+import com.vysh.subairoma.ApplicationClass;
 import com.vysh.subairoma.R;
+import com.vysh.subairoma.SQLHelpers.SQLDatabaseHelper;
 import com.vysh.subairoma.activities.ActivityGasSection;
+import com.vysh.subairoma.activities.ActivityRegister;
 import com.vysh.subairoma.activities.ActivityTileHome;
 
 /**
@@ -54,6 +57,9 @@ public class DialogAnswersVerification extends DialogFragment implements View.On
                     intent.putExtra("countryBlacklist", activity.blacklist);
                     dismiss();
                     //startActivity(intent);
+
+                    new SQLDatabaseHelper(getContext()).insertResponseTableData("true", -3,
+                            ApplicationClass.getInstance().getMigrantId(), "mg_verified_answers");
                     activity.setUpGasSections();
                 } else {
                     tvCheckTerm.setTextColor(getResources().getColor(R.color.colorError));

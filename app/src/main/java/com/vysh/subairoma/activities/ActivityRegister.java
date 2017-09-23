@@ -38,7 +38,6 @@ import com.facebook.login.widget.LoginButton;
 import com.vysh.subairoma.ApplicationClass;
 import com.vysh.subairoma.R;
 import com.vysh.subairoma.SQLHelpers.SQLDatabaseHelper;
-import com.vysh.subairoma.dialogs.DialogCountryChooser;
 import com.vysh.subairoma.utils.CustomTextView;
 
 import org.json.JSONArray;
@@ -90,6 +89,8 @@ public class ActivityRegister extends AppCompatActivity {
     Button btnAlreadyRegistered;
     @BindView(R.id.login_button)
     LoginButton loginButton;
+    @BindView(R.id.tvOR)
+    TextView tvOr;
 
     CallbackManager callbackManager;
 
@@ -622,6 +623,7 @@ public class ActivityRegister extends AppCompatActivity {
     }
 
     private void loadMigrantView() {
+        tvOr.setVisibility(View.GONE);
         etNumber.setText("");
         etAge.setText("");
         etName.setText("");

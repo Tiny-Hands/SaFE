@@ -23,7 +23,7 @@
                 android:layout_alignParentTop="true"
                 android:layout_marginTop="@dimen/default_margin"
                 android:text="Test User"
-                android:textSize="22sp" />
+                android:textSize="@dimen/default_title_size" />
 
             <com.vysh.subairoma.utils.CustomTextView
                 android:id="@+id/tvGoingTo"

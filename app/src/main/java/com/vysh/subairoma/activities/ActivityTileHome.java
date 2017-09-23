@@ -29,7 +29,6 @@ import com.vysh.subairoma.dialogs.DialogAnswersVerification;
 import com.vysh.subairoma.R;
 import com.vysh.subairoma.SQLHelpers.SQLDatabaseHelper;
 import com.vysh.subairoma.adapters.TileAdapter;
-import com.vysh.subairoma.dialogs.DialogCountryChooser;
 import com.vysh.subairoma.models.TilesModel;
 
 import java.util.ArrayList;
@@ -109,6 +108,14 @@ public class ActivityTileHome extends AppCompatActivity {
         setUpListeners();
         setTileIcons();
         setUpRecyclerView();
+        checkIfVerifiedAnswers();
+    }
+
+    private void checkIfVerifiedAnswers() {
+        String verified = new SQLDatabaseHelper(ActivityTileHome.this).getResponse(ApplicationClass.getInstance().getMigrantId(),
+                "mg_verified_answers");
+        if (verified.equalsIgnoreCase("true"))
+            setUpGasSections();
     }
 
     private void setUpListeners() {
@@ -117,8 +124,10 @@ public class ActivityTileHome extends AppCompatActivity {
             public void onClick(View v) {
                 if (!finalSection)
                     new DialogAnswersVerification().show(getSupportFragmentManager(), "dialog");
-                else
-                    Toast.makeText(ActivityTileHome.this, "Completed", Toast.LENGTH_SHORT).show();
+                else {
+                    //Toast.makeText(ActivityTileHome.this, "Completed", Toast.LENGTH_SHORT).show();
+                    showSnackbar("The steps are Completed");
+                }
                 getAllResponses();
             }
         });
@@ -204,7 +213,7 @@ public class ActivityTileHome extends AppCompatActivity {
         }) {
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
-                for(Object key: fParams.keySet()){
+                for (Object key : fParams.keySet()) {
                     Log.d("mylog", key + ": " + fParams.get(key));
                 }
                 return fParams;

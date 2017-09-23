@@ -45,7 +45,54 @@ public class TileAdapter extends RecyclerView.Adapter<TileAdapter.TileViewHolder
                 holder.viewDisabled.setVisibility(View.VISIBLE);
             }
         }
+        setTileIcons(holder.ivTile, tileList.get(position).getTileId());
         //holder.ivTile.setBackgroundResource(ivTiles[position]);
+    }
+
+    private void setTileIcons(ImageView ivTile, int tileId) {
+        switch (tileId) {
+            case 0:
+                ivTile.setImageResource(R.drawable.ic_travel_work);
+                break;
+            case 1:
+                ivTile.setImageResource(R.drawable.ic_manpower);
+                break;
+            case 2:
+                ivTile.setImageResource(R.drawable.ic_work);
+                break;
+            case 3:
+                ivTile.setImageResource(R.drawable.ic_contract);
+                break;
+            case 4:
+                ivTile.setImageResource(R.drawable.ic_cost);
+                break;
+            case 5:
+                ivTile.setImageResource(R.drawable.ic_government);
+                break;
+            case 6:
+                ivTile.setImageResource(R.drawable.ic_preparation);
+                break;
+            case 7:
+                ivTile.setImageResource(R.drawable.ic_passport_visa);
+                break;
+            case 8:
+                ivTile.setImageResource(R.drawable.ic_packing);
+                break;
+            case 9:
+                ivTile.setImageResource(R.drawable.ic_travel);
+                break;
+            case 10:
+                ivTile.setImageResource(R.drawable.ic_incountry);
+                break;
+            case 15:
+                ivTile.setImageResource(R.drawable.ic_preparation);
+                break;
+            case 16:
+                ivTile.setImageResource(R.drawable.ic_travel);
+                break;
+            default:
+                ivTile.setImageResource(R.drawable.ic_default);
+        }
     }
 
     @Override

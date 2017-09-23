@@ -53,7 +53,11 @@ public class ActivityTileQuestions extends AppCompatActivity {
         for (TileQuestionsModel question : questionList) {
             if (question.getResponseType() == 2) {
                 String[] options = sqlDatabaseHelper.getOptions(question.getQuestionId());
-                question.setOptions(options);
+                ArrayList<String> temp = new ArrayList<>();
+                for(int i = 0; i<options.length; i++){
+                    temp.add(i, options[i]);
+                }
+                question.setOptions(temp);
             }
         }
     }

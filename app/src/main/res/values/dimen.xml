@@ -24,6 +24,7 @@
     <dimen name="card_view_marker_text">12sp</dimen>
     <dimen name="tile_step_text">18sp</dimen>
     <dimen name="tile_title_size">24sp</dimen>
+    <dimen name="default_title_size">22sp</dimen>
 
     <!-- Help Icons -->
     <dimen name="help_dimen">36dp</dimen>

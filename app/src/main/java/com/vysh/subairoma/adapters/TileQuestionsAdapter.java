@@ -162,12 +162,9 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
             holder.question.setVisibility(View.GONE);
             holder.etResponse.setVisibility(View.GONE);
             holder.spinnerOptions.setVisibility(View.VISIBLE);
-            String[] options = question.getOptions();
+            ArrayList<String> options = question.getOptions();
             //Showing ---- if nothing selected
-            options[0] = "---------";
-            for (int i = 1; i < options.length; i++) {
-                Log.d("mylog", "Options: " + options[i]);
-            }
+            options.add(0, "---------");
             SpinnerAdapter adapter = new ArrayAdapter<>(context, R.layout.support_simple_spinner_dropdown_item, options);
             holder.spinnerOptions.setAdapter(adapter);
         }
