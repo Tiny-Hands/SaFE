@@ -34,6 +34,7 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
                     DatabaseTables.ResponseTable.is_error + " TEXT," +
                     DatabaseTables.ResponseTable.response_variable + " TEXT," +
                     DatabaseTables.ResponseTable.response + " TEXT," +
+                    DatabaseTables.ResponseTable.tile_id + " INTEGER," +
                     " UNIQUE (" + DatabaseTables.ResponseTable.question_id +
                     ", " + DatabaseTables.ResponseTable.migrant_id + "));";
     final String SQL_CREATE_TilesTable =
@@ -97,13 +98,14 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
 
     }
 
-    public void insertResponseTableData(String response, int question_id, int migrant_id, String variable) {
+    public void insertResponseTableData(String response, int question_id, int tileId, int migrant_id, String variable) {
         // Gets the data repository in write mode
         SQLiteDatabase db = this.getWritableDatabase();
         // Create a new map of values, where column names are the keys
         ContentValues values = new ContentValues();
         values.put(DatabaseTables.ResponseTable.response, response);
         values.put(DatabaseTables.ResponseTable.response_variable, variable);
+        values.put(DatabaseTables.ResponseTable.tile_id, tileId);
 
         //If already exist the Update
         String whereClause = DatabaseTables.ResponseTable.migrant_id + " = " + migrant_id + " AND " +
@@ -115,6 +117,7 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
             // Insert the new row, returning the primary key value of the new row
             values.put(DatabaseTables.ResponseTable.migrant_id, migrant_id);
             values.put(DatabaseTables.ResponseTable.question_id, question_id);
+            values.put(DatabaseTables.ResponseTable.tile_id, tileId);
             long newRowId = db.insert(DatabaseTables.ResponseTable.TABLE_NAME, null, values);
             Log.d("mylog", "Inserted row ID: " + newRowId);
         }
@@ -203,6 +206,27 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
             //Log.d("mylog", "Mid: " + mid + " Qid: " + qid + " rvar: " + response);
         }
         return response;
+    }
+
+    public boolean getIsError(int migId, String variable) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String query;
+        if (variable == null) {
+            query = "SELECT * FROM " + DatabaseTables.ResponseTable.TABLE_NAME
+                    + " WHERE " + DatabaseTables.ResponseTable.migrant_id + " = " + "'" + migId + "'";
+        } else {
+            query = "SELECT * FROM " + DatabaseTables.ResponseTable.TABLE_NAME +
+                    " WHERE " + DatabaseTables.ResponseTable.migrant_id + " = " + "'" + migId + "'"
+                    + " AND " + DatabaseTables.ResponseTable.response_variable + " = " + "'" + variable + "'";
+        }
+        //Log.d("mylog", "Query: " + query);
+        Cursor cursor = db.rawQuery(query, null);
+        boolean isError = false;
+        while (cursor.moveToNext()) {
+            isError = Boolean.parseBoolean(cursor.getString(cursor.getColumnIndexOrThrow(DatabaseTables.ResponseTable.is_error)));
+            //Log.d("mylog", "Mid: " + mid + " Qid: " + qid + " rvar: " + response);
+        }
+        return isError;
     }
 
     public void insertCountry(String id, String name, int status, int blacklist) {
@@ -323,6 +347,7 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
             String condition = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseTables.QuestionsTable.question_condition));
             int responseType = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseTables.QuestionsTable.response_type));
             String variable = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseTables.QuestionsTable.question_variable));
+            int gotTileId = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseTables.QuestionsTable.tile_id));
             TileQuestionsModel questionModel = new TileQuestionsModel();
 
             //IF RESPONSE TYPE OTHER THEN 1, GET OPTIONS FROM SERVER AND POPULATE OPTIONS IN QUESTION MODEL
@@ -333,6 +358,7 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
             questionModel.setCondition(condition);
             questionModel.setQuestion(question);
             questionModel.setVariable(variable);
+            questionModel.setTileId(gotTileId);
 
             questionList.add(questionModel);
         }
@@ -408,18 +434,19 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
         return cursor.getCount();
     }
 
-    public ArrayList<Integer> getErrorTileIds(int migId) {
-      /*  SQLiteDatabase db = this.getReadableDatabase();
+    public int getTileErrorCount(int migId, int tileId) {
+        SQLiteDatabase db = this.getReadableDatabase();
         String query = "SELECT * FROM " + DatabaseTables.ResponseTable.TABLE_NAME + " WHERE "
                 + DatabaseTables.ResponseTable.migrant_id + "=" + "'" + migId + "'" +
+                " AND " + DatabaseTables.ResponseTable.tile_id + "=" + "'" + tileId + "'" +
                 " AND " + DatabaseTables.ResponseTable.is_error + "='true'";
         Cursor cursor = db.rawQuery(query, null);
         while (cursor.moveToNext()) {
             String isError = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseTables.ResponseTable.is_error));
             String variable = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseTables.ResponseTable.response_variable));
             Log.d("mylog", "Got error: " + isError + " FOR: " + variable);
-        }*/
-        return null;
+        }
+        return cursor.getCount();
     }
 
     public ArrayList<MigrantModel> getMigrants() {

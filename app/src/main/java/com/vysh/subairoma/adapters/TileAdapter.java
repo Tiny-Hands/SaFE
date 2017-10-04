@@ -2,12 +2,15 @@ package com.vysh.subairoma.adapters;
 
 import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.vysh.subairoma.ApplicationClass;
+import com.vysh.subairoma.SQLHelpers.SQLDatabaseHelper;
 import com.vysh.subairoma.activities.ActivityTileHome;
 import com.vysh.subairoma.activities.ActivityTileQuestions;
 import com.vysh.subairoma.R;
@@ -23,6 +26,7 @@ public class TileAdapter extends RecyclerView.Adapter<TileAdapter.TileViewHolder
 
     ArrayList<TilesModel> tileList;
     int[] ivTiles;
+    SQLDatabaseHelper sqlDatabaseHelper;
 
     public TileAdapter(ArrayList list, int[] tiles) {
         tileList = list;
@@ -32,6 +36,7 @@ public class TileAdapter extends RecyclerView.Adapter<TileAdapter.TileViewHolder
     @Override
     public TileViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.recycler_view_tile_row, parent, false);
+        sqlDatabaseHelper = new SQLDatabaseHelper(parent.getContext());
         return new TileViewHolder(view);
     }
 
@@ -45,6 +50,13 @@ public class TileAdapter extends RecyclerView.Adapter<TileAdapter.TileViewHolder
                 holder.viewDisabled.setVisibility(View.VISIBLE);
             }
         }
+        int errorCount = sqlDatabaseHelper.getTileErrorCount(ApplicationClass.getInstance().getMigrantId(),
+                tileList.get(position).getTileId());
+        Log.d("mylog", "Tile Errors: " + errorCount + " For tile ID: " + tileList.get(position).getTileId());
+        if (errorCount == 1) {
+            holder.tvErrorCount.setText(errorCount + " Error");
+        } else if (errorCount > 1)
+            holder.tvErrorCount.setText(errorCount + " Errors");
         setTileIcons(holder.ivTile, tileList.get(position).getTileId());
         //holder.ivTile.setBackgroundResource(ivTiles[position]);
     }
@@ -104,6 +116,7 @@ public class TileAdapter extends RecyclerView.Adapter<TileAdapter.TileViewHolder
         public TextView tvTile;
         public ImageView ivTile;
         public View viewDisabled;
+        public TextView tvErrorCount;
 
         public TileViewHolder(View itemView) {
             super(itemView);
@@ -127,6 +140,7 @@ public class TileAdapter extends RecyclerView.Adapter<TileAdapter.TileViewHolder
             });
             tvTile = (TextView) itemView.findViewById(R.id.tvTitle);
             ivTile = (ImageView) itemView.findViewById(R.id.ivTitle);
+            tvErrorCount = (TextView) itemView.findViewById(R.id.tvErrorCount);
             viewDisabled = itemView.findViewById(R.id.viewDisabled);
         }
     }

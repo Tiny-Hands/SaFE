@@ -554,7 +554,7 @@ public class ActivityRegister extends AppCompatActivity {
                         int mig_id = jsonResponse.getInt("migrant_id");
                         Log.d("mylog", "Migrant ID: " + mig_id);
                         ApplicationClass.getInstance().setMigrantId(mig_id);
-                        new SQLDatabaseHelper(ActivityRegister.this).insertResponseTableData(sex, -2, mig_id, "mg_sex");
+                        new SQLDatabaseHelper(ActivityRegister.this).insertResponseTableData(sex, -2, -1, mig_id, "mg_sex");
                         startOTPActivity();
                         return;
                     } else {
@@ -571,7 +571,7 @@ public class ActivityRegister extends AppCompatActivity {
                 else {
                     //startOTPActivity();
                     int mig_id = jsonResponse.getInt("migrant_id");
-                    new SQLDatabaseHelper(ActivityRegister.this).insertResponseTableData(sex, -2, mig_id, "mg_sex");
+                    new SQLDatabaseHelper(ActivityRegister.this).insertResponseTableData(sex, -2, -1, mig_id, "mg_sex");
                     Intent intent = new Intent(ActivityRegister.this, ActivityMigrantList.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     startActivity(intent);

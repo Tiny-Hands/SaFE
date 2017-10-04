@@ -20,9 +20,16 @@
             android:layout_width="@dimen/card_view_markers_dimen"
             android:layout_height="@dimen/card_view_markers_dimen"
             android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
             android:src="@drawable/ic_checkmark"
             android:visibility="invisible" />
+
+        <com.vysh.subairoma.utils.CustomTextView
+            android:id="@+id/tvErrorCount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:textColor="@color/colorError"
+            app:font="gotham_medium.ttf" />
 
         <TextView
             android:id="@+id/tvPercent"

@@ -58,7 +58,7 @@ public class DialogAnswersVerification extends DialogFragment implements View.On
                     dismiss();
                     //startActivity(intent);
 
-                    new SQLDatabaseHelper(getContext()).insertResponseTableData("true", -3,
+                    new SQLDatabaseHelper(getContext()).insertResponseTableData("true", -3, -1,
                             ApplicationClass.getInstance().getMigrantId(), "mg_verified_answers");
                     activity.setUpGasSections();
                 } else {
