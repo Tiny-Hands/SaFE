@@ -234,7 +234,9 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
         }
 
         String variable = questionsListDisplay.get(position).getVariable();
+        Log.d("mylog", "Getting response for Migrant: " + migrantId + " Variable: " + variable);
         String response = sqlDatabaseHelper.getResponse(migrantId, variable);
+        Log.d("mylog", "Response is: " + response);
         int responseType = questionsListDisplay.get(position).getResponseType();
         if (responseType == 0) {
             if (response == null || response.isEmpty()) {
@@ -534,8 +536,12 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
             spinnerOptions.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                 @Override
                 public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                    String variable = questionsList.get(getAdapterPosition()).getVariable();
+                    String variable = questionsListDisplay.get(getAdapterPosition()).getVariable();
                     String response = spinnerOptions.getSelectedItem().toString();
+                    Log.d("mylog", "Inserting spinner response for question: " +
+                            questionsListDisplay.get(getAdapterPosition()).getQuestionId() + " Tile ID: " +
+                            questionsListDisplay.get(getAdapterPosition()).getTileId()
+                    );
                     if (!fromSetView) {
                         sqlDatabaseHelper.insertResponseTableData(response,
                                 questionsListDisplay.get(getAdapterPosition()).getQuestionId(),
