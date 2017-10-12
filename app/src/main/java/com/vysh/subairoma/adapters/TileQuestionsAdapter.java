@@ -1,6 +1,7 @@
 package com.vysh.subairoma.adapters;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.os.Build;
 import android.support.v7.widget.RecyclerView;
 import android.transition.TransitionManager;
@@ -19,6 +20,7 @@ import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.SpinnerAdapter;
 import android.widget.TextView;
@@ -49,7 +51,7 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
 
     int previousClickedPos = -1;
     int currentClickedPos = -1;
-    boolean fromSetView;
+    boolean fromSetView, disabled;
     Boolean isExpanded = false;
     ArrayList<TileQuestionsModel> questionsList;
     ArrayList<TileQuestionsModel> questionsListDisplay;
@@ -63,9 +65,10 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
     Context context;
 
     public TileQuestionsAdapter(ArrayList<TileQuestionsModel> questions,
-                                Context context) {
+                                boolean disabled, Context context) {
         sqlDatabaseHelper = new SQLDatabaseHelper(context);
         this.context = context;
+        this.disabled = disabled;
         questionsList = questions;
         setConditionVariables();
         setConditionVariableValues();
@@ -185,7 +188,17 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
             holder.spinnerOptions.setAdapter(adapter);
         }
 
-        setValue(holder.checkbox, holder.etResponse, holder.spinnerOptions, holder.question, holder.ivError, position);
+        setValue(holder.checkbox, holder.etResponse, holder.spinnerOptions,
+                holder.question, holder.ivError, holder.rootLayout, position);
+        if (disabled) {
+            holder.disabledView.setVisibility(View.VISIBLE);
+            holder.disabledView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    //Toast.makeText(context, "", Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
     }
 
     private void notifyConditionVariableChange(ArrayList<Integer> questionIds) {
@@ -203,15 +216,18 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
         return questionsListDisplay.size();
     }
 
-    private void setValue(CheckBox checkBox, EditText etResponse, Spinner spinner, TextView question, ImageView ivError, int position) {
+    private void setValue(CheckBox checkBox, EditText etResponse, Spinner spinner, TextView question,
+                          ImageView ivError, RelativeLayout rootLayout, int position) {
         //For showing/hiding error on condition variable change
         Log.d("mylog", "Setting value now");
         boolean isError = sqlDatabaseHelper.getIsError(migrantId, questionsListDisplay.get(position).getVariable());
         Log.d("mylog", "Should show error for: " + questionsListDisplay.get(position).getVariable() + " : " + isError);
         if (isError) {
             ivError.setVisibility(View.VISIBLE);
+            rootLayout.setBackgroundColor(context.getResources().getColor(R.color.colorErrorFaded));
         } else {
             ivError.setVisibility(View.INVISIBLE);
+            rootLayout.setBackgroundColor(Color.TRANSPARENT);
         }
 
         String variable = questionsListDisplay.get(position).getVariable();
@@ -453,10 +469,14 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
         Button btnCall, btnHelp, btnVideo;
 
         LinearLayout helpLayout;
+        RelativeLayout rootLayout;
+        View disabledView;
 
         public QuestionHolder(final View itemView) {
             super(itemView);
 
+            disabledView = itemView.findViewById(R.id.viewDisabled);
+            rootLayout = (RelativeLayout) itemView.findViewById(R.id.rlRoot);
             ivError = (ImageView) itemView.findViewById(R.id.questionMarker);
             details = (TextView) itemView.findViewById(R.id.tvDetail);
             details.setVisibility(GONE);

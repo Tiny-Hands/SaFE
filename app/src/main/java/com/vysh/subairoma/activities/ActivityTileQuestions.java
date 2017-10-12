@@ -5,6 +5,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.WindowManager;
 import android.widget.TextView;
 
@@ -30,6 +31,8 @@ public class ActivityTileQuestions extends AppCompatActivity {
     @BindView(R.id.tvTitle)
     public TextView tvTitle;
 
+    Boolean stateDisabled;
+
     public ArrayList<TileQuestionsModel> questionList;
 
     public TileQuestionsAdapter questionsAdapter;
@@ -41,6 +44,8 @@ public class ActivityTileQuestions extends AppCompatActivity {
         //getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         ButterKnife.bind(ActivityTileQuestions.this);
 
+        stateDisabled = getIntent().hasExtra("stateDisabled");
+        Log.d("mylog", "Disabled state is: " + stateDisabled);
         tvTitle.setText(getIntent().getStringExtra("tileName").toUpperCase());
         getQuestions(getIntent().getIntExtra("tileId", -1));
         setUpRecyclerView();
@@ -54,7 +59,7 @@ public class ActivityTileQuestions extends AppCompatActivity {
             if (question.getResponseType() == 2) {
                 String[] options = sqlDatabaseHelper.getOptions(question.getQuestionId());
                 ArrayList<String> temp = new ArrayList<>();
-                for(int i = 0; i<options.length; i++){
+                for (int i = 0; i < options.length; i++) {
                     temp.add(i, options[i]);
                 }
                 question.setOptions(temp);
@@ -64,7 +69,7 @@ public class ActivityTileQuestions extends AppCompatActivity {
 
     private void setUpRecyclerView() {
         rvQuestions.setLayoutManager(new LinearLayoutManager(ActivityTileQuestions.this));
-        questionsAdapter = new TileQuestionsAdapter(questionList, ActivityTileQuestions.this);
+        questionsAdapter = new TileQuestionsAdapter(questionList, stateDisabled, ActivityTileQuestions.this);
         rvQuestions.setAdapter(questionsAdapter);
     }
 }

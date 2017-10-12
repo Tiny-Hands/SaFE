@@ -129,6 +129,12 @@ public class TileAdapter extends RecyclerView.Adapter<TileAdapter.TileViewHolder
                             intent.putExtra("tileId", tileList.get(getAdapterPosition()).getTileId());
                             intent.putExtra("tileName", tileList.get(getAdapterPosition()).getTitle());
                             v.getContext().startActivity(intent);
+                        } else {
+                            Intent intent = new Intent(v.getContext(), ActivityTileQuestions.class);
+                            intent.putExtra("tileId", tileList.get(getAdapterPosition()).getTileId());
+                            intent.putExtra("tileName", tileList.get(getAdapterPosition()).getTitle());
+                            intent.putExtra("stateDisabled", true);
+                            v.getContext().startActivity(intent);
                         }
                     } else {
                         Intent intent = new Intent(v.getContext(), ActivityTileQuestions.class);

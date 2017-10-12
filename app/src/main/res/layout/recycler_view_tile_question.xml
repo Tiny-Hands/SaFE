@@ -10,6 +10,7 @@
     app:cardUseCompatPadding="true">
 
     <RelativeLayout
+        android:id="@+id/rlRoot"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="@dimen/medium_large_margin">
@@ -39,8 +40,8 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/tvStep"
             android:layout_marginTop="8dp"
-            android:textColor="@color/grey"
             android:text="आफ्नो योग्यता अनुसारको रोजगार अवसरहरू कान्तिपुर र नागरिक जस्ता पत्रपत्रिकामा हेर्नुहोस् र कुनै काम मनपरेपछि सिधै म्यानपावरलाई सम्पर्क गर्नुहोस् । तपाईँले अनलाइन www.baideshikrojgari.com मा पनि विज्ञापनहरू हेर्नसक्नुहुन्छ । त्यस विज्ञापनको एक प्रति आफूसँग राख्नुहोस् र तपाईँले त्यस विज्ञापनमा दिएका कामहरूको पूर्व–स्वीकृति LT No. ठीक छ कि छैन भनेर चेक गर्न पनि सक्नुहुन्छ । यो कसरी गर्ने भनेर तलको रोजगार भागमा दिइएको छ ।"
+            android:textColor="@color/grey"
             android:visibility="gone" />
 
         <TextView
@@ -132,6 +133,11 @@
                     android:background="@drawable/ic_video" />
             </LinearLayout>
         </LinearLayout>
-
     </RelativeLayout>
+    <View
+        android:id="@+id/viewDisabled"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/colorDisabledLight"
+        android:visibility="gone" />
 </android.support.v7.widget.CardView>
