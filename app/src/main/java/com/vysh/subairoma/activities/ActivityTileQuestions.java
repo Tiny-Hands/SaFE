@@ -45,7 +45,6 @@ public class ActivityTileQuestions extends AppCompatActivity {
         ButterKnife.bind(ActivityTileQuestions.this);
 
         stateDisabled = getIntent().hasExtra("stateDisabled");
-        Log.d("mylog", "Disabled state is: " + stateDisabled);
         tvTitle.setText(getIntent().getStringExtra("tileName").toUpperCase());
         getQuestions(getIntent().getIntExtra("tileId", -1));
         setUpRecyclerView();

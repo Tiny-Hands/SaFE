@@ -110,12 +110,15 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
                                 String key = iter.next().toString();
                                 String curValue = conditionVariableValues.get(key);
                                 if (curValue == null || curValue.isEmpty()) {
-                                    conditionMatch = false;
-                                    break;
+                                    //Setting to false as we might need to display a question when a variable is not filled or false
+                                    curValue = "false";
                                 }
                                 //If Current value of the variable matches the condition satisfying value of the variable
-                                else if (curValue.equalsIgnoreCase(conditionVars.getString(key))) {
+                                Log.d("mylog", "Current Value: " + curValue + " Required Value: " + conditionVars.get(key));
+                                if (curValue.equalsIgnoreCase(conditionVars.getString(key))) {
                                     conditionMatch = true;
+                                } else {
+                                    conditionMatch = false;
                                 }
                             }
                             if (conditionMatch) {
@@ -325,11 +328,12 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
         conditionVariableValues = new HashMap<>();
         for (int i = 0; i < conditionVariables.size(); i++) {
             String response = sqlDatabaseHelper.getResponse(migrantId, conditionVariables.get(i));
+            Log.d("mylog", "Condition variable to get value for: " + conditionVariables.get(i));
             if (response == null || response.isEmpty()) {
                 //response = "false";
                 Log.d("mylog", "Not filled yet: " + conditionVariables.get(i));
             }
-            //Log.d("mylog", conditionVariables.get(i) + " response is: " + response);
+            Log.d("mylog", conditionVariables.get(i) + " response is: " + response);
             conditionVariableValues.put(conditionVariables.get(i), response);
         }
     }
@@ -425,6 +429,7 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
                         //errorAlready = true;
                     }
                 } else if (conditionType.equalsIgnoreCase("error")) {
+                    int displayListIndex = -1;
                     if (conditionValid) {
                         Log.d("mylog", "All variables match, showing error");
                         sqlDatabaseHelper.insertIsError(migrantId, key, "true");
@@ -439,6 +444,7 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
                             if (mainListIdCompare == currIdToCompare) {
                                 //Question is visible
                                 Log.d("mylog", "Take action for question with display index: " + j);
+                                displayListIndex = j;
                                 alreadyVisible = true;
                                 break;
                             }
@@ -449,7 +455,10 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
                         //Checking if question is visible, then only notifying item changed
                         if (alreadyVisible) {
                             Log.d("mylog", "Question is visible, showing error");
-                            notifyItemChanged(mainIndex);
+                            if (displayListIndex != -1)
+                                notifyItemChanged(displayListIndex);
+                            else
+                                Log.d("mylog", "Display list index is -1");
                         }
                         //If any further conditions just check but do now remove error if no error
                     }
@@ -504,7 +513,7 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
                         String response = etResponse.getText().toString();
                         String variable = questionsList.get(getAdapterPosition()).getVariable();
                         if (!response.isEmpty()) {
-                            Log.d("mylog", "Inserting response for question: " +
+                            Log.d("mylog", "Inserting text response for question: " +
                                     questionsListDisplay.get(getAdapterPosition()).getQuestionId() + " Tile ID: " +
                                     questionsListDisplay.get(getAdapterPosition()).getTileId()
                             );
@@ -544,12 +553,12 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
             checkbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                    String variable = questionsList.get(getAdapterPosition()).getVariable();
+                    String variable = questionsListDisplay.get(getAdapterPosition()).getVariable();
                     if (isChecked) {
                         if (!fromSetView) {
-                            Log.d("mylog", "Inserting response for question: " +
-                                    questionsListDisplay.get(getAdapterPosition()).getQuestionId() + " Tile ID: " +
-                                    questionsListDisplay.get(getAdapterPosition()).getTileId()
+                            Log.d("mylog", "Inserting response for question variable: " + variable +
+                                    " Inserting response for question ID: " + questionsListDisplay.get(getAdapterPosition()).getQuestionId() +
+                                    " Tile ID: " + questionsListDisplay.get(getAdapterPosition()).getTileId()
                             );
                             sqlDatabaseHelper.insertResponseTableData("true",
                                     questionsListDisplay.get(getAdapterPosition()).getQuestionId(),
