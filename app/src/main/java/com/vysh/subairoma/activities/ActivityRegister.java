@@ -266,23 +266,7 @@ public class ActivityRegister extends AppCompatActivity {
             public void onClick(DialogInterface dialog, int whichButton) {
                 final String number = etRNumber.getText().toString();
                 if (!number.isEmpty() && number.length() == 10) {
-                    AlertDialog.Builder builder = new AlertDialog.Builder(ActivityRegister.this);
-                    builder.setTitle("Select User Type");
-                    builder.setPositiveButton("I am Helping Others", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            checkUserRegistration(number, 0);
-                            dialog.dismiss();
-                        }
-                    });
-                    builder.setNegativeButton("I am an Aspiring Migrant", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            checkUserRegistration(number, 1);
-                            dialog.dismiss();
-                        }
-                    });
-                    builder.show();
+                   checkUserRegistration(number);
                 } else {
                     etNumber.setError("Please enter a valid number");
                 }
@@ -297,7 +281,7 @@ public class ActivityRegister extends AppCompatActivity {
         b.show();
     }
 
-    private void checkUserRegistration(String number, final int userType) {
+    private void checkUserRegistration(String number) {
         final String pNumber = number;
         String api = ApplicationClass.getInstance().getAPIROOT() + apiAlreadyRegistered;
         final ProgressDialog progressDialog = new ProgressDialog(ActivityRegister.this);
@@ -315,22 +299,26 @@ public class ActivityRegister extends AppCompatActivity {
                     if (error) {
                         showSnackbar(jsonRes.getString("message"));
                     } else {
-                        if (userType == 1) {
+                        int userType = jsonRes.getInt("user_type");
+                        int id = jsonRes.getInt("user_id");
+                        if (userType == 0) {
+                            ApplicationClass.getInstance().setUserId(id);
+                        } else if (userType == 1) {
                             ApplicationClass.getInstance().setUserId(-1);
-                            ApplicationClass.getInstance().setMigrantId(jsonRes.getInt("id"));
-                            getMigrantDetails();
-                        } else {
-                            ApplicationClass.getInstance().setUserId(jsonRes.getInt("id"));
+                            ApplicationClass.getInstance().setMigrantId(id);
                         }
-                        //Getting all the saved responses for the user
-                        getAllResponses(userType);
+                        getMigrantDetails();
                     }
-                } catch (JSONException e) {
+                    //Getting all the saved responses for the user
+                    getAllResponses(userType);
+                } catch (JSONException e)
+                {
                     e.printStackTrace();
                     Log.d("mylog", "Error in getting user_id: " + e.toString());
                 }
             }
-        }, new Response.ErrorListener() {
+        }, new Response.ErrorListener()
+        {
             @Override
             public void onErrorResponse(VolleyError error) {
                 progressDialog.dismiss();
@@ -341,12 +329,13 @@ public class ActivityRegister extends AppCompatActivity {
                 else
                     showSnackbar(error.toString());
             }
-        }) {
+        })
+
+        {
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
                 HashMap<String, String> params = new HashMap<>();
                 params.put("number", pNumber);
-                params.put("user_type", userType + "");
                 return params;
             }
         };

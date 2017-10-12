@@ -212,7 +212,7 @@ public class ActivityProfileEdit extends AppCompatActivity implements View.OnCli
         etName.setText(migrantModel.getMigrantName());
         etNumber.setText(migrantModel.getMigrantPhone());
         Log.d("mylog", "Age: " + migrantModel.getMigrantAge());
-        etAge.setText(migrantModel.getMigrantAge() + "");
+        etAge.setText(migrantModel.getMigrantAge());
         String sex = migrantModel.getMigrantSex();
         if (sex.equalsIgnoreCase("male")) {
             rbMale.setChecked(true);
