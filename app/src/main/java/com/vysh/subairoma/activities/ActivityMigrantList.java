@@ -104,7 +104,7 @@ public class ActivityMigrantList extends AppCompatActivity {
         if (userType != -1) {
             Log.d("mylog", "Usertype: " + userType);
             setUpRecyclerView(migrantModels);
-        } else if (userType == -1) {
+        } else {
             if (migrantModels.size() > 0) {
                 int migId = migrantModels.get(0).getMigrantId();
                 ApplicationClass.getInstance().setMigrantId(migId);
@@ -124,6 +124,7 @@ public class ActivityMigrantList extends AppCompatActivity {
                 } else {
                     DialogCountryChooser dialog = DialogCountryChooser.newInstance();
                     dialog.setMigrantName(migrantModels.get(0).getMigrantName());
+                    dialog.setCancelable(false);
                     Log.d("mylog", "Migrant name: " + migrantModels.get(0).getMigrantName() + " : " + migrantModels.get(0).getMigrantId());
                     dialog.show(getSupportFragmentManager(), "countrychooser");
                     recyclerView.setVisibility(View.INVISIBLE);
