@@ -2,6 +2,7 @@ package com.vysh.subairoma.activities;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
@@ -34,6 +35,7 @@ import com.facebook.login.widget.LoginButton;
 import com.vysh.subairoma.ApplicationClass;
 import com.vysh.subairoma.R;
 import com.vysh.subairoma.SQLHelpers.SQLDatabaseHelper;
+import com.vysh.subairoma.SharedPrefKeys;
 import com.vysh.subairoma.models.MigrantModel;
 import com.vysh.subairoma.utils.CustomTextView;
 
@@ -110,8 +112,23 @@ public class ActivityProfileEdit extends AppCompatActivity implements View.OnCli
             getData();
         } else if (userType == 0) {
             tvTitle.setText("EDIT PROFILE");
+            setUpUserData();
             setUpFBLogin();
         }
+    }
+
+    private void setUpUserData() {
+        SharedPreferences sharedPreferences = getSharedPreferences(SharedPrefKeys.sharedPrefName, MODE_PRIVATE);
+        etNumber.setText(sharedPreferences.getString(SharedPrefKeys.userPhone, ""));
+        etName.setText(sharedPreferences.getString(SharedPrefKeys.userName, ""));
+        String sex = sharedPreferences.getString(SharedPrefKeys.userSex, "");
+        String age = sharedPreferences.getString(SharedPrefKeys.userAge, "");
+        etAge.setText(age);
+        Log.d("mylog", "Got from Pref: " + sharedPreferences.getString(SharedPrefKeys.userPhone, ""));
+        if (sex.equalsIgnoreCase("male"))
+            rbMale.setChecked(true);
+        else if (sex.equalsIgnoreCase("female"))
+            rbFemale.setChecked(false);
     }
 
     private void setUpFBLogin() {
@@ -120,7 +137,7 @@ public class ActivityProfileEdit extends AppCompatActivity implements View.OnCli
         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT
                 , LinearLayout.LayoutParams.WRAP_CONTENT);
         float px = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 16, getResources().getDisplayMetrics());
-        layoutParams.setMargins(0, (int)px, 0, 0);
+        layoutParams.setMargins(0, (int) px, 0, 0);
         loginButton.setReadPermissions("email");
         loginButton.setLayoutParams(layoutParams);
         callbackManager = CallbackManager.Factory.create();
@@ -212,7 +229,9 @@ public class ActivityProfileEdit extends AppCompatActivity implements View.OnCli
         etName.setText(migrantModel.getMigrantName());
         etNumber.setText(migrantModel.getMigrantPhone());
         Log.d("mylog", "Age: " + migrantModel.getMigrantAge());
-        etAge.setText(migrantModel.getMigrantAge());
+
+        //Appending empty string as if it's Int, it's considered resource id
+        etAge.setText(migrantModel.getMigrantAge() + "");
         String sex = migrantModel.getMigrantSex();
         if (sex.equalsIgnoreCase("male")) {
             rbMale.setChecked(true);

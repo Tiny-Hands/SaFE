@@ -7,6 +7,7 @@ package com.vysh.subairoma;
 public final class SharedPrefKeys {
     public static String sharedPrefName = "subairomasharedprefs";
     public static String userName ="username";
+    public static String userAge ="userage";
     public static String userPhone = "userphone";
     public static String userSex = "usersex";
     public static String userId = "id";

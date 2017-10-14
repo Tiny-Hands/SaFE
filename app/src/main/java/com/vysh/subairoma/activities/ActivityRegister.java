@@ -200,6 +200,19 @@ public class ActivityRegister extends AppCompatActivity {
                             getMigrantDetails();
                         } else {
                             ApplicationClass.getInstance().setUserId(jsonRes.getInt("user_id"));
+                            String userName = jsonRes.getString("user_name");
+                            String userPhone = jsonRes.getString("user_phone");
+                            String userSex = jsonRes.getString("user_sex");
+                            String age = jsonRes.getString("user_age");
+                            Log.d("mylog", "Saving: " + userName + userPhone + userSex + age);
+                            SharedPreferences sharedPreferences = getSharedPreferences(SharedPrefKeys.sharedPrefName, MODE_PRIVATE);
+                            SharedPreferences.Editor editor = sharedPreferences.edit();
+                            editor.putString(SharedPrefKeys.userName, userName);
+                            editor.putString(SharedPrefKeys.userPhone, userPhone);
+                            editor.putString(SharedPrefKeys.userSex, userSex);
+                            editor.putString(SharedPrefKeys.userAge, age);
+                            editor.putString(SharedPrefKeys.userType, "helper");
+                            editor.commit();
                         }
                         //Getting all the saved responses for the user
                         getAllResponses(userType);
@@ -265,7 +278,7 @@ public class ActivityRegister extends AppCompatActivity {
             public void onClick(DialogInterface dialog, int whichButton) {
                 final String number = etRNumber.getText().toString();
                 if (!number.isEmpty() && number.length() == 10) {
-                   checkUserRegistration(number);
+                    checkUserRegistration(number);
                 } else {
                     etNumber.setError("Please enter a valid number");
                 }
@@ -302,6 +315,20 @@ public class ActivityRegister extends AppCompatActivity {
                         int id = jsonRes.getInt("user_id");
                         if (userType == 0) {
                             ApplicationClass.getInstance().setUserId(id);
+                            String userName = jsonRes.getString("user_name");
+                            String userPhone = jsonRes.getString("user_phone");
+                            String userSex = jsonRes.getString("user_sex");
+                            String age = jsonRes.getString("user_age");
+
+                            Log.d("mylog", "Saving: " + userName + userPhone + userSex + age);
+                            SharedPreferences sharedPreferences = getSharedPreferences(SharedPrefKeys.sharedPrefName, MODE_PRIVATE);
+                            SharedPreferences.Editor editor = sharedPreferences.edit();
+                            editor.putString(SharedPrefKeys.userName, userName);
+                            editor.putString(SharedPrefKeys.userPhone, userPhone);
+                            editor.putString(SharedPrefKeys.userSex, userSex);
+                            editor.putString(SharedPrefKeys.userAge, age);
+                            editor.putString(SharedPrefKeys.userType, "helper");
+                            editor.commit();
                         } else if (userType == 1) {
                             ApplicationClass.getInstance().setUserId(-1);
                             ApplicationClass.getInstance().setMigrantId(id);
@@ -310,14 +337,12 @@ public class ActivityRegister extends AppCompatActivity {
                     }
                     //Getting all the saved responses for the user
                     getAllResponses(userType);
-                } catch (JSONException e)
-                {
+                } catch (JSONException e) {
                     e.printStackTrace();
                     Log.d("mylog", "Error in getting user_id: " + e.toString());
                 }
             }
-        }, new Response.ErrorListener()
-        {
+        }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
                 progressDialog.dismiss();
@@ -548,6 +573,21 @@ public class ActivityRegister extends AppCompatActivity {
                     } else {
                         int user_id = jsonResponse.getInt("user_id");
                         ApplicationClass.getInstance().setUserId(user_id);
+                        //Parse Other responses and save in SharedPref
+                        String userName = etName.getText().toString();
+                        String userPhone = etNumber.getText().toString();
+                        String age = etAge.getText().toString();
+                        String sex = "";
+                        sex = rbMale.isChecked() ? "male" : "female";
+                        SharedPreferences sharedPreferences = getSharedPreferences(SharedPrefKeys.sharedPrefName, MODE_PRIVATE);
+                        SharedPreferences.Editor editor = sharedPreferences.edit();
+                        editor.putString(SharedPrefKeys.userName, userName);
+                        editor.putString(SharedPrefKeys.userPhone, userPhone);
+                        editor.putString(SharedPrefKeys.userSex, sex);
+                        editor.putString(SharedPrefKeys.userAge, age);
+                        editor.putString(SharedPrefKeys.userType, "helper");
+                        editor.commit();
+
                     }
                     //Save to application class
                     userRegistered = true;
