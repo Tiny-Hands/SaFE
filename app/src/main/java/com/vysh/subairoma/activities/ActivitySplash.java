@@ -14,9 +14,11 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.facebook.share.Share;
 import com.vysh.subairoma.ApplicationClass;
 import com.vysh.subairoma.R;
 import com.vysh.subairoma.SQLHelpers.SQLDatabaseHelper;
+import com.vysh.subairoma.SharedPrefKeys;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -61,28 +63,28 @@ public class ActivitySplash extends AppCompatActivity {
                 }
             }
         });
-        sp = getSharedPreferences(ApplicationClass.getInstance().getSHAREDPREFSNAME(), MODE_PRIVATE);
+        sp = getSharedPreferences(SharedPrefKeys.sharedPrefName, MODE_PRIVATE);
         getAllData();
     }
 
     private void getAllData() {
-        if (sp.getInt("savedcount", 0) != 4) {
+        if (sp.getInt(SharedPrefKeys.savedTableCount, 0) != 4) {
             Log.d("mylog", "Starting save");
             dbHelper = new SQLDatabaseHelper(ActivitySplash.this);
             dbHelper.getWritableDatabase();
-            if (!sp.getBoolean("savedtiles", false)) {
+            if (!sp.getBoolean(SharedPrefKeys.savedTiles, false)) {
                 Log.d("mylog", "Getting tiles");
                 getTiles();
             } else incrementCount();
-            if (!sp.getBoolean("savedquestions", false)) {
+            if (!sp.getBoolean(SharedPrefKeys.savedQuestions, false)) {
                 Log.d("mylog", "Getting questions");
                 getQuestions();
             } else incrementCount();
-            if (!sp.getBoolean("savedoptions", false)) {
+            if (!sp.getBoolean(SharedPrefKeys.savedOptions, false)) {
                 Log.d("mylog", "Getting options");
                 getOptions();
             } else incrementCount();
-            if (!sp.getBoolean("savedcountries", false)) {
+            if (!sp.getBoolean(SharedPrefKeys.savedCountries, false)) {
                 Log.d("mylog", "Getting countries");
                 getCountries();
             } else incrementCount();
@@ -104,7 +106,7 @@ public class ActivitySplash extends AppCompatActivity {
                 Log.d("mylog", "Got Tiles: " + response);
                 parseAndSaveTiles(response);
                 SharedPreferences.Editor editor = sp.edit();
-                editor.putBoolean("savedtiles", true);
+                editor.putBoolean(SharedPrefKeys.savedTiles, true);
                 editor.commit();
             }
         }, new Response.ErrorListener() {
@@ -126,7 +128,7 @@ public class ActivitySplash extends AppCompatActivity {
                 Log.d("mylog", "Got questions: " + response);
                 parseAndSaveQuestions(response);
                 SharedPreferences.Editor editor = sp.edit();
-                editor.putBoolean("savedquestions", true);
+                editor.putBoolean(SharedPrefKeys.savedQuestions, true);
                 editor.commit();
             }
         }, new Response.ErrorListener() {
@@ -148,7 +150,7 @@ public class ActivitySplash extends AppCompatActivity {
                 Log.d("mylog", "Got options: " + response);
                 parseAndSaveOptions(response);
                 SharedPreferences.Editor editor = sp.edit();
-                editor.putBoolean("savedoptions", true);
+                editor.putBoolean(SharedPrefKeys.savedOptions, true);
                 editor.commit();
             }
         }, new Response.ErrorListener() {
@@ -170,7 +172,7 @@ public class ActivitySplash extends AppCompatActivity {
                 parseAndSaveCountries(response);
                 Log.d("mylog", "Got countries: " + response);
                 SharedPreferences.Editor editor = sp.edit();
-                editor.putBoolean("savedcountries", true);
+                editor.putBoolean(SharedPrefKeys.savedCountries, true);
                 editor.commit();
             }
         }, new Response.ErrorListener() {

@@ -1,6 +1,5 @@
 package com.vysh.subairoma.activities;
 
-import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -15,7 +14,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioButton;
@@ -38,6 +36,7 @@ import com.facebook.login.widget.LoginButton;
 import com.vysh.subairoma.ApplicationClass;
 import com.vysh.subairoma.R;
 import com.vysh.subairoma.SQLHelpers.SQLDatabaseHelper;
+import com.vysh.subairoma.SharedPrefKeys;
 import com.vysh.subairoma.utils.CustomTextView;
 
 import org.json.JSONArray;
@@ -235,9 +234,9 @@ public class ActivityRegister extends AppCompatActivity {
     }
 
     private boolean checkUserExists() {
-        SharedPreferences sharedPreferences = getSharedPreferences(ApplicationClass.getInstance().getSHAREDPREFSNAME(), MODE_PRIVATE);
-        int userId = sharedPreferences.getInt("id", -10);
-        String type = sharedPreferences.getString("type", "");
+        SharedPreferences sharedPreferences = getSharedPreferences(SharedPrefKeys.sharedPrefName, MODE_PRIVATE);
+        int userId = sharedPreferences.getInt(SharedPrefKeys.userId, -10);
+        String type = sharedPreferences.getString(SharedPrefKeys.userType, "");
         Log.d("mylog", "User id: " + userId + " Type: " + type);
         if (userId != -10) {
             if (type.equalsIgnoreCase("helper")) {
@@ -599,13 +598,13 @@ public class ActivityRegister extends AppCompatActivity {
         if (ApplicationClass.getInstance().getUserId() != -1) {
             type = "helper";
         } else type = "migrant";
-        SharedPreferences sharedPreferences = getSharedPreferences(ApplicationClass.getInstance().getSHAREDPREFSNAME(), MODE_PRIVATE);
+        SharedPreferences sharedPreferences = getSharedPreferences(SharedPrefKeys.sharedPrefName, MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         if (type.equalsIgnoreCase("helper"))
-            editor.putInt("id", ApplicationClass.getInstance().getUserId());
+            editor.putInt(SharedPrefKeys.userId, ApplicationClass.getInstance().getUserId());
         else if (type.equalsIgnoreCase("migrant"))
-            editor.putInt("id", ApplicationClass.getInstance().getMigrantId());
-        editor.putString("type", type);
+            editor.putInt(SharedPrefKeys.userId, ApplicationClass.getInstance().getMigrantId());
+        editor.putString(SharedPrefKeys.userType, type);
         editor.commit();
         Intent intent = new Intent(ActivityRegister.this, ActivityOTPVerification.class);
         startActivity(intent);
