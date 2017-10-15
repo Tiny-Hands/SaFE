@@ -124,7 +124,6 @@ public class ActivityProfileEdit extends AppCompatActivity implements View.OnCli
         String sex = sharedPreferences.getString(SharedPrefKeys.userSex, "");
         String age = sharedPreferences.getString(SharedPrefKeys.userAge, "");
         etAge.setText(age);
-        Log.d("mylog", "Got from Pref: " + sharedPreferences.getString(SharedPrefKeys.userPhone, ""));
         if (sex.equalsIgnoreCase("male"))
             rbMale.setChecked(true);
         else if (sex.equalsIgnoreCase("female"))
@@ -270,7 +269,8 @@ public class ActivityProfileEdit extends AppCompatActivity implements View.OnCli
         sendToServer(API, id, name, age, number, sex);
     }
 
-    private void sendToServer(String API, final int id, final String name, final String age, final String number, final String sex) {
+    private void sendToServer(String API, final int id, final String name, final String age,
+                              final String number, final String sex) {
         final ProgressDialog progressDialog = new ProgressDialog(ActivityProfileEdit.this);
         progressDialog.setTitle("Please wait");
         progressDialog.setMessage("Updating...");
@@ -280,10 +280,32 @@ public class ActivityProfileEdit extends AppCompatActivity implements View.OnCli
             @Override
             public void onResponse(String response) {
                 progressDialog.dismiss();
-                Intent intent = new Intent(ActivityProfileEdit.this, ActivityMigrantList.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                startActivity(intent);
-                Log.d("mylog", "response : " + response);
+                try {
+                    Log.d("mylog", "response : " + response);
+                    JSONObject jsonObject = new JSONObject(response);
+                    Boolean error = jsonObject.getBoolean("error");
+                    if(!error){
+                        if(userType == 0){
+                            //Save the new user info in SharedPrefs
+                            SharedPreferences sharedPreferences = getSharedPreferences(SharedPrefKeys.sharedPrefName, MODE_PRIVATE);
+                            SharedPreferences.Editor editor = sharedPreferences.edit();
+                            editor.putString(SharedPrefKeys.userName, name);
+                            editor.putString(SharedPrefKeys.userPhone, number);
+                            editor.putString(SharedPrefKeys.userSex, sex);
+                            editor.putString(SharedPrefKeys.userAge, age);
+                            editor.putString(SharedPrefKeys.userType, "helper");
+                            editor.commit();
+                        }
+                        Intent intent = new Intent(ActivityProfileEdit.this, ActivityMigrantList.class);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        startActivity(intent);
+                    }
+                    else{
+                        showSnackbar("Failed to update User");
+                    }
+                } catch (JSONException e) {
+                    Log.d("mylog", "Error updating: " + e.toString());
+                }
             }
         }, new Response.ErrorListener() {
             @Override
