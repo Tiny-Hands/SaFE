@@ -51,7 +51,7 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
 
     int previousClickedPos = -1;
     int currentClickedPos = -1;
-    boolean fromSetView, disabled;
+    boolean fromSetView, fromSetViewSpinner, disabled;
     Boolean isExpanded = false;
     ArrayList<TileQuestionsModel> questionsList;
     ArrayList<TileQuestionsModel> questionsListDisplay;
@@ -186,7 +186,9 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
             holder.spinnerOptions.setVisibility(View.VISIBLE);
             ArrayList<String> options = question.getOptions();
             //Showing ---- if nothing selected
-            options.add(0, "---------");
+            //Somehow spinner displays index at 0 multiple time when reinitialized
+            if (!options.get(0).contains("-----"))
+                options.add(0, "---------");
             SpinnerAdapter adapter = new ArrayAdapter<>(context, R.layout.support_simple_spinner_dropdown_item, options);
             holder.spinnerOptions.setAdapter(adapter);
         }
@@ -257,7 +259,7 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
                 question.setVisibility(GONE);
                 etResponse.setVisibility(GONE);
             } else {
-                //fromSetView = true;
+                fromSetView = true;
                 etResponse.setText(response);
             }
         } else if (responseType == 2) {
@@ -266,9 +268,10 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
                 question.setVisibility(GONE);
                 spinner.setVisibility(GONE);
             } else {
-                //fromSetView = true;
+                fromSetView = true;
                 for (int i = 0; i < spinner.getCount(); i++) {
                     if (response.equalsIgnoreCase(spinner.getItemAtPosition(i).toString())) {
+                        fromSetViewSpinner = true;
                         spinner.setSelection(i);
                         break;
                     }
@@ -542,13 +545,24 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
                             questionsListDisplay.get(getAdapterPosition()).getQuestionId() + " Tile ID: " +
                             questionsListDisplay.get(getAdapterPosition()).getTileId()
                     );
+                    if (conditionVariables.contains(variable)) {
+                        Log.d("mylog", "Current spinner variable: " + variable + " Is in condition for some question");
+                        conditionVariableValues.put(variable, response);
+                    }
                     if (!fromSetView) {
                         sqlDatabaseHelper.insertResponseTableData(response,
                                 questionsListDisplay.get(getAdapterPosition()).getQuestionId(),
                                 questionsListDisplay.get(getAdapterPosition()).getTileId(),
                                 migrantId, variable);
-                        fromSetView = false;
+                        if (conditionVariables.contains(variable)) {
+                            Log.d("mylog", "From Set View spinner: " + fromSetViewSpinner);
+                            if (!fromSetViewSpinner) {
+                                ArrayList<Integer> questionIds = conditionOnQuestions.get(variable);
+                                notifyConditionVariableChange(questionIds);
+                            }
+                        }
                     }
+                    fromSetViewSpinner = false;
                 }
 
                 @Override
@@ -570,7 +584,6 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
                                     questionsListDisplay.get(getAdapterPosition()).getQuestionId(),
                                     questionsListDisplay.get(getAdapterPosition()).getTileId(),
                                     migrantId, variable);
-                            fromSetView = false;
                         }
                         if (conditionVariables.contains(variable)) {
                             Log.d("mylog", "Current variable: " + variable + " Is in condition for some question");
@@ -582,7 +595,6 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
                                     questionsListDisplay.get(getAdapterPosition()).getQuestionId(),
                                     questionsListDisplay.get(getAdapterPosition()).getTileId(),
                                     migrantId, variable);
-                            fromSetView = false;
                         }
 
                         if (conditionVariables.contains(variable)) {
@@ -594,7 +606,6 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
                         ArrayList<Integer> questionIds = conditionOnQuestions.get(variable);
                         if (!fromSetView) {
                             notifyConditionVariableChange(questionIds);
-                            fromSetView = false;
                         }
                     }
                 }

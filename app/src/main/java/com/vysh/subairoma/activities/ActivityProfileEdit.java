@@ -330,6 +330,10 @@ public class ActivityProfileEdit extends AppCompatActivity implements View.OnCli
                     params.put("user_id", id + "");
                 } else if (userType == 1) {
                     params.put("migrant_id", id + "");
+                    params.put("user_id", ApplicationClass.getInstance().getUserId() + "");
+                }
+                for(Object obj: params.keySet()){
+                    Log.d("mylog", "Key: " + obj + " Val: " + params.get(obj));
                 }
                 return params;
             }
