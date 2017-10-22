@@ -1,8 +1,12 @@
 package com.vysh.subairoma.adapters;
 
 import android.content.Context;
+import android.database.DataSetObserver;
 import android.graphics.Color;
 import android.os.Build;
+import android.support.annotation.LayoutRes;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.transition.TransitionManager;
 import android.util.Log;
@@ -20,6 +24,8 @@ import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListAdapter;
+import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.SpinnerAdapter;
@@ -38,6 +44,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 
 import static android.view.View.GONE;
 
@@ -61,6 +68,9 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
     HashMap<String, String> conditionVariableValues;
     HashMap<String, ArrayList<Integer>> conditionOnQuestions;
     HashMap<Integer, Integer> conditionQuestionIndex;
+
+    String multiResponse = "";
+    ArrayList<String> multiOptions;
 
     Context context;
 
@@ -174,15 +184,18 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
             holder.question.setVisibility(View.VISIBLE);
             holder.spinnerOptions.setVisibility(View.GONE);
             holder.etResponse.setVisibility(View.GONE);
+            holder.listViewOptions.setVisibility(View.GONE);
         } else if (question.getResponseType() == 1) {
             holder.checkbox.setVisibility(GONE);
             holder.question.setVisibility(View.GONE);
             holder.spinnerOptions.setVisibility(View.GONE);
+            holder.listViewOptions.setVisibility(View.GONE);
             holder.etResponse.setVisibility(View.VISIBLE);
         } else if (question.getResponseType() == 2) {
             holder.checkbox.setVisibility(GONE);
             holder.question.setVisibility(View.GONE);
             holder.etResponse.setVisibility(View.GONE);
+            holder.listViewOptions.setVisibility(View.GONE);
             holder.spinnerOptions.setVisibility(View.VISIBLE);
             ArrayList<String> options = question.getOptions();
             //Showing ---- if nothing selected
@@ -191,10 +204,19 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
                 options.add(0, "---------");
             SpinnerAdapter adapter = new ArrayAdapter<>(context, R.layout.support_simple_spinner_dropdown_item, options);
             holder.spinnerOptions.setAdapter(adapter);
+        } else if (question.getResponseType() == 3) {
+            holder.checkbox.setVisibility(GONE);
+            holder.question.setVisibility(View.GONE);
+            holder.etResponse.setVisibility(View.GONE);
+            holder.spinnerOptions.setVisibility(View.GONE);
+            holder.listViewOptions.setVisibility(View.VISIBLE);
+            multiOptions = question.getOptions();
+            OptionsListViewAdapter adapter = new OptionsListViewAdapter(context, multiOptions, position);
+            holder.listViewOptions.setAdapter(adapter);
         }
 
         setValue(holder.checkbox, holder.etResponse, holder.spinnerOptions,
-                holder.question, holder.ivError, holder.rootLayout, position);
+                holder.question, holder.ivError, holder.listViewOptions, holder.rootLayout, position);
         if (disabled) {
             holder.disabledView.setVisibility(View.VISIBLE);
             holder.disabledView.setOnClickListener(new View.OnClickListener() {
@@ -222,7 +244,7 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
     }
 
     private void setValue(CheckBox checkBox, EditText etResponse, Spinner spinner, TextView question,
-                          ImageView ivError, RelativeLayout rootLayout, int position) {
+                          ImageView ivError, ListView lvOptions, RelativeLayout rootLayout, int position) {
         //For showing/hiding error on condition variable change
         Log.d("mylog", "Setting value now");
         boolean isError = sqlDatabaseHelper.getIsError(migrantId, questionsListDisplay.get(position).getVariable());
@@ -277,6 +299,10 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
                     }
                 }
             }
+        } else if (responseType == 3) {
+            multiResponse = response;
+            OptionsListViewAdapter adapter = new OptionsListViewAdapter(context, multiOptions, position);
+            lvOptions.setAdapter(adapter);
         }
         fromSetView = false;
     }
@@ -480,6 +506,7 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
         EditText etResponse;
         ImageView ivError;
         Spinner spinnerOptions;
+        ListView listViewOptions;
         Button btnCall, btnHelp, btnVideo;
 
         LinearLayout helpLayout;
@@ -510,6 +537,7 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
                     toggleExpandView();
                 }
             });
+            listViewOptions = (ListView) itemView.findViewById(R.id.listViewMultipleOptions);
             etResponse = (EditText) itemView.findViewById(R.id.etResponse);
             etResponse.setOnEditorActionListener(new TextView.OnEditorActionListener() {
                 @Override
@@ -654,6 +682,9 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
             } else if (responseType == 2) {
                 question.setVisibility(View.VISIBLE);
                 spinnerOptions.setVisibility(View.VISIBLE);
+            } else if (responseType == 3) {
+                question.setVisibility(View.VISIBLE);
+                listViewOptions.setVisibility(View.VISIBLE);
             }
             isExpanded = true;
         }
@@ -671,6 +702,68 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
                     Toast.makeText(context, "Open Video Link", Toast.LENGTH_SHORT).show();
                     break;
             }
+        }
+    }
+
+    private class OptionsListViewAdapter extends ArrayAdapter<String> {
+
+        ArrayList<String> options;
+        Context mContext;
+        int mainPos;
+
+        public OptionsListViewAdapter(Context context, List<String> objects, int position) {
+            super(context, R.layout.listview_options_row, objects);
+            options = new ArrayList<>();
+            options.addAll(objects);
+            mContext = context;
+            mainPos = position;
+        }
+
+        final class ViewHolder {
+            public TextView text;
+            public CheckBox checkBox;
+        }
+
+        @NonNull
+        @Override
+        public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+            View rowView = convertView;
+            if (rowView == null) {
+                LayoutInflater inflater = LayoutInflater.from(mContext);
+                rowView = inflater.inflate(R.layout.listview_options_row, parent, false);
+                //Configure viewHolder
+                ViewHolder viewHolder = new ViewHolder();
+                viewHolder.text = (TextView) rowView.findViewById(R.id.tvListViewOptions);
+                viewHolder.checkBox = (CheckBox) rowView.findViewById(R.id.cbListViewOptions);
+                rowView.setTag(viewHolder);
+            }// fill data
+            ViewHolder holder = (ViewHolder) rowView.getTag();
+            String s = options.get(position);
+            holder.text.setText(s);
+            if (multiResponse.contains(s)) {
+                holder.checkBox.setChecked(true);
+            }
+            final String selectedOption = holder.text.getText().toString();
+            holder.checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                    if (isChecked) {
+                        //If already exists do nothing
+                        if (multiResponse.contains(selectedOption)) ;
+                        else {
+                            multiResponse = multiResponse.concat(", " + selectedOption);
+                        }
+                    } else {
+                        if (multiResponse.contains(selectedOption))
+                            multiResponse = multiResponse.replace(selectedOption, "");
+                    }
+                    sqlDatabaseHelper.insertResponseTableData(multiResponse,
+                            questionsListDisplay.get(mainPos).getQuestionId(),
+                            questionsListDisplay.get(mainPos).getTileId(),
+                            migrantId, questionsListDisplay.get(mainPos).getVariable());
+                }
+            });
+            return rowView;
         }
     }
 }

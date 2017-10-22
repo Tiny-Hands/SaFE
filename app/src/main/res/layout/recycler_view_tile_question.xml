@@ -34,60 +34,71 @@
             android:src="@drawable/ic_error"
             android:visibility="invisible" />
 
-        <TextView
-            android:id="@+id/tvDetail"
+        <RelativeLayout
+            android:id="@+id/rlResponse"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/tvStep"
-            android:layout_marginTop="8dp"
-            android:text="आफ्नो योग्यता अनुसारको रोजगार अवसरहरू कान्तिपुर र नागरिक जस्ता पत्रपत्रिकामा हेर्नुहोस् र कुनै काम मनपरेपछि सिधै म्यानपावरलाई सम्पर्क गर्नुहोस् । तपाईँले अनलाइन www.baideshikrojgari.com मा पनि विज्ञापनहरू हेर्नसक्नुहुन्छ । त्यस विज्ञापनको एक प्रति आफूसँग राख्नुहोस् र तपाईँले त्यस विज्ञापनमा दिएका कामहरूको पूर्व–स्वीकृति LT No. ठीक छ कि छैन भनेर चेक गर्न पनि सक्नुहुन्छ । यो कसरी गर्ने भनेर तलको रोजगार भागमा दिइएको छ ।"
-            android:textColor="@color/grey"
-            android:visibility="gone" />
+            android:layout_marginTop="8dp">
 
-        <TextView
-            android:id="@+id/tvQuestion"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignStart="@+id/tvStep"
-            android:layout_below="@id/tvDetail"
-            android:layout_marginEnd="18dp"
-            android:layout_marginTop="12dp"
-            android:layout_toStartOf="@+id/cbResponse"
-            android:text="तपाईँले काम छानेर आवेदन दिनुभयो भने मात्रै याहाँ चिनो लगाउनुहोस् ।"
-            android:textColor="@color/darkGrey"
-            android:textStyle="bold" />
+            <TextView
+                android:id="@+id/tvDetail"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="आफ्नो योग्यता अनुसारको रोजगार अवसरहरू कान्तिपुर र नागरिक जस्ता पत्रपत्रिकामा हेर्नुहोस् र कुनै काम मनपरेपछि सिधै म्यानपावरलाई सम्पर्क गर्नुहोस् । तपाईँले अनलाइन www.baideshikrojgari.com मा पनि विज्ञापनहरू हेर्नसक्नुहुन्छ । त्यस विज्ञापनको एक प्रति आफूसँग राख्नुहोस् र तपाईँले त्यस विज्ञापनमा दिएका कामहरूको पूर्व–स्वीकृति LT No. ठीक छ कि छैन भनेर चेक गर्न पनि सक्नुहुन्छ । यो कसरी गर्ने भनेर तलको रोजगार भागमा दिइएको छ ।"
+                android:textColor="@color/grey"
+                android:visibility="gone" />
 
-        <EditText
-            android:id="@+id/etResponse"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignStart="@+id/tvStep"
-            android:layout_below="@+id/tvDetail"
-            android:layout_marginTop="12dp"
-            android:layout_toStartOf="@+id/questionMarker"
-            android:imeOptions="actionDone"
-            android:inputType="text" />
+            <TextView
+                android:id="@+id/tvQuestion"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/tvDetail"
+                android:layout_marginEnd="18dp"
+                android:layout_marginTop="12dp"
+                android:layout_toStartOf="@+id/cbResponse"
+                android:text="तपाईँले काम छानेर आवेदन दिनुभयो भने मात्रै याहाँ चिनो लगाउनुहोस् ।"
+                android:textColor="@color/darkGrey"
+                android:textStyle="bold" />
 
-        <Spinner
-            android:id="@+id/spinnerOptions"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignStart="@+id/tvStep"
-            android:layout_below="@+id/tvDetail"
-            android:layout_marginTop="12dp" />
+            <EditText
+                android:id="@+id/etResponse"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/tvDetail"
+                android:layout_marginTop="12dp"
+                android:imeOptions="actionDone"
+                android:inputType="text" />
 
-        <CheckBox
-            android:id="@+id/cbResponse"
-            android:layout_width="wrap_content"
-            android:layout_height="@dimen/card_view_markers_dimen"
-            android:layout_alignParentEnd="true"
-            android:layout_alignTop="@id/tvQuestion" />
+            <Spinner
+                android:id="@+id/spinnerOptions"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/tvDetail"
+                android:layout_marginTop="12dp" />
+
+            <ListView
+                android:id="@+id/listViewMultipleOptions"
+                android:layout_width="match_parent"
+                android:layout_height="128dp"
+                android:layout_below="@+id/tvQuestion"
+                android:layout_marginTop="12dp"
+                android:nestedScrollingEnabled="true"
+                android:visibility="gone" />
+
+            <CheckBox
+                android:id="@+id/cbResponse"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/card_view_markers_dimen"
+                android:layout_alignParentEnd="true"
+                android:layout_alignTop="@id/tvQuestion" />
+        </RelativeLayout>
 
         <LinearLayout
             android:id="@+id/llHelp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/tvQuestion"
+            android:layout_below="@+id/rlResponse"
             android:gravity="bottom|center"
             android:orientation="vertical">
 
@@ -134,6 +145,7 @@
             </LinearLayout>
         </LinearLayout>
     </RelativeLayout>
+
     <View
         android:id="@+id/viewDisabled"
         android:layout_width="match_parent"
