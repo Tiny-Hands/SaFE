@@ -14,6 +14,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.crashlytics.android.Crashlytics;
 import com.facebook.share.Share;
 import com.vysh.subairoma.ApplicationClass;
 import com.vysh.subairoma.R;
@@ -23,6 +24,8 @@ import com.vysh.subairoma.SharedPrefKeys;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import io.fabric.sdk.android.Fabric;
 
 /**
  * Created by Vishal on 6/12/2017.
@@ -47,6 +50,7 @@ public class ActivitySplash extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        Fabric.with(this, new Crashlytics());
         startTime = System.currentTimeMillis();
         sleepThread = new Thread(new Runnable() {
             @Override
