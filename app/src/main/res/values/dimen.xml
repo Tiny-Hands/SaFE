@@ -8,6 +8,7 @@
     <dimen name="default_button_width">196dp</dimen>
     <dimen name="avatar_dimen">38dp</dimen>
     <dimen name="fab_dimen">52dp</dimen>
+    <dimen name="redflag_dimen">20dp</dimen>
 
     <!-- Padding and Margin -->
     <dimen name="default_margin">16dp</dimen>

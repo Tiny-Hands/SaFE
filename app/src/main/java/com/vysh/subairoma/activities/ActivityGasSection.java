@@ -100,6 +100,6 @@ public class ActivityGasSection extends AppCompatActivity {
 
     private void setUpRecyclerView() {
         rvTiles.setLayoutManager(new GridLayoutManager(this, 2));
-        rvTiles.setAdapter(new TileAdapter(tiles, tileIcons));
+        rvTiles.setAdapter(new TileAdapter(tiles, tileIcons, ActivityGasSection.this));
     }
 }

@@ -56,16 +56,13 @@
             android:text="Country"
             app:font="gotham_medium.ttf" />
 
-        <com.vysh.subairoma.utils.CustomTextView
-            android:id="@+id/tvErrorCount"
+        <LinearLayout
+            android:id="@+id/llRedflags"
+            android:layout_alignParentRight="true"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_below="@+id/ivUserLogo"
-            android:layout_marginTop="@dimen/default_margin"
-            android:text=""
-            android:textColor="@color/colorError"
-            app:font="gotham_bold.ttf" />
+            android:layout_alignBottom="@id/tvCountryGoing"
+            android:orientation="horizontal"/>
     </RelativeLayout>
 
 </android.support.v7.widget.CardView>

@@ -23,13 +23,12 @@
             android:src="@drawable/ic_checkmark"
             android:visibility="invisible" />
 
-        <com.vysh.subairoma.utils.CustomTextView
-            android:id="@+id/tvErrorCount"
+        <LinearLayout
+            android:id="@+id/llRedflags"
+            android:layout_alignParentRight="true"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:textColor="@color/colorError"
-            app:font="gotham_medium.ttf" />
+            android:orientation="horizontal"/>
 
         <TextView
             android:id="@+id/tvPercent"

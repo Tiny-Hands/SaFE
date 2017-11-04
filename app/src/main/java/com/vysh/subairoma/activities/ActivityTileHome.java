@@ -173,7 +173,7 @@ public class ActivityTileHome extends AppCompatActivity {
 
     private void setUpRecyclerView() {
         rvTiles.setLayoutManager(new GridLayoutManager(this, 2));
-        tileAdapter = new TileAdapter(tiles, tileIcons);
+        tileAdapter = new TileAdapter(tiles, tileIcons, ActivityTileHome.this);
         rvTiles.setAdapter(tileAdapter);
 
     }

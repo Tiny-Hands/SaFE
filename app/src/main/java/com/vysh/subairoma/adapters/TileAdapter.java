@@ -1,12 +1,15 @@
 package com.vysh.subairoma.adapters;
 
+import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.vysh.subairoma.ApplicationClass;
@@ -27,10 +30,12 @@ public class TileAdapter extends RecyclerView.Adapter<TileAdapter.TileViewHolder
     ArrayList<TilesModel> tileList;
     int[] ivTiles;
     SQLDatabaseHelper sqlDatabaseHelper;
+    Context context;
 
-    public TileAdapter(ArrayList list, int[] tiles) {
+    public TileAdapter(ArrayList list, int[] tiles, Context cxt) {
         tileList = list;
         ivTiles = tiles;
+        context = cxt;
     }
 
     @Override
@@ -53,10 +58,16 @@ public class TileAdapter extends RecyclerView.Adapter<TileAdapter.TileViewHolder
         int errorCount = sqlDatabaseHelper.getTileErrorCount(ApplicationClass.getInstance().getMigrantId(),
                 tileList.get(position).getTileId());
         Log.d("mylog", "Tile Errors: " + errorCount + " For tile ID: " + tileList.get(position).getTileId());
-        if (errorCount == 1) {
-            holder.tvErrorCount.setText(errorCount + " Error");
-        } else if (errorCount > 1)
-            holder.tvErrorCount.setText(errorCount + " Errors");
+        if (errorCount > 0) {
+            for (int i = 0; i < errorCount; i++) {
+                ImageView imgView = new ImageView(holder.llErrorLayout.getContext());
+                LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams((int)context.getResources().getDimension(R.dimen.redflag_dimen),
+                        (int)context.getResources().getDimension(R.dimen.redflag_dimen));
+                imgView.setLayoutParams(lp);
+                imgView.setImageResource(R.drawable.ic_redflag);
+                holder.llErrorLayout.addView(imgView);
+            }
+        }
         setTileIcons(holder.ivTile, tileList.get(position).getTileId());
         //holder.ivTile.setBackgroundResource(ivTiles[position]);
     }
@@ -116,7 +127,7 @@ public class TileAdapter extends RecyclerView.Adapter<TileAdapter.TileViewHolder
         public TextView tvTile;
         public ImageView ivTile;
         public View viewDisabled;
-        public TextView tvErrorCount;
+        public LinearLayout llErrorLayout;
 
         public TileViewHolder(View itemView) {
             super(itemView);
@@ -146,8 +157,8 @@ public class TileAdapter extends RecyclerView.Adapter<TileAdapter.TileViewHolder
             });
             tvTile = (TextView) itemView.findViewById(R.id.tvTitle);
             ivTile = (ImageView) itemView.findViewById(R.id.ivTitle);
-            tvErrorCount = (TextView) itemView.findViewById(R.id.tvErrorCount);
             viewDisabled = itemView.findViewById(R.id.viewDisabled);
+            llErrorLayout = (LinearLayout) itemView.findViewById(R.id.llRedflags);
         }
     }
 }

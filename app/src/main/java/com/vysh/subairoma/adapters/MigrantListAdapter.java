@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.vysh.subairoma.activities.ActivityTileHome;
@@ -67,14 +68,14 @@ public class MigrantListAdapter extends RecyclerView.Adapter<MigrantListAdapter.
             //Showing error count
             int errorCount = new SQLDatabaseHelper(mContext).getMigrantErrorCount(migrantModel.getMigrantId());
             if (errorCount > 0) {
-                if (errorCount == 1)
-                    holder.tvErrorCount.setText(errorCount + " Error");
-                else
-                    holder.tvErrorCount.setText(errorCount + " Errors");
-                holder.tvErrorCount.setTextColor(mContext.getResources().getColor(R.color.colorError));
-            } else {
-                holder.tvErrorCount.setTextColor(mContext.getResources().getColor(R.color.colorPrimary));
-                holder.tvErrorCount.setText("No errors");
+                for (int i = 0; i < errorCount; i++) {
+                    ImageView imgView = new ImageView(holder.llErrorLayout.getContext());
+                    LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams((int) holder.llErrorLayout.getContext().getResources().getDimension(R.dimen.redflag_dimen),
+                            (int) holder.llErrorLayout.getContext().getResources().getDimension(R.dimen.redflag_dimen));
+                    imgView.setLayoutParams(lp);
+                    imgView.setImageResource(R.drawable.ic_redflag);
+                    holder.llErrorLayout.addView(imgView);
+                }
             }
         }
     }
@@ -88,15 +89,16 @@ public class MigrantListAdapter extends RecyclerView.Adapter<MigrantListAdapter.
     }
 
     public class MigrantHolder extends RecyclerView.ViewHolder {
-        public TextView textViewName, sex, tvErrorCount, tvGoingCountry;
+        public TextView textViewName, sex, tvGoingCountry;
         public ImageView ivAvatar;
+        public LinearLayout llErrorLayout;
 
         public MigrantHolder(final View itemView) {
             super(itemView);
-            tvErrorCount = (TextView) itemView.findViewById(R.id.tvErrorCount);
             textViewName = (TextView) itemView.findViewById(R.id.tvMigrantName);
             tvGoingCountry = (TextView) itemView.findViewById(R.id.tvCountryGoing);
             ivAvatar = (ImageView) itemView.findViewById(R.id.ivUserLogo);
+            llErrorLayout = (LinearLayout) itemView.findViewById(R.id.llRedflags);
             sex = (TextView) itemView.findViewById(R.id.tvMigrantAgeSex);
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override

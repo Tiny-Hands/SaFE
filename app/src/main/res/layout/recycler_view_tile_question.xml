@@ -27,11 +27,11 @@
 
         <ImageView
             android:id="@+id/questionMarker"
-            android:layout_width="@dimen/card_view_markers_dimen"
+            android:layout_width="@dimen/redflag_dimen"
             android:layout_height="@dimen/card_view_markers_dimen"
             android:layout_alignParentEnd="true"
             android:layout_marginEnd="4dp"
-            android:src="@drawable/ic_error"
+            android:src="@drawable/ic_redflag"
             android:visibility="invisible" />
 
         <RelativeLayout
