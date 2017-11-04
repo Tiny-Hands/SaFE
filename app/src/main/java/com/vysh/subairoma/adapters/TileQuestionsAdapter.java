@@ -1,12 +1,15 @@
 package com.vysh.subairoma.adapters;
 
+import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.database.DataSetObserver;
 import android.graphics.Color;
 import android.os.Build;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.transition.TransitionManager;
 import android.util.Log;
@@ -150,8 +153,12 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
                                 }
                             }
                         } else {
-                            //ALWAYS KEEP THE ERROR CONDITION AT THE START IN THE JSON CONDITION FORMAT
-                            questionsListDisplay.add(question);
+                            if (!questionsListDisplay.contains(question)) {
+                                Log.d("mylog", "Added to display list");
+                                questionsListDisplay.add(question);
+                            } else {
+                                Log.d("mylog", "Question already exists in the Display list");
+                            }
                         }
                     }
                 } catch (JSONException e) {
@@ -604,14 +611,36 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
                     String variable = questionsListDisplay.get(getAdapterPosition()).getVariable();
                     if (isChecked) {
                         if (!fromSetView) {
-                            Log.d("mylog", "Inserting response for question variable: " + variable +
-                                    " Inserting response for question ID: " + questionsListDisplay.get(getAdapterPosition()).getQuestionId() +
-                                    " Tile ID: " + questionsListDisplay.get(getAdapterPosition()).getTileId()
-                            );
-                            sqlDatabaseHelper.insertResponseTableData("true",
-                                    questionsListDisplay.get(getAdapterPosition()).getQuestionId(),
-                                    questionsListDisplay.get(getAdapterPosition()).getTileId(),
-                                    migrantId, variable);
+                            //This condition is just to check If conflicting
+                            boolean shouldAllowMarking = true;
+                            String condition = questionsList.get(getAdapterPosition()).getCondition();
+                            if (condition.contains("conflict")) {
+                                shouldAllowMarking = getConflictingVariable(condition);
+                            }
+                            //Show conflict dialog
+                            if (!shouldAllowMarking) {
+                                final AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                                builder.setNegativeButton("OKAY", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        dialog.dismiss();
+                                    }
+                                });
+                                builder.setMessage("Conflicting Option");
+                                builder.setCancelable(false);
+                                builder.show();
+                                checkbox.setChecked(false);
+                                return;
+                            } else {
+                                Log.d("mylog", "Inserting response for question variable: " + variable +
+                                        " Inserting response for question ID: " + questionsListDisplay.get(getAdapterPosition()).getQuestionId() +
+                                        " Tile ID: " + questionsListDisplay.get(getAdapterPosition()).getTileId()
+                                );
+                                sqlDatabaseHelper.insertResponseTableData("true",
+                                        questionsListDisplay.get(getAdapterPosition()).getQuestionId(),
+                                        questionsListDisplay.get(getAdapterPosition()).getTileId(),
+                                        migrantId, variable);
+                            }
                         }
                         if (conditionVariables.contains(variable)) {
                             Log.d("mylog", "Current variable: " + variable + " Is in condition for some question");
@@ -703,6 +732,32 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
                     break;
             }
         }
+    }
+
+    private boolean getConflictingVariable(String condition) {
+        try {
+            JSONObject conditionsObject = new JSONObject(condition);
+            JSONArray conditionsArray = conditionsObject.getJSONArray("conditions");
+            for (int i = 0; i < conditionsArray.length(); i++) {
+                JSONObject conditionJson = conditionsArray.getJSONObject(i);
+                String type = conditionJson.getString("type");
+                if (type.equalsIgnoreCase("conflict")) {
+                    JSONObject varsJson = conditionJson.getJSONObject("condition");
+                    Iterator iter = varsJson.keys();
+                    String variableValueToCheck = "";
+                    if (iter.hasNext())
+                        variableValueToCheck = iter.next().toString();
+                    String conditionValue = conditionVariableValues.get(variableValueToCheck);
+                    if (conditionValue.contains("true"))
+                        return false;
+                    else
+                        return true;
+                }
+            }
+        } catch (JSONException e) {
+            Log.d("mylog", "Error getting conflicting variable value: " + e.toString());
+        }
+        return true;
     }
 
     private class OptionsListViewAdapter extends ArrayAdapter<String> {
