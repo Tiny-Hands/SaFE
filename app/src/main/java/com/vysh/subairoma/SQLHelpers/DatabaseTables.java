@@ -50,6 +50,15 @@ public final class DatabaseTables {
         public static final String country_blacklist = "country_blacklist";
     }
 
+    public static class ImportantContacts{
+        public static final String TABLE_NAME = "tbl_contacts";
+        public static final String country_id = "country_id";
+        public static final String nepal_embassy = "nepal_embassy";
+        public static final String contact1 = "contact1";
+        public static final String contact2 = "contact2";
+        public static final String contact3 = "contact3";
+    }
+
     public static class OptionsTable {
         public static final String TABLE_NAME = "tbl_options";
         public static final String option_id = "option_id";

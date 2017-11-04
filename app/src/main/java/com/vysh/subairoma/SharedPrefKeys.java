@@ -17,4 +17,5 @@ public final class SharedPrefKeys {
     public static String savedQuestions = "savedquestions";
     public static String savedOptions = "savedoptions";
     public static String savedCountries = "savedcountries";
+    public static String savedContacts = "savedcontacts";
 }

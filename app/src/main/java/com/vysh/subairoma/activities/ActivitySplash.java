@@ -35,6 +35,7 @@ public class ActivitySplash extends AppCompatActivity {
     private final String questionAPI = "/getallquestions.php";
     private final String optionsAPI = "/getalloptions.php";
     private final String countiesAPI = "/getcountries.php";
+    private final String importantContactsAPI = "/getcountries.php";
     private int savedCount = 0;
     private long startTime;
     private long sleepTime;
@@ -71,7 +72,7 @@ public class ActivitySplash extends AppCompatActivity {
     }
 
     private void getAllData() {
-        if (sp.getInt(SharedPrefKeys.savedTableCount, 0) != 4) {
+        if (sp.getInt(SharedPrefKeys.savedTableCount, 0) != 5) {
             Log.d("mylog", "Starting save");
             dbHelper = new SQLDatabaseHelper(ActivitySplash.this);
             dbHelper.getWritableDatabase();
@@ -91,12 +92,60 @@ public class ActivitySplash extends AppCompatActivity {
                 Log.d("mylog", "Getting countries");
                 getCountries();
             } else incrementCount();
+            if (!sp.getBoolean(SharedPrefKeys.savedContacts, false)) {
+                Log.d("mylog", "Getting contacts");
+                getContacts();
+            } else incrementCount();
         } else {
             Log.d("mylog", "Saved already, starting");
             //Start activity directly or show splash
             long currTime = System.currentTimeMillis();
             sleepTime = 2000;
             sleepThread.start();
+        }
+    }
+
+    private void getContacts() {
+        String api = ApplicationClass.getInstance().getAPIROOT() + importantContactsAPI;
+        StringRequest getRequest = new StringRequest(Request.Method.GET, api, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                //SAVE RESPONSE IN LOCAL DB
+                Log.d("mylog", "Got questions: " + response);
+                parseAndSaveContacts(response);
+                SharedPreferences.Editor editor = sp.edit();
+                editor.putBoolean(SharedPrefKeys.savedContacts, true);
+                editor.commit();
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.d("mylog", "Error getting questions: " + error.toString());
+            }
+        });
+        RequestQueue queue = Volley.newRequestQueue(ActivitySplash.this);
+        queue.add(getRequest);
+    }
+
+    private void parseAndSaveContacts(String response) {
+        try {
+            JSONObject jsonTiles = new JSONObject(response);
+            boolean error = jsonTiles.getBoolean("error");
+            if (error) {
+                Log.d("mylog", "Error getting contacts: " + response);
+            } else {
+                JSONObject contactsObject = jsonTiles.getJSONObject("contacts");
+                String cid = contactsObject.getString("country_id");
+                String nepalEmbassy = contactsObject.getString("nepal_embassy");
+                String contact1 = contactsObject.getString("contact1");
+                String contact2 = contactsObject.getString("contact2");
+                String contact3 = contactsObject.getString("contact3");
+                Log.d("mylog", cid);
+                dbHelper.insertImportantContacts(cid, nepalEmbassy, contact1, contact2, contact3);
+                incrementCount();
+            }
+        } catch (JSONException e) {
+            Log.d("mylog", "Error parsing countries: " + e.toString());
         }
     }
 

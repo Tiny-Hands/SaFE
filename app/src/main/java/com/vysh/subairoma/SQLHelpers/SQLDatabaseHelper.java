@@ -66,6 +66,13 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
                     DatabaseTables.CountriesTable.country_blacklist + " INTEGER," +
                     DatabaseTables.CountriesTable.country_status + " INTEGER," +
                     DatabaseTables.CountriesTable.country_name + " TEXT" + ");";
+    final String SQL_CREATE_ContactsTable =
+            "CREATE TABLE " + DatabaseTables.ImportantContacts.TABLE_NAME + " (" +
+                    DatabaseTables.ImportantContacts.country_id + " TEXT PRIMARY KEY," +
+                    DatabaseTables.ImportantContacts.nepal_embassy + " TEXT," +
+                    DatabaseTables.ImportantContacts.contact1 + " TEXT," +
+                    DatabaseTables.ImportantContacts.contact2 + " TEXT," +
+                    DatabaseTables.ImportantContacts.contact3 + " TEXT" + ");";
     final String SQL_CREATE_MigrantsTable =
             "CREATE TABLE " + DatabaseTables.MigrantsTable.TABLE_NAME + " (" +
                     DatabaseTables.MigrantsTable.migrant_id + " INTEGER PRIMARY KEY," +
@@ -91,6 +98,7 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
         db.execSQL(SQL_CREATE_OptionsTable);
         db.execSQL(SQL_CREATE_CountriesTable);
         db.execSQL(SQL_CREATE_MigrantsTable);
+        db.execSQL(SQL_CREATE_ContactsTable);
     }
 
     @Override
@@ -291,6 +299,19 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
         Log.d("mylog", "Inserted row ID; " + newRowId);
     }
 
+    public void insertImportantContacts(String cid, String nepalEmbassy, String contact1, String contact2, String contact3) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(DatabaseTables.ImportantContacts.country_id, cid);
+        values.put(DatabaseTables.ImportantContacts.nepal_embassy, nepalEmbassy);
+        values.put(DatabaseTables.ImportantContacts.contact1, contact1);
+        values.put(DatabaseTables.ImportantContacts.contact2, contact2);
+        values.put(DatabaseTables.ImportantContacts.contact3, contact3);
+
+        long newRowId = db.insert(DatabaseTables.TilesTable.TABLE_NAME, null, values);
+        Log.d("mylog", "Inserted row ID; " + newRowId);
+    }
+
     public ArrayList<TilesModel> getTiles(String type) {
         SQLiteDatabase db = this.getReadableDatabase();
         ArrayList<TilesModel> tileList = new ArrayList<>();
@@ -471,6 +492,19 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
             migrantModels.add(migrantModel);
         }
         return migrantModels;
+    }
+
+    public String[] getImportantContacts(String countryId) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String[] contacts = new String[4];
+        Cursor cursor = db.rawQuery("SELECT * FROM " + DatabaseTables.ImportantContacts.TABLE_NAME + " WHERE "
+                + DatabaseTables.ImportantContacts.country_id + "=" + "'" + countryId + "'", null);
+        cursor.moveToNext();
+        contacts[0] = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseTables.ImportantContacts.nepal_embassy));
+        contacts[1] = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseTables.ImportantContacts.contact1));
+        contacts[2] = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseTables.ImportantContacts.contact2));
+        contacts[3] = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseTables.ImportantContacts.contact3));
+        return contacts;
     }
 
     public MigrantModel getMigrantDetails() {
