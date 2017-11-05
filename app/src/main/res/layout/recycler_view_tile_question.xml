@@ -51,13 +51,13 @@
 
             <TextView
                 android:id="@+id/tvQuestion"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/tvDetail"
                 android:layout_marginEnd="18dp"
                 android:layout_marginTop="12dp"
                 android:layout_toStartOf="@+id/cbResponse"
-                android:text="तपाईँले काम छानेर आवेदन दिनुभयो भने मात्रै याहाँ चिनो लगाउनुहोस् ।"
+                android:text="तपाईँले काम छानेर आवेदन याहाँ चिनो लगाउनुहोस् ।"
                 android:textColor="@color/darkGrey"
                 android:textStyle="bold" />
 
