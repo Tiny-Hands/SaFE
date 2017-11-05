@@ -15,6 +15,7 @@ import android.transition.TransitionManager;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
@@ -545,6 +546,27 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
                 }
             });
             listViewOptions = (ListView) itemView.findViewById(R.id.listViewMultipleOptions);
+            listViewOptions.setOnTouchListener(new ListView.OnTouchListener() {
+                @Override
+                public boolean onTouch(View v, MotionEvent event) {
+                    int action = event.getAction();
+                    switch (action) {
+                        case MotionEvent.ACTION_DOWN:
+                            // Disallow RecyclerView to intercept touch events.
+                            v.getParent().requestDisallowInterceptTouchEvent(true);
+                            break;
+
+                        case MotionEvent.ACTION_UP:
+                            // Allow RecyclerView to intercept touch events.
+                            v.getParent().requestDisallowInterceptTouchEvent(false);
+                            break;
+                    }
+
+                    // Handle ListView touch events.
+                    v.onTouchEvent(event);
+                    return true;
+                }
+            });
             etResponse = (EditText) itemView.findViewById(R.id.etResponse);
             etResponse.setOnEditorActionListener(new TextView.OnEditorActionListener() {
                 @Override
