@@ -311,6 +311,7 @@ public class ActivityRegister extends AppCompatActivity {
                     boolean error = jsonRes.getBoolean("error");
                     if (error) {
                         showSnackbar(jsonRes.getString("message"));
+                        return;
                     } else {
                         int userType = jsonRes.getInt("user_type");
                         int id = jsonRes.getInt("user_id");
