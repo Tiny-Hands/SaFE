@@ -2,6 +2,9 @@
     <string name="app_name">सुवैरोमा </string>
     <string name="user_name">विशाल श्रेष्ठ </string>
     <string name="code">CODE</string>
+    <string name="disclaimer">नेपालबाट विदेशमा काम गर्न जाने धेरै व्यक्तिहरू शोषणमा पर्ने गर्दछन् । उनीहरू ठगिन्छन्, गाह्रो अवस्थाहरूमा काम गर्न बाध्य पारिन्छन्, पिटिन्छन्, उनीहरूले भनेको तलब र सुविधा पाउने गर्दैनन् र कति त यतना र यौनशोषणमा पर्नेगर्दछन् । कति विदेशमा थुनामा पर्दछन् त कतिले आत्माहत्या गर्नेगर्दछन् । यो एपले वैदेशिक रोजगारीमा जान चाहाने नेपालीहरूलाई ठगि र शोषणबाट बचेर सुरक्षित र लाभदायक रोजगारी पत्ता लगाउन सहायता गर्दछ तर सुरक्षाको भने पूर्ण सुनिश्चितता गर्दैन ।</string>
+    <string name="disclaimer_button">मैले बुझे</string>
+    <string name="disclaimer_title">प्रतिदावी</string>
     <string name="finalAnswerVerification">You have completed the foreign employment preparation part of the app. To continue forward please agree to not to change the previous answers. If you have to change your answers please go back and do it now, otherwise please check. I agree to not change my answers.</string>
     <string name="opt_message">We are sending an SMS with a code to you phone number. Please enter it below. It may take upto 5 minutes</string>
 

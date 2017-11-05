@@ -443,10 +443,10 @@ public class ActivityRegister extends AppCompatActivity {
 
     private void showDisclaimer(final int i) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Disclaimer");
-        builder.setMessage("Message");
+        builder.setTitle(getResources().getString(R.string.disclaimer_title));
+        builder.setMessage(getResources().getString(R.string.disclaimer));
         builder.setCancelable(false);
-        builder.setPositiveButton("Agree", new DialogInterface.OnClickListener() {
+        builder.setPositiveButton(getResources().getString(R.string.disclaimer_button), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 if (i == 1)
@@ -457,13 +457,14 @@ public class ActivityRegister extends AppCompatActivity {
                 }
             }
         });
-        builder.setNegativeButton("Disagree", new DialogInterface.OnClickListener() {
+        /*builder.setNegativeButton("Disagree", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 //Do Nothing
             }
         });
         builder.show();
+        */
     }
 
     private void registerMigrant() {
