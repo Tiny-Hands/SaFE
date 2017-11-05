@@ -471,9 +471,20 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
                     int displayListIndex = -1;
                     if (conditionValid) {
                         Log.d("mylog", "All variables match, showing error");
+
                         sqlDatabaseHelper.insertIsError(migrantId, key, "true");
                         //Check if question is visible
 
+                        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                        builder.setMessage(questionsList.get(mainIndex).getDescription());
+                        builder.setCancelable(false);
+                        builder.setNegativeButton("OKAY", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        });
+                        builder.show();
                         Log.d("mylog", "All variables match, showing view");
                         int mainListIdCompare = questionsList.get(mainIndex).getQuestionId();
                         boolean alreadyVisible = false;
