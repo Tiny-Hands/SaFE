@@ -13,4 +13,9 @@
         <item name="android:textSize">@dimen/default_title_size</item>
     </style>
 
+    <style name="DialogError" parent="Theme.AppCompat.Light.Dialog">
+        <item name="android:textColorPrimary">@color/colorError</item>
+        <item name="colorAccent">@color/colorAccent</item>
+    </style>
+
 </resources>

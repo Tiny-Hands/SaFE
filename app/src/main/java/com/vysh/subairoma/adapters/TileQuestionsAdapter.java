@@ -475,7 +475,7 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
                         sqlDatabaseHelper.insertIsError(migrantId, key, "true");
                         //Check if question is visible
 
-                        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                        AlertDialog.Builder builder = new AlertDialog.Builder(context, R.style.DialogError);
                         builder.setMessage(questionsList.get(mainIndex).getDescription());
                         builder.setCancelable(false);
                         builder.setNegativeButton("OKAY", new DialogInterface.OnClickListener() {
@@ -652,7 +652,7 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
                             }
                             //Show conflict dialog
                             if (!shouldAllowMarking) {
-                                final AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                                final AlertDialog.Builder builder = new AlertDialog.Builder(context, R.style.DialogError);
                                 builder.setNegativeButton("OKAY", new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
