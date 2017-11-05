@@ -163,6 +163,7 @@ public class ActivityRegister extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (validateData()) {
+                    Log.d("mylog", "Saving User");
                     saveUser();
                 }
             }
@@ -463,8 +464,8 @@ public class ActivityRegister extends AppCompatActivity {
                 //Do Nothing
             }
         });
-        builder.show();
         */
+        builder.show();
     }
 
     private void registerMigrant() {
