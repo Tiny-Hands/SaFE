@@ -35,7 +35,7 @@ public class ActivitySplash extends AppCompatActivity {
     private final String questionAPI = "/getallquestions.php";
     private final String optionsAPI = "/getalloptions.php";
     private final String countiesAPI = "/getcountries.php";
-    private final String importantContactsAPI = "/getcountries.php";
+    private final String importantContactsAPI = "/getimportantcontacts.php";
     private int savedCount = 0;
     private long startTime;
     private long sleepTime;
@@ -111,7 +111,7 @@ public class ActivitySplash extends AppCompatActivity {
             @Override
             public void onResponse(String response) {
                 //SAVE RESPONSE IN LOCAL DB
-                Log.d("mylog", "Got questions: " + response);
+                Log.d("mylog", "Got contacts: " + response);
                 parseAndSaveContacts(response);
                 SharedPreferences.Editor editor = sp.edit();
                 editor.putBoolean(SharedPrefKeys.savedContacts, true);
@@ -129,23 +129,26 @@ public class ActivitySplash extends AppCompatActivity {
 
     private void parseAndSaveContacts(String response) {
         try {
-            JSONObject jsonTiles = new JSONObject(response);
-            boolean error = jsonTiles.getBoolean("error");
+            JSONObject jsonContacts = new JSONObject(response);
+            boolean error = jsonContacts.getBoolean("error");
             if (error) {
                 Log.d("mylog", "Error getting contacts: " + response);
             } else {
-                JSONObject contactsObject = jsonTiles.getJSONObject("contacts");
-                String cid = contactsObject.getString("country_id");
-                String nepalEmbassy = contactsObject.getString("nepal_embassy");
-                String contact1 = contactsObject.getString("contact1");
-                String contact2 = contactsObject.getString("contact2");
-                String contact3 = contactsObject.getString("contact3");
-                Log.d("mylog", cid);
-                dbHelper.insertImportantContacts(cid, nepalEmbassy, contact1, contact2, contact3);
+                JSONArray contactsArray = jsonContacts.getJSONArray("contacts");
+                for (int i = 0; i < contactsArray.length(); i++) {
+                    JSONObject contactsObject = contactsArray.getJSONObject(i);
+                    String cid = contactsObject.getString("country_id");
+                    String nepalEmbassy = contactsObject.getString("nepal_embassy");
+                    String contact1 = contactsObject.getString("contact1");
+                    String contact2 = contactsObject.getString("contact2");
+                    String contact3 = contactsObject.getString("contact3");
+                    Log.d("mylog", cid);
+                    dbHelper.insertImportantContacts(cid, nepalEmbassy, contact1, contact2, contact3);
+                }
                 incrementCount();
             }
         } catch (JSONException e) {
-            Log.d("mylog", "Error parsing countries: " + e.toString());
+            Log.d("mylog", "Error parsing contacts: " + e.toString());
         }
     }
 

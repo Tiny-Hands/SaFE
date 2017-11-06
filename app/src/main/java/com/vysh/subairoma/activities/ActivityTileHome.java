@@ -10,12 +10,10 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
@@ -61,6 +59,8 @@ public class ActivityTileHome extends AppCompatActivity {
     TextView tvCountry;
     @BindView(R.id.btnNext)
     Button btnNext;
+    @BindView(R.id.btnImportantContacts)
+    Button btnImportantContacts;
     @BindView(R.id.ivAvatar)
     ImageView ivAvatar;
 
@@ -138,6 +138,15 @@ public class ActivityTileHome extends AppCompatActivity {
                 Intent intent = new Intent(ActivityTileHome.this, ActivityProfileEdit.class);
                 intent.putExtra("userType", 1);
                 startActivity(intent);
+            }
+        });
+
+        btnImportantContacts.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent impIntent = new Intent(ActivityTileHome.this, ActivityImportantContacts.class);
+                impIntent.putExtra("countryId", countryId);
+                startActivity(impIntent);
             }
         });
     }

@@ -80,6 +80,17 @@
                 android:clipToPadding="false" />
 
             <Button
+                android:id="@+id/btnImportantContacts"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/default_button_height"
+                android:layout_gravity="bottom"
+                android:layout_marginLeft="@dimen/default_margin"
+                android:layout_marginRight="@dimen/default_margin"
+                android:background="@drawable/default_rounded_button_only_border"
+                android:text="@string/important_contacts"
+                android:textColor="@color/colorPrimary" />
+
+            <Button
                 android:id="@+id/btnNext"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/default_button_height"

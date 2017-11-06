@@ -308,7 +308,7 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
         values.put(DatabaseTables.ImportantContacts.contact2, contact2);
         values.put(DatabaseTables.ImportantContacts.contact3, contact3);
 
-        long newRowId = db.insert(DatabaseTables.TilesTable.TABLE_NAME, null, values);
+        long newRowId = db.insert(DatabaseTables.ImportantContacts.TABLE_NAME, null, values);
         Log.d("mylog", "Inserted row ID; " + newRowId);
     }
 
@@ -497,14 +497,18 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
     public String[] getImportantContacts(String countryId) {
         SQLiteDatabase db = this.getReadableDatabase();
         String[] contacts = new String[4];
-        Cursor cursor = db.rawQuery("SELECT * FROM " + DatabaseTables.ImportantContacts.TABLE_NAME + " WHERE "
-                + DatabaseTables.ImportantContacts.country_id + "=" + "'" + countryId + "'", null);
-        cursor.moveToNext();
-        contacts[0] = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseTables.ImportantContacts.nepal_embassy));
-        contacts[1] = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseTables.ImportantContacts.contact1));
-        contacts[2] = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseTables.ImportantContacts.contact2));
-        contacts[3] = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseTables.ImportantContacts.contact3));
-        return contacts;
+        Cursor cursor = db.rawQuery("SELECT * FROM " + DatabaseTables.ImportantContacts.TABLE_NAME
+                + " WHERE " + DatabaseTables.ImportantContacts.country_id + "=" + "'" + countryId + "'", null);
+        Log.d("mylog", "Raw Data: " + cursor.toString());
+        if (cursor.getCount() > 0) {
+            cursor.moveToNext();
+            contacts[0] = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseTables.ImportantContacts.nepal_embassy));
+            contacts[1] = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseTables.ImportantContacts.contact1));
+            contacts[2] = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseTables.ImportantContacts.contact2));
+            contacts[3] = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseTables.ImportantContacts.contact3));
+            return contacts;
+        } else
+            return null;
     }
 
     public MigrantModel getMigrantDetails() {
