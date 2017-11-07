@@ -80,7 +80,7 @@
             <ListView
                 android:id="@+id/listViewMultipleOptions"
                 android:layout_width="match_parent"
-                android:layout_height="142dp"
+                android:layout_height="192dp"
                 android:layout_below="@+id/tvQuestion"
                 android:layout_marginTop="12dp"
                 android:nestedScrollingEnabled="true"
