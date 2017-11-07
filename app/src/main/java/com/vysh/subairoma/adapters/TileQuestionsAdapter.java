@@ -49,6 +49,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.zip.Inflater;
 
 import static android.view.View.GONE;
 
@@ -474,17 +475,7 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
 
                         sqlDatabaseHelper.insertIsError(migrantId, key, "true");
                         //Check if question is visible
-
-                        AlertDialog.Builder builder = new AlertDialog.Builder(context, R.style.DialogError);
-                        builder.setMessage(questionsList.get(mainIndex).getDescription());
-                        builder.setCancelable(false);
-                        builder.setNegativeButton("OKAY", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.dismiss();
-                            }
-                        });
-                        builder.show();
+                        showErrowDialog(mainIndex);
                         Log.d("mylog", "All variables match, showing view");
                         int mainListIdCompare = questionsList.get(mainIndex).getQuestionId();
                         boolean alreadyVisible = false;
@@ -517,6 +508,22 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
         } catch (JSONException e) {
             Log.d("mylog", "Parsing condition error: " + e.toString());
         }
+    }
+
+    private void showErrowDialog(int mainIndex) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(context, R.style.DialogError);
+        builder.setNegativeButton("OKAY", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+        View errView = LayoutInflater.from(context).inflate(R.layout.dialog_error, null);
+        TextView errDesc = (TextView) errView.findViewById(R.id.tvErrorDescription);
+        builder.setView(errView);
+        builder.setCancelable(false);
+        errDesc.setText(questionsList.get(mainIndex).getDescription());
+        builder.show();
     }
 
     public class QuestionHolder extends RecyclerView.ViewHolder implements View.OnClickListener {

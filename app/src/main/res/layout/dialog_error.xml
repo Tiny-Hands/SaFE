@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/error_dialog_title_size"
+        android:background="@color/colorError"
+        android:gravity="center_vertical"
+        android:paddingLeft="@dimen/medium_margin"
+        android:text="Error"
+        android:textColor="#fff"
+        android:textSize="@dimen/error_dialog_title_text" />
+    <TextView
+        android:id="@+id/tvErrorDescription"
+        android:layout_width="match_parent"
+        android:padding="@dimen/medium_margin"
+        android:textColor="@color/colorError"
+        android:layout_height="wrap_content" />
+</LinearLayout>
