@@ -67,6 +67,10 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/tvDetail"
                 android:layout_marginTop="12dp"
+                android:paddingLeft="@dimen/small_margin"
+                android:paddingRight="@dimen/small_margin"
+                android:paddingBottom="@dimen/small_margin"
+                style="@style/editTextBackground"
                 android:imeOptions="actionDone"
                 android:inputType="text" />
 

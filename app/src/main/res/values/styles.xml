@@ -18,4 +18,8 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <style name="editTextBackground" parent="Widget.AppCompat.EditText">
+        <item name="android:background">@drawable/bg_edittext</item>
+    </style>
+
 </resources>
