@@ -190,19 +190,16 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
         //Check else if for every view as notifyItemChanged giving problems otherwise
         if (question.getResponseType() == 0) {
             holder.checkbox.setVisibility(View.VISIBLE);
-            holder.question.setVisibility(View.VISIBLE);
             holder.spinnerOptions.setVisibility(View.GONE);
             holder.etResponse.setVisibility(View.GONE);
             holder.listViewOptions.setVisibility(View.GONE);
         } else if (question.getResponseType() == 1) {
             holder.checkbox.setVisibility(GONE);
-            holder.question.setVisibility(View.GONE);
             holder.spinnerOptions.setVisibility(View.GONE);
             holder.listViewOptions.setVisibility(View.GONE);
             holder.etResponse.setVisibility(View.VISIBLE);
         } else if (question.getResponseType() == 2) {
             holder.checkbox.setVisibility(GONE);
-            holder.question.setVisibility(View.GONE);
             holder.etResponse.setVisibility(View.GONE);
             holder.listViewOptions.setVisibility(View.GONE);
             holder.spinnerOptions.setVisibility(View.VISIBLE);
@@ -215,7 +212,6 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
             holder.spinnerOptions.setAdapter(adapter);
         } else if (question.getResponseType() == 3) {
             holder.checkbox.setVisibility(GONE);
-            holder.question.setVisibility(View.GONE);
             holder.etResponse.setVisibility(View.GONE);
             holder.spinnerOptions.setVisibility(View.GONE);
             holder.listViewOptions.setVisibility(View.VISIBLE);
@@ -224,6 +220,15 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
             holder.listViewOptions.setAdapter(adapter);
         }
 
+        //Hiding fields if no data to display in
+        String questionSet = holder.question.getText().toString();
+        String descSet = holder.details.getText().toString();
+        if (questionSet.isEmpty()) {
+            holder.question.setVisibility(GONE);
+        }
+        if (descSet.isEmpty()) {
+            holder.details.setVisibility(GONE);
+        }
         setValue(holder.checkbox, holder.etResponse, holder.spinnerOptions,
                 holder.question, holder.ivError, holder.listViewOptions, holder.rootLayout, position);
         if (disabled) {
