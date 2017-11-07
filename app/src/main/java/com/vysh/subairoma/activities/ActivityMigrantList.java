@@ -74,7 +74,6 @@ public class ActivityMigrantList extends AppCompatActivity {
 
         userType = ApplicationClass.getInstance().getUserId();
         migrantModels = new ArrayList();
-        getSavedMigrants();
         getMigrants();
         //setUpRecyclerView(null);
         if (userType == -1)
@@ -95,6 +94,12 @@ public class ActivityMigrantList extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        getSavedMigrants();
     }
 
     private void getSavedMigrants() {

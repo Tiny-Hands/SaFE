@@ -105,8 +105,12 @@ public class ActivityTileHome extends AppCompatActivity {
         if (blacklist == 1) {
             tvCountry.setTextColor(getResources().getColor(R.color.colorError));
         }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
         setUpListeners();
-        setTileIcons();
         setUpRecyclerView();
         checkIfVerifiedAnswers();
     }
@@ -149,13 +153,6 @@ public class ActivityTileHome extends AppCompatActivity {
                 startActivity(impIntent);
             }
         });
-    }
-
-    private void setTileIcons() {
-        int size = tiles.size();
-        tileIcons = new int[size];
-        for (int i = 0; i < size; i++)
-            tileIcons[i] = R.drawable.roller;
     }
 
     @Override
