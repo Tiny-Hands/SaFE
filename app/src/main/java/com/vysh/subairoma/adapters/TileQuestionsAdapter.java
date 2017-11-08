@@ -49,7 +49,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.zip.Inflater;
 
 import static android.view.View.GONE;
 
@@ -104,6 +103,7 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
             question.setQuestionNo(questionModel.getQuestionNo());
             question.setTileId(questionModel.getTileId());
             question.setResponseType(questionModel.getResponseType());
+            question.setConflictDescription(questionModel.getConflictDescription());
 
             //To Display question in beginning or not
             String condition = questionModel.getCondition();
@@ -671,7 +671,11 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
                                         dialog.dismiss();
                                     }
                                 });
-                                builder.setMessage("Conflicting Option");
+                                //builder.setMessage("Conflicting Option");
+                                String conf = questionsListDisplay.get(getAdapterPosition()).getConflictDescription();
+                                String confT = questionsListDisplay.get(getAdapterPosition()).getTitle();
+                                Log.d("mylog", "Conflict to display: " + conf + " Title: " + confT);
+                                builder.setMessage(conf);
                                 builder.setCancelable(false);
                                 builder.show();
                                 checkbox.setChecked(false);

@@ -50,6 +50,7 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
                     DatabaseTables.QuestionsTable.tile_id + " INTEGER," +
                     DatabaseTables.QuestionsTable.question_step + " TEXT," +
                     DatabaseTables.QuestionsTable.question_description + " TEXT," +
+                    DatabaseTables.QuestionsTable.conflict_description + " TEXT," +
                     DatabaseTables.QuestionsTable.question_title + " TEXT," +
                     DatabaseTables.QuestionsTable.question_condition + " TEXT," +
                     DatabaseTables.QuestionsTable.question_variable + " TEXT," +
@@ -335,7 +336,7 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
     }
 
     public void insertQuestion(int qid, int tid, String order, String step, String title
-            , String description, String condition, String responseType, String variable) {
+            , String description, String condition, String responseType, String variable, String conflictDesc) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(DatabaseTables.QuestionsTable.question_id, qid);
@@ -347,6 +348,8 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
         values.put(DatabaseTables.QuestionsTable.response_type, responseType);
         values.put(DatabaseTables.QuestionsTable.question_condition, condition);
         values.put(DatabaseTables.QuestionsTable.question_variable, variable);
+        Log.d("mylog", "Inserting conflicting desc: " + conflictDesc);
+        values.put(DatabaseTables.QuestionsTable.conflict_description, conflictDesc);
 
         long newRowId = db.insert(DatabaseTables.QuestionsTable.TABLE_NAME, null, values);
         Log.d("mylog", "Inserted row ID; " + newRowId);
@@ -364,6 +367,7 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
             int id = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseTables.QuestionsTable.question_id));
             String question = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseTables.QuestionsTable.question_title));
             String desc = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseTables.QuestionsTable.question_description));
+            String confDesc = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseTables.QuestionsTable.conflict_description));
             String step = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseTables.QuestionsTable.question_step));
             String condition = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseTables.QuestionsTable.question_condition));
             int responseType = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseTables.QuestionsTable.response_type));
@@ -380,6 +384,7 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
             questionModel.setQuestion(question);
             questionModel.setVariable(variable);
             questionModel.setTileId(gotTileId);
+            questionModel.setConflictDescription(confDesc);
 
             questionList.add(questionModel);
         }

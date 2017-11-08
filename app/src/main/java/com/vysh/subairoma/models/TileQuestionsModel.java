@@ -1,5 +1,7 @@
 package com.vysh.subairoma.models;
 
+import android.util.Log;
+
 import java.util.ArrayList;
 
 /**
@@ -8,6 +10,7 @@ import java.util.ArrayList;
 
 public class TileQuestionsModel {
     String condition, title, description, question, variable;
+    String conflictDescription;
     ArrayList<String> options;
     int tileId, questionId, questionNo, responseType;
 
@@ -91,5 +94,13 @@ public class TileQuestionsModel {
 
     public void setResponseType(int responseType) {
         this.responseType = responseType;
+    }
+
+    public String getConflictDescription() {
+        return this.conflictDescription;
+    }
+
+    public void setConflictDescription(String conflictDescription) {
+        this.conflictDescription = conflictDescription;
     }
 }
