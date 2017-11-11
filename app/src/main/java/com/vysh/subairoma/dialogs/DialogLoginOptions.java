@@ -79,13 +79,10 @@ public class DialogLoginOptions extends DialogFragment {
             public void onClick(View v) {
                 AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(context);
                 LayoutInflater inflater = activityRegister.getLayoutInflater();
-                final View dialogView = inflater.inflate(R.layout.edittext_dialog, null);
+                final View dialogView = inflater.inflate(R.layout.dialog_edittext, null);
                 dialogBuilder.setView(dialogView);
 
                 final EditText etRNumber = (EditText) dialogView.findViewById(R.id.etInput);
-                etRNumber.setHint("Phone number");
-                dialogBuilder.setTitle("Login");
-                dialogBuilder.setMessage("Enter the number that you registered");
                 dialogBuilder.setPositiveButton("Done", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
                         final String number = etRNumber.getText().toString();

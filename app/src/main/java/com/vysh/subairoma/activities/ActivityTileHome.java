@@ -47,7 +47,7 @@ public class ActivityTileHome extends AppCompatActivity {
     public int blacklist, status;
     int[] tileIcons;
     TileAdapter tileAdapter;
-    public static Boolean finalSection = false, showIndia = false;
+    public static Boolean finalSection, showIndia;
 
     @BindView(R.id.rvTiles)
     RecyclerView rvTiles;
@@ -79,8 +79,11 @@ public class ActivityTileHome extends AppCompatActivity {
         blacklist = getIntent().getIntExtra("countryBlacklist", -1);
         if (countryId.equalsIgnoreCase("in")) {
             //GET GIS TILES
-            Log.d("mylog", "Received Country ID: " + countryId);
+            Log.d("mylog", "Received Country is India");
             showIndia = true;
+        } else {
+            Log.d("mylog", "Setting show India to False");
+            showIndia = false;
         }
 
         tvMigrantName.setText(migName.toUpperCase());
@@ -106,6 +109,7 @@ public class ActivityTileHome extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        finalSection = false;
         setUpListeners();
         setUpRecyclerView();
         checkIfVerifiedAnswers();
@@ -174,11 +178,11 @@ public class ActivityTileHome extends AppCompatActivity {
     }
 
     private void setUpRecyclerView() {
-        if(showIndia) {
+        Log.d("mylog", "Received Country ID: " + countryId + " And showIndia: " + showIndia);
+        if (showIndia) {
             tiles = new SQLDatabaseHelper(ActivityTileHome.this).getTiles("GIS");
             tilesGAS = new ArrayList<>();
-        }
-        else {
+        } else {
             tiles = new SQLDatabaseHelper(ActivityTileHome.this).getTiles("FEP");
             tilesGAS = new SQLDatabaseHelper(ActivityTileHome.this).getTiles("GAS");
         }
