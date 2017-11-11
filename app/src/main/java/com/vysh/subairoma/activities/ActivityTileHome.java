@@ -79,6 +79,7 @@ public class ActivityTileHome extends AppCompatActivity {
         blacklist = getIntent().getIntExtra("countryBlacklist", -1);
         if (countryId.equalsIgnoreCase("in")) {
             //GET GIS TILES
+            Log.d("mylog", "Received Country ID: " + countryId);
             showIndia = true;
         }
 

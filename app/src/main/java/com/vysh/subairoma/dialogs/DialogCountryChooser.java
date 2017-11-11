@@ -75,7 +75,8 @@ public class DialogCountryChooser extends DialogFragment {
                     } else if (status == 1) {
                         showDialog("Not open", "This country is not Open", cid, cname);
                     } else {
-                        //For destination -1 is default question id as it's not identified as question currently.
+                        //For mg_destination -1 is question id as it's not identified as question currently.
+                        Log.d("mylog", "Saving country for MID: " + ApplicationClass.getInstance().getMigrantId());
                         new SQLDatabaseHelper(getContext()).insertResponseTableData(cid, -1, -1,
                                 ApplicationClass.getInstance().getMigrantId(), "mg_destination");
                         Intent intent = new Intent(getContext(), ActivityTileHome.class);

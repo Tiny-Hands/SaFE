@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:padding="@dimen/default_margin">
+
+    <Button
+        android:id="@+id/btnPhoneLogin"
+        android:layout_width="@dimen/default_button_width"
+        android:layout_height="wrap_content"
+        android:background="?attr/selectableItemBackground"
+        android:text="Login with Phone Number"
+        android:textColor="@color/grey"
+        android:textSize="12sp" />
+
+    <com.facebook.login.widget.LoginButton xmlns:facebook="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/login_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/default_margin"
+        facebook:com_facebook_login_text="LOGIN WITH FACEBOOK"
+        facebook:com_facebook_logout_text="LOG OUT" />
+</LinearLayout>

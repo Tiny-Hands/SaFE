@@ -27,16 +27,11 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.facebook.CallbackManager;
-import com.facebook.FacebookCallback;
-import com.facebook.FacebookException;
-import com.facebook.Profile;
-import com.facebook.login.LoginResult;
-import com.facebook.login.widget.LoginButton;
 import com.vysh.subairoma.ApplicationClass;
 import com.vysh.subairoma.R;
 import com.vysh.subairoma.SQLHelpers.SQLDatabaseHelper;
 import com.vysh.subairoma.SharedPrefKeys;
+import com.vysh.subairoma.dialogs.DialogLoginOptions;
 import com.vysh.subairoma.utils.CustomTextView;
 
 import org.json.JSONArray;
@@ -54,12 +49,12 @@ import butterknife.ButterKnife;
  */
 
 public class ActivityRegister extends AppCompatActivity {
+    final String checkFbId = "/checkfbuid.php";
     final String apiURL = "/saveuser.php";
     final String apiURLMigrant = "/savemigrant.php";
     final String apiGetAllResponses = "/getallresponses.php";
     final String apiGetResponses = "/getresponses.php";
     final String apiAlreadyRegistered = "/checkphonenumber.php";
-    final String checkFbId = "/checkfbuid.php";
     private final String apiGetMigrants = "/getmigrants.php";
 
     int userType;
@@ -86,12 +81,8 @@ public class ActivityRegister extends AppCompatActivity {
     RelativeLayout rootLayout;
     @BindView(R.id.btnAlreadyRegistered)
     Button btnAlreadyRegistered;
-    @BindView(R.id.login_button)
-    LoginButton loginButton;
     @BindView(R.id.tvOR)
     TextView tvOr;
-
-    CallbackManager callbackManager;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -116,35 +107,7 @@ public class ActivityRegister extends AppCompatActivity {
         }
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        callbackManager.onActivityResult(requestCode, resultCode, data);
-    }
-
     private void setUpComponentListeners() {
-        loginButton.setReadPermissions("email");
-        callbackManager = CallbackManager.Factory.create();
-        // Callback registration
-        loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
-            @Override
-            public void onSuccess(LoginResult loginResult) {
-                Log.d("mylog", "Successful, User ID: " + Profile.getCurrentProfile().getId());
-                checkIfFBUserExists(Profile.getCurrentProfile().getId());
-            }
-
-            @Override
-            public void onCancel() {
-                Log.d("mylog", "Canceled");
-            }
-
-            @Override
-            public void onError(FacebookException exception) {
-                // App code
-                Log.d("mylog", "Error: " + exception.toString());
-            }
-        });
-
         rbFemale.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -176,10 +139,33 @@ public class ActivityRegister extends AppCompatActivity {
         });
     }
 
-    private void checkIfFBUserExists(String fid) {
+    private boolean checkUserExists() {
+        SharedPreferences sharedPreferences = getSharedPreferences(SharedPrefKeys.sharedPrefName, MODE_PRIVATE);
+        int userId = sharedPreferences.getInt(SharedPrefKeys.userId, -10);
+        String type = sharedPreferences.getString(SharedPrefKeys.userType, "");
+        Log.d("mylog", "User id: " + userId + " Type: " + type);
+        if (userId != -10) {
+            if (type.equalsIgnoreCase("helper")) {
+                Log.d("mylog", "User already exists with ID: " + userId);
+                ApplicationClass.getInstance().setUserId(userId);
+            } else {
+                Log.d("mylog", "Migrant already exists, setting user ID: " + -1);
+                ApplicationClass.getInstance().setMigrantId(userId);
+                ApplicationClass.getInstance().setUserId(-1);
+            }
+            return true;
+        } else return false;
+    }
+
+    private void showRegistrationDialog() {
+        DialogLoginOptions dialogLoginOptions = new DialogLoginOptions();
+        dialogLoginOptions.show(getFragmentManager(), "alreadyregistered");
+    }
+
+    public void checkIfFBUserExists(String fid) {
         final String fbId = fid;
         String api = ApplicationClass.getInstance().getAPIROOT() + checkFbId;
-        final ProgressDialog progressDialog = new ProgressDialog(ActivityRegister.this);
+        final ProgressDialog progressDialog = new ProgressDialog(this);
         progressDialog.setTitle("Please wait");
         progressDialog.setMessage("Checking Registration...");
         progressDialog.show();
@@ -242,59 +228,12 @@ public class ActivityRegister extends AppCompatActivity {
                 return params;
             }
         };
-        RequestQueue queue = Volley.newRequestQueue(ActivityRegister.this);
+        RequestQueue queue = Volley.newRequestQueue(this);
         checkRequest.setShouldCache(false);
         queue.add(checkRequest);
     }
 
-    private boolean checkUserExists() {
-        SharedPreferences sharedPreferences = getSharedPreferences(SharedPrefKeys.sharedPrefName, MODE_PRIVATE);
-        int userId = sharedPreferences.getInt(SharedPrefKeys.userId, -10);
-        String type = sharedPreferences.getString(SharedPrefKeys.userType, "");
-        Log.d("mylog", "User id: " + userId + " Type: " + type);
-        if (userId != -10) {
-            if (type.equalsIgnoreCase("helper")) {
-                Log.d("mylog", "User already exists with ID: " + userId);
-                ApplicationClass.getInstance().setUserId(userId);
-            } else {
-                Log.d("mylog", "Migrant already exists, setting user ID: " + -1);
-                ApplicationClass.getInstance().setMigrantId(userId);
-                ApplicationClass.getInstance().setUserId(-1);
-            }
-            return true;
-        } else return false;
-    }
-
-    private void showRegistrationDialog() {
-        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
-        LayoutInflater inflater = this.getLayoutInflater();
-        final View dialogView = inflater.inflate(R.layout.edittext_dialog, null);
-        dialogBuilder.setView(dialogView);
-
-        final EditText etRNumber = (EditText) dialogView.findViewById(R.id.etInput);
-        etRNumber.setHint("Phone number");
-        dialogBuilder.setTitle("Login");
-        dialogBuilder.setMessage("Enter the number that you registered");
-        dialogBuilder.setPositiveButton("Done", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int whichButton) {
-                final String number = etRNumber.getText().toString();
-                if (!number.isEmpty() && number.length() == 10) {
-                    checkUserRegistration(number);
-                } else {
-                    etNumber.setError("Please enter a valid number");
-                }
-            }
-        });
-        dialogBuilder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int whichButton) {
-                dialog.dismiss();
-            }
-        });
-        AlertDialog b = dialogBuilder.create();
-        b.show();
-    }
-
-    private void checkUserRegistration(String number) {
+    public void checkUserRegistration(String number) {
         final String pNumber = number;
         String api = ApplicationClass.getInstance().getAPIROOT() + apiAlreadyRegistered;
         final ProgressDialog progressDialog = new ProgressDialog(ActivityRegister.this);
@@ -370,7 +309,7 @@ public class ActivityRegister extends AppCompatActivity {
         queue.add(checkRequest);
     }
 
-    private void getMigrantDetails() {
+    public void getMigrantDetails() {
         String api = ApplicationClass.getInstance().getAPIROOT() + apiGetMigrants;
         final ProgressDialog progressDialog = new ProgressDialog(ActivityRegister.this);
         progressDialog.setTitle("Please wait");
@@ -638,7 +577,7 @@ public class ActivityRegister extends AppCompatActivity {
                     editor.putString(SharedPrefKeys.userType, type);
                     editor.commit();
                     Intent intent = new Intent(this, ActivityRegister.class);
-                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     intent.putExtra("migrantmode", true);
                     startActivity(intent);
                     return;
@@ -705,7 +644,6 @@ public class ActivityRegister extends AppCompatActivity {
         etAge.setText("");
         etName.setText("");
         //tvHint.setText("Please enter Migrant's details");
-        loginButton.setVisibility(View.GONE);
         tvTitle.setText("ADD MIGRANT");
         etName.setHint("Migrant's Name");
         etAge.setHint("Migrant's Age");
@@ -713,7 +651,7 @@ public class ActivityRegister extends AppCompatActivity {
         btnAlreadyRegistered.setVisibility(View.INVISIBLE);
     }
 
-    private void showSnackbar(String msg) {
+    public void showSnackbar(String msg) {
         Snackbar snack = Snackbar.make(rootLayout, msg, Snackbar.LENGTH_LONG);
         View view = snack.getView();
         TextView tv = (TextView) view.findViewById(android.support.design.R.id.snackbar_text);
