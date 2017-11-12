@@ -27,26 +27,28 @@
                 android:textSize="@dimen/default_title_size" />
 
             <com.vysh.subairoma.utils.CustomTextView
-                android:id="@+id/tvGoingTo"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/tvMigrantName"
-                android:text="Going to: "
-                android:textSize="18sp"
-                app:font="gotham_light.ttf" />
-
-            <com.vysh.subairoma.utils.CustomTextView
                 android:id="@+id/tvCountry"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignBottom="@+id/tvGoingTo"
                 android:layout_below="@+id/tvMigrantName"
-                android:layout_toEndOf="@+id/tvGoingTo"
                 android:gravity="bottom"
                 android:text="Some Country"
                 android:textColor="@color/colorPrimaryDark"
                 android:textSize="18sp"
                 app:font="gotham_bold.ttf" />
+
+            <com.vysh.subairoma.utils.CustomTextView
+                android:id="@+id/tvGoingTo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/tvMigrantName"
+                android:layout_toEndOf="@+id/tvCountry"
+                android:paddingLeft="@dimen/small_margin"
+                android:text="@string/going_to"
+                android:textSize="18sp"
+                app:font="gotham_light.ttf" />
+
 
             <ImageView
                 android:id="@+id/ivAvatar"
@@ -62,8 +64,8 @@
     <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/toolbar"
-        android:layout_alignParentStart="true">
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/toolbar">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -95,8 +97,8 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:gravity="center"
-                    android:textSize="16sp"
-                    android:text="@string/important_contacts" />
+                    android:text="@string/important_contacts"
+                    android:textSize="16sp" />
             </android.support.v7.widget.CardView>
 
             <Button
@@ -106,7 +108,7 @@
                 android:layout_gravity="bottom"
                 android:layout_margin="@dimen/default_margin"
                 android:background="@drawable/default_rounded_button"
-                android:text="NEXT"
+                android:text="@string/next"
                 android:textColor="#fff" />
         </LinearLayout>
     </android.support.v4.widget.NestedScrollView>

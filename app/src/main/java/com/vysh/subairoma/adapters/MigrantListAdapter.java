@@ -47,14 +47,20 @@ public class MigrantListAdapter extends RecyclerView.Adapter<MigrantListAdapter.
     public void onBindViewHolder(MigrantHolder holder, int position) {
         MigrantModel migrantModel = migrants.get(position);
         holder.textViewName.setText(migrantModel.getMigrantName());
-        holder.sex.setText(migrantModel.getMigrantSex() + ", " + migrantModel.getMigrantAge());
+        String tsex = migrantModel.getMigrantSex();
+        if (tsex.equalsIgnoreCase("male")) {
+            tsex = mContext.getResources().getString(R.string.male);
+        } else if (tsex.equalsIgnoreCase("female")) {
+            tsex = mContext.getResources().getString(R.string.female);
+        }
+        holder.sex.setText(tsex + ", " + migrantModel.getMigrantAge());
         if (migrantModel.getMigrantSex().equalsIgnoreCase("female"))
             holder.ivAvatar.setImageBitmap(BitmapFactory.decodeResource(mContext.getResources(), R.drawable.ic_female));
 
         //Showing going to country
         String cid = new SQLDatabaseHelper(mContext).getResponse(migrants.get(position).getMigrantId(), "mg_destination");
         if (cid == null || cid.isEmpty()) {
-            holder.tvGoingCountry.setText("Not Started Yet");
+            holder.tvGoingCountry.setText(mContext.getResources().getString(R.string.not_started));
         } else {
             CountryModel goingTo = new SQLDatabaseHelper(mContext).getCountry(cid);
             holder.tvGoingCountry.setText(goingTo.getCountryName().toUpperCase());

@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:paddingLeft="@dimen/default_margin"
@@ -9,24 +8,23 @@
     android:gravity="center_horizontal"
     android:orientation="vertical">
 
-    <com.vysh.subairoma.utils.CustomTextView
+    <TextView
         android:id="@+id/tvTermHeader"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Before Moving On"
+        android:text="@string/finalAnswerVerificationTitle"
         android:textColor="@color/colorAccent"
-        android:textSize="24sp"
-        app:font="gotham_bold.ttf" />
+        android:textStyle="bold"
+        android:textSize="22sp" />
 
-    <com.vysh.subairoma.utils.CustomTextView
+    <TextView
         android:id="@+id/tvTerms"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/default_margin"
         android:lineSpacingExtra="5sp"
         android:text="@string/finalAnswerVerification"
-        android:textSize="16sp"
-        app:font="gotham_medium.ttf" />
+        android:textSize="16sp" />
 
     <View
         android:layout_width="match_parent"
@@ -45,15 +43,15 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
 
-        <com.vysh.subairoma.utils.CustomTextView
+        <TextView
             android:id="@+id/tvCheckTerm"
             android:gravity="center"
             android:padding="4dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="I agree to not change the answers"
+            android:text="@string/finalAnswerButton"
             android:textColor="@color/colorAccent"
-            app:font="gotham_bold.ttf" />
+            android:textStyle="bold" />
     </LinearLayout>
 
     <Button
@@ -62,7 +60,7 @@
         android:layout_height="@dimen/default_button_height"
         android:layout_margin="@dimen/default_margin"
         android:background="@drawable/default_rounded_button"
-        android:text="PROCEED"
+        android:text="@string/proceed"
         android:textColor="@color/bgFaded" />
 
     <Button
@@ -70,7 +68,7 @@
         android:layout_width="@dimen/default_button_width"
         android:layout_height="@dimen/default_button_height"
         android:background="@drawable/default_rounded_button_accent"
-        android:text="BACK"
+        android:text="@string/back"
         android:layout_marginBottom="@dimen/default_margin"
         android:textColor="@color/bgFaded" />
 </LinearLayout>

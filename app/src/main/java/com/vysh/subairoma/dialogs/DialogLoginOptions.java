@@ -17,6 +17,7 @@ import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
 import com.facebook.Profile;
+import com.facebook.ProfileTracker;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 import com.vysh.subairoma.R;
@@ -30,9 +31,9 @@ public class DialogLoginOptions extends DialogFragment {
     Context context;
     Button btnPhoneLogin;
     LoginButton loginButton;
-    CallbackManager callbackManager;
 
     ActivityRegister activityRegister;
+    ProfileTracker mProfileTracker;
 
     @Override
     public void onAttach(Context context) {
@@ -53,13 +54,27 @@ public class DialogLoginOptions extends DialogFragment {
 
     private void setUpListeners() {
         loginButton.setReadPermissions("email");
-        callbackManager = CallbackManager.Factory.create();
         // Callback registration
-        loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
+        loginButton.registerCallback(activityRegister.callbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(LoginResult loginResult) {
-                Log.d("mylog", "Successful, User ID: " + Profile.getCurrentProfile().getId());
-                activityRegister.checkIfFBUserExists(Profile.getCurrentProfile().getId());
+                if(Profile.getCurrentProfile() == null) {
+                    mProfileTracker = new ProfileTracker() {
+                        @Override
+                        protected void onCurrentProfileChanged(Profile oldProfile, Profile currentProfile) {
+                            mProfileTracker.stopTracking();
+                            //get data here
+                            Log.d("mylog", "In profile Tracker, User ID: " + Profile.getCurrentProfile().getId());
+                            activityRegister.checkIfFBUserExists(Profile.getCurrentProfile().getId());
+                        }
+                    };
+                    // no need to call startTracking() on mProfileTracker
+                    // because it is called by its constructor, internally.
+                }
+                else {
+                    Log.d("mylog", "Successful, User ID: " + Profile.getCurrentProfile().getId());
+                    activityRegister.checkIfFBUserExists(Profile.getCurrentProfile().getId());
+                }
             }
 
             @Override
@@ -102,11 +117,5 @@ public class DialogLoginOptions extends DialogFragment {
                 b.show();
             }
         });
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        callbackManager.onActivityResult(requestCode, resultCode, data);
     }
 }

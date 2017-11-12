@@ -36,25 +36,24 @@
                 android:textSize="18sp"
                 app:font="gotham_bold.ttf" />
 
-            <com.vysh.subairoma.utils.CustomTextView
+            <TextView
                 android:id="@+id/tvMigrantAgeSex"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
                 android:text="23, Male"
                 android:textColor="@color/grey"
-                android:textSize="16sp"
-                app:font="gotham_light.ttf" />
+                android:textSize="16sp" />
         </LinearLayout>
 
-        <com.vysh.subairoma.utils.CustomTextView
+        <TextView
             android:id="@+id/tvCountryGoing"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/ivUserLogo"
             android:layout_marginTop="@dimen/default_margin"
             android:text="Country"
-            app:font="gotham_medium.ttf" />
+            android:textStyle="italic"/>
 
         <LinearLayout
             android:id="@+id/llRedflags"

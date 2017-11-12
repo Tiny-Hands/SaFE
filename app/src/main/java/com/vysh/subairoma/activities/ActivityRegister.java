@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Resources;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
@@ -28,6 +29,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.facebook.CallbackManager;
 import com.vysh.subairoma.ApplicationClass;
 import com.vysh.subairoma.R;
 import com.vysh.subairoma.SQLHelpers.SQLDatabaseHelper;
@@ -67,7 +69,7 @@ public class ActivityRegister extends AppCompatActivity {
     @BindView(R.id.btnNext)
     Button btnNext;
     @BindView(R.id.tvTitle)
-    CustomTextView tvTitle;
+    TextView tvTitle;
     @BindView(R.id.etName)
     EditText etName;
     @BindView(R.id.etAge)
@@ -87,6 +89,7 @@ public class ActivityRegister extends AppCompatActivity {
     @BindView(R.id.tvOR)
     TextView tvOr;
 
+    public CallbackManager callbackManager;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -108,8 +111,15 @@ public class ActivityRegister extends AppCompatActivity {
             Log.d("mylog", "Loading migrant view");
             loadMigrantView();
         }
-    }
 
+        callbackManager = CallbackManager.Factory.create();
+    }
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        Log.d("mylog", "On Actitiy Result");
+        callbackManager.onActivityResult(requestCode, resultCode, data);
+    }
     private void setUpComponentListeners() {
         rbFemale.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -648,10 +658,11 @@ public class ActivityRegister extends AppCompatActivity {
         etAge.setText("");
         etName.setText("");
         //tvHint.setText("Please enter Migrant's details");
-        tvTitle.setText("ADD MIGRANT");
-        etName.setHint("Migrant's Name");
-        etAge.setHint("Migrant's Age");
-        etNumber.setHint("Migrant's Phone Number");
+        Resources res = getResources();
+        tvTitle.setText(res.getString(R.string.add_migrant));
+        etName.setHint(res.getString(R.string.migrants_name));
+        etAge.setHint(res.getString(R.string.migrants_age));
+        etNumber.setHint(res.getString(R.string.migrants_phone_number));
         btnAlreadyRegistered.setVisibility(View.INVISIBLE);
     }
 

@@ -9,7 +9,7 @@
         android:layout_height="@dimen/error_dialog_title_bg"
         android:background="@color/colorError"
         android:gravity="center"
-        android:text="Error"
+        android:text="@string/error"
         android:textColor="#fff"
         android:textSize="@dimen/error_dialog_title_text_size" />
     <TextView

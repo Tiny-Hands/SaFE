@@ -22,15 +22,15 @@
             android:layout_height="wrap_content"
             android:gravity="center">
 
-            <com.vysh.subairoma.utils.CustomTextView
+            <TextView
                 android:id="@+id/tvTitle"
                 style="@style/TitleText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
-                android:text="REGISTER"
-                android:textColor="#fff"
-                app:font="gotham_bold.ttf" />
+                android:text="@string/register"
+                android:textStyle="bold"
+                android:textColor="#fff" />
         </RelativeLayout>
     </android.support.v7.widget.Toolbar>
 
@@ -90,7 +90,7 @@
                         android:layout_marginStart="@dimen/default_margin"
                         android:layout_marginTop="@dimen/default_margin"
                         android:background="@null"
-                        android:hint="Full name"
+                        android:hint="@string/full_name"
                         android:imeOptions="actionNext"
                         android:inputType="text"
                         android:maxLength="25" />
@@ -107,7 +107,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="@dimen/default_margin"
                         android:background="@null"
-                        android:hint="Phone number"
+                        android:hint="@string/phone_number"
                         android:imeOptions="actionNext"
                         android:inputType="number"
                         android:maxLength="10" />
@@ -124,7 +124,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="@dimen/default_margin"
                         android:background="@null"
-                        android:hint="Age"
+                        android:hint="@string/age"
                         android:imeOptions="actionDone"
                         android:inputType="number"
                         android:maxLength="2" />
@@ -148,7 +148,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginEnd="@dimen/default_margin"
-                            android:text="Gender"
+                            android:text="@string/gender"
                             android:textSize="18sp" />
 
                         <RadioButton
@@ -157,14 +157,14 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:checked="true"
-                            android:text="Male" />
+                            android:text="@string/male" />
 
                         <RadioButton
                             android:id="@+id/rbFemale"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="Female" />
+                            android:text="@string/female" />
                     </RadioGroup>
                 </LinearLayout>
             </android.support.v7.widget.CardView>
@@ -175,7 +175,7 @@
                 android:layout_height="@dimen/default_button_height"
                 android:layout_marginTop="@dimen/medium_margin"
                 android:background="@drawable/default_rounded_button"
-                android:text="NEXT"
+                android:text="@string/next"
                 android:textColor="#fff" />
 
             <com.vysh.subairoma.utils.CustomTextView
@@ -183,7 +183,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/medium_large_margin"
-                android:text="OR"
+                android:text="@string/or"
                 app:font="gotham_light.ttf" />
 
             <Button
@@ -191,7 +191,7 @@
                 android:layout_width="@dimen/default_button_width"
                 android:layout_height="wrap_content"
                 android:background="?attr/selectableItemBackground"
-                android:text="Already Registered"
+                android:text="@string/already_registered"
                 android:textColor="@color/grey" />
 
             <com.facebook.login.widget.LoginButton xmlns:facebook="http://schemas.android.com/apk/res-auto"
@@ -200,8 +200,8 @@
                 android:layout_height="wrap_content"
                 android:visibility="gone"
                 android:layout_marginBottom="@dimen/default_margin"
-                facebook:com_facebook_login_text="LOGIN WITH FACEBOOK"
-                facebook:com_facebook_logout_text="LOG OUT" />
+                facebook:com_facebook_login_text="@string/facebook_login"
+                facebook:com_facebook_logout_text="@string/logout" />
 
             <com.facebook.login.widget.LoginButton xmlns:facebook="http://schemas.android.com/apk/res-auto"
                 android:id="@+id/login_button_edit"
@@ -209,8 +209,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/default_margin"
                 android:visibility="gone"
-                facebook:com_facebook_login_text="Connect with Facebook"
-                facebook:com_facebook_logout_text="LOG OUT" />
+                facebook:com_facebook_login_text="@string/facebook_login"
+                facebook:com_facebook_logout_text="@string/logout" />
         </LinearLayout>
     </ScrollView>
 

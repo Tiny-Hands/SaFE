@@ -7,8 +7,49 @@
     <string name="disclaimer">नेपालबाट विदेशमा काम गर्न जाने धेरै व्यक्तिहरू शोषणमा पर्ने गर्दछन् । उनीहरू ठगिन्छन्, गाह्रो अवस्थाहरूमा काम गर्न बाध्य पारिन्छन्, पिटिन्छन्, उनीहरूले भनेको तलब र सुविधा पाउने गर्दैनन् र कति त यतना र यौनशोषणमा पर्नेगर्दछन् । कति विदेशमा थुनामा पर्दछन् त कतिले आत्माहत्या गर्नेगर्दछन् । यो एपले वैदेशिक रोजगारीमा जान चाहाने नेपालीहरूलाई ठगि र शोषणबाट बचेर सुरक्षित र लाभदायक रोजगारी पत्ता लगाउन सहायता गर्दछ तर सुरक्षाको भने पूर्ण सुनिश्चितता गर्दैन ।</string>
     <string name="disclaimer_button">मैले बुझे</string>
     <string name="disclaimer_title">प्रतिदावी</string>
-    <string name="finalAnswerVerification">You have completed the foreign employment preparation part of the app. To continue forward please agree to not to change the previous answers. If you have to change your answers please go back and do it now, otherwise please check. I agree to not change my answers.</string>
+    <string name="finalAnswerVerificationTitle">अघि बढ्नु पहिले</string>
+    <string name="finalAnswerVerification">तपाईँले यस सुवैरोमा एपको वैदेशिक रोजगारी तयारी भाग पुरा गर्नुभएको छ । अगाडि बढ्नुभन्दा पहिले तपाईँले दिनुभएका उत्तरहरू परिवर्तन गर्दिन भनेर स्वीकार्नुपर्दछ । यदि तपाईँले कुनै खण्डको उत्तर परिवर्तन गर्नुपरेमा अहिले गर्नुहोला । उत्तरहरू परिवर्तन गर्नुहुन्न भने तल चिनो लगाउनुहोस् ।.</string>
+    <string name="finalAnswerButton">म मैले दिएका उत्तरहरू परिवर्तन गर्ने छैन ।</string>
     <string name="opt_message">We are sending an SMS with a code to you phone number. Please enter it below. It may take upto 5 minutes</string>
+
+    <!-- Generic -->
+    <string name="next">अगाडि</string>
+    <string name="proceed">अगाडि बढ्नु</string>
+    <string name="back">फिर्ता</string>
+
+    <!-- Error Dialogs -->
+    <string name="error">ग़लती</string>
+
+    <!-- Activity Migrant List -->
+    <string name="select_migrant">प्रवासी चयन गर्नुहोस्</string>
+    <string name="not_started">अहिले सम्म सुरू भएको छैन</string>
+
+    <!-- Activity Register -->
+    <string name="edit_profile">सम्पादन गर्नु</string>
+    <string name="edit_migrant">प्रवासी सम्पादन गर्नु</string>
+    <string name="add_migrant">प्रवासी थप्नु</string>
+    <string name="register">दर्ता गर्नुहोस्</string>
+
+    <!-- Activity Tile Home -->
+    <string name="going_to">जाँदै</string>
+
+    <!-- Tile Questions -->
+    <string name="need_help">सहयोग चाहियो?</string>
+
+    <!-- Registration -->
+    <string name="migrants_name">प्रवासीको नाम</string>
+    <string name="full_name">पुरा नाम</string>
+    <string name="migrants_phone_number">प्रवासीको फोन नम्बर</string>
+    <string name="phone_number">फोन नम्बर</string>
+    <string name="migrants_age">प्रवासीको उमेर</string>
+    <string name="age">उमेर</string>
+    <string name="gender">लिङ्ग</string>
+    <string name="male">पुरुष</string>
+    <string name="female">महिला</string>
+    <string name="or">वा</string>
+    <string name="already_registered">पहिले नै दर्ता गरिएको</string>
+    <string name="facebook_login">फेसबुक लगइन</string>
+    <string name="logout">लोग आउट</string>
 
     <!-- Required for facebook Login -->
     <string name="facebook_app_id">118900038809550</string>

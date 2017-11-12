@@ -26,10 +26,13 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.facebook.AccessToken;
+import com.facebook.AccessTokenTracker;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
 import com.facebook.Profile;
+import com.facebook.ProfileTracker;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 import com.vysh.subairoma.ApplicationClass;
@@ -63,7 +66,7 @@ public class ActivityProfileEdit extends AppCompatActivity implements View.OnCli
     @BindView(R.id.btnNext)
     Button btnNext;
     @BindView(R.id.tvTitle)
-    CustomTextView tvTitle;
+    TextView tvTitle;
     @BindView(R.id.etName)
     EditText etName;
     @BindView(R.id.etAge)
@@ -90,6 +93,7 @@ public class ActivityProfileEdit extends AppCompatActivity implements View.OnCli
     CallbackManager callbackManager;
 
     int userType = -1;
+    ProfileTracker mProfileTracker;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -102,7 +106,7 @@ public class ActivityProfileEdit extends AppCompatActivity implements View.OnCli
         btnAlreadyRegistered.setVisibility(GONE);
         btnNext.setOnClickListener(this);
         if (userType == 1) {
-            tvTitle.setText("EDIT MIGRANT");
+            tvTitle.setText(getResources().getString(R.string.edit_migrant));
             if (ApplicationClass.getInstance().getUserId() != -1) {
                 loginButton.setVisibility(GONE);
                 loginButtonToHide.setVisibility(GONE);
@@ -111,7 +115,7 @@ public class ActivityProfileEdit extends AppCompatActivity implements View.OnCli
                 setUpFBLogin();
             getData();
         } else if (userType == 0) {
-            tvTitle.setText("EDIT PROFILE");
+            tvTitle.setText(getResources().getString(R.string.edit_profile));
             setUpUserData();
             setUpFBLogin();
         }
@@ -144,8 +148,23 @@ public class ActivityProfileEdit extends AppCompatActivity implements View.OnCli
         loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(LoginResult loginResult) {
-                Log.d("mylog", "Successful, User ID: " + Profile.getCurrentProfile().getId());
-                addFbIDToUID(Profile.getCurrentProfile().getId());
+                if(Profile.getCurrentProfile() == null) {
+                    mProfileTracker = new ProfileTracker() {
+                        @Override
+                        protected void onCurrentProfileChanged(Profile oldProfile, Profile currentProfile) {
+                            mProfileTracker.stopTracking();
+                            //get data here
+                            Log.d("mylog", "In profile Tracker, User ID: " + Profile.getCurrentProfile().getId());
+                            addFbIDToUID(Profile.getCurrentProfile().getId());
+                        }
+                    };
+                    // no need to call startTracking() on mProfileTracker
+                    // because it is called by its constructor, internally.
+                }
+                else {
+                    Log.d("mylog", "Successful, User ID: " + Profile.getCurrentProfile().getId());
+                    addFbIDToUID(Profile.getCurrentProfile().getId());
+                }
             }
 
             @Override
@@ -284,8 +303,8 @@ public class ActivityProfileEdit extends AppCompatActivity implements View.OnCli
                     Log.d("mylog", "response : " + response);
                     JSONObject jsonObject = new JSONObject(response);
                     Boolean error = jsonObject.getBoolean("error");
-                    if(!error){
-                        if(userType == 0){
+                    if (!error) {
+                        if (userType == 0) {
                             //Save the new user info in SharedPrefs
                             SharedPreferences sharedPreferences = getSharedPreferences(SharedPrefKeys.sharedPrefName, MODE_PRIVATE);
                             SharedPreferences.Editor editor = sharedPreferences.edit();
@@ -299,8 +318,7 @@ public class ActivityProfileEdit extends AppCompatActivity implements View.OnCli
                         Intent intent = new Intent(ActivityProfileEdit.this, ActivityMigrantList.class);
                         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                         startActivity(intent);
-                    }
-                    else{
+                    } else {
                         showSnackbar("Failed to update User");
                     }
                 } catch (JSONException e) {
@@ -332,7 +350,7 @@ public class ActivityProfileEdit extends AppCompatActivity implements View.OnCli
                     params.put("migrant_id", id + "");
                     params.put("user_id", ApplicationClass.getInstance().getUserId() + "");
                 }
-                for(Object obj: params.keySet()){
+                for (Object obj : params.keySet()) {
                     Log.d("mylog", "Key: " + obj + " Val: " + params.get(obj));
                 }
                 return params;
