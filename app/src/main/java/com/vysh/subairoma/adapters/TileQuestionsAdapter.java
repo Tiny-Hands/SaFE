@@ -517,7 +517,7 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
 
     private void showErrowDialog(int mainIndex) {
         AlertDialog.Builder builder = new AlertDialog.Builder(context, R.style.DialogError);
-        builder.setNegativeButton("OKAY", new DialogInterface.OnClickListener() {
+        builder.setNegativeButton(context.getResources().getString(R.string.understand), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();
@@ -665,7 +665,7 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
                             //Show conflict dialog
                             if (!shouldAllowMarking) {
                                 final AlertDialog.Builder builder = new AlertDialog.Builder(context, R.style.DialogError);
-                                builder.setNegativeButton("OKAY", new DialogInterface.OnClickListener() {
+                                builder.setNegativeButton(context.getResources().getString(R.string.okay), new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
                                         dialog.dismiss();

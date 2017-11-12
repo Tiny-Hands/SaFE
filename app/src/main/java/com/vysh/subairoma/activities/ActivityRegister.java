@@ -473,7 +473,7 @@ public class ActivityRegister extends AppCompatActivity {
     private void showUserTypeDialogAndRegister() {
         userType = 0;
         AlertDialog.Builder builder = new AlertDialog.Builder(ActivityRegister.this);
-        builder.setPositiveButton("REGISTER", new DialogInterface.OnClickListener() {
+        builder.setPositiveButton(getResources().getString(R.string.register), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 String api;
@@ -485,7 +485,8 @@ public class ActivityRegister extends AppCompatActivity {
                 }
             }
         });
-        builder.setSingleChoiceItems(new String[]{"I am an aspiring migrant", "I am helping others"}, 0, new DialogInterface.OnClickListener() {
+        builder.setSingleChoiceItems(new String[]{getResources().getString(R.string.aspiringmigrant),
+                getResources().getString(R.string.helper)}, 0, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 Log.d("mylog", "Which: " + which);

@@ -71,9 +71,11 @@ public class DialogCountryChooser extends DialogFragment {
                     Log.d("mylog", "Country code: " + cid + " Status: " + status
                             + " Blacklist: " + blacklist);
                     if (blacklist == 1) {
-                        showDialog("Blacklisted", "This country is Blacklisted", cid, cname);
+                        showDialog(getContext().getResources().getString(R.string.blacklisted),
+                                getContext().getResources().getString(R.string.blacklisted_message), cid, cname);
                     } else if (status == 1) {
-                        showDialog("Not open", "This country is not Open", cid, cname);
+                        showDialog(getContext().getResources().getString(R.string.not_open),
+                                getContext().getResources().getString(R.string.not_open_message), cid, cname);
                     } else {
                         //For mg_destination -1 is question id as it's not identified as question currently.
                         Log.d("mylog", "Saving country for MID: " + ApplicationClass.getInstance().getMigrantId());
@@ -103,7 +105,9 @@ public class DialogCountryChooser extends DialogFragment {
         AlertDialog.Builder mBuilder = new AlertDialog.Builder(getContext());
         mBuilder.setTitle(title);
         mBuilder.setMessage(message);
-        mBuilder.setNegativeButton("Go to " + cname.toUpperCase(), new DialogInterface.OnClickListener() {
+        mBuilder.setNegativeButton(cname.toUpperCase() + " " +
+                        getContext().getResources().getString(R.string.go_regardless),
+                new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 new SQLDatabaseHelper(getContext()).insertResponseTableData(cid, -1, -1,
@@ -121,7 +125,7 @@ public class DialogCountryChooser extends DialogFragment {
                 getContext().startActivity(intent);
             }
         });
-        mBuilder.setPositiveButton("Choose another Country", new DialogInterface.OnClickListener() {
+        mBuilder.setPositiveButton(getContext().getResources().getString(R.string.choose_another_country), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();

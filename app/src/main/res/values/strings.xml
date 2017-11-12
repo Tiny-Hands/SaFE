@@ -13,12 +13,23 @@
     <string name="opt_message">We are sending an SMS with a code to you phone number. Please enter it below. It may take upto 5 minutes</string>
 
     <!-- Generic -->
-    <string name="next">अगाडि</string>
+    <string name="next">अगाडि बढ्नु</string>
     <string name="proceed">अगाडि बढ्नु</string>
     <string name="back">फिर्ता</string>
+    <string name="okay">ठीक छ</string>
+    <string name="understand">बुझ्न</string>
 
     <!-- Error Dialogs -->
-    <string name="error">ग़लती</string>
+    <string name="error">गलती</string>
+
+    <!-- Country Chooser -->
+    <string name="choose_another_country">अर्को देश छनौट गर्नुहोस्</string>
+    <string name="blacklisted">प्रतिबन्धित</string>
+    <string name="blacklisted_message">यो देश प्रतिबन्धित छ</string>
+    <string name="not_open">खुला छैन</string>
+    <string name="not_open_message">यो देश खुला छैन</string>
+    <string name="go_regardless">जान चाहन्छु</string>
+    <string name="select_country">कृपया देश चयन गर्नुहोस्</string>
 
     <!-- Activity Migrant List -->
     <string name="select_migrant">प्रवासी चयन गर्नुहोस्</string>
@@ -29,6 +40,8 @@
     <string name="edit_migrant">प्रवासी सम्पादन गर्नु</string>
     <string name="add_migrant">प्रवासी थप्नु</string>
     <string name="register">दर्ता गर्नुहोस्</string>
+    <string name="helper">म अरूलाई सहयोग गर्दैछु</string>
+    <string name="aspiringmigrant">म इच्छुक प्रवासी हुँ</string>
 
     <!-- Activity Tile Home -->
     <string name="going_to">जाँदै</string>
