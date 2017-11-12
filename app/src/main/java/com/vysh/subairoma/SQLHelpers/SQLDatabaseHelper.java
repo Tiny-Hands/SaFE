@@ -133,7 +133,7 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
     }
 
     //This is used when we have isError, when response is fetched from server
-    public void insertAllResponses(String response, int question_id, int migrant_id, String variable, String isError) {
+    public void insertAllResponses(String response, int question_id, int migrant_id, String variable, String isError, int tileId) {
         // Gets the data repository in write mode
         SQLiteDatabase db = this.getWritableDatabase();
         // Create a new map of values, where column names are the keys
@@ -143,6 +143,7 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
         values.put(DatabaseTables.ResponseTable.response_variable, variable);
         values.put(DatabaseTables.ResponseTable.question_id, question_id);
         values.put(DatabaseTables.ResponseTable.is_error, isError);
+        values.put(DatabaseTables.ResponseTable.tile_id, tileId);
         long newRowId = db.insert(DatabaseTables.ResponseTable.TABLE_NAME, null, values);
         Log.d("mylog", "Inserted row ID: " + newRowId);
     }
@@ -177,6 +178,7 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
             response = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseTables.ResponseTable.response));
             int mid = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseTables.ResponseTable.migrant_id));
             int qid = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseTables.ResponseTable.question_id));
+            int tileid = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseTables.ResponseTable.tile_id));
             String error = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseTables.ResponseTable.is_error));
             Log.d("mylog", "Uid: " + userId + " Mid: " + mid + " Qid: " + qid + " Response: " + response + " Variable: " + qvar + " isError: " + error);
             HashMap<String, String> params = new HashMap<>();
@@ -185,6 +187,7 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
             params.put("question_id", "" + qid);
             params.put("response", response);
             params.put("response_variable", qvar);
+            params.put("tile_id", tileid + "");
             if (error == null)
                 error = "false";
             params.put("is_error", error);

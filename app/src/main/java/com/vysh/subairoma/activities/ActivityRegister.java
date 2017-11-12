@@ -52,7 +52,9 @@ public class ActivityRegister extends AppCompatActivity {
     final String checkFbId = "/checkfbuid.php";
     final String apiURL = "/saveuser.php";
     final String apiURLMigrant = "/savemigrant.php";
+    //For Helper
     final String apiGetAllResponses = "/getallresponses.php";
+    //For Migrant
     final String apiGetResponses = "/getresponses.php";
     final String apiAlreadyRegistered = "/checkphonenumber.php";
     private final String apiGetMigrants = "/getmigrants.php";
@@ -717,8 +719,13 @@ public class ActivityRegister extends AppCompatActivity {
                     String responseVariable = tempResponse.getString("response_variable");
                     String response = tempResponse.getString("response");
                     String isError = tempResponse.getString("is_error");
-                    Log.d("mylog", "Inserting");
-                    dbHelper.insertAllResponses(response, questionId, migrantId, responseVariable, isError);
+                    String sTileId = tempResponse.getString("tile_id");
+                    int tileId = -1;
+                    if (!sTileId.contains("null") && !sTileId.isEmpty() && sTileId != null) {
+                        tileId = Integer.parseInt(sTileId);
+                    }
+                    Log.d("mylog", "Inserting Response with Tile ID: " + tileId);
+                    dbHelper.insertAllResponses(response, questionId, migrantId, responseVariable, isError, tileId);
                 }
             } else {
                 Log.d("mylog", "No responses found");
