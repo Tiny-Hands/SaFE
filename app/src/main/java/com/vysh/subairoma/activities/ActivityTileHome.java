@@ -114,6 +114,7 @@ public class ActivityTileHome extends AppCompatActivity {
         setUpListeners();
         setUpRecyclerView();
         checkIfVerifiedAnswers();
+        getAllResponses();
     }
 
     private void checkIfVerifiedAnswers() {
@@ -222,8 +223,10 @@ public class ActivityTileHome extends AppCompatActivity {
             @Override
             public void onErrorResponse(VolleyError error) {
                 String err = error.toString();
-                if (!err.isEmpty() && err.contains("NoConnection"))
-                    showSnackbar("Response cannot be saved at the moment, please check your Intenet connection.");
+                if (!err.isEmpty() && err.contains("NoConnection")){
+                    //showSnackbar("Response cannot be saved at the moment, please check your Intenet connection.");
+                    Log.d("mylog","Response cannot be saved at the moment, please check your Intenet connection.");
+                }
             }
         }) {
             @Override
