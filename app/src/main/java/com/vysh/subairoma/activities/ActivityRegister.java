@@ -12,6 +12,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -386,9 +387,9 @@ public class ActivityRegister extends AppCompatActivity {
 
     private void showDisclaimer(final int i) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle(getResources().getString(R.string.disclaimer_title));
-        builder.setMessage(getResources().getString(R.string.disclaimer));
-        builder.setCancelable(false);
+        View view = LayoutInflater.from(this).inflate(R.layout.dialog_disclaimer, null);
+        TextView msg = (TextView)view.findViewById(R.id.tvDisclaimerContent);
+        builder.setView(view);
         builder.setPositiveButton(getResources().getString(R.string.disclaimer_button), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
@@ -407,6 +408,7 @@ public class ActivityRegister extends AppCompatActivity {
             }
         });
         */
+        msg.setText(getResources().getString(R.string.disclaimer));
         builder.show();
     }
 
