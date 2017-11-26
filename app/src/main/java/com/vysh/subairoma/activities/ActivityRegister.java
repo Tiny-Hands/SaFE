@@ -13,7 +13,6 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -35,7 +34,6 @@ import com.vysh.subairoma.R;
 import com.vysh.subairoma.SQLHelpers.SQLDatabaseHelper;
 import com.vysh.subairoma.SharedPrefKeys;
 import com.vysh.subairoma.dialogs.DialogLoginOptions;
-import com.vysh.subairoma.utils.CustomTextView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -53,7 +51,6 @@ import butterknife.ButterKnife;
 
 public class ActivityRegister extends AppCompatActivity {
     final String checkFbId = "/checkfbuid.php";
-    final String apiURL = "/saveuser.php";
     final String apiURLMigrant = "/savemigrant.php";
     //For Helper
     final String apiGetAllResponses = "/getallresponses.php";
@@ -62,6 +59,7 @@ public class ActivityRegister extends AppCompatActivity {
     final String apiAlreadyRegistered = "/checkphonenumber.php";
     private final String apiGetMigrants = "/getmigrants.php";
 
+    //Usertype = 0 for Helper and 1 for migrant. Order is reversed in Dialogs and Other Methods.
     int userType;
     Boolean userRegistered = false;
     String sex = "male";
@@ -90,11 +88,11 @@ public class ActivityRegister extends AppCompatActivity {
     TextView tvOr;
 
     public CallbackManager callbackManager;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         //Checking if already logged in on current device
-
         if (checkUserExists() && !getIntent().hasExtra("migrantmode")) {
             Intent intent = new Intent(ActivityRegister.this, ActivityMigrantList.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -104,7 +102,6 @@ public class ActivityRegister extends AppCompatActivity {
 
         setContentView(R.layout.activity_register);
         ButterKnife.bind(this);
-
         setUpComponentListeners();
         if (getIntent().hasExtra("migrantmode")) {
             userRegistered = true;
@@ -114,12 +111,94 @@ public class ActivityRegister extends AppCompatActivity {
 
         callbackManager = CallbackManager.Factory.create();
     }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        Log.d("mylog", "On Actitiy Result");
+        Log.d("mylog", "On Activity Result");
         callbackManager.onActivityResult(requestCode, resultCode, data);
     }
+
+    public void checkUserRegistration(String number) {
+        final String pNumber = number;
+        String api = ApplicationClass.getInstance().getAPIROOT() + apiAlreadyRegistered;
+        final ProgressDialog progressDialog = new ProgressDialog(ActivityRegister.this);
+        progressDialog.setTitle("Please wait");
+        progressDialog.setMessage("Checking Registration...");
+        progressDialog.show();
+        StringRequest checkRequest = new StringRequest(Request.Method.POST, api, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                progressDialog.dismiss();
+                Log.d("mylog", "response : " + response);
+                try {
+                    JSONObject jsonRes = new JSONObject(response);
+                    boolean error = jsonRes.getBoolean("error");
+                    if (error) {
+                        showSnackbar(jsonRes.getString("message"));
+                        return;
+                    } else {
+                        int userType = jsonRes.getInt("user_type");
+                        int id = jsonRes.getInt("user_id");
+                        if (userType == 0) {
+                            ApplicationClass.getInstance().setUserId(id);
+                            String userName = jsonRes.getString("user_name");
+                            String userPhone = jsonRes.getString("user_phone");
+                            String userSex = jsonRes.getString("user_sex");
+                            String age = jsonRes.getString("user_age");
+
+                            Log.d("mylog", "Saving: " + userName + userPhone + userSex + age);
+                            SharedPreferences sharedPreferences = getSharedPreferences(SharedPrefKeys.sharedPrefName, MODE_PRIVATE);
+                            SharedPreferences.Editor editor = sharedPreferences.edit();
+                            editor.putString(SharedPrefKeys.userName, userName);
+                            editor.putString(SharedPrefKeys.userPhone, userPhone);
+                            editor.putString(SharedPrefKeys.userSex, userSex);
+                            editor.putString(SharedPrefKeys.userAge, age);
+                            editor.putString(SharedPrefKeys.userType, "helper");
+                            editor.commit();
+                        } else if (userType == 1) {
+                            ApplicationClass.getInstance().setUserId(-1);
+                            ApplicationClass.getInstance().setMigrantId(id);
+                        }
+                        getMigrantDetails();
+                    }
+                    //Getting all the saved responses for the user
+                    getAllResponses(userType);
+                    Intent intent = new Intent(ActivityRegister.this, ActivityMigrantList.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    startActivity(intent);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                    Log.d("mylog", "Error in getting user_id: " + e.toString());
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                progressDialog.dismiss();
+                String err = error.toString();
+                Log.d("mylog", "error : " + err);
+                if (!err.isEmpty() && err.contains("TimeoutError"))
+                    showSnackbar("Failed to connect to server :(");
+                else
+                    showSnackbar(error.toString());
+            }
+        })
+
+        {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                HashMap<String, String> params = new HashMap<>();
+                params.put("number", pNumber);
+                return params;
+            }
+        };
+        RequestQueue queue = Volley.newRequestQueue(ActivityRegister.this);
+        checkRequest.setShouldCache(false);
+        queue.add(checkRequest);
+    }
+
+
     private void setUpComponentListeners() {
         rbFemale.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -152,6 +231,207 @@ public class ActivityRegister extends AppCompatActivity {
         });
     }
 
+    private void showRegistrationDialog() {
+        DialogLoginOptions dialogLoginOptions = new DialogLoginOptions();
+        dialogLoginOptions.show(getFragmentManager(), "alreadyregistered");
+    }
+
+    private void saveUser() {
+        if (!userRegistered) {
+            //Shows user type selection dialog with next button
+            showUserTypeDialogAndContinue();
+        } else {
+            //Parameter 1 is for registering migrant after reading disclaimer
+            showDisclaimerAndContinue(1);
+        }
+    }
+
+    private void showDisclaimerAndContinue(final int i) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        View view = LayoutInflater.from(this).inflate(R.layout.dialog_disclaimer, null);
+        TextView msg = (TextView) view.findViewById(R.id.tvDisclaimerContent);
+        builder.setView(view);
+        builder.setPositiveButton(getResources().getString(R.string.disclaimer_button), new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                if (i == 1) {
+                    //If it's a helper user, then no need to redirect to OTPActivity,
+                    //But Register and then redirect to migrant list.
+                    if (userRegistered) {
+                        String api = ApplicationClass.getInstance().getAPIROOT() + apiURLMigrant;
+                        registerMigrant(api);
+                        //Start Migrant List Activity
+                    } else {
+                        startOTPActivity(1);
+                    }
+                } else if (i == 2) {
+                    startOTPActivity(2);
+                }
+            }
+        });
+        msg.setText(getResources().getString(R.string.disclaimer));
+        builder.show();
+    }
+
+    private void startOTPActivity(int uType) {
+        //uType = 1 for Migrant, 2 for helper
+        String type;
+        if (uType == 1) {
+            type = "migrant";
+        } else type = "helper";
+        SharedPreferences sharedPreferences = getSharedPreferences(SharedPrefKeys.sharedPrefName, MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        if (type.equalsIgnoreCase("helper"))
+            editor.putInt(SharedPrefKeys.userId, ApplicationClass.getInstance().getUserId());
+        else if (type.equalsIgnoreCase("migrant"))
+            editor.putInt(SharedPrefKeys.userId, ApplicationClass.getInstance().getMigrantId());
+        editor.putString(SharedPrefKeys.userType, type);
+        editor.commit();
+        Intent intent = new Intent(ActivityRegister.this, ActivityOTPVerification.class);
+        intent.putExtra("name", etName.getText().toString());
+        intent.putExtra("phoneNumber", etNumber.getText().toString());
+        intent.putExtra("age", etAge.getText().toString());
+        intent.putExtra("gender", sex);
+        intent.putExtra("userType", uType);
+        if (uType == 1)
+            intent.putExtra("isSupervised", userRegistered);
+        startActivity(intent);
+    }
+
+    private void registerMigrant(String api) {
+        Log.d("mylog", "API called: " + api);
+        final ProgressDialog progressDialog = new ProgressDialog(ActivityRegister.this);
+        progressDialog.setTitle("Please wait");
+        progressDialog.setMessage("Registering...");
+        progressDialog.setCancelable(false);
+        progressDialog.show();
+        StringRequest saveRequest = new StringRequest(Request.Method.POST, api, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                progressDialog.dismiss();
+                Log.d("mylog", "response : " + response);
+                parseResponse(response);
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                progressDialog.dismiss();
+                String err = error.toString();
+                Log.d("mylog", "error : " + err);
+                if (!err.isEmpty() && err.contains("TimeoutError"))
+                    showSnackbar("Failed to connect to server :(");
+                else
+                    showSnackbar(error.toString());
+            }
+        }) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                HashMap<String, String> params = new HashMap<>();
+                params.put("full_name", etName.getText().toString());
+                params.put("phone_number", etNumber.getText().toString());
+                params.put("age", etAge.getText().toString());
+                params.put("gender", sex);
+
+                //Flow will not enter these two unless a migrant is being registered
+                if (userRegistered) {
+                    Log.d("mylog", "User ID setting: " + ApplicationClass.getInstance().getUserId());
+                    params.put("user_id", ApplicationClass.getInstance().getUserId() + "");
+                }
+                return params;
+            }
+        };
+        RequestQueue queue = Volley.newRequestQueue(ActivityRegister.this);
+        saveRequest.setShouldCache(false);
+        queue.add(saveRequest);
+    }
+
+    private void parseResponse(String response) {
+        try {
+            JSONObject jsonObject = new JSONObject(response);
+            Boolean error = jsonObject.getBoolean("error");
+            if (!error) {
+                int mig_id = jsonObject.getInt("migrant_id");
+                new SQLDatabaseHelper(ActivityRegister.this).insertResponseTableData(sex, -2, -1, mig_id, "mg_sex");
+                Intent intent = new Intent(ActivityRegister.this, ActivityMigrantList.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intent);
+            } else {
+                String message = jsonObject.getString("message");
+                showSnackbar(message);
+            }
+        } catch (JSONException e) {
+            Log.d("mylog", "Error in parsing migrant result: " + e.toString());
+        }
+    }
+
+    public void showSnackbar(String msg) {
+        Snackbar snack = Snackbar.make(rootLayout, msg, Snackbar.LENGTH_LONG);
+        View view = snack.getView();
+        TextView tv = (TextView) view.findViewById(android.support.design.R.id.snackbar_text);
+        tv.setTextColor(Color.WHITE);
+        if (Build.VERSION.SDK_INT >= 17)
+            tv.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+        snack.show();
+    }
+
+    private void showUserTypeDialogAndContinue() {
+        userType = 0;
+        AlertDialog.Builder builder = new AlertDialog.Builder(ActivityRegister.this);
+        builder.setPositiveButton(getResources().getString(R.string.register), new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                if (userType == 0) {
+                    showDisclaimerAndContinue(1);
+                } else {
+                    showDisclaimerAndContinue(2);
+                }
+            }
+        });
+        builder.setSingleChoiceItems(new String[]{getResources().getString(R.string.aspiringmigrant),
+                getResources().getString(R.string.helper)}, 0, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                Log.d("mylog", "Which: " + which);
+                userType = which;
+            }
+        });
+        builder.show();
+    }
+
+    private boolean validateData() {
+        if (etName.getText().toString().isEmpty() || etName.getText().toString().length() < 5) {
+            etName.setError("Name must be more than 5 characters long");
+            return false;
+        }
+        if (etAge.getText().toString().isEmpty() || etAge.getText().toString().length() != 2) {
+            etAge.setError("Age must be between 12 - 90");
+            return false;
+        }
+        if (Integer.parseInt(etAge.getText().toString()) < 12 || Integer.parseInt(etAge.getText().toString()) > 90) {
+            etAge.setError("Age must be between 12 - 90");
+            return false;
+        }
+        if (etNumber.getText().toString().isEmpty() || etNumber.getText().toString().length() < 10) {
+            etNumber.setError("Please enter a valid mobile number");
+            return false;
+        }
+        return true;
+    }
+
+    private void loadMigrantView() {
+        tvOr.setVisibility(View.GONE);
+        etNumber.setText("");
+        etAge.setText("");
+        etName.setText("");
+        //tvHint.setText("Please enter Migrant's details");
+        Resources res = getResources();
+        tvTitle.setText(res.getString(R.string.add_migrant));
+        etName.setHint(res.getString(R.string.migrants_name));
+        etAge.setHint(res.getString(R.string.migrants_age));
+        etNumber.setHint(res.getString(R.string.migrants_phone_number));
+        btnAlreadyRegistered.setVisibility(View.INVISIBLE);
+    }
+
     private boolean checkUserExists() {
         SharedPreferences sharedPreferences = getSharedPreferences(SharedPrefKeys.sharedPrefName, MODE_PRIVATE);
         int userId = sharedPreferences.getInt(SharedPrefKeys.userId, -10);
@@ -168,11 +448,6 @@ public class ActivityRegister extends AppCompatActivity {
             }
             return true;
         } else return false;
-    }
-
-    private void showRegistrationDialog() {
-        DialogLoginOptions dialogLoginOptions = new DialogLoginOptions();
-        dialogLoginOptions.show(getFragmentManager(), "alreadyregistered");
     }
 
     public void checkIfFBUserExists(String fid) {
@@ -246,82 +521,6 @@ public class ActivityRegister extends AppCompatActivity {
         queue.add(checkRequest);
     }
 
-    public void checkUserRegistration(String number) {
-        final String pNumber = number;
-        String api = ApplicationClass.getInstance().getAPIROOT() + apiAlreadyRegistered;
-        final ProgressDialog progressDialog = new ProgressDialog(ActivityRegister.this);
-        progressDialog.setTitle("Please wait");
-        progressDialog.setMessage("Checking Registration...");
-        progressDialog.show();
-        StringRequest checkRequest = new StringRequest(Request.Method.POST, api, new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-                progressDialog.dismiss();
-                Log.d("mylog", "response : " + response);
-                try {
-                    JSONObject jsonRes = new JSONObject(response);
-                    boolean error = jsonRes.getBoolean("error");
-                    if (error) {
-                        showSnackbar(jsonRes.getString("message"));
-                        return;
-                    } else {
-                        int userType = jsonRes.getInt("user_type");
-                        int id = jsonRes.getInt("user_id");
-                        if (userType == 0) {
-                            ApplicationClass.getInstance().setUserId(id);
-                            String userName = jsonRes.getString("user_name");
-                            String userPhone = jsonRes.getString("user_phone");
-                            String userSex = jsonRes.getString("user_sex");
-                            String age = jsonRes.getString("user_age");
-
-                            Log.d("mylog", "Saving: " + userName + userPhone + userSex + age);
-                            SharedPreferences sharedPreferences = getSharedPreferences(SharedPrefKeys.sharedPrefName, MODE_PRIVATE);
-                            SharedPreferences.Editor editor = sharedPreferences.edit();
-                            editor.putString(SharedPrefKeys.userName, userName);
-                            editor.putString(SharedPrefKeys.userPhone, userPhone);
-                            editor.putString(SharedPrefKeys.userSex, userSex);
-                            editor.putString(SharedPrefKeys.userAge, age);
-                            editor.putString(SharedPrefKeys.userType, "helper");
-                            editor.commit();
-                        } else if (userType == 1) {
-                            ApplicationClass.getInstance().setUserId(-1);
-                            ApplicationClass.getInstance().setMigrantId(id);
-                        }
-                        getMigrantDetails();
-                    }
-                    //Getting all the saved responses for the user
-                    getAllResponses(userType);
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                    Log.d("mylog", "Error in getting user_id: " + e.toString());
-                }
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                progressDialog.dismiss();
-                String err = error.toString();
-                Log.d("mylog", "error : " + err);
-                if (!err.isEmpty() && err.contains("TimeoutError"))
-                    showSnackbar("Failed to connect to server :(");
-                else
-                    showSnackbar(error.toString());
-            }
-        })
-
-        {
-            @Override
-            protected Map<String, String> getParams() throws AuthFailureError {
-                HashMap<String, String> params = new HashMap<>();
-                params.put("number", pNumber);
-                return params;
-            }
-        };
-        RequestQueue queue = Volley.newRequestQueue(ActivityRegister.this);
-        checkRequest.setShouldCache(false);
-        queue.add(checkRequest);
-    }
-
     public void getMigrantDetails() {
         String api = ApplicationClass.getInstance().getAPIROOT() + apiGetMigrants;
         final ProgressDialog progressDialog = new ProgressDialog(ActivityRegister.this);
@@ -387,296 +586,6 @@ public class ActivityRegister extends AppCompatActivity {
         queue.add(getRequest);
     }
 
-    private void saveUser() {
-        if (!userRegistered) {
-            showUserTypeDialogAndRegister();
-        } else {
-            showDisclaimer(1);
-        }
-    }
-
-    private void showDisclaimer(final int i) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        View view = LayoutInflater.from(this).inflate(R.layout.dialog_disclaimer, null);
-        TextView msg = (TextView)view.findViewById(R.id.tvDisclaimerContent);
-        builder.setView(view);
-        builder.setPositiveButton(getResources().getString(R.string.disclaimer_button), new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                if (i == 1)
-                    registerMigrant();
-                else if (i == 2) {
-                    String api = ApplicationClass.getInstance().getAPIROOT() + apiURLMigrant;
-                    startInitialRegistration(api);
-                }
-            }
-        });
-        /*builder.setNegativeButton("Disagree", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                //Do Nothing
-            }
-        });
-        */
-        msg.setText(getResources().getString(R.string.disclaimer));
-        builder.show();
-    }
-
-    private void registerMigrant() {
-        String api = ApplicationClass.getInstance().getAPIROOT() + apiURLMigrant;
-        final ProgressDialog progressDialog = new ProgressDialog(ActivityRegister.this);
-        progressDialog.setTitle("Please wait");
-        progressDialog.setMessage("Registering...");
-        progressDialog.setCancelable(false);
-        progressDialog.show();
-        StringRequest saveRequest = new StringRequest(Request.Method.POST, api, new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-                progressDialog.dismiss();
-                Log.d("mylog", "response : " + response);
-                parseResponse(response);
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                progressDialog.dismiss();
-                String err = error.toString();
-                Log.d("mylog", "error : " + err);
-                if (!err.isEmpty() && err.contains("TimeoutError"))
-                    showSnackbar("Failed to connect to server :(");
-                else
-                    showSnackbar(error.toString());
-            }
-        }) {
-            @Override
-            protected Map<String, String> getParams() throws AuthFailureError {
-                HashMap<String, String> params = new HashMap<>();
-                params.put("full_name", etName.getText().toString());
-                params.put("phone_number", etNumber.getText().toString());
-                params.put("age", etAge.getText().toString());
-                params.put("gender", sex);
-                if (userRegistered) {
-                    params.put("user_id", ApplicationClass.getInstance().getUserId() + "");
-                    Log.d("mylog", "User ID: " + ApplicationClass.getInstance().getUserId());
-                } else if (userType == 0) {
-                    params.put("user_id", "-1");
-                    Log.d("mylog", "User ID: " + -1);
-                }
-                return params;
-            }
-        };
-        RequestQueue queue = Volley.newRequestQueue(ActivityRegister.this);
-        saveRequest.setShouldCache(false);
-        queue.add(saveRequest);
-    }
-
-    private void showUserTypeDialogAndRegister() {
-        userType = 0;
-        AlertDialog.Builder builder = new AlertDialog.Builder(ActivityRegister.this);
-        builder.setPositiveButton(getResources().getString(R.string.register), new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                String api;
-                if (userType == 0) {
-                    showDisclaimer(2);
-                } else {
-                    api = ApplicationClass.getInstance().getAPIROOT() + apiURL;
-                    startInitialRegistration(api);
-                }
-            }
-        });
-        builder.setSingleChoiceItems(new String[]{getResources().getString(R.string.aspiringmigrant),
-                getResources().getString(R.string.helper)}, 0, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                Log.d("mylog", "Which: " + which);
-                userType = which;
-            }
-        });
-        builder.show();
-    }
-
-    private void startInitialRegistration(String api) {
-        Log.d("mylog", "API called: " + api);
-        final ProgressDialog progressDialog = new ProgressDialog(ActivityRegister.this);
-        progressDialog.setTitle("Please wait");
-        progressDialog.setMessage("Registering...");
-        progressDialog.setCancelable(false);
-        progressDialog.show();
-        StringRequest saveRequest = new StringRequest(Request.Method.POST, api, new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-                progressDialog.dismiss();
-                Log.d("mylog", "response : " + response);
-                parseResponse(response);
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                progressDialog.dismiss();
-                String err = error.toString();
-                Log.d("mylog", "error : " + err);
-                if (!err.isEmpty() && err.contains("TimeoutError"))
-                    showSnackbar("Failed to connect to server :(");
-                else
-                    showSnackbar(error.toString());
-            }
-        }) {
-            @Override
-            protected Map<String, String> getParams() throws AuthFailureError {
-                HashMap<String, String> params = new HashMap<>();
-                params.put("full_name", etName.getText().toString());
-                params.put("phone_number", etNumber.getText().toString());
-                params.put("age", etAge.getText().toString());
-                params.put("gender", sex);
-                if (userType == 0) {
-                    params.put("user_id", "-1");
-                } else if (userRegistered)
-                    params.put("user_id", ApplicationClass.getInstance().getUserId() + "");
-                return params;
-            }
-        };
-        RequestQueue queue = Volley.newRequestQueue(ActivityRegister.this);
-        saveRequest.setShouldCache(false);
-        queue.add(saveRequest);
-    }
-
-    private void parseResponse(String response) {
-        try {
-            JSONObject jsonResponse = new JSONObject(response);
-            Boolean error = jsonResponse.getBoolean("error");
-            if (!error) {
-                //Means the registered person might be user
-                if (!userRegistered) {
-                    if (userType == 0) {
-                        ApplicationClass.getInstance().setUserId(-1);
-                        int mig_id = jsonResponse.getInt("migrant_id");
-                        Log.d("mylog", "Migrant ID: " + mig_id);
-                        ApplicationClass.getInstance().setMigrantId(mig_id);
-                        new SQLDatabaseHelper(ActivityRegister.this).insertResponseTableData(sex, -2, -1, mig_id, "mg_sex");
-                        startOTPActivity();
-                        return;
-                    } else {
-                        int user_id = jsonResponse.getInt("user_id");
-                        ApplicationClass.getInstance().setUserId(user_id);
-                        //Parse Other responses and save in SharedPref
-                        String userName = etName.getText().toString();
-                        String userPhone = etNumber.getText().toString();
-                        String age = etAge.getText().toString();
-                        String sex = "";
-                        sex = rbMale.isChecked() ? "male" : "female";
-                        SharedPreferences sharedPreferences = getSharedPreferences(SharedPrefKeys.sharedPrefName, MODE_PRIVATE);
-                        SharedPreferences.Editor editor = sharedPreferences.edit();
-                        editor.putString(SharedPrefKeys.userName, userName);
-                        editor.putString(SharedPrefKeys.userPhone, userPhone);
-                        editor.putString(SharedPrefKeys.userSex, sex);
-                        editor.putString(SharedPrefKeys.userAge, age);
-                        editor.putString(SharedPrefKeys.userType, "helper");
-                        editor.commit();
-
-                    }
-                    //Save to application class
-                    userRegistered = true;
-                    //startOTPActivity();
-                    //Go to user registration page
-                    String type;
-                    if (ApplicationClass.getInstance().getUserId() != -1) {
-                        type = "helper";
-                    } else type = "migrant";
-                    SharedPreferences sharedPreferences = getSharedPreferences(SharedPrefKeys.sharedPrefName, MODE_PRIVATE);
-                    SharedPreferences.Editor editor = sharedPreferences.edit();
-                    if (type.equalsIgnoreCase("helper"))
-                        editor.putInt(SharedPrefKeys.userId, ApplicationClass.getInstance().getUserId());
-                    else if (type.equalsIgnoreCase("migrant"))
-                        editor.putInt(SharedPrefKeys.userId, ApplicationClass.getInstance().getMigrantId());
-                    editor.putString(SharedPrefKeys.userType, type);
-                    editor.commit();
-                    Intent intent = new Intent(this, ActivityRegister.class);
-                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                    intent.putExtra("migrantmode", true);
-                    startActivity(intent);
-                    return;
-                    //loadMigrantView();
-                }
-                //Means the registered person was migrant
-                else {
-                    //startOTPActivity();
-                    int mig_id = jsonResponse.getInt("migrant_id");
-                    new SQLDatabaseHelper(ActivityRegister.this).insertResponseTableData(sex, -2, -1, mig_id, "mg_sex");
-                    Intent intent = new Intent(ActivityRegister.this, ActivityMigrantList.class);
-                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                    startActivity(intent);
-                }
-            } else {
-                String message = jsonResponse.getString("message");
-                showSnackbar(message);
-            }
-        } catch (JSONException e) {
-            Log.d("mylog", "Error in parsing: " + e.getMessage());
-        }
-    }
-
-    private boolean validateData() {
-        if (etName.getText().toString().isEmpty() || etName.getText().toString().length() < 5) {
-            etName.setError("Name must be more than 5 characters long");
-            return false;
-        }
-        if (etAge.getText().toString().isEmpty() || etAge.getText().toString().length() != 2) {
-            etAge.setError("Age must be between 12 - 90");
-            return false;
-        }
-        if (Integer.parseInt(etAge.getText().toString()) < 12 || Integer.parseInt(etAge.getText().toString()) > 90) {
-            etAge.setError("Age must be between 12 - 90");
-            return false;
-        }
-        if (etNumber.getText().toString().isEmpty() || etNumber.getText().toString().length() < 10) {
-            etNumber.setError("Please enter a valid mobile number");
-            return false;
-        }
-        return true;
-    }
-
-    private void startOTPActivity() {
-        String type;
-        if (ApplicationClass.getInstance().getUserId() != -1) {
-            type = "helper";
-        } else type = "migrant";
-        SharedPreferences sharedPreferences = getSharedPreferences(SharedPrefKeys.sharedPrefName, MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        if (type.equalsIgnoreCase("helper"))
-            editor.putInt(SharedPrefKeys.userId, ApplicationClass.getInstance().getUserId());
-        else if (type.equalsIgnoreCase("migrant"))
-            editor.putInt(SharedPrefKeys.userId, ApplicationClass.getInstance().getMigrantId());
-        editor.putString(SharedPrefKeys.userType, type);
-        editor.commit();
-        Intent intent = new Intent(ActivityRegister.this, ActivityOTPVerification.class);
-        startActivity(intent);
-    }
-
-    private void loadMigrantView() {
-        tvOr.setVisibility(View.GONE);
-        etNumber.setText("");
-        etAge.setText("");
-        etName.setText("");
-        //tvHint.setText("Please enter Migrant's details");
-        Resources res = getResources();
-        tvTitle.setText(res.getString(R.string.add_migrant));
-        etName.setHint(res.getString(R.string.migrants_name));
-        etAge.setHint(res.getString(R.string.migrants_age));
-        etNumber.setHint(res.getString(R.string.migrants_phone_number));
-        btnAlreadyRegistered.setVisibility(View.INVISIBLE);
-    }
-
-    public void showSnackbar(String msg) {
-        Snackbar snack = Snackbar.make(rootLayout, msg, Snackbar.LENGTH_LONG);
-        View view = snack.getView();
-        TextView tv = (TextView) view.findViewById(android.support.design.R.id.snackbar_text);
-        tv.setTextColor(Color.WHITE);
-        if (Build.VERSION.SDK_INT >= 17)
-            tv.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
-        snack.show();
-    }
-
     public void getAllResponses(final int uType) {
         String api;
         if (uType == 0)
@@ -693,7 +602,6 @@ public class ActivityRegister extends AppCompatActivity {
                 Log.d("mylog", "Responses from migrants: " + response);
                 pdialog.dismiss();
                 parseAllResponses(response);
-                startOTPActivity();
             }
         }, new Response.ErrorListener() {
             @Override
