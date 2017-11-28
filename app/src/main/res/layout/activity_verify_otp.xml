@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
     android:id="@+id/rlRoot"
+    android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <View
@@ -35,9 +35,9 @@
         android:id="@+id/ivOTP"
         android:layout_width="136dp"
         android:layout_height="136dp"
+        android:layout_centerHorizontal="true"
         android:layout_marginTop="98dp"
-        android:src="@drawable/ic_phone_otp"
-        android:layout_centerHorizontal="true" />
+        android:src="@drawable/ic_phone_otp" />
 
     <com.vysh.subairoma.utils.CustomTextView
         android:id="@+id/tvOPtMessage"
@@ -60,13 +60,32 @@
         android:hint="@string/code"
         android:padding="8dp" />
 
+    <com.vysh.subairoma.utils.CustomTextView
+        android:layout_marginTop="@dimen/default_margin"
+        android:id="@+id/noOtpMsg"
+        app:font="gotham_medium.ttf"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/etCode"
+        android:layout_centerHorizontal="true"
+        android:text="@string/no_otp_receiption" />
+
+    <Button
+        android:id="@+id/btnSendOTPAgain"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/noOtpMsg"
+        android:layout_centerHorizontal="true"
+        android:background="?attr/selectableItemBackground"
+        android:text="@string/no_otp_try_again" />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="52dp"
         android:layout_alignParentBottom="true"
+        android:layout_marginBottom="12dp"
         android:layout_marginLeft="@dimen/default_margin"
         android:layout_marginRight="@dimen/default_margin"
-        android:layout_marginBottom="12dp"
         android:orientation="horizontal">
 
         <Button

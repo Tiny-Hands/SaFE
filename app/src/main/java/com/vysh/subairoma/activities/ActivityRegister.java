@@ -275,18 +275,6 @@ public class ActivityRegister extends AppCompatActivity {
 
     private void startOTPActivity(int uType) {
         //uType = 1 for Migrant, 2 for helper
-        String type;
-        if (uType == 1) {
-            type = "migrant";
-        } else type = "helper";
-        SharedPreferences sharedPreferences = getSharedPreferences(SharedPrefKeys.sharedPrefName, MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        if (type.equalsIgnoreCase("helper"))
-            editor.putInt(SharedPrefKeys.userId, ApplicationClass.getInstance().getUserId());
-        else if (type.equalsIgnoreCase("migrant"))
-            editor.putInt(SharedPrefKeys.userId, ApplicationClass.getInstance().getMigrantId());
-        editor.putString(SharedPrefKeys.userType, type);
-        editor.commit();
         Intent intent = new Intent(ActivityRegister.this, ActivityOTPVerification.class);
         intent.putExtra("name", etName.getText().toString());
         intent.putExtra("phoneNumber", etNumber.getText().toString());

@@ -12,6 +12,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -32,6 +33,7 @@ import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -41,6 +43,10 @@ import butterknife.ButterKnife;
  */
 
 public class ActivityOTPVerification extends AppCompatActivity implements View.OnClickListener {
+    String trueOTP;
+    boolean hasExceededReceiveTime = true;
+    long lastTime;
+
     final String apiOTP = "/twiliosender.php";
     final String apiURLHelper = "/saveuser.php";
     final String apiURLMigrant = "/savemigrant.php";
@@ -51,6 +57,10 @@ public class ActivityOTPVerification extends AppCompatActivity implements View.O
     Button btnChangeNumber;
     @BindView(R.id.rlRoot)
     RelativeLayout rootLayout;
+    @BindView(R.id.etCode)
+    EditText etCode;
+    @BindView(R.id.btnSendOTPAgain)
+    Button btnSendOtpAgain;
 
     String apiUserRegister;
     String name, phoneNumber, age, gender;
@@ -65,10 +75,11 @@ public class ActivityOTPVerification extends AppCompatActivity implements View.O
         ButterKnife.bind(this);
         btnVerify.setOnClickListener(this);
         btnChangeNumber.setOnClickListener(this);
+        btnSendOtpAgain.setOnClickListener(this);
 
         //Sending the OTP To the mentioned number;
-        //sendOTP();
-
+        lastTime = System.currentTimeMillis();
+        sendOTP();
         Intent intent = getIntent();
         name = intent.getStringExtra("name");
         phoneNumber = intent.getStringExtra("phoneNumber");
@@ -88,7 +99,11 @@ public class ActivityOTPVerification extends AppCompatActivity implements View.O
         switch (v.getId()) {
             case R.id.btnVerify:
                 //Validate the OTP Here
-                registerUser(apiUserRegister);
+                boolean isValid = isOtpValid();
+                if (isValid)
+                    registerUser(apiUserRegister);
+                else
+                    showSnackbar("The OTP is incorrect, please try registering Again");
                 /*
                 Intent intent = new Intent(ActivityOTPVerification.this, ActivityMigrantList.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -100,13 +115,37 @@ public class ActivityOTPVerification extends AppCompatActivity implements View.O
                 intent1.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(intent1);
                 break;
+            case R.id.btnSendOTPAgain:
+                if (lastTime == 0)
+                    sendOTP();
+                else {
+                    long currTime = System.currentTimeMillis();
+                    long gap = (currTime - lastTime) / 1000;
+                    Log.d("mylog", "Gap : " + gap);
+                    if (gap>10) {
+                        lastTime = System.currentTimeMillis();
+                        sendOTP();
+                    }
+                    else
+                        showSnackbar(getResources().getString(R.string.no_otp_patient));
+                }
         }
     }
 
+    private boolean isOtpValid() {
+        Log.d("mylog", "True OTP: " + trueOTP);
+        String otpEntered = etCode.getText().toString();
+        if (otpEntered.isEmpty())
+            return false;
+        else if (!otpEntered.equalsIgnoreCase(trueOTP))
+            return false;
+        else
+            return true;
+    }
+
     private void sendOTP() {
-        String api = apiUserRegister = ApplicationClass.getInstance().getAPIROOT() + apiOTP;
+        String api = ApplicationClass.getInstance().getAPIROOT() + apiOTP;
         final ProgressDialog progressDialog = new ProgressDialog(ActivityOTPVerification.this);
-        progressDialog.setTitle("Please wait");
         progressDialog.setMessage("Sending OTP...");
         progressDialog.setCancelable(false);
         progressDialog.show();
@@ -131,10 +170,10 @@ public class ActivityOTPVerification extends AppCompatActivity implements View.O
         }) {
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
-                long otpCode = generateOTP();
+                trueOTP = generateOTP();
                 HashMap<String, String> params = new HashMap<>();
-                params.put("otp", otpCode + "");
-                params.put("phone_number", phoneNumber);
+                params.put("otp", "Subairoma OTP: " + trueOTP);
+                params.put("phone_number", "+977" + phoneNumber);
                 return params;
             }
         };
@@ -143,8 +182,17 @@ public class ActivityOTPVerification extends AppCompatActivity implements View.O
         queue.add(saveRequest);
     }
 
-    private long generateOTP() {
-        return 1;
+    private String generateOTP() {
+        //Generating and Saving OTP Code in the App
+        long optCodeRaw = new Random().nextLong() & Integer.MAX_VALUE;
+        String otpCode = optCodeRaw + "";
+        otpCode = otpCode.substring(0, 5);
+        SharedPreferences sp = getSharedPreferences(SharedPrefKeys.sharedPrefName, MODE_PRIVATE);
+        SharedPreferences.Editor editor = sp.edit();
+        editor.putString(SharedPrefKeys.otpCode, otpCode);
+        editor.commit();
+
+        return otpCode;
     }
 
     private void registerUser(String api) {

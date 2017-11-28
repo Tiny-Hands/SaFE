@@ -10,7 +10,7 @@
     <string name="finalAnswerVerificationTitle">अघि बढ्नु पहिले</string>
     <string name="finalAnswerVerification">तपाईँले यस सुवैरोमा एपको वैदेशिक रोजगारी तयारी भाग पुरा गर्नुभएको छ । अगाडि बढ्नुभन्दा पहिले तपाईँले दिनुभएका उत्तरहरू परिवर्तन गर्दिन भनेर स्वीकार्नुपर्दछ । यदि तपाईँले कुनै खण्डको उत्तर परिवर्तन गर्नुपरेमा अहिले गर्नुहोला । उत्तरहरू परिवर्तन गर्नुहुन्न भने तल चिनो लगाउनुहोस् ।.</string>
     <string name="finalAnswerButton">म मैले दिएका उत्तरहरू परिवर्तन गर्ने छैन ।</string>
-    <string name="opt_message">We are sending an SMS with a code to you phone number. Please enter it below. It may take upto 5 minutes</string>
+    <string name="opt_message">We are sending an SMS with a code to your phone number. Please enter it below. It may take upto 5 minutes</string>
 
     <!-- Generic -->
     <string name="next">अगाडि बढ्नु</string>
@@ -21,6 +21,11 @@
 
     <!-- Error Dialogs -->
     <string name="error">गलती</string>
+
+    <!-- OTP Activity -->
+    <string name="no_otp_receiption">Didn\'t receive OTP?</string>
+    <string name="no_otp_try_again">Send Code Again</string>
+    <string name="no_otp_patient">Please be patient, You should receive the code in about 10 seconds.</string>
 
     <!-- Country Chooser -->
     <string name="choose_another_country">अर्को देश छनौट गर्नुहोस्</string>
