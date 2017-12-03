@@ -150,8 +150,8 @@ public class ActivityMigrantList extends AppCompatActivity {
                 try {
                     progressDialog.dismiss();
                     boolean firstRun = false;
-                    if (migrantModels == null || migrantModels.size() < 1) firstRun = true;
                     migrantModels = parseResponse(response);
+                    if (migrantModels == null || migrantModels.size() < 1) firstRun = true;
                     //migrantListAdapter.notifyDataSetChanged();
                     if (userType == -1 && firstRun) {
                         DialogCountryChooser dialog = DialogCountryChooser.newInstance();
