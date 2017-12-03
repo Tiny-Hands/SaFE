@@ -346,9 +346,12 @@ public class ActivitySplash extends AppCompatActivity {
                     String name = tempCountry.getString("country_name");
                     int status = tempCountry.getInt("country_status");
                     int blacklist = tempCountry.getInt("country_blacklist");
+                    String order = null;
+                    if (!(tempCountry.get("country_order") == null))
+                        order = tempCountry.getString("country_order");
                     Log.d("mylog", "Country id: " + tempCountry.getString("country_id") + " Country name: " + tempCountry.getString("country_name")
                             + " Status: " + tempCountry.getInt("country_status") + " Blacklist: " + tempCountry.getInt("country_blacklist"));
-                    dbHelper.insertCountry(id, name, status, blacklist);
+                    dbHelper.insertCountry(id, name, status, blacklist, order);
                 }
             }
             incrementCount();

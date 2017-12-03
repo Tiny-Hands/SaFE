@@ -6,7 +6,15 @@ package com.vysh.subairoma.models;
 
 public class CountryModel {
     String countryId, countryName;
-    int countrySatus, countryBlacklist;
+    int countrySatus, countryBlacklist, order;
+
+    public int getOrder() {
+        return order;
+    }
+
+    public void setOrder(int order) {
+        this.order = order;
+    }
 
     public String getCountryId() {
         return countryId;

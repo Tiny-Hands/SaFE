@@ -55,6 +55,8 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/tvOPtMessage"
         android:layout_centerHorizontal="true"
+        android:inputType="number"
+        android:imeOptions="actionDone"
         android:layout_marginEnd="@dimen/default_margin"
         android:layout_marginStart="@dimen/default_margin"
         android:hint="@string/code"

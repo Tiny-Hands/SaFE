@@ -49,6 +49,7 @@ public final class DatabaseTables {
         public static final String country_name = "country_name";
         public static final String country_status = "country_status";
         public static final String country_blacklist = "country_blacklist";
+        public static final String country_order = "country_order";
     }
 
     public static class ImportantContacts{

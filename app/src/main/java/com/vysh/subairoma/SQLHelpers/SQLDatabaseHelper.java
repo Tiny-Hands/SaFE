@@ -66,6 +66,7 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
                     DatabaseTables.CountriesTable.country_id + " TEXT PRIMARY KEY," +
                     DatabaseTables.CountriesTable.country_blacklist + " INTEGER," +
                     DatabaseTables.CountriesTable.country_status + " INTEGER," +
+                    DatabaseTables.CountriesTable.country_order + " INTEGER," +
                     DatabaseTables.CountriesTable.country_name + " TEXT" + ");";
     final String SQL_CREATE_ContactsTable =
             "CREATE TABLE " + DatabaseTables.ImportantContacts.TABLE_NAME + " (" +
@@ -241,13 +242,14 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
         return isError;
     }
 
-    public void insertCountry(String id, String name, int status, int blacklist) {
+    public void insertCountry(String id, String name, int status, int blacklist, String order) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(DatabaseTables.CountriesTable.country_id, id);
         values.put(DatabaseTables.CountriesTable.country_name, name);
         values.put(DatabaseTables.CountriesTable.country_status, status);
         values.put(DatabaseTables.CountriesTable.country_blacklist, blacklist);
+        values.put(DatabaseTables.CountriesTable.country_order, order);
 
         long newRowId = db.insert(DatabaseTables.CountriesTable.TABLE_NAME, null, values);
         Log.d("mylog", "Inserted row ID; " + newRowId);
@@ -256,17 +258,19 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
     public ArrayList<CountryModel> getCountries() {
         SQLiteDatabase db = this.getReadableDatabase();
         ArrayList<CountryModel> countryList = new ArrayList<>();
-        Cursor cursor = db.rawQuery("SELECT * FROM " + DatabaseTables.CountriesTable.TABLE_NAME, null);
+        Cursor cursor = db.rawQuery("SELECT * FROM " + DatabaseTables.CountriesTable.TABLE_NAME + " ORDER BY " + DatabaseTables.CountriesTable.country_order, null);
         while (cursor.moveToNext()) {
             String id = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseTables.CountriesTable.country_id));
             String name = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseTables.CountriesTable.country_name));
             int blacklist = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseTables.CountriesTable.country_blacklist));
             int status = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseTables.CountriesTable.country_status));
+            int order = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseTables.CountriesTable.country_order));
             CountryModel countryModel = new CountryModel();
             countryModel.setCountryId(id);
             countryModel.setCountryName(name);
             countryModel.setCountrySatus(status);
             countryModel.setCountryBlacklist(blacklist);
+            countryModel.setOrder(order);
             countryList.add(countryModel);
         }
         return countryList;
