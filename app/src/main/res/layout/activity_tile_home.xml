@@ -26,22 +26,20 @@
                 android:text="Test User"
                 android:textSize="@dimen/default_title_size" />
 
-            <com.vysh.subairoma.utils.CustomTextView
+           <!-- <com.vysh.subairoma.utils.CustomTextView
                 android:id="@+id/tvGoingTo"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/tvMigrantName"
                 android:text="Going to: "
                 android:textSize="18sp"
-                app:font="gotham_light.ttf" />
+                app:font="gotham_light.ttf" />-->
 
-            <com.vysh.subairoma.utils.CustomTextView
+            <TextView
                 android:id="@+id/tvCountry"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignBottom="@+id/tvGoingTo"
                 android:layout_below="@+id/tvMigrantName"
-                android:layout_toEndOf="@+id/tvGoingTo"
                 android:gravity="bottom"
                 android:text="Some Country"
                 android:textColor="@color/colorPrimaryDark"
