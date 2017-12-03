@@ -140,6 +140,9 @@ public class ActivityRegister extends AppCompatActivity {
                     } else {
                         int userType = jsonRes.getInt("user_type");
                         int id = jsonRes.getInt("user_id");
+
+                        SharedPreferences sharedPreferences = getSharedPreferences(SharedPrefKeys.sharedPrefName, MODE_PRIVATE);
+                        SharedPreferences.Editor editor = sharedPreferences.edit();
                         if (userType == 0) {
                             ApplicationClass.getInstance().setUserId(id);
                             String userName = jsonRes.getString("user_name");
@@ -147,25 +150,31 @@ public class ActivityRegister extends AppCompatActivity {
                             String userSex = jsonRes.getString("user_sex");
                             String age = jsonRes.getString("user_age");
 
+                            //Saving Helper Details and Login Status
                             Log.d("mylog", "Saving: " + userName + userPhone + userSex + age);
-                            SharedPreferences sharedPreferences = getSharedPreferences(SharedPrefKeys.sharedPrefName, MODE_PRIVATE);
-                            SharedPreferences.Editor editor = sharedPreferences.edit();
                             editor.putString(SharedPrefKeys.userName, userName);
                             editor.putString(SharedPrefKeys.userPhone, userPhone);
                             editor.putString(SharedPrefKeys.userSex, userSex);
                             editor.putString(SharedPrefKeys.userAge, age);
                             editor.putString(SharedPrefKeys.userType, "helper");
+                            editor.putInt(SharedPrefKeys.userId, id);
                             editor.commit();
                         } else if (userType == 1) {
                             ApplicationClass.getInstance().setUserId(-1);
                             ApplicationClass.getInstance().setMigrantId(id);
+
+                            //Saving Migrant ID and Login Status
+                            editor.putString(SharedPrefKeys.userType, "migrant");
+                            editor.putInt(SharedPrefKeys.userId, id);
+                            editor.commit();
                         }
+                        //Gets Migrant Details and Saves in DB regardless of User Type
                         getMigrantDetails();
                     }
                     //Getting all the saved responses for the user
                     getAllResponses(userType);
                     Intent intent = new Intent(ActivityRegister.this, ActivityMigrantList.class);
-                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     startActivity(intent);
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -457,19 +466,24 @@ public class ActivityRegister extends AppCompatActivity {
                         showSnackbar(jsonRes.getString("message"));
                     } else {
                         int userType = jsonRes.getInt("user_type");
+                        int uid = jsonRes.getInt("user_id");
+                        SharedPreferences sharedPreferences = getSharedPreferences(SharedPrefKeys.sharedPrefName, MODE_PRIVATE);
+                        SharedPreferences.Editor editor = sharedPreferences.edit();
+
                         if (userType == 1) {
                             ApplicationClass.getInstance().setUserId(-1);
                             ApplicationClass.getInstance().setMigrantId(jsonRes.getInt("migrant_id"));
-                            getMigrantDetails();
+
+                            editor.putString(SharedPrefKeys.userType, "helper");
+                            editor.putInt(SharedPrefKeys.userId, uid);
+                            editor.commit();
                         } else {
-                            ApplicationClass.getInstance().setUserId(jsonRes.getInt("user_id"));
+                            ApplicationClass.getInstance().setUserId(uid);
                             String userName = jsonRes.getString("user_name");
                             String userPhone = jsonRes.getString("user_phone");
                             String userSex = jsonRes.getString("user_sex");
                             String age = jsonRes.getString("user_age");
                             Log.d("mylog", "Saving: " + userName + userPhone + userSex + age);
-                            SharedPreferences sharedPreferences = getSharedPreferences(SharedPrefKeys.sharedPrefName, MODE_PRIVATE);
-                            SharedPreferences.Editor editor = sharedPreferences.edit();
                             editor.putString(SharedPrefKeys.userName, userName);
                             editor.putString(SharedPrefKeys.userPhone, userPhone);
                             editor.putString(SharedPrefKeys.userSex, userSex);
@@ -477,6 +491,8 @@ public class ActivityRegister extends AppCompatActivity {
                             editor.putString(SharedPrefKeys.userType, "helper");
                             editor.commit();
                         }
+                        //Gets Migrant Details and Saves in DB regardless of User Type
+                        getMigrantDetails();
                         //Getting all the saved responses for the user
                         getAllResponses(userType);
                     }
