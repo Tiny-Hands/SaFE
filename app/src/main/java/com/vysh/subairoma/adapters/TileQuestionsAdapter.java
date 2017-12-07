@@ -281,8 +281,7 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
                 Log.d("mylog", "0 Response: " + response);
                 question.setVisibility(View.GONE);
                 checkBox.setVisibility(View.GONE);
-            }
-            if (response.equalsIgnoreCase("true")) {
+            } else if (response.equalsIgnoreCase("true")) {
                 fromSetView = true;
                 checkBox.setChecked(true);
             } else if (response.equalsIgnoreCase("false")) {
@@ -723,7 +722,7 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
             currentClickedPos = getAdapterPosition();
             if (previousClickedPos != currentClickedPos && previousClickedPos != -1) {
                 isExpanded = false;
-                notifyItemChanged(previousClickedPos);
+                //notifyItemChanged(previousClickedPos);
             }
             Log.d("mylog", "Is Expanded: " + isExpanded);
             if (!isExpanded) {
