@@ -26,14 +26,14 @@
                 android:text="Test User"
                 android:textSize="@dimen/default_title_size" />
 
-           <!-- <com.vysh.subairoma.utils.CustomTextView
-                android:id="@+id/tvGoingTo"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/tvMigrantName"
-                android:text="Going to: "
-                android:textSize="18sp"
-                app:font="gotham_light.ttf" />-->
+            <!-- <com.vysh.subairoma.utils.CustomTextView
+                 android:id="@+id/tvGoingTo"
+                 android:layout_width="wrap_content"
+                 android:layout_height="wrap_content"
+                 android:layout_below="@+id/tvMigrantName"
+                 android:text="Going to: "
+                 android:textSize="18sp"
+                 app:font="gotham_light.ttf" />-->
 
             <TextView
                 android:id="@+id/tvCountry"
@@ -44,7 +44,7 @@
                 android:text="Some Country"
                 android:textColor="@color/colorPrimaryDark"
                 android:textSize="18sp"
-                android:textStyle="bold"/>
+                android:textStyle="bold" />
 
             <ImageView
                 android:id="@+id/ivAvatar"
@@ -60,8 +60,8 @@
     <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/toolbar"
-        android:layout_alignParentStart="true">
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/toolbar">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -74,6 +74,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
+                android:layout_marginEnd="@dimen/small_medium_margin"
+                android:layout_marginStart="@dimen/small_medium_margin"
                 android:clipToPadding="false"
                 android:nestedScrollingEnabled="false" />
 

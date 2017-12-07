@@ -2,7 +2,7 @@
 <resources>
     <!-- Component View -->
     <dimen name="card_view_imageview_dimen">72dp</dimen>
-    <dimen name="card_view_tile_radius">8dp</dimen>
+    <dimen name="card_view_tile_radius">6dp</dimen>
     <dimen name="card_view_markers_dimen">24dp</dimen>
     <dimen name="default_button_height">42dp</dimen>
     <dimen name="default_button_width">196dp</dimen>
@@ -17,6 +17,7 @@
     <dimen name="medium_large_margin">12dp</dimen>
     <dimen name="medium_margin">8dp</dimen>
     <dimen name="small_margin">4dp</dimen>
+    <dimen name="small_medium_margin">6dp</dimen>
     <dimen name="card_small_margin">2dp</dimen>
     <dimen name="card_in_padding">8dp</dimen>
     <dimen name="tile_text_margin">6dp</dimen>
