@@ -20,7 +20,7 @@
     <string name="understand">मैले बुझें</string>
 
     <!-- Error Dialogs -->
-    <string name="error">गलती</string>
+    <string name="error">होसियार</string>
 
     <!-- OTP Activity -->
     <string name="no_otp_receiption">Didn\'t receive OTP?</string>
