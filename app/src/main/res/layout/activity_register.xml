@@ -184,7 +184,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/medium_large_margin"
                 android:text="@string/or"
-                app:font="gotham_light.ttf" />
+                app:fonts="gotham_light.ttf" />
 
             <Button
                 android:id="@+id/btnAlreadyRegistered"

@@ -11,7 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="LOGIN"
-        app:font="gotham_bold.ttf" />
+        app:fonts="gotham_bold.ttf" />
 
     <com.vysh.subairoma.utils.CustomTextView
         android:layout_width="match_parent"
@@ -19,7 +19,7 @@
         android:layout_marginBottom="@dimen/medium_margin"
         android:layout_marginTop="@dimen/medium_margin"
         android:text="Enter the number that you registered"
-        app:font="gotham_light.ttf" />
+        app:fonts="gotham_light.ttf" />
 
     <EditText
         android:id="@+id/etInput"

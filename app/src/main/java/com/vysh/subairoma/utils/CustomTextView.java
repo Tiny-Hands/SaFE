@@ -25,7 +25,7 @@ public class CustomTextView extends TextView {
                 attrs,
                 R.styleable.CustomTextView);
 
-        String fontName = attributeArray.getString(R.styleable.CustomTextView_font);
+        String fontName = attributeArray.getString(R.styleable.CustomTextView_fonts);
         Typeface customFont = selectTypeface(context, fontName);
         setTypeface(customFont);
         attributeArray.recycle();

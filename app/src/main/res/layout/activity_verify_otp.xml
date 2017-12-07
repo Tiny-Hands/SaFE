@@ -27,7 +27,7 @@
                 android:layout_centerInParent="true"
                 android:text="VERIFY PHONE"
                 android:textColor="#fff"
-                app:font="gotham_bold.ttf" />
+                app:fonts="gotham_bold.ttf" />
         </RelativeLayout>
     </android.support.v7.widget.Toolbar>
 
@@ -47,7 +47,7 @@
         android:gravity="center"
         android:padding="16dp"
         android:text="@string/opt_message"
-        app:font="gotham_light.ttf" />
+        app:fonts="gotham_light.ttf" />
 
     <EditText
         android:id="@+id/etCode"
@@ -65,7 +65,7 @@
     <com.vysh.subairoma.utils.CustomTextView
         android:layout_marginTop="@dimen/default_margin"
         android:id="@+id/noOtpMsg"
-        app:font="gotham_medium.ttf"
+        app:fonts="gotham_medium.ttf"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/etCode"

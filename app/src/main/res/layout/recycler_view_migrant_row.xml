@@ -34,7 +34,7 @@
                 android:layout_height="wrap_content"
                 android:text="Vishal Shrestha"
                 android:textSize="18sp"
-                app:font="gotham_bold.ttf" />
+                app:fonts="gotham_bold.ttf" />
 
             <TextView
                 android:id="@+id/tvMigrantAgeSex"
