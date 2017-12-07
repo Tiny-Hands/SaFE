@@ -13,6 +13,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.transition.TransitionManager;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -479,7 +480,7 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
 
                         sqlDatabaseHelper.insertIsError(migrantId, key, "true");
                         //Check if question is visible
-                        showErrowDialog(mainIndex);
+                        showErrorDialog(mainIndex);
                         Log.d("mylog", "All variables match, showing view");
                         int mainListIdCompare = questionsList.get(mainIndex).getQuestionId();
                         boolean alreadyVisible = false;
@@ -514,7 +515,7 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
         }
     }
 
-    private void showErrowDialog(int mainIndex) {
+    private void showErrorDialog(int mainIndex) {
         AlertDialog.Builder builder = new AlertDialog.Builder(context, R.style.DialogError);
         builder.setNegativeButton(context.getResources().getString(R.string.understand), new DialogInterface.OnClickListener() {
             @Override
@@ -523,11 +524,38 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
             }
         });
         View errView = LayoutInflater.from(context).inflate(R.layout.dialog_error, null);
-        TextView errDesc = (TextView) errView.findViewById(R.id.tvErrorDescription);
+        TextView errDesc = errView.findViewById(R.id.tvErrorDescription);
         builder.setView(errView);
         builder.setCancelable(false);
         errDesc.setText(questionsList.get(mainIndex).getDescription());
-        builder.show();
+        AlertDialog dialog = builder.show();
+
+        final Button positiveButton = dialog.getButton(AlertDialog.BUTTON_NEGATIVE);
+        LinearLayout.LayoutParams positiveButtonLL = (LinearLayout.LayoutParams) positiveButton.getLayoutParams();
+        positiveButtonLL.width = ViewGroup.LayoutParams.MATCH_PARENT;
+        positiveButton.setLayoutParams(positiveButtonLL);
+    }
+
+    private void showConflictDialog(int index) {
+        final AlertDialog.Builder builder = new AlertDialog.Builder(context, R.style.DialogError);
+        builder.setNegativeButton(context.getResources().getString(R.string.okay), new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+        //builder.setMessage("Conflicting Option");
+        String conf = questionsListDisplay.get(index).getConflictDescription();
+        String confT = questionsListDisplay.get(index).getTitle();
+        Log.d("mylog", "Conflict to display: " + conf + " Title: " + confT);
+        builder.setMessage(conf);
+        builder.setCancelable(false);
+        AlertDialog dialog = builder.show();
+
+        final Button positiveButton = dialog.getButton(AlertDialog.BUTTON_NEGATIVE);
+        LinearLayout.LayoutParams positiveButtonLL = (LinearLayout.LayoutParams) positiveButton.getLayoutParams();
+        positiveButtonLL.width = ViewGroup.LayoutParams.MATCH_PARENT;
+        positiveButton.setLayoutParams(positiveButtonLL);
     }
 
     public class QuestionHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -663,20 +691,7 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
                             }
                             //Show conflict dialog
                             if (!shouldAllowMarking) {
-                                final AlertDialog.Builder builder = new AlertDialog.Builder(context, R.style.DialogError);
-                                builder.setNegativeButton(context.getResources().getString(R.string.okay), new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        dialog.dismiss();
-                                    }
-                                });
-                                //builder.setMessage("Conflicting Option");
-                                String conf = questionsListDisplay.get(getAdapterPosition()).getConflictDescription();
-                                String confT = questionsListDisplay.get(getAdapterPosition()).getTitle();
-                                Log.d("mylog", "Conflict to display: " + conf + " Title: " + confT);
-                                builder.setMessage(conf);
-                                builder.setCancelable(false);
-                                builder.show();
+                                showConflictDialog(getAdapterPosition());
                                 checkbox.setChecked(false);
                                 return;
                             } else {
