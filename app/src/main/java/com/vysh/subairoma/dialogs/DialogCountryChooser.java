@@ -1,8 +1,12 @@
 package com.vysh.subairoma.dialogs;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.support.annotation.LayoutRes;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
@@ -13,6 +17,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import com.vysh.subairoma.ApplicationClass;
 import com.vysh.subairoma.R;
@@ -21,6 +26,7 @@ import com.vysh.subairoma.activities.ActivityTileHome;
 import com.vysh.subairoma.models.CountryModel;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Vishal on 7/12/2017.
@@ -29,7 +35,7 @@ import java.util.ArrayList;
 public class DialogCountryChooser extends DialogFragment {
     Spinner spinner;
     String migName;
-    int status, blacklist;
+    int status, blacklist, importantCount = 0;
 
     public static DialogCountryChooser newInstance() {
         DialogCountryChooser frag = new DialogCountryChooser();
@@ -40,7 +46,7 @@ public class DialogCountryChooser extends DialogFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.dialog_countries_spinner, container, false);
-        spinner = (Spinner) view.findViewById(R.id.spinnerCountries);
+        spinner = view.findViewById(R.id.spinnerCountries);
         return view;
     }
 
@@ -55,8 +61,11 @@ public class DialogCountryChooser extends DialogFragment {
         for (CountryModel country : countries) {
             Log.d("mylog", "Country name: " + country.getCountryName());
             countryNameList.add(country.getCountryName().toUpperCase());
+            if (country.getOrder() >= 1)
+                importantCount++;
         }
-        spinner.setAdapter(new ArrayAdapter<>(view.getContext(), android.R.layout.simple_spinner_dropdown_item, countryNameList));
+        AdapterCountry adapterCountry = new AdapterCountry(getContext(), R.layout.country_spinner_row, countryNameList);
+        spinner.setAdapter(adapterCountry);
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -108,23 +117,23 @@ public class DialogCountryChooser extends DialogFragment {
         mBuilder.setNegativeButton(cname.toUpperCase() + " " +
                         getContext().getResources().getString(R.string.go_regardless),
                 new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                new SQLDatabaseHelper(getContext()).insertResponseTableData(cid, -1, -1,
-                        ApplicationClass.getInstance().getMigrantId(), "mg_destination");
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        new SQLDatabaseHelper(getContext()).insertResponseTableData(cid, -1, -1,
+                                ApplicationClass.getInstance().getMigrantId(), "mg_destination");
 
-                Intent intent = new Intent(getContext(), ActivityTileHome.class);
-                intent.putExtra("countryId", cid);
-                intent.putExtra("migrantName", migName);
-                intent.putExtra("countryName", cname);
-                intent.putExtra("countryStatus", status);
-                intent.putExtra("countryBlacklist", blacklist);
-                dismiss();
-                if (ApplicationClass.getInstance().getUserId() == -1)
-                    intent = intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                getContext().startActivity(intent);
-            }
-        });
+                        Intent intent = new Intent(getContext(), ActivityTileHome.class);
+                        intent.putExtra("countryId", cid);
+                        intent.putExtra("migrantName", migName);
+                        intent.putExtra("countryName", cname);
+                        intent.putExtra("countryStatus", status);
+                        intent.putExtra("countryBlacklist", blacklist);
+                        dismiss();
+                        if (ApplicationClass.getInstance().getUserId() == -1)
+                            intent = intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        getContext().startActivity(intent);
+                    }
+                });
         mBuilder.setPositiveButton(getContext().getResources().getString(R.string.choose_another_country), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
@@ -136,5 +145,26 @@ public class DialogCountryChooser extends DialogFragment {
 
     public void setMigrantName(String migrantName) {
         migName = migrantName;
+    }
+
+    private class AdapterCountry extends ArrayAdapter<String> {
+        ArrayList<String> countryList;
+
+        public AdapterCountry(Context context, int resource, ArrayList objects) {
+            super(context, resource, objects);
+            countryList = objects;
+        }
+
+        @Override
+        public View getDropDownView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+            View textView = LayoutInflater.from(getContext()).inflate(R.layout.country_spinner_row, parent, false);
+            TextView tv = textView.findViewById(R.id.tvCountry);
+            if (position != 0 && position <= importantCount) {
+                textView.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+                tv.setTextColor(Color.WHITE);
+            }
+            tv.setText(countryList.get(position));
+            return textView;
+        }
     }
 }

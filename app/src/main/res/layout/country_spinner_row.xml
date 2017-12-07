@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/tvCountry"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:paddingBottom="@dimen/medium_margin"
+    android:paddingLeft="@dimen/small_medium_margin"
+    android:paddingRight="@dimen/small_medium_margin"
+    android:paddingTop="@dimen/medium_margin"
+    android:textColor="@color/darkGrey"
+    android:textSize="@dimen/country_spinner_text_size" />
