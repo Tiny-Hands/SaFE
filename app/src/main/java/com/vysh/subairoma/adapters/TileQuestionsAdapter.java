@@ -21,6 +21,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -596,6 +597,7 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
                 }
             });
             listViewOptions = (ListView) itemView.findViewById(R.id.listViewMultipleOptions);
+            listViewOptions.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE);
             listViewOptions.setOnTouchListener(new ListView.OnTouchListener() {
                 @Override
                 public boolean onTouch(View v, MotionEvent event) {
@@ -849,15 +851,15 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
         @Override
         public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
             View rowView = convertView;
-            if (rowView == null) {
-                LayoutInflater inflater = LayoutInflater.from(mContext);
-                rowView = inflater.inflate(R.layout.listview_options_row, parent, false);
-                //Configure viewHolder
-                ViewHolder viewHolder = new ViewHolder();
-                viewHolder.text = (TextView) rowView.findViewById(R.id.tvListViewOptions);
-                viewHolder.checkBox = (CheckBox) rowView.findViewById(R.id.cbListViewOptions);
-                rowView.setTag(viewHolder);
-            }// fill data
+            //if (rowView == null) {
+            LayoutInflater inflater = LayoutInflater.from(mContext);
+            rowView = inflater.inflate(R.layout.listview_options_row, parent, false);
+            //Configure viewHolder
+            ViewHolder viewHolder = new ViewHolder();
+            viewHolder.text = (TextView) rowView.findViewById(R.id.tvListViewOptions);
+            viewHolder.checkBox = (CheckBox) rowView.findViewById(R.id.cbListViewOptions);
+            rowView.setTag(viewHolder);
+            //}// fill data
             ViewHolder holder = (ViewHolder) rowView.getTag();
             String s = options.get(position);
             holder.text.setText(s);
