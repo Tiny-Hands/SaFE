@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.GridLayoutManager;
@@ -64,6 +65,8 @@ public class ActivityTileHome extends AppCompatActivity {
     CardView btnImportantContacts;
     @BindView(R.id.ivAvatar)
     ImageView ivAvatar;
+    @BindView(R.id.nsv)
+    NestedScrollView nsv;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -199,8 +202,11 @@ public class ActivityTileHome extends AppCompatActivity {
             tiles.add(i, tilesGAS.get(i));
         }
         finalSection = true;
+        btnNext.setVisibility(View.GONE);
         tileAdapter.notifyDataSetChanged();
-        rvTiles.scrollToPosition(tiles.size() - 1);
+        //float y = rvTiles.getChildAt(0).getY();
+        rvTiles.smoothScrollToPosition(0);
+        nsv.scrollTo(0,0);
     }
 
     private void getAllResponses() {
@@ -223,9 +229,9 @@ public class ActivityTileHome extends AppCompatActivity {
             @Override
             public void onErrorResponse(VolleyError error) {
                 String err = error.toString();
-                if (!err.isEmpty() && err.contains("NoConnection")){
+                if (!err.isEmpty() && err.contains("NoConnection")) {
                     //showSnackbar("Response cannot be saved at the moment, please check your Intenet connection.");
-                    Log.d("mylog","Response cannot be saved at the moment, please check your Intenet connection.");
+                    Log.d("mylog", "Response cannot be saved at the moment, please check your Intenet connection.");
                 }
             }
         }) {
