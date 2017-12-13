@@ -87,7 +87,6 @@
                 android:layout_height="192dp"
                 android:layout_below="@+id/tvQuestion"
                 android:layout_marginTop="12dp"
-                android:nestedScrollingEnabled="true"
                 android:visibility="gone" />
 
             <CheckBox

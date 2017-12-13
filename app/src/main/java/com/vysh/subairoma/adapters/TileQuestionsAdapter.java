@@ -215,7 +215,7 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
             holder.checkbox.setVisibility(GONE);
             holder.etResponse.setVisibility(View.GONE);
             holder.spinnerOptions.setVisibility(View.GONE);
-            holder.listViewOptions.setVisibility(View.VISIBLE);
+            //holder.listViewOptions.setVisibility(View.VISIBLE);
             multiOptions = question.getOptions();
             OptionsListViewAdapter adapter = new OptionsListViewAdapter(context, multiOptions, position);
             holder.listViewOptions.setAdapter(adapter);
@@ -753,7 +753,10 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
             }
             details.setVisibility(GONE);
             helpLayout.setVisibility(View.GONE);
-
+            if (listViewOptions.getVisibility() == View.VISIBLE)
+                listViewOptions.setVisibility(GONE);
+            if (question.getVisibility() == View.VISIBLE)
+                question.setVisibility(GONE);
             isExpanded = false;
         }
 
