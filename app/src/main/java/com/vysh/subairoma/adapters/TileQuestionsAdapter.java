@@ -759,6 +759,8 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
                 listViewOptions.setVisibility(GONE);
             if (question.getVisibility() == View.VISIBLE)
                 question.setVisibility(GONE);
+            if (checkbox.getVisibility() == View.VISIBLE)
+                checkbox.setVisibility(GONE);
             isExpanded = false;
         }
 
