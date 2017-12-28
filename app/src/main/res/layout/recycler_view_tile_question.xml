@@ -40,7 +40,7 @@
             android:layout_below="@+id/tvStep"
             android:layout_marginTop="8dp">
 
-            <TextView
+            <com.wordpress.priyankvex.smarttextview.SmartTextView
                 android:id="@+id/tvDetail"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

@@ -12,4 +12,6 @@
     <color name="colorErrorFaded">#32ff0000</color>
     <color name="colorDisabled">#7dd1d1d1</color>
     <color name="colorDisabledLight">#5ad7d7d7</color>
+    <color name="colorUrlLink">#2992dc</color>
+    <color name="colorPhoneNumber">#3d63f2</color>
 </resources>

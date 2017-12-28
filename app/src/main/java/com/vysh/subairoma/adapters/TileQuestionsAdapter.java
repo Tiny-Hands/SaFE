@@ -42,6 +42,8 @@ import com.vysh.subairoma.ApplicationClass;
 import com.vysh.subairoma.R;
 import com.vysh.subairoma.SQLHelpers.SQLDatabaseHelper;
 import com.vysh.subairoma.models.TileQuestionsModel;
+import com.wordpress.priyankvex.smarttextview.SmartTextCallback;
+import com.wordpress.priyankvex.smarttextview.SmartTextView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -559,8 +561,9 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
         positiveButton.setLayoutParams(positiveButtonLL);
     }
 
-    public class QuestionHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        TextView title, details, question;
+    public class QuestionHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
+        TextView title, question;
+        SmartTextView details;
         CheckBox checkbox;
         EditText etResponse;
         ImageView ivError;
@@ -578,7 +581,11 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
             disabledView = itemView.findViewById(R.id.viewDisabled);
             rootLayout = (RelativeLayout) itemView.findViewById(R.id.rlRoot);
             ivError = (ImageView) itemView.findViewById(R.id.questionMarker);
-            details = (TextView) itemView.findViewById(R.id.tvDetail);
+            details = itemView.findViewById(R.id.tvDetail);
+            //Setting color for phone numbers and weblinks
+            details.setUrlColorCode("#2992dc");
+            details.setPhoneNumberColorCode("#3d63f2");
+
             details.setVisibility(GONE);
             question = (TextView) itemView.findViewById(R.id.tvQuestion);
             checkbox = (CheckBox) itemView.findViewById(R.id.cbResponse);
