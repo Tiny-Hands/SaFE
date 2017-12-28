@@ -33,6 +33,15 @@
             android:src="@drawable/ic_redflag"
             android:visibility="invisible" />
 
+        <ImageView
+            android:id="@+id/questionDone"
+            android:layout_width="@dimen/redflag_dimen"
+            android:layout_height="@dimen/card_view_markers_dimen"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="4dp"
+            android:src="@drawable/ic_checkmark"
+            android:visibility="invisible" />
+
         <RelativeLayout
             android:id="@+id/rlResponse"
             android:layout_width="match_parent"

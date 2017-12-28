@@ -234,7 +234,7 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
             holder.details.setVisibility(GONE);
         }
         setValue(holder.checkbox, holder.etResponse, holder.spinnerOptions,
-                holder.question, holder.ivError, holder.listViewOptions, holder.rootLayout, position);
+                holder.question, holder.ivError, holder.ivDone, holder.listViewOptions, holder.rootLayout, position);
         if (disabled) {
             holder.disabledView.setVisibility(View.VISIBLE);
             holder.disabledView.setOnClickListener(new View.OnClickListener() {
@@ -262,29 +262,31 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
     }
 
     private void setValue(CheckBox checkBox, EditText etResponse, Spinner spinner, TextView question,
-                          ImageView ivError, ListView lvOptions, RelativeLayout rootLayout, int position) {
+                          ImageView ivError, ImageView ivDone, ListView lvOptions, RelativeLayout rootLayout, int position) {
         //For showing/hiding error on condition variable change
         Log.d("mylog", "Setting value now");
         boolean isError = sqlDatabaseHelper.getIsError(migrantId, questionsListDisplay.get(position).getVariable());
         Log.d("mylog", "Should show error for: " + questionsListDisplay.get(position).getVariable() + " : " + isError);
+        String variable = questionsListDisplay.get(position).getVariable();
+        Log.d("mylog", "Getting response for Migrant: " + migrantId + " Variable: " + variable);
+        int responseType = questionsListDisplay.get(position).getResponseType();
+        String response = sqlDatabaseHelper.getResponse(migrantId, variable);
+        Log.d("mylog", "Response is: " + response);
         if (isError) {
             ivError.setVisibility(View.VISIBLE);
             rootLayout.setBackgroundColor(context.getResources().getColor(R.color.colorErrorFaded));
         } else {
+            if (!response.isEmpty())
+                ivDone.setVisibility(View.VISIBLE);
+            else
+                ivDone.setVisibility(View.GONE);
             ivError.setVisibility(View.INVISIBLE);
             rootLayout.setBackgroundColor(Color.TRANSPARENT);
         }
 
-        String variable = questionsListDisplay.get(position).getVariable();
-        Log.d("mylog", "Getting response for Migrant: " + migrantId + " Variable: " + variable);
-        String response = sqlDatabaseHelper.getResponse(migrantId, variable);
-        Log.d("mylog", "Response is: " + response);
-        int responseType = questionsListDisplay.get(position).getResponseType();
         if (responseType == 0) {
             if (response == null || response.isEmpty()) {
                 Log.d("mylog", "0 Response: " + response);
-                question.setVisibility(View.GONE);
-                checkBox.setVisibility(View.GONE);
             } else if (response.equalsIgnoreCase("true")) {
                 fromSetView = true;
                 checkBox.setChecked(true);
@@ -292,6 +294,9 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
                 fromSetView = true;
                 checkBox.setChecked(false);
             }
+            //Hiding visibility No Matter what as If checked showing Checkmark
+            question.setVisibility(View.GONE);
+            checkBox.setVisibility(View.GONE);
         } else if (responseType == 1) {
             if (response == null || response.isEmpty()) {
                 Log.d("mylog", "1 Response: " + response);
@@ -561,12 +566,12 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
         positiveButton.setLayoutParams(positiveButtonLL);
     }
 
-    public class QuestionHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
+    public class QuestionHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         TextView title, question;
         SmartTextView details;
         CheckBox checkbox;
         EditText etResponse;
-        ImageView ivError;
+        ImageView ivError, ivDone;
         Spinner spinnerOptions;
         ListView listViewOptions;
         Button btnCall, btnHelp, btnVideo;
@@ -581,6 +586,7 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
             disabledView = itemView.findViewById(R.id.viewDisabled);
             rootLayout = (RelativeLayout) itemView.findViewById(R.id.rlRoot);
             ivError = (ImageView) itemView.findViewById(R.id.questionMarker);
+            ivDone = itemView.findViewById(R.id.questionDone);
             details = itemView.findViewById(R.id.tvDetail);
             //Setting color for phone numbers and weblinks
             details.setUrlColorCode("#2992dc");
