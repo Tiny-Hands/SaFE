@@ -52,7 +52,7 @@ public final class DatabaseTables {
         public static final String country_order = "country_order";
     }
 
-    public static class ImportantContacts{
+    public static class ImportantContacts {
         public static final String TABLE_NAME = "tbl_contacts";
         public static final String country_id = "country_id";
         public static final String nepal_embassy = "nepal_embassy";
@@ -76,5 +76,23 @@ public final class DatabaseTables {
         public static final String age = "migrant_age";
         public static final String sex = "migrant_sex";
         public static final String phone_number = "migrant_phone";
+    }
+
+    public static class FeedbackQuestionsTable {
+        public static final String TABLE_NAME = "tbl_feedbackquestions";
+        public static final String question_id = "question_id";
+        public static final String question_title = "question_title";
+        public static final String question_type = "question_type";
+        public static final String question_group = "question_group";
+        public static final String question_variable = "question_variable";
+    }
+
+    public static class FeedbackQuestionsResponseTable {
+        public static final String TABLE_NAME = "tbl_feedbackresponse";
+        public static final String response_id = "response_id";
+        public static final String question_id = "question_id";
+        public static final String migrant_id = "migrant_id";
+        public static final String response = "response";
+        public static final String response_feedback = "response_feedbacl";
     }
 }

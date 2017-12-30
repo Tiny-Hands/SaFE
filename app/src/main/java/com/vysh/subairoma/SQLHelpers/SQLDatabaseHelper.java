@@ -11,6 +11,7 @@ import android.util.Log;
 
 import com.vysh.subairoma.ApplicationClass;
 import com.vysh.subairoma.models.CountryModel;
+import com.vysh.subairoma.models.FeedbackQuestionModel;
 import com.vysh.subairoma.models.MigrantModel;
 import com.vysh.subairoma.models.TileQuestionsModel;
 import com.vysh.subairoma.models.TilesModel;
@@ -85,6 +86,20 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
                     DatabaseTables.MigrantsTable.phone_number + " TEXT," +
                     " UNIQUE (" + DatabaseTables.MigrantsTable.migrant_id +
                     ", " + DatabaseTables.MigrantsTable.user_id + "));";
+    final String SQL_CREATE_FeedbackQuestionTable =
+            "CREATE TABLE " + DatabaseTables.FeedbackQuestionsTable.TABLE_NAME + " (" +
+                    DatabaseTables.FeedbackQuestionsTable.question_id + " INTEGER PRIMARY KEY," +
+                    DatabaseTables.FeedbackQuestionsTable.question_title + " TEXT," +
+                    DatabaseTables.FeedbackQuestionsTable.question_variable + " TEXT," +
+                    DatabaseTables.FeedbackQuestionsTable.question_type + " TEXT," +
+                    DatabaseTables.FeedbackQuestionsTable.question_group + " TEXT" + ");";
+    final String SQL_CREATE_FeedbackQuestionResponseTable =
+            "CREATE TABLE " + DatabaseTables.FeedbackQuestionsResponseTable.TABLE_NAME + " (" +
+                    DatabaseTables.FeedbackQuestionsResponseTable.response_id + " INTEGER PRIMARY KEY," +
+                    DatabaseTables.FeedbackQuestionsResponseTable.question_id + " INTEGER," +
+                    DatabaseTables.FeedbackQuestionsResponseTable.migrant_id + " INTEGER," +
+                    DatabaseTables.FeedbackQuestionsResponseTable.response + " TEXT," +
+                    DatabaseTables.FeedbackQuestionsResponseTable.response_feedback + " TEXT" + ");";
 
     public SQLDatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -101,6 +116,8 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
         db.execSQL(SQL_CREATE_CountriesTable);
         db.execSQL(SQL_CREATE_MigrantsTable);
         db.execSQL(SQL_CREATE_ContactsTable);
+        db.execSQL(SQL_CREATE_FeedbackQuestionTable);
+        db.execSQL(SQL_CREATE_FeedbackQuestionResponseTable);
     }
 
     @Override
@@ -362,6 +379,61 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
         Log.d("mylog", "Inserted row ID; " + newRowId);
     }
 
+    public void insertFeedbackQuestions(int qid, String qTitle, int questionType, String questionVariable, int questionGroup) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(DatabaseTables.FeedbackQuestionsTable.question_id, qid);
+        values.put(DatabaseTables.FeedbackQuestionsTable.question_title, qTitle);
+        values.put(DatabaseTables.FeedbackQuestionsTable.question_variable, questionVariable);
+
+        if (questionType != -1)
+            values.put(DatabaseTables.FeedbackQuestionsTable.question_type, questionType);
+        else
+            values.putNull(DatabaseTables.FeedbackQuestionsTable.question_type);
+
+        if (questionGroup != -1)
+            values.put(DatabaseTables.FeedbackQuestionsTable.question_group, questionGroup);
+        else
+            values.putNull(DatabaseTables.FeedbackQuestionsTable.question_group);
+
+        long newRowId = db.insert(DatabaseTables.FeedbackQuestionsTable.TABLE_NAME, null, values);
+        Log.d("mylog", "Inserted Feedback row ID; " + newRowId);
+    }
+
+    public ArrayList<FeedbackQuestionModel> getFeedbackQuestions() {
+        SQLiteDatabase db = this.getReadableDatabase();
+        ArrayList<FeedbackQuestionModel> feedbackQuestions = new ArrayList<>();
+        //SELECT * FROM `feedback_questions_table` ORDER BY question_group, question_type DESC
+        String statement = "SELECT * FROM " + DatabaseTables.FeedbackQuestionsTable.TABLE_NAME + " ORDER BY "
+                + DatabaseTables.FeedbackQuestionsTable.question_group + ", " + DatabaseTables.FeedbackQuestionsTable.question_type + " DESC";
+        Cursor cursor = db.rawQuery(statement, null);
+        while (cursor.moveToNext()) {
+            int id = cursor.getInt(cursor.getColumnIndex(DatabaseTables.FeedbackQuestionsTable.question_id));
+
+            int qTypeIndex = cursor.getColumnIndex(DatabaseTables.FeedbackQuestionsTable.question_type);
+            int qType = -1;
+            if (!cursor.isNull(qTypeIndex))
+                qType = cursor.getInt(qTypeIndex);
+
+            int qGroupIndex = cursor.getColumnIndex(DatabaseTables.FeedbackQuestionsTable.question_group);
+            int qGroup = -1;
+            if (!cursor.isNull(qGroupIndex))
+                qGroup = cursor.getInt(qGroupIndex);
+
+            String qTitle = cursor.getString(cursor.getColumnIndex(DatabaseTables.FeedbackQuestionsTable.question_title));
+            String qVar = cursor.getString(cursor.getColumnIndex(DatabaseTables.FeedbackQuestionsTable.question_variable));
+
+            FeedbackQuestionModel tempModel = new FeedbackQuestionModel();
+            tempModel.setQuestionId(id);
+            tempModel.setQuestionGroup(qGroup);
+            tempModel.setQuestionTitle(qTitle);
+            tempModel.setQuestionType(qType);
+            tempModel.setQuestionVariable(qVar);
+            feedbackQuestions.add(tempModel);
+        }
+        return feedbackQuestions;
+    }
+
     public ArrayList<TileQuestionsModel> getQuestions(int tileId) {
         //Log.d("mylog", "Geting questions for tileId: " + tileId);
         SQLiteDatabase db = this.getReadableDatabase();
@@ -380,6 +452,7 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
             int responseType = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseTables.QuestionsTable.response_type));
             String variable = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseTables.QuestionsTable.question_variable));
             int gotTileId = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseTables.QuestionsTable.tile_id));
+
             TileQuestionsModel questionModel = new TileQuestionsModel();
 
             //IF RESPONSE TYPE OTHER THEN 1, GET OPTIONS FROM SERVER AND POPULATE OPTIONS IN QUESTION MODEL

@@ -36,6 +36,7 @@ public class ActivitySplash extends AppCompatActivity {
     private final String optionsAPI = "/getalloptions.php";
     private final String countiesAPI = "/getcountries.php";
     private final String importantContactsAPI = "/getimportantcontacts.php";
+    private final String feedbackQuestions = "/getfeedbackquestions.php";
     private int savedCount = 0;
     private long startTime;
     private long sleepTime;
@@ -72,7 +73,7 @@ public class ActivitySplash extends AppCompatActivity {
     }
 
     private void getAllData() {
-        if (sp.getInt(SharedPrefKeys.savedTableCount, 0) != 5) {
+        if (sp.getInt(SharedPrefKeys.savedTableCount, 0) != 6) {
             Log.d("mylog", "Starting save");
             dbHelper = new SQLDatabaseHelper(ActivitySplash.this);
             dbHelper.getWritableDatabase();
@@ -95,6 +96,10 @@ public class ActivitySplash extends AppCompatActivity {
             if (!sp.getBoolean(SharedPrefKeys.savedContacts, false)) {
                 Log.d("mylog", "Getting contacts");
                 getContacts();
+            } else incrementCount();
+            if (!sp.getBoolean(SharedPrefKeys.savedFeedbackQuestions, false)) {
+                Log.d("mylog", "Getting feedback questions");
+                getFeedbackQuestions();
             } else incrementCount();
         } else {
             Log.d("mylog", "Saved already, starting");
@@ -125,31 +130,6 @@ public class ActivitySplash extends AppCompatActivity {
         });
         RequestQueue queue = Volley.newRequestQueue(ActivitySplash.this);
         queue.add(getRequest);
-    }
-
-    private void parseAndSaveContacts(String response) {
-        try {
-            JSONObject jsonContacts = new JSONObject(response);
-            boolean error = jsonContacts.getBoolean("error");
-            if (error) {
-                Log.d("mylog", "Error getting contacts: " + response);
-            } else {
-                JSONArray contactsArray = jsonContacts.getJSONArray("contacts");
-                for (int i = 0; i < contactsArray.length(); i++) {
-                    JSONObject contactsObject = contactsArray.getJSONObject(i);
-                    String cid = contactsObject.getString("country_id");
-                    String nepalEmbassy = contactsObject.getString("nepal_embassy");
-                    String contact1 = contactsObject.getString("contact1");
-                    String contact2 = contactsObject.getString("contact2");
-                    String contact3 = contactsObject.getString("contact3");
-                    Log.d("mylog", cid);
-                    dbHelper.insertImportantContacts(cid, nepalEmbassy, contact1, contact2, contact3);
-                }
-                incrementCount();
-            }
-        } catch (JSONException e) {
-            Log.d("mylog", "Error parsing contacts: " + e.toString());
-        }
     }
 
     private void getTiles() {
@@ -240,18 +220,91 @@ public class ActivitySplash extends AppCompatActivity {
         queue.add(getRequest);
     }
 
-    private synchronized void checkSleep() {
-        if (savedCount == 4) {
-            long currTime = System.currentTimeMillis();
-            sleepTime = currTime - startTime;
-            Log.d("mylog", "Count is 4, Sleep Time: " + sleepTime);
-            if (sleepTime > 2000) {
-                sleepTime = 0;
-                sleepThread.start();
-            } else {
-                sleepTime = 2000 - sleepTime;
-                sleepThread.start();
+    public void getFeedbackQuestions() {
+        String api = ApplicationClass.getInstance().getAPIROOT() + feedbackQuestions;
+        StringRequest getRequest = new StringRequest(Request.Method.GET, api, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                //SAVE RESPONSE IN LOCAL DB
+                parseAndSaveFeedback(response);
+                Log.d("mylog", "Got feedback: " + response);
+                SharedPreferences.Editor editor = sp.edit();
+                editor.putBoolean(SharedPrefKeys.savedFeedbackQuestions, true);
+                editor.commit();
             }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.d("mylog", "Error getting countries: " + error.toString());
+            }
+        });
+        RequestQueue queue = Volley.newRequestQueue(ActivitySplash.this);
+        queue.add(getRequest);
+    }
+
+    private void parseAndSaveFeedback(String response) {
+        try {
+            JSONObject jsonQuestions = new JSONObject(response);
+            boolean error = jsonQuestions.getBoolean("error");
+            if (error) {
+                Log.d("mylog", "Error getting contacts: " + response);
+            } else {
+                JSONArray questionArray = jsonQuestions.getJSONArray("feedback_questions");
+                for (int i = 0; i < questionArray.length(); i++) {
+                    JSONObject questionObject = questionArray.getJSONObject(i);
+
+                    String qidString = questionObject.getString("question_id");
+                    int qid = -1;
+                    if (!qidString.equalsIgnoreCase("null")) {
+                        qid = Integer.parseInt(qidString);
+                    }
+
+                    String qTitle = questionObject.getString("question_title");
+
+                    int qType = -1;
+                    String questionType = questionObject.getString("question_type");
+                    if (!questionType.equalsIgnoreCase("null"))
+                        qType = Integer.parseInt(questionType);
+
+                    String questionVariable = questionObject.getString("question_variable");
+
+                    int qGroup = -1;
+                    String questionGroup = questionObject.getString("question_group");
+                    if (!questionGroup.equalsIgnoreCase("null"))
+                        qGroup = Integer.parseInt(questionGroup);
+
+                    Log.d("mylog", "Feedback qid: " + qid);
+                    dbHelper.insertFeedbackQuestions(qid, qTitle, qType, questionVariable, qGroup);
+                }
+                incrementCount();
+            }
+        } catch (JSONException e) {
+            Log.d("mylog", "Error parsing feedback questions: " + e.toString());
+        }
+    }
+
+    private void parseAndSaveContacts(String response) {
+        try {
+            JSONObject jsonContacts = new JSONObject(response);
+            boolean error = jsonContacts.getBoolean("error");
+            if (error) {
+                Log.d("mylog", "Error getting contacts: " + response);
+            } else {
+                JSONArray contactsArray = jsonContacts.getJSONArray("contacts");
+                for (int i = 0; i < contactsArray.length(); i++) {
+                    JSONObject contactsObject = contactsArray.getJSONObject(i);
+                    String cid = contactsObject.getString("country_id");
+                    String nepalEmbassy = contactsObject.getString("nepal_embassy");
+                    String contact1 = contactsObject.getString("contact1");
+                    String contact2 = contactsObject.getString("contact2");
+                    String contact3 = contactsObject.getString("contact3");
+                    Log.d("mylog", cid);
+                    dbHelper.insertImportantContacts(cid, nepalEmbassy, contact1, contact2, contact3);
+                }
+                incrementCount();
+            }
+        } catch (JSONException e) {
+            Log.d("mylog", "Error parsing contacts: " + e.toString());
         }
     }
 
@@ -360,13 +413,28 @@ public class ActivitySplash extends AppCompatActivity {
         }
     }
 
+    private synchronized void checkSleep() {
+        if (savedCount == 6) {
+            long currTime = System.currentTimeMillis();
+            sleepTime = currTime - startTime;
+            Log.d("mylog", "Count is 4, Sleep Time: " + sleepTime);
+            if (sleepTime > 2000) {
+                sleepTime = 0;
+                sleepThread.start();
+            } else {
+                sleepTime = 2000 - sleepTime;
+                sleepThread.start();
+            }
+        }
+    }
+
     public synchronized void incrementCount() {
         savedCount++;
         Log.d("mylog", "Incremented Count: " + savedCount);
         SharedPreferences.Editor editor = sp.edit();
         editor.putInt("savedcount", savedCount);
         editor.commit();
-        if (savedCount == 4) {
+        if (savedCount == 6) {
             checkSleep();
         }
     }

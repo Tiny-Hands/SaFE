@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+    <!-- Section 1 -->
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/tvQtitle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_margin="@dimen/medium_margin"
+            android:text="This app redirecteunsafe situation" />
+
+        <android.support.v7.widget.AppCompatCheckBox
+            android:id="@+id/cbQ"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+
+    <ListView
+        android:id="@+id/listViewMultipleOptions"
+        android:layout_width="match_parent"
+        android:layout_height="192dp"
+        android:layout_below="@+id/tvQuestion"
+        android:layout_marginTop="12dp"
+        android:visibility="gone" />
+</LinearLayout>

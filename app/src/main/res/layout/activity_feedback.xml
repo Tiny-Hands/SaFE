@@ -47,25 +47,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="2dp"
                 android:background="@color/darkGrey" />
-            <!-- Section 1 -->
-            <TextView
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/rvQuestions"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_margin="@dimen/medium_margin"
-                android:text="This app redirected me from potentially unsafe situation" />
-
-            <android.support.v7.widget.AppCompatCheckBox
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Decided not to go overseas" />
-
-            <EditText
-                android:id="@+id/etQestionResponse"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="@dimen/medium_margin"
-                android:background="@drawable/bg_edittext" />
-            <!-- Section 1 Complete -->
+                android:layout_height="wrap_content"/>
         </LinearLayout>
     </android.support.v7.widget.CardView>
 </LinearLayout>
