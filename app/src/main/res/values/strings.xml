@@ -19,6 +19,9 @@
     <string name="okay">ठीक छ</string>
     <string name="understand">मैले बुझें</string>
 
+    <!-- Feedback -->
+    <string name="feedback_trial">How did this section of the app help you?</string>
+
     <!-- Error Dialogs -->
     <string name="error">होसियार</string>
 

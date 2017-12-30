@@ -1,7 +1,5 @@
 package com.vysh.subairoma.models;
 
-import android.util.Log;
-
 import java.util.ArrayList;
 
 /**

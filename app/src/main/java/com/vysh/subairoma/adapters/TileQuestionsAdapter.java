@@ -808,13 +808,32 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
                     Toast.makeText(context, "Call helpline", Toast.LENGTH_SHORT).show();
                     break;
                 case R.id.btnHelp:
-                    Toast.makeText(context, "Help Link or Help Text", Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(context, "Help Link or Help Text", Toast.LENGTH_SHORT).show();
+                    showSupportDialog();
                     break;
                 case R.id.btnVideo:
                     Toast.makeText(context, "Open Video Link", Toast.LENGTH_SHORT).show();
                     break;
             }
         }
+    }
+
+    private void showSupportDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setPositiveButton(context.getResources().getString(R.string.okay), new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+        View supportView = LayoutInflater.from(context).inflate(R.layout.dialog_questionfeedback, null);
+        builder.setView(supportView);
+        AlertDialog dialog = builder.show();
+
+        final Button positiveButton = dialog.getButton(AlertDialog.BUTTON_POSITIVE);
+        LinearLayout.LayoutParams positiveButtonLL = (LinearLayout.LayoutParams) positiveButton.getLayoutParams();
+        positiveButtonLL.width = ViewGroup.LayoutParams.MATCH_PARENT;
+        positiveButton.setLayoutParams(positiveButtonLL);
     }
 
     private boolean getConflictingVariable(String condition) {

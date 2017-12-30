@@ -25,9 +25,13 @@
         android:id="@+id/etInput"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/default_margin"
+        android:background="@drawable/bg_edittext"
         android:hint="Phone Number"
         android:imeOptions="actionDone"
         android:inputType="number"
-        android:maxLength="10" />
+        android:maxLength="10"
+        android:padding="@dimen/small_medium_margin"
+        android:textSize="16sp" />
 
 </LinearLayout>
