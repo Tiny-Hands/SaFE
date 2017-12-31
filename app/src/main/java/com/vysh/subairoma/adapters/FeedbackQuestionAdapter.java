@@ -3,6 +3,7 @@ package com.vysh.subairoma.adapters;
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.util.TypedValue;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,7 +12,9 @@ import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.vysh.subairoma.ApplicationClass;
 import com.vysh.subairoma.R;
+import com.vysh.subairoma.SQLHelpers.SQLDatabaseHelper;
 import com.vysh.subairoma.models.FeedbackQuestionModel;
 
 import java.util.ArrayList;
@@ -22,13 +25,15 @@ import java.util.zip.Inflater;
  */
 
 public class FeedbackQuestionAdapter extends RecyclerView.Adapter<FeedbackQuestionAdapter.FeedbackHolder> {
-
+    final int migrantId = ApplicationClass.getInstance().getMigrantId();
     Context mContext;
     ArrayList<FeedbackQuestionModel> feedbackQuestionModels;
+    SQLDatabaseHelper sqlDatabaseHelper;
 
     public FeedbackQuestionAdapter(Context context, ArrayList<FeedbackQuestionModel> feedbackQuestionModels) {
         this.feedbackQuestionModels = feedbackQuestionModels;
         mContext = context;
+        sqlDatabaseHelper = new SQLDatabaseHelper(mContext);
     }
 
     @Override
@@ -40,7 +45,7 @@ public class FeedbackQuestionAdapter extends RecyclerView.Adapter<FeedbackQuesti
 
     @Override
     public void onBindViewHolder(final FeedbackHolder holder, int position) {
-        FeedbackQuestionModel tempModel = feedbackQuestionModels.get(position);
+        final FeedbackQuestionModel tempModel = feedbackQuestionModels.get(position);
         holder.tvMainText.setText(tempModel.getQuestionTitle());
         if (tempModel.getQuestionType() == 2) {
             holder.main.setVisibility(View.GONE);
@@ -50,10 +55,31 @@ public class FeedbackQuestionAdapter extends RecyclerView.Adapter<FeedbackQuesti
         holder.main.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
-                if (isChecked)
+                if (isChecked) {
                     holder.editText.setVisibility(View.VISIBLE);
-                else
+                    sqlDatabaseHelper.insertFeedbackResponse(migrantId, tempModel.getQuestionId(),
+                            tempModel.getQuestionVariable(), "true", "");
+
+                } else {
                     holder.editText.setVisibility(View.GONE);
+                    sqlDatabaseHelper.insertFeedbackResponse(migrantId, tempModel.getQuestionId(),
+                            tempModel.getQuestionVariable(), "false", "");
+                }
+            }
+        });
+
+        holder.editText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
+                String feedbackText = holder.editText.getText().toString();
+                if (feedbackText.length() < 5)
+                    holder.editText.setError("Please Elaborate");
+                else {
+                    sqlDatabaseHelper.insertFeedbackResponse(migrantId, tempModel.getQuestionId(),
+                            tempModel.getQuestionVariable(), "true", feedbackText);
+                    return true;
+                }
+                return false;
             }
         });
     }
