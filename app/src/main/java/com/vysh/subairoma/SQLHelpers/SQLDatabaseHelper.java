@@ -453,6 +453,33 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
 
     }
 
+    public ArrayList<HashMap> getAllFeedbackResponses(int migId) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String query;
+        ArrayList<HashMap> allResponses = new ArrayList<>();
+        query = "SELECT * FROM " + DatabaseTables.FeedbackQuestionsResponseTable.TABLE_NAME + " WHERE " +
+                DatabaseTables.FeedbackQuestionsResponseTable.migrant_id + "=" + "'" + migId + "'";
+        //Log.d("mylog", "Query: " + query);
+        Cursor cursor = db.rawQuery(query, null);
+        String response = "", resFeedback = "";
+        Log.d("mylog", "Response for Migrant ID: " + migId);
+        int userId = ApplicationClass.getInstance().getUserId();
+        while (cursor.moveToNext()) {
+            response = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseTables.FeedbackQuestionsResponseTable.response));
+            resFeedback = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseTables.FeedbackQuestionsResponseTable.response_feedback));
+            int mid = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseTables.FeedbackQuestionsResponseTable.migrant_id));
+            int qid = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseTables.FeedbackQuestionsResponseTable.question_id));
+
+            HashMap<String, String> params = new HashMap<>();
+            params.put("migrant_id", "" + mid);
+            params.put("question_id", "" + qid);
+            params.put("response", response);
+            params.put("feedback", resFeedback);
+            allResponses.add(params);
+        }
+        return allResponses;
+    }
+
     public ArrayList<FeedbackQuestionModel> getFeedbackQuestions() {
         SQLiteDatabase db = this.getReadableDatabase();
         ArrayList<FeedbackQuestionModel> feedbackQuestions = new ArrayList<>();
