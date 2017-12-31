@@ -13,6 +13,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.transition.TransitionManager;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -809,7 +810,9 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
                     break;
                 case R.id.btnHelp:
                     //Toast.makeText(context, "Help Link or Help Text", Toast.LENGTH_SHORT).show();
-                    showSupportDialog();
+                    int qid = questionsListDisplay.get(getAdapterPosition()).getQuestionId();
+                    int tileId = questionsListDisplay.get(getAdapterPosition()).getTileId();
+                    showSupportDialog(qid, tileId);
                     break;
                 case R.id.btnVideo:
                     Toast.makeText(context, "Open Video Link", Toast.LENGTH_SHORT).show();
@@ -818,22 +821,31 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
         }
     }
 
-    private void showSupportDialog() {
+    private void showSupportDialog(final int qid, final int tileId) {
+        //EditText queryEt;
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
-        builder.setPositiveButton(context.getResources().getString(R.string.okay), new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-            }
-        });
-        View supportView = LayoutInflater.from(context).inflate(R.layout.dialog_questionfeedback, null);
-        builder.setView(supportView);
-        AlertDialog dialog = builder.show();
 
-        final Button positiveButton = dialog.getButton(AlertDialog.BUTTON_POSITIVE);
-        LinearLayout.LayoutParams positiveButtonLL = (LinearLayout.LayoutParams) positiveButton.getLayoutParams();
-        positiveButtonLL.width = ViewGroup.LayoutParams.MATCH_PARENT;
-        positiveButton.setLayoutParams(positiveButtonLL);
+        View supportView = LayoutInflater.from(context).inflate(R.layout.dialog_questionfeedback, null);
+        Button btnSaveQuery = supportView.findViewById(R.id.btnQuery);
+        builder.setView(supportView);
+        final AlertDialog dialog = builder.show();
+
+        //Query editText
+        final EditText queryEt = dialog.findViewById(R.id.etInput);
+        btnSaveQuery.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String queryText = queryEt.getText().toString();
+                if (queryText.isEmpty() || queryText.length() < 10) {
+                    queryEt.setError("Please explain your query");
+                } else {
+                    //Save and Send Query
+                    Log.d("mylog", "Saving: " + queryText);
+                    sqlDatabaseHelper.insertQuestionQuery(qid, tileId, migrantId, queryText);
+                    dialog.dismiss();
+                }
+            }
+        }); 
     }
 
     private boolean getConflictingVariable(String condition) {

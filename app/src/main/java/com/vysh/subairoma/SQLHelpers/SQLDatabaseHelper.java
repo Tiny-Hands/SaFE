@@ -35,6 +35,7 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
                     DatabaseTables.ResponseTable.is_error + " TEXT," +
                     DatabaseTables.ResponseTable.response_variable + " TEXT," +
                     DatabaseTables.ResponseTable.response + " TEXT," +
+                    DatabaseTables.ResponseTable.question_query + " TEXT," +
                     DatabaseTables.ResponseTable.tile_id + " INTEGER," +
                     " UNIQUE (" + DatabaseTables.ResponseTable.question_id +
                     ", " + DatabaseTables.ResponseTable.migrant_id + "));";
@@ -150,6 +151,29 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
         }
     }
 
+    public void insertQuestionQuery(int qid, int tileId, int migrantId, String query) {
+        // Gets the data repository in write mode
+        SQLiteDatabase db = this.getWritableDatabase();
+        // Create a new map of values, where column names are the keys
+        ContentValues values = new ContentValues();
+        values.put(DatabaseTables.ResponseTable.question_query, query);
+
+        //If already exist the Update
+        String whereClause = DatabaseTables.ResponseTable.migrant_id + " = " + migrantId + " AND " +
+                DatabaseTables.ResponseTable.question_id + " = " + qid;
+        long updateCount = db.update(DatabaseTables.ResponseTable.TABLE_NAME, values, whereClause, null);
+        Log.d("mylog", "Updated query row count: " + updateCount);
+        //If not update then insert
+        if (updateCount < 1) {
+            values.put(DatabaseTables.ResponseTable.question_id, qid);
+            values.put(DatabaseTables.ResponseTable.migrant_id, migrantId);
+            values.put(DatabaseTables.ResponseTable.tile_id, tileId);
+            // Insert the new row, returning the primary key value of the new row
+            long newRowId = db.insert(DatabaseTables.ResponseTable.TABLE_NAME, null, values);
+            Log.d("mylog", "Inserted query row ID: " + newRowId);
+        }
+    }
+
     //This is used when we have isError, when response is fetched from server
     public void insertAllResponses(String response, int question_id, int migrant_id, String variable, String isError, int tileId) {
         // Gets the data repository in write mode
@@ -188,12 +212,13 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
                 DatabaseTables.ResponseTable.migrant_id + "=" + "'" + migId + "'";
         //Log.d("mylog", "Query: " + query);
         Cursor cursor = db.rawQuery(query, null);
-        String response = "";
+        String response = "", responseQuery = "";
         Log.d("mylog", "Response for Migrant ID: " + migId);
         int userId = ApplicationClass.getInstance().getUserId();
         while (cursor.moveToNext()) {
             String qvar = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseTables.ResponseTable.response_variable));
             response = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseTables.ResponseTable.response));
+            responseQuery = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseTables.ResponseTable.question_query));
             int mid = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseTables.ResponseTable.migrant_id));
             int qid = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseTables.ResponseTable.question_id));
             int tileid = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseTables.ResponseTable.tile_id));
@@ -209,6 +234,7 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
             if (error == null)
                 error = "false";
             params.put("is_error", error);
+            params.put("question_query", responseQuery);
             allResponses.add(params);
         }
         return allResponses;

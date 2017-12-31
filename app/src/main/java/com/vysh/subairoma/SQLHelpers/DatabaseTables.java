@@ -15,6 +15,7 @@ public final class DatabaseTables {
         public static final String migrant_id = "migrant_id";
         public static final String question_id = "question_id";
         public static final String response = "response";
+        public static final String question_query = "question_query";
         public static final String response_variable = "response_variable";
         public static final String is_error = "is_error";
         public static final String tile_id = "tile_id";
