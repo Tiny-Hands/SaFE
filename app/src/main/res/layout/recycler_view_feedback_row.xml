@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="@dimen/medium_margin"
     android:orientation="vertical">
     <!-- Section 1 -->
 
@@ -16,7 +17,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:layout_margin="@dimen/medium_margin"
+            android:padding="@dimen/small_medium_margin"
             android:text="This app redirecteunsafe situation" />
 
         <android.support.v7.widget.AppCompatCheckBox
@@ -25,11 +26,17 @@
             android:layout_height="wrap_content" />
     </LinearLayout>
 
-    <ListView
-        android:id="@+id/listViewMultipleOptions"
+    <EditText
+        android:id="@+id/etFeedback"
         android:layout_width="match_parent"
-        android:layout_height="192dp"
-        android:layout_below="@+id/tvQuestion"
-        android:layout_marginTop="12dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/medium_large_margin"
+        android:layout_marginLeft="@dimen/small_medium_margin"
+        android:layout_marginRight="@dimen/small_medium_margin"
+        android:layout_marginTop="@dimen/medium_margin"
+        android:background="@drawable/bg_edittext"
+        android:imeOptions="actionDone"
+        android:inputType="text"
+        android:padding="@dimen/small_medium_margin"
         android:visibility="gone" />
 </LinearLayout>
