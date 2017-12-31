@@ -9,9 +9,9 @@
         android:layout_height="@dimen/error_dialog_title_bg"
         android:background="@color/colorAccent"
         android:gravity="center"
-        android:text="Support"
+        android:text="@string/support"
         android:textColor="#fff"
-        app:fonts="gotham_bold.ttf"
+        app:fonts="gotham_medium.ttf"
         android:textSize="@dimen/error_dialog_title_text_size" />
 
     <EditText
@@ -23,12 +23,12 @@
         android:inputType="textMultiLine"
         android:padding="@dimen/small_medium_margin"
         android:background="@drawable/edittext_feedback_bg"
-        android:hint="Enter you query"
+        android:hint="@string/enter_query"
         android:textSize="16sp" />
 
     <Button
         android:id="@+id/btnQuery"
-        android:text="@string/messenger_send_button_text"
+        android:text="@string/send"
         android:background="?android:attr/selectableItemBackground"
         android:layout_width="match_parent"
         android:textColor="@color/grey"

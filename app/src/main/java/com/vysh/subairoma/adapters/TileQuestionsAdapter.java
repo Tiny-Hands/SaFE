@@ -140,6 +140,9 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
                                 } else {
                                     conditionMatch = false;
                                 }
+                                //This means that there are multiple options as response, even if one is clicked, we show error currently
+                                if (curValue.length() > 5)
+                                    conditionMatch = true;
                             }
                             if (conditionMatch) {
                                 //Add to question list display only if it needs to be shown on conditions match
@@ -410,6 +413,12 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
                     key = iter.next().toString();
                     reqValue = varsJson.getString(key);
                     currValue = conditionVariableValues.get(key);
+
+                    if (questionsList.get(mainIndex).getResponseType() == 3) {
+                        //Means that it's a multi options question. Show error even if one is selected
+                        if (currValue.length() > 5)
+                            currValue = "true";
+                    }
                     Log.d("mylog", "Current Value: " + currValue + " Required Value: " + reqValue);
                     if (!reqValue.equalsIgnoreCase(currValue)) {
                         Log.d("mylog", "Condition failed, do not perform the action");
@@ -845,7 +854,7 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
                     dialog.dismiss();
                 }
             }
-        }); 
+        });
     }
 
     private boolean getConflictingVariable(String condition) {
@@ -876,9 +885,11 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
 
     private class OptionsListViewAdapter extends ArrayAdapter<String> {
 
+        int questionId;
         ArrayList<String> options;
         Context mContext;
         int mainPos;
+        boolean shownError = false;
 
         public OptionsListViewAdapter(Context context, List<String> objects, int position) {
             super(context, R.layout.listview_options_row, objects);
@@ -916,20 +927,47 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
             holder.checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                    //If a checkbox has already been clicked before initilization, that means error dialog has also been show some-time before.
+                    if (multiResponse.length() > 5)
+                        shownError = true;
+
                     if (isChecked) {
                         //If already exists do nothing
                         if (multiResponse.contains(selectedOption)) ;
                         else {
-                            multiResponse = multiResponse.concat(", " + selectedOption);
+                            multiResponse = multiResponse.concat("," + selectedOption);
                         }
                     } else {
                         if (multiResponse.contains(selectedOption))
-                            multiResponse = multiResponse.replace(selectedOption, "");
+                            multiResponse = multiResponse.replace("," + selectedOption, "");
                     }
+                    TileQuestionsModel tempQuestion = questionsListDisplay.get(mainPos);
+                    Log.d("mylog", "Multi Response Length: " + multiResponse.length());
+                    if (conditionVariables.contains(tempQuestion.getVariable())) {
+                        if (multiResponse.length() > 5) {
+                            conditionVariableValues.put(tempQuestion.getVariable(), "true");
+                            sqlDatabaseHelper.insertIsError(migrantId, tempQuestion.getVariable(), "true");
+                            if (!shownError & !fromSetView) {
+                                ArrayList<Integer> questionIds = conditionOnQuestions.get(questionsListDisplay.get(mainPos).getVariable());
+                                notifyConditionVariableChange(questionIds);
+                                //(mainPos);
+                            }
+                            shownError = true;
+                        } else {
+                            conditionVariableValues.put(tempQuestion.getVariable(), "false");
+                            sqlDatabaseHelper.insertIsError(migrantId, tempQuestion.getVariable(), "false");
+                            if (!fromSetView) {
+                                ArrayList<Integer> questionIds = conditionOnQuestions.get(questionsListDisplay.get(mainPos).getVariable());
+                                notifyConditionVariableChange(questionIds);
+                            }
+                            shownError = false;
+                        }
+                    }
+
                     sqlDatabaseHelper.insertResponseTableData(multiResponse,
-                            questionsListDisplay.get(mainPos).getQuestionId(),
-                            questionsListDisplay.get(mainPos).getTileId(),
-                            migrantId, questionsListDisplay.get(mainPos).getVariable());
+                            tempQuestion.getQuestionId(),
+                            tempQuestion.getTileId(),
+                            migrantId, tempQuestion.getVariable());
                 }
             });
             return rowView;
