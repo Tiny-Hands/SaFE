@@ -519,7 +519,7 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getReadableDatabase();
         ArrayList<TileQuestionsModel> questionList = new ArrayList<>();
         String statement = "SELECT * FROM " + DatabaseTables.QuestionsTable.TABLE_NAME + " WHERE "
-                + DatabaseTables.QuestionsTable.tile_id + "=" + "'" + tileId + "'";
+                + DatabaseTables.QuestionsTable.tile_id + "=" + "'" + tileId + "'" + " ORDER BY " + DatabaseTables.QuestionsTable.question_order;
         //Log.d("mylog", "Query: " + statement);
         Cursor cursor = db.rawQuery(statement, null);
         while (cursor.moveToNext()) {
