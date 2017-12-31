@@ -96,11 +96,13 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
                     DatabaseTables.FeedbackQuestionsTable.question_group + " TEXT" + ");";
     final String SQL_CREATE_FeedbackQuestionResponseTable =
             "CREATE TABLE " + DatabaseTables.FeedbackQuestionsResponseTable.TABLE_NAME + " (" +
-                    DatabaseTables.FeedbackQuestionsResponseTable.response_id + " INTEGER PRIMARY KEY," +
                     DatabaseTables.FeedbackQuestionsResponseTable.question_id + " INTEGER," +
                     DatabaseTables.FeedbackQuestionsResponseTable.migrant_id + " INTEGER," +
                     DatabaseTables.FeedbackQuestionsResponseTable.response + " TEXT," +
-                    DatabaseTables.FeedbackQuestionsResponseTable.response_feedback + " TEXT" + ");";
+                    DatabaseTables.FeedbackQuestionsResponseTable.response_variable + " TEXT," +
+                    DatabaseTables.FeedbackQuestionsResponseTable.response_feedback + " TEXT" +
+                    " UNIQUE (" + DatabaseTables.FeedbackQuestionsResponseTable.question_id + ", " +
+                    DatabaseTables.FeedbackQuestionsResponseTable.migrant_id + ");";
 
     public SQLDatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -424,6 +426,31 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
 
         long newRowId = db.insert(DatabaseTables.FeedbackQuestionsTable.TABLE_NAME, null, values);
         Log.d("mylog", "Inserted Feedback row ID; " + newRowId);
+    }
+
+    public void insertFeedbackResponse(int migrantId, int questionId, String responseVar, String response, String responseFeedback) {
+        // Gets the data repository in write mode
+        SQLiteDatabase db = this.getWritableDatabase();
+        // Create a new map of values, where column names are the keys
+        ContentValues values = new ContentValues();
+        values.put(DatabaseTables.FeedbackQuestionsResponseTable.response, response);
+        values.put(DatabaseTables.FeedbackQuestionsResponseTable.response_feedback, responseFeedback);
+
+        //If already exist the Update
+        String whereClause = DatabaseTables.FeedbackQuestionsResponseTable.migrant_id + " = " + migrantId + " AND " +
+                DatabaseTables.FeedbackQuestionsResponseTable.question_id + " = " + questionId;
+        long updateCount = db.update(DatabaseTables.FeedbackQuestionsResponseTable.TABLE_NAME, values, whereClause, null);
+        Log.d("mylog", "Updated row count: " + updateCount);
+        //If not update then insert
+        if (updateCount < 1) {
+            // Insert the new row, returning the primary key value of the new row
+            values.put(DatabaseTables.FeedbackQuestionsResponseTable.migrant_id, migrantId);
+            values.put(DatabaseTables.FeedbackQuestionsResponseTable.question_id, questionId);
+            values.put(DatabaseTables.FeedbackQuestionsResponseTable.response_variable, responseVar);
+            long newRowId = db.insert(DatabaseTables.FeedbackQuestionsResponseTable.TABLE_NAME, null, values);
+            Log.d("mylog", "Inserted feedback row ID: " + newRowId);
+        }
+
     }
 
     public ArrayList<FeedbackQuestionModel> getFeedbackQuestions() {
