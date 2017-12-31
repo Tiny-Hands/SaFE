@@ -16,6 +16,7 @@
         android:id="@+id/tvErrorDescription"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:lineSpacingExtra="5dp"
         android:background="@drawable/edittext_feedback_bg"
         android:padding="@dimen/medium_large_margin"
         android:textColor="@color/colorError" />
