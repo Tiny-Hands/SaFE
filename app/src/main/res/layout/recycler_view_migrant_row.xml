@@ -51,10 +51,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/ivUserLogo"
-            android:paddingRight="@dimen/small_margin"
             android:layout_marginTop="@dimen/default_margin"
-            android:text="Country"
-            android:textStyle="italic"/>
+            android:text="@string/enter_query"/>
 
         <LinearLayout
             android:id="@+id/llRedflags"
