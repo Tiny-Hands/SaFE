@@ -535,23 +535,20 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
 
     private void showErrorDialog(int mainIndex) {
         AlertDialog.Builder builder = new AlertDialog.Builder(context, R.style.DialogError);
-        builder.setNegativeButton(context.getResources().getString(R.string.understand), new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-            }
-        });
         View errView = LayoutInflater.from(context).inflate(R.layout.dialog_error, null);
         TextView errDesc = errView.findViewById(R.id.tvErrorDescription);
+        Button btnClose = errView.findViewById(R.id.btnUnderstood);
+
         builder.setView(errView);
         builder.setCancelable(false);
         errDesc.setText(questionsList.get(mainIndex).getDescription());
-        AlertDialog dialog = builder.show();
-
-        final Button positiveButton = dialog.getButton(AlertDialog.BUTTON_NEGATIVE);
-        LinearLayout.LayoutParams positiveButtonLL = (LinearLayout.LayoutParams) positiveButton.getLayoutParams();
-        positiveButtonLL.width = ViewGroup.LayoutParams.MATCH_PARENT;
-        positiveButton.setLayoutParams(positiveButtonLL);
+        final AlertDialog dialog = builder.show();
+        btnClose.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.dismiss();
+            }
+        });
     }
 
     private void showConflictDialog(int index) {

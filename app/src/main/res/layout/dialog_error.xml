@@ -1,7 +1,6 @@
-<?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:orientation="vertical">
 
     <TextView
@@ -12,10 +11,20 @@
         android:text="@string/error"
         android:textColor="#fff"
         android:textSize="@dimen/error_dialog_title_text_size" />
+
     <TextView
         android:id="@+id/tvErrorDescription"
         android:layout_width="match_parent"
-        android:padding="@dimen/medium_margin"
-        android:textColor="@color/colorError"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:background="@drawable/edittext_feedback_bg"
+        android:padding="@dimen/medium_large_margin"
+        android:textColor="@color/colorError" />
+
+    <Button
+        android:id="@+id/btnUnderstood"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/error_dialog_title_bg"
+        android:background="?android:attr/selectableItemBackground"
+        android:text="@string/understand"
+        android:textColor="@color/grey" />
 </LinearLayout>
