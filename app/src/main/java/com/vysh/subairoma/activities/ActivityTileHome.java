@@ -133,10 +133,8 @@ public class ActivityTileHome extends AppCompatActivity {
         int migId = ApplicationClass.getInstance().getMigrantId();
         SQLDatabaseHelper sqlDatabaseHelper = new SQLDatabaseHelper(ActivityTileHome.this);
         ArrayList<HashMap> responses = sqlDatabaseHelper.getAllFeedbackResponses(migId);
-
-        RequestQueue queue = Volley.newRequestQueue(ActivityTileHome.this);
         for (int i = 0; i < responses.size(); i++) {
-            saveResponseToServer(responses.get(i), queue, 2);
+            saveResponseToServer(responses.get(i), 2);
         }
     }
 
@@ -225,13 +223,13 @@ public class ActivityTileHome extends AppCompatActivity {
     private void getAllResponses() {
         ArrayList<HashMap> allParams = new SQLDatabaseHelper(ActivityTileHome.this)
                 .getAllResponse(ApplicationClass.getInstance().getMigrantId());
-        RequestQueue queue = Volley.newRequestQueue(ActivityTileHome.this);
         for (int i = 0; i < allParams.size(); i++) {
-            saveResponseToServer(allParams.get(i), queue, 1);
+            //Log.d("mylog", "Saving to server: " + i);
+            saveResponseToServer(allParams.get(i), 1);
         }
     }
 
-    private void saveResponseToServer(final HashMap<String, String> fParams, RequestQueue queue, int responseType) {
+    private void saveResponseToServer(final HashMap<String, String> fParams, int responseType) {
         String api;
         if (responseType == 1)
             api = ApplicationClass.getInstance().getAPIROOT() + saveAPI;
@@ -249,7 +247,8 @@ public class ActivityTileHome extends AppCompatActivity {
                 if (!err.isEmpty() && err.contains("NoConnection")) {
                     //showSnackbar("Response cannot be saved at the moment, please check your Intenet connection.");
                     Log.d("mylog", "Response cannot be saved at the moment, please check your Intenet connection.");
-                }
+                } else
+                    Log.d("mylog", "Error saving response: " + err);
             }
         }) {
             @Override
@@ -260,7 +259,8 @@ public class ActivityTileHome extends AppCompatActivity {
                 return fParams;
             }
         };
-
+        Log.d("mylog", "Calling: " + api);
+        RequestQueue queue = Volley.newRequestQueue(ActivityTileHome.this);
         queue.add(stringRequest);
     }
 

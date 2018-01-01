@@ -236,6 +236,8 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
             if (error == null)
                 error = "false";
             params.put("is_error", error);
+            if (responseQuery == null)
+                responseQuery = "";
             params.put("question_query", responseQuery);
             allResponses.add(params);
         }
