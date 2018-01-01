@@ -494,6 +494,9 @@ public class ActivityRegister extends AppCompatActivity {
                         getMigrantDetails();
                         //Getting all the saved responses for the user
                         getAllResponses(userType);
+                        Intent intent = new Intent(ActivityRegister.this, ActivityMigrantList.class);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        startActivity(intent);
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
