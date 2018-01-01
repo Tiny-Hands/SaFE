@@ -44,6 +44,7 @@ import butterknife.ButterKnife;
 
 public class ActivityTileHome extends AppCompatActivity {
     private final String saveAPI = "/saveresponse.php";
+    private final String saveFeedbackAPI = "/savefeedbackresponse.php";
     ArrayList<TilesModel> tiles, tilesGAS;
     public String migName, countryName, countryId;
     public int blacklist, status;
@@ -118,6 +119,7 @@ public class ActivityTileHome extends AppCompatActivity {
         setUpRecyclerView();
         checkIfVerifiedAnswers();
         getAllResponses();
+        getAllFeedbackResponses();
     }
 
     private void checkIfVerifiedAnswers() {
@@ -125,6 +127,17 @@ public class ActivityTileHome extends AppCompatActivity {
                 "mg_verified_answers");
         if (verified.equalsIgnoreCase("true"))
             setUpGasSections();
+    }
+
+    private void getAllFeedbackResponses() {
+        int migId = ApplicationClass.getInstance().getMigrantId();
+        SQLDatabaseHelper sqlDatabaseHelper = new SQLDatabaseHelper(ActivityTileHome.this);
+        ArrayList<HashMap> responses = sqlDatabaseHelper.getAllFeedbackResponses(migId);
+
+        RequestQueue queue = Volley.newRequestQueue(ActivityTileHome.this);
+        for (int i = 0; i < responses.size(); i++) {
+            saveResponseToServer(responses.get(i), queue, 2);
+        }
     }
 
     private void setUpListeners() {
@@ -206,7 +219,7 @@ public class ActivityTileHome extends AppCompatActivity {
         tileAdapter.notifyDataSetChanged();
         //float y = rvTiles.getChildAt(0).getY();
         rvTiles.smoothScrollToPosition(0);
-        nsv.scrollTo(0,0);
+        nsv.scrollTo(0, 0);
     }
 
     private void getAllResponses() {
@@ -214,12 +227,16 @@ public class ActivityTileHome extends AppCompatActivity {
                 .getAllResponse(ApplicationClass.getInstance().getMigrantId());
         RequestQueue queue = Volley.newRequestQueue(ActivityTileHome.this);
         for (int i = 0; i < allParams.size(); i++) {
-            saveResponseToServer(allParams.get(i), queue);
+            saveResponseToServer(allParams.get(i), queue, 1);
         }
     }
 
-    private void saveResponseToServer(final HashMap<String, String> fParams, RequestQueue queue) {
-        String api = ApplicationClass.getInstance().getAPIROOT() + saveAPI;
+    private void saveResponseToServer(final HashMap<String, String> fParams, RequestQueue queue, int responseType) {
+        String api;
+        if (responseType == 1)
+            api = ApplicationClass.getInstance().getAPIROOT() + saveAPI;
+        else
+            api = ApplicationClass.getInstance().getAPIROOT() + saveFeedbackAPI;
         StringRequest stringRequest = new StringRequest(Request.Method.POST, api, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
