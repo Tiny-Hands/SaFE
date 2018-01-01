@@ -14,6 +14,7 @@ import android.widget.TextView;
 import com.vysh.subairoma.ApplicationClass;
 import com.vysh.subairoma.R;
 import com.vysh.subairoma.SQLHelpers.SQLDatabaseHelper;
+import com.vysh.subairoma.activities.ActivityFeedback;
 import com.vysh.subairoma.activities.ActivityGasSection;
 import com.vysh.subairoma.activities.ActivityRegister;
 import com.vysh.subairoma.activities.ActivityTileHome;
@@ -49,18 +50,18 @@ public class DialogAnswersVerification extends DialogFragment implements View.On
             case R.id.btnProceed:
                 if (checkbox.isChecked()) {
                     ActivityTileHome activity = (ActivityTileHome) getActivity();
-                    Intent intent = new Intent(getContext(), ActivityGasSection.class);
+
+                    Intent intent = new Intent(getContext(), ActivityFeedback.class);
                     intent.putExtra("countryId", activity.countryId);
                     intent.putExtra("migrantName", activity.migName);
                     intent.putExtra("countryName", activity.countryName);
                     intent.putExtra("countryStatus", activity.status);
                     intent.putExtra("countryBlacklist", activity.blacklist);
                     dismiss();
-                    //startActivity(intent);
 
                     new SQLDatabaseHelper(getContext()).insertResponseTableData("true", -3, -1,
                             ApplicationClass.getInstance().getMigrantId(), "mg_verified_answers");
-                    activity.setUpGasSections();
+                    startActivity(intent);
                 } else {
                     tvCheckTerm.setTextColor(getResources().getColor(R.color.colorError));
                 }

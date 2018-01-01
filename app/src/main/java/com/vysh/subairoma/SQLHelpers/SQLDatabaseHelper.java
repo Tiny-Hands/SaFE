@@ -100,9 +100,9 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
                     DatabaseTables.FeedbackQuestionsResponseTable.migrant_id + " INTEGER," +
                     DatabaseTables.FeedbackQuestionsResponseTable.response + " TEXT," +
                     DatabaseTables.FeedbackQuestionsResponseTable.response_variable + " TEXT," +
-                    DatabaseTables.FeedbackQuestionsResponseTable.response_feedback + " TEXT" +
+                    DatabaseTables.FeedbackQuestionsResponseTable.response_feedback + " TEXT," +
                     " UNIQUE (" + DatabaseTables.FeedbackQuestionsResponseTable.question_id + ", " +
-                    DatabaseTables.FeedbackQuestionsResponseTable.migrant_id + ");";
+                    DatabaseTables.FeedbackQuestionsResponseTable.migrant_id + "));";
 
     public SQLDatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);

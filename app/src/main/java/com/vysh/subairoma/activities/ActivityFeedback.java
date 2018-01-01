@@ -1,5 +1,6 @@
 package com.vysh.subairoma.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -35,6 +36,7 @@ public class ActivityFeedback extends AppCompatActivity {
 
     RecyclerView rvFeedback;
     Button btnNext;
+    String countryId, migName, countryName, status, blacklist;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -43,13 +45,36 @@ public class ActivityFeedback extends AppCompatActivity {
         rvFeedback = findViewById(R.id.rvFeedbackQuestions);
         btnNext = findViewById(R.id.btnNext);
 
+        setUpMigrantCountryData(getIntent());
         setUpRecyclerView();
         btnNext.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 getAllFeedbackResponses();
+                openTileHomeActivity();
+
             }
         });
+    }
+
+    private void setUpMigrantCountryData(Intent intent) {
+        countryId = intent.getStringExtra("countryId");
+        migName = intent.getStringExtra("migrantName");
+        countryName = intent.getStringExtra("countryName");
+        status = intent.getStringExtra("countryStatus");
+        blacklist = intent.getStringExtra("countryBlacklist");
+    }
+
+    private void openTileHomeActivity() {
+        Intent intent = new Intent(ActivityFeedback.this, ActivityTileHome.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        intent.putExtra("countryId", countryId);
+        intent.putExtra("migrantName", migName);
+        intent.putExtra("countryName", countryName);
+        intent.putExtra("countryStatus", status);
+        intent.putExtra("countryBlacklist", blacklist);
+
+        startActivity(intent);
     }
 
     private void setUpRecyclerView() {
