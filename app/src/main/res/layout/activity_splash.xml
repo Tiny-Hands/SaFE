@@ -1,14 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:gravity="center"
     android:background="@drawable/background">
 
     <ImageView
         android:layout_width="216dp"
         android:layout_height="216dp"
-        android:src="@drawable/logo_org"
-        android:elevation="12dp"/>
+        android:layout_centerInParent="true"
+        android:elevation="12dp"
+        android:src="@drawable/logo_org" />
 
-</LinearLayout>
+    <ProgressBar
+        android:id="@+id/progressCircle"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:visibility="gone"
+        android:layout_marginBottom="@dimen/default_margin" />
+
+    <LinearLayout
+        android:id="@+id/llBottom"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="@color/grey"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:visibility="gone">
+
+        <com.vysh.subairoma.utils.CustomTextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/default_margin"
+            android:layout_weight="1"
+            android:text="Failed to Connect"
+            android:textColor="#f5f5f5"
+            app:fonts="gotham_medium.ttf" />
+
+        <Button
+            android:id="@+id/btnTryAgain"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="@dimen/default_margin"
+            android:background="?android:attr/selectableItemBackground"
+            android:text="Try Again"
+            android:textColor="#ff6d00" />
+    </LinearLayout>
+</RelativeLayout>

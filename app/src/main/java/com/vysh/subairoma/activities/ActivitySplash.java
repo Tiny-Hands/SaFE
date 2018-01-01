@@ -2,11 +2,20 @@ package com.vysh.subairoma.activities;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.RecyclerView;
+import android.transition.TransitionManager;
 import android.util.Log;
+import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.Button;
+import android.widget.LinearLayout;
+import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -24,6 +33,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import io.fabric.sdk.android.Fabric;
 
 /**
@@ -46,12 +57,30 @@ public class ActivitySplash extends AppCompatActivity {
     SQLDatabaseHelper dbHelper;
     Thread sleepThread;
 
+    @BindView(R.id.progressCircle)
+    ProgressBar progressBar;
+    @BindView(R.id.llBottom)
+    LinearLayout bottomLayoutMessage;
+    @BindView(R.id.btnTryAgain)
+    Button btnTryAgain;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         Fabric.with(this, new Crashlytics());
+        ButterKnife.bind(this);
+
+        btnTryAgain.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                getAllData();
+                progressBar.setVisibility(View.VISIBLE);
+                bottomLayoutMessage.setVisibility(View.GONE);
+            }
+        });
+
         startTime = System.currentTimeMillis();
         sleepThread = new Thread(new Runnable() {
             @Override
@@ -73,7 +102,9 @@ public class ActivitySplash extends AppCompatActivity {
     }
 
     private void getAllData() {
+        //Showing Progress
         if (sp.getInt(SharedPrefKeys.savedTableCount, 0) != 6) {
+            progressBar.setVisibility(View.VISIBLE);
             Log.d("mylog", "Starting save");
             dbHelper = new SQLDatabaseHelper(ActivitySplash.this);
             dbHelper.getWritableDatabase();
@@ -126,6 +157,7 @@ public class ActivitySplash extends AppCompatActivity {
             @Override
             public void onErrorResponse(VolleyError error) {
                 Log.d("mylog", "Error getting questions: " + error.toString());
+                showErrorResponse();
             }
         });
         RequestQueue queue = Volley.newRequestQueue(ActivitySplash.this);
@@ -148,10 +180,19 @@ public class ActivitySplash extends AppCompatActivity {
             @Override
             public void onErrorResponse(VolleyError error) {
                 Log.d("mylog", "Got Tiles error: " + error.toString());
+                showErrorResponse();
             }
         });
         RequestQueue queue = Volley.newRequestQueue(ActivitySplash.this);
         queue.add(getRequest);
+    }
+
+    private void showErrorResponse() {
+        if (Build.VERSION.SDK_INT >= 19) {
+            TransitionManager.beginDelayedTransition((ViewGroup) bottomLayoutMessage.getParent());
+        }
+        bottomLayoutMessage.setVisibility(View.VISIBLE);
+        progressBar.setVisibility(View.GONE);
     }
 
     private void getQuestions() {
@@ -170,6 +211,7 @@ public class ActivitySplash extends AppCompatActivity {
             @Override
             public void onErrorResponse(VolleyError error) {
                 Log.d("mylog", "Error getting questions: " + error.toString());
+                showErrorResponse();
             }
         });
         RequestQueue queue = Volley.newRequestQueue(ActivitySplash.this);
@@ -192,6 +234,7 @@ public class ActivitySplash extends AppCompatActivity {
             @Override
             public void onErrorResponse(VolleyError error) {
                 Log.d("mylog", "Error getting options: " + error.toString());
+                showErrorResponse();
             }
         });
         RequestQueue queue = Volley.newRequestQueue(ActivitySplash.this);
@@ -214,6 +257,7 @@ public class ActivitySplash extends AppCompatActivity {
             @Override
             public void onErrorResponse(VolleyError error) {
                 Log.d("mylog", "Error getting countries: " + error.toString());
+                showErrorResponse();
             }
         });
         RequestQueue queue = Volley.newRequestQueue(ActivitySplash.this);
@@ -236,6 +280,7 @@ public class ActivitySplash extends AppCompatActivity {
             @Override
             public void onErrorResponse(VolleyError error) {
                 Log.d("mylog", "Error getting countries: " + error.toString());
+                showErrorResponse();
             }
         });
         RequestQueue queue = Volley.newRequestQueue(ActivitySplash.this);
