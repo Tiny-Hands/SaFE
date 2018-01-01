@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="@dimen/medium_margin"
+    android:layout_marginBottom="@dimen/medium_large_margin"
     android:orientation="vertical">
     <!-- Section 1 -->
 
@@ -30,13 +30,20 @@
         android:id="@+id/etFeedback"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/medium_large_margin"
+        android:layout_marginBottom="@dimen/medium_margin"
         android:layout_marginLeft="@dimen/small_medium_margin"
         android:layout_marginRight="@dimen/small_medium_margin"
+        android:visibility="gone"
         android:layout_marginTop="@dimen/medium_margin"
         android:background="@drawable/bg_edittext"
         android:imeOptions="actionDone"
         android:inputType="text"
-        android:padding="@dimen/small_medium_margin"
-        android:visibility="gone" />
+        android:padding="@dimen/small_medium_margin" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginLeft="@dimen/medium_margin"
+        android:layout_marginRight="@dimen/medium_margin"
+        android:background="@color/translucentGrey" />
 </LinearLayout>

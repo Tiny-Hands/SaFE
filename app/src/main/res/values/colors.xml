@@ -6,6 +6,7 @@
     <color name="bgFaded">#ededed</color>
     <color name="darkGrey">#444444</color>
     <color name="grey">#616060</color>
+    <color name="translucentGrey">#a8e0e0e0</color>
     <color name="colorNeutral">#d9a428</color>
     <color name="colorComplete">#25860a</color>
     <color name="colorError">#e12b2b</color>
