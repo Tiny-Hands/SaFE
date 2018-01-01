@@ -92,6 +92,7 @@ public class ActivityRegister extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_register);
         //Checking if already logged in on current device
         if (checkUserExists() && !getIntent().hasExtra("migrantmode")) {
             Intent intent = new Intent(ActivityRegister.this, ActivityMigrantList.class);
@@ -99,8 +100,6 @@ public class ActivityRegister extends AppCompatActivity {
             startActivity(intent);
             return;
         }
-
-        setContentView(R.layout.activity_register);
         ButterKnife.bind(this);
         setUpComponentListeners();
         if (getIntent().hasExtra("migrantmode")) {
