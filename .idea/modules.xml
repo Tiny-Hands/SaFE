@@ -4,6 +4,7 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/Subairoma.iml" filepath="$PROJECT_DIR$/Subairoma.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://D:\Android\Studio Projects\Subairoma\app\app.iml" filepath="D:\Android\Studio Projects\Subairoma\app\app.iml" />
     </modules>
   </component>
 </project>
