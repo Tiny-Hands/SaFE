@@ -2,6 +2,7 @@
     package="com.vysh.subairoma">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
     <application
         android:name=".ApplicationClass"
         android:allowBackup="true"
@@ -48,6 +49,9 @@
             android:name=".activities.ActivityProfileEdit"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden" />
+
+        <!-- for getting country -->
+        <service android:name=".services.LocationChecker"/>
 
         <!-- For Facebook Login -->
         <meta-data

@@ -12,20 +12,35 @@ import android.os.Looper;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
+import com.vysh.subairoma.ApplicationClass;
 import com.vysh.subairoma.R;
+import com.vysh.subairoma.SQLHelpers.SQLDatabaseHelper;
+import com.vysh.subairoma.activities.ActivityMigrantList;
+import com.vysh.subairoma.models.MigrantModel;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Vishal on 12/28/2017.
  */
 
 public class LocationChecker extends Service {
+    private final String saveAPI = "/updatemigrantcountry.php";
     private final int LOCATION_VALIDITY_DURATION_MS = 2000;
 
     @Nullable
@@ -76,7 +91,49 @@ public class LocationChecker extends Service {
     }
 
     private void saveToServer(String countryName) {
-        Log.d("mylog", "Save to server: " + countryName);
+        Log.d("mylog", "Saving to server country Name: " + countryName);
+        String api = ApplicationClass.getInstance().getAPIROOT() + saveAPI;
+
+        SQLDatabaseHelper dbHelper = new SQLDatabaseHelper(getApplicationContext());
+        ArrayList<MigrantModel> migrantModels = dbHelper.getMigrants();
+
+        RequestQueue queue = Volley.newRequestQueue(getApplicationContext());
+        for (int i = 0; i < migrantModels.size(); i++) {
+            sendToServer(api, migrantModels.get(i).getMigrantId() + "", countryName, queue);
+        }
+    }
+
+    private void sendToServer(String api, String migrantId, String country, RequestQueue queue) {
+        final HashMap<String, String> fParams = new HashMap<>();
+        fParams.put("migrant_id", migrantId);
+        fParams.put("country", country);
+
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, api, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                Log.d("mylog", "Response: " + response);
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                String err = error.toString();
+                if (!err.isEmpty() && err.contains("NoConnection")) {
+                    //showSnackbar("Response cannot be saved at the moment, please check your Intenet connection.");
+                    Log.d("mylog", "couldn't save country");
+                }
+            }
+        }) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                for (Object key : fParams.keySet()) {
+                    Log.d("mylog", key + ": " + fParams.get(key));
+                }
+                return fParams;
+            }
+        };
+
+        queue.add(stringRequest);
+
     }
 
     private String getCountryName(Location location) {

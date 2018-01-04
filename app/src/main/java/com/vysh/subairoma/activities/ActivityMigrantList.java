@@ -1,10 +1,14 @@
 package com.vysh.subairoma.activities;
 
+import android.Manifest;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.location.Location;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -32,6 +36,7 @@ import com.vysh.subairoma.adapters.MigrantListAdapter;
 import com.vysh.subairoma.dialogs.DialogCountryChooser;
 import com.vysh.subairoma.models.CountryModel;
 import com.vysh.subairoma.models.MigrantModel;
+import com.vysh.subairoma.services.LocationChecker;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -50,6 +55,7 @@ import butterknife.ButterKnife;
 
 public class ActivityMigrantList extends AppCompatActivity {
     private final String API = "/getmigrants.php";
+    private final int REQUEST_LOCATION = 1;
 
     @BindView(R.id.rvMigrants)
     RecyclerView recyclerView;
@@ -75,6 +81,10 @@ public class ActivityMigrantList extends AppCompatActivity {
         userType = ApplicationClass.getInstance().getUserId();
         migrantModels = new ArrayList();
         getMigrants();
+        if (isLocationAccessAllowed())
+            getUpdatedMigrantCounties();
+        else
+            requestLocationAccess();
         //setUpRecyclerView(null);
         if (userType == -1)
             btnAddMigrant.setVisibility(View.GONE);
@@ -100,6 +110,37 @@ public class ActivityMigrantList extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         getSavedMigrants();
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        switch (requestCode) {
+            case REQUEST_LOCATION:
+                if (grantResults[0] == PackageManager.PERMISSION_GRANTED)
+                    getUpdatedMigrantCounties();
+                break;
+        }
+    }
+
+    private void requestLocationAccess() {
+        if (Build.VERSION.SDK_INT > 22)
+            requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_LOCATION);
+    }
+
+    private boolean isLocationAccessAllowed() {
+        if (Build.VERSION.SDK_INT >= 22) {
+            if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION)
+                    != PackageManager.PERMISSION_GRANTED) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private void getUpdatedMigrantCounties() {
+        Intent intent = new Intent(ActivityMigrantList.this, LocationChecker.class);
+        startService(intent);
     }
 
     private void getSavedMigrants() {
