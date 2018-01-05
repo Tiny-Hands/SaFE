@@ -184,12 +184,20 @@ public class ActivityMigrantList extends AppCompatActivity {
         final ProgressDialog progressDialog = new ProgressDialog(ActivityMigrantList.this);
         progressDialog.setTitle("Please wait");
         progressDialog.setMessage("Getting migrants...");
-        progressDialog.show();
+        try {
+            progressDialog.show();
+        } catch (Exception ex) {
+            Log.d("mylog", "Exception in progress list: " + ex.getMessage());
+        }
         StringRequest getRequest = new StringRequest(Request.Method.POST, api, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 try {
                     progressDialog.dismiss();
+                } catch (Exception ex) {
+                    Log.d("mylog", "Exception in progress dis: " + ex.getMessage());
+                }
+                try {
                     boolean firstRun = false;
                     migrantModels = parseResponse(response);
                     if (migrantModels == null || migrantModels.size() < 1) firstRun = true;
@@ -213,6 +221,10 @@ public class ActivityMigrantList extends AppCompatActivity {
             public void onErrorResponse(VolleyError error) {
                 try {
                     progressDialog.dismiss();
+                } catch (Exception ex) {
+                    Log.d("mylog", "Exception in progress dis error: " + ex.getMessage());
+                }
+                try {
                     String err = error.toString();
                     Log.d("mylog", "error : " + err);
                     if (!err.isEmpty() && err.contains("TimeoutError"))
