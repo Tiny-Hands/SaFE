@@ -31,7 +31,6 @@ import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
@@ -904,7 +903,7 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
         @NonNull
         @Override
         public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-            View rowView = convertView;
+            View rowView;
             //if (rowView == null) {
             LayoutInflater inflater = LayoutInflater.from(mContext);
             rowView = inflater.inflate(R.layout.listview_options_row, parent, false);
@@ -938,7 +937,13 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
                         if (multiResponse.contains(selectedOption))
                             multiResponse = multiResponse.replace("," + selectedOption, "");
                     }
+                    //This needs to be inserted before error data insertion
                     TileQuestionsModel tempQuestion = questionsListDisplay.get(mainPos);
+                    sqlDatabaseHelper.insertResponseTableData(multiResponse,
+                            tempQuestion.getQuestionId(),
+                            tempQuestion.getTileId(),
+                            migrantId, tempQuestion.getVariable());
+
                     Log.d("mylog", "Multi Response Length: " + multiResponse.length());
                     if (conditionVariables.contains(tempQuestion.getVariable())) {
                         if (multiResponse.length() > 5) {
@@ -960,11 +965,6 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
                             shownError = false;
                         }
                     }
-
-                    sqlDatabaseHelper.insertResponseTableData(multiResponse,
-                            tempQuestion.getQuestionId(),
-                            tempQuestion.getTileId(),
-                            migrantId, tempQuestion.getVariable());
                 }
             });
             return rowView;
