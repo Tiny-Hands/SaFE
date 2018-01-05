@@ -73,7 +73,8 @@ public class MigrantListAdapter extends RecyclerView.Adapter<MigrantListAdapter.
 
             //Showing error count
             int errorCount = new SQLDatabaseHelper(mContext).getMigrantErrorCount(migrantModel.getMigrantId());
-            if (errorCount > 0) {
+
+            if (errorCount > 0 && (holder.llErrorLayout.getTag()) == null) {
                 for (int i = 0; i < errorCount; i++) {
                     ImageView imgView = new ImageView(holder.llErrorLayout.getContext());
                     LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams((int) holder.llErrorLayout.getContext().getResources().getDimension(R.dimen.redflag_dimen),
@@ -82,6 +83,7 @@ public class MigrantListAdapter extends RecyclerView.Adapter<MigrantListAdapter.
                     imgView.setImageResource(R.drawable.ic_redflag);
                     holder.llErrorLayout.addView(imgView);
                 }
+                holder.llErrorLayout.setTag("shownerror");
             }
         }
     }

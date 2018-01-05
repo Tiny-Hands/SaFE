@@ -58,6 +58,7 @@ public class ActivityRegister extends AppCompatActivity {
     final String apiGetResponses = "/getresponses.php";
     final String apiAlreadyRegistered = "/checkphonenumber.php";
     private final String apiGetMigrants = "/getmigrants.php";
+    private int gotDetailCount = 0;
 
     //Usertype = 0 for Helper and 1 for migrant. Order is reversed in Dialogs and Other Methods.
     int userType;
@@ -143,9 +144,6 @@ public class ActivityRegister extends AppCompatActivity {
                     }
                     //Getting all the saved responses for the user
                     getAllResponses(userType);
-                    Intent intent = new Intent(ActivityRegister.this, ActivityMigrantList.class);
-                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                    startActivity(intent);
                 } catch (JSONException e) {
                     e.printStackTrace();
                     Log.d("mylog", "Error in getting user_id: " + e.toString());
@@ -478,9 +476,6 @@ public class ActivityRegister extends AppCompatActivity {
                         getMigrantDetails();
                         //Getting all the saved responses for the user
                         getAllResponses(userType);
-                        Intent intent = new Intent(ActivityRegister.this, ActivityMigrantList.class);
-                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                        startActivity(intent);
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -511,6 +506,14 @@ public class ActivityRegister extends AppCompatActivity {
         queue.add(checkRequest);
     }
 
+    private void startMigrantistActivity() {
+        if (gotDetailCount > 0) {
+            Intent intent = new Intent(ActivityRegister.this, ActivityMigrantList.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(intent);
+        }
+    }
+
     public void getMigrantDetails() {
         String api = ApplicationClass.getInstance().getAPIROOT() + apiGetMigrants;
         final ProgressDialog progressDialog = new ProgressDialog(ActivityRegister.this);
@@ -521,6 +524,7 @@ public class ActivityRegister extends AppCompatActivity {
             @Override
             public void onResponse(String response) {
                 try {
+                    ++gotDetailCount;
                     progressDialog.dismiss();
                     Log.d("mylog", "response : " + response);
                     JSONObject responseJson = new JSONObject(response);
@@ -538,6 +542,8 @@ public class ActivityRegister extends AppCompatActivity {
                                     insertMigrants(id, migName, migAge, migPhone, migSex, ApplicationClass.getInstance().getUserId());
                         }
                     }
+
+                    startMigrantistActivity();
                 } catch (Exception ex) {
                     Log.d("mylog", "response exception: " + ex.toString());
                 }
@@ -590,12 +596,14 @@ public class ActivityRegister extends AppCompatActivity {
             @Override
             public void onResponse(String response) {
                 Log.d("mylog", "Responses from migrants: " + response);
+                ++gotDetailCount;
                 try {
                     pdialog.dismiss();
                 } catch (Exception ex) {
                     Log.d("mylog", "Dialog dismissing error or : " + ex.toString());
                 }
                 parseAllResponses(response);
+                startMigrantistActivity();
             }
         }, new Response.ErrorListener() {
             @Override
