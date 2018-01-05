@@ -590,13 +590,21 @@ public class ActivityRegister extends AppCompatActivity {
             @Override
             public void onResponse(String response) {
                 Log.d("mylog", "Responses from migrants: " + response);
-                pdialog.dismiss();
+                try {
+                    pdialog.dismiss();
+                } catch (Exception ex) {
+                    Log.d("mylog", "Dialog dismissing error or : " + ex.toString());
+                }
                 parseAllResponses(response);
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                pdialog.dismiss();
+                try {
+                    pdialog.dismiss();
+                } catch (Exception ex) {
+                    Log.d("mylog", "Dialog dismissing error or : " + ex.toString());
+                }
                 Log.d("mylog", "Error getting all responses: " + error.toString());
             }
         }) {
