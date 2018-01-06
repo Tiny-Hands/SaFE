@@ -17,6 +17,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.android.volley.AuthFailureError;
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -239,7 +240,7 @@ public class ActivityOTPVerification extends AppCompatActivity implements View.O
             }
         };
         RequestQueue queue = Volley.newRequestQueue(ActivityOTPVerification.this);
-        saveRequest.setShouldCache(false);
+        saveRequest.setRetryPolicy(new DefaultRetryPolicy(20*1000, 0, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         queue.add(saveRequest);
     }
 

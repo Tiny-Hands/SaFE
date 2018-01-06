@@ -22,6 +22,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.android.volley.AuthFailureError;
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -171,7 +172,7 @@ public class ActivityRegister extends AppCompatActivity {
             }
         };
         RequestQueue queue = Volley.newRequestQueue(ActivityRegister.this);
-        checkRequest.setShouldCache(false);
+        //checkRequest.setShouldCache(false);
         queue.add(checkRequest);
     }
 
@@ -344,7 +345,8 @@ public class ActivityRegister extends AppCompatActivity {
             }
         };
         RequestQueue queue = Volley.newRequestQueue(ActivityRegister.this);
-        saveRequest.setShouldCache(false);
+        //saveRequest.setShouldCache(false);
+        saveRequest.setRetryPolicy(new DefaultRetryPolicy(20*1000, 0, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         queue.add(saveRequest);
     }
 
@@ -502,7 +504,9 @@ public class ActivityRegister extends AppCompatActivity {
             }
         };
         RequestQueue queue = Volley.newRequestQueue(this);
-        checkRequest.setShouldCache(false);
+        //checkRequest.setShouldCache(false);
+
+        checkRequest.setRetryPolicy(new DefaultRetryPolicy(20*1000, 0, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         queue.add(checkRequest);
     }
 
