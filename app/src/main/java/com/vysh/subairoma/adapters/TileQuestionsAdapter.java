@@ -279,10 +279,15 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
             ivError.setVisibility(View.VISIBLE);
             rootLayout.setBackgroundColor(context.getResources().getColor(R.color.colorErrorFaded));
         } else {
-            if (!response.isEmpty())
+            //Show green checkmark only if checkbox is checked and no error
+            if (response.equalsIgnoreCase("true") && !isError)
                 ivDone.setVisibility(View.VISIBLE);
             else
-                ivDone.setVisibility(View.GONE);
+                ivDone.setVisibility(GONE);
+            /*if (!response.isEmpty())
+                ivDone.setVisibility(View.VISIBLE);
+            else
+                ivDone.setVisibility(View.GONE);*/
             ivError.setVisibility(View.INVISIBLE);
             rootLayout.setBackgroundColor(Color.TRANSPARENT);
         }
@@ -749,6 +754,9 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
                             notifyConditionVariableChange(questionIds);
                         }
                     }
+                    if (!fromSetView)
+                        notifyItemChanged(getAdapterPosition());
+
                 }
             });
         }
