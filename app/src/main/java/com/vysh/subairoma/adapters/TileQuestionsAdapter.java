@@ -278,9 +278,10 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
         if (isError) {
             ivError.setVisibility(View.VISIBLE);
             rootLayout.setBackgroundColor(context.getResources().getColor(R.color.colorErrorFaded));
+            ivDone.setVisibility(GONE);
         } else {
             //Show green checkmark only if checkbox is checked and no error
-            if (response.equalsIgnoreCase("true") && !isError)
+            if (response.equalsIgnoreCase("true"))
                 ivDone.setVisibility(View.VISIBLE);
             else
                 ivDone.setVisibility(GONE);
