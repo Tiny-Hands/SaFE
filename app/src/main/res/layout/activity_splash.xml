@@ -18,8 +18,8 @@
         android:layout_height="64dp"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:visibility="gone"
-        android:layout_marginBottom="@dimen/default_margin" />
+        android:layout_marginBottom="@dimen/default_margin"
+        android:visibility="gone" />
 
     <LinearLayout
         android:id="@+id/llBottom"
@@ -48,5 +48,50 @@
             android:background="?android:attr/selectableItemBackground"
             android:text="Try Again"
             android:textColor="#ff6d00" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/llLang"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="@dimen/default_margin"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <com.vysh.subairoma.utils.CustomTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Language"
+            app:fonts="gotham_medium.ttf" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/default_margin"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <ImageButton
+                android:id="@+id/ibEn"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_marginEnd="@dimen/default_margin"
+                android:layout_marginStart="@dimen/default_margin"
+                android:background="@null"
+                android:scaleType="centerInside"
+                android:src="@drawable/ic_lang_en" />
+
+            <ImageButton
+                android:id="@+id/ibNp"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_marginEnd="@dimen/default_margin"
+                android:layout_marginStart="@dimen/default_margin"
+                android:background="@null"
+                android:scaleType="centerInside"
+                android:src="@drawable/ic_lang_np" />
+        </LinearLayout>
     </LinearLayout>
 </RelativeLayout>

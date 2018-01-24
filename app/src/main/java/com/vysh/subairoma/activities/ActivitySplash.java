@@ -2,17 +2,21 @@ package com.vysh.subairoma.activities;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.transition.TransitionManager;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
@@ -32,6 +36,8 @@ import com.vysh.subairoma.SharedPrefKeys;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -63,6 +69,12 @@ public class ActivitySplash extends AppCompatActivity {
     LinearLayout bottomLayoutMessage;
     @BindView(R.id.btnTryAgain)
     Button btnTryAgain;
+    @BindView(R.id.llLang)
+    LinearLayout llLang;
+    @BindView(R.id.ibEn)
+    ImageButton ibEn;
+    @BindView(R.id.ibNp)
+    ImageButton ibNp;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -76,8 +88,24 @@ public class ActivitySplash extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 getAllData();
-                progressBar.setVisibility(View.VISIBLE);
+                //progressBar.setVisibility(View.VISIBLE);
                 bottomLayoutMessage.setVisibility(View.GONE);
+            }
+        });
+
+        ibEn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                setLocale("en");
+                startRegisterActivity();
+            }
+        });
+
+        ibNp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                setLocale("np");
+                startRegisterActivity();
             }
         });
 
@@ -91,14 +119,28 @@ public class ActivitySplash extends AppCompatActivity {
                 } catch (Exception ex) {
                     Log.d("mylog", "Sleeping exception: " + ex.toString());
                 } finally {
-                    Intent intent = new Intent(ActivitySplash.this, ActivityRegister.class);
-                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-                    startActivity(intent);
+                    startRegisterActivity();
                 }
             }
         });
         sp = getSharedPreferences(SharedPrefKeys.sharedPrefName, MODE_PRIVATE);
+
         getAllData();
+    }
+
+    private void startRegisterActivity() {
+        Intent intent = new Intent(ActivitySplash.this, ActivityRegister.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
+    }
+
+    private void setLocale(String lang) {
+        Locale myLocale = new Locale(lang);
+        Resources res = getResources();
+        DisplayMetrics dm = res.getDisplayMetrics();
+        Configuration conf = res.getConfiguration();
+        conf.locale = myLocale;
+        res.updateConfiguration(conf, dm);
     }
 
     private void getAllData() {
@@ -108,6 +150,14 @@ public class ActivitySplash extends AppCompatActivity {
             Log.d("mylog", "Starting save");
             dbHelper = new SQLDatabaseHelper(ActivitySplash.this);
             dbHelper.getWritableDatabase();
+            savedCount = 0;
+            getTiles();
+            getQuestions();
+            getOptions();
+            getCountries();
+            getContacts();
+            getFeedbackQuestions();
+            /*
             if (!sp.getBoolean(SharedPrefKeys.savedTiles, false)) {
                 Log.d("mylog", "Getting tiles");
                 getTiles();
@@ -132,12 +182,13 @@ public class ActivitySplash extends AppCompatActivity {
                 Log.d("mylog", "Getting feedback questions");
                 getFeedbackQuestions();
             } else incrementCount();
+            */
         } else {
             Log.d("mylog", "Saved already, starting");
             //Start activity directly or show splash
-            long currTime = System.currentTimeMillis();
-            sleepTime = 2000;
-            sleepThread.start();
+            //sleepTime = 2000;
+            //sleepThread.start();
+            showLangOptions();
         }
     }
 
@@ -451,8 +502,8 @@ public class ActivitySplash extends AppCompatActivity {
                             + " Status: " + tempCountry.getInt("country_status") + " Blacklist: " + tempCountry.getInt("country_blacklist"));
                     dbHelper.insertCountry(id, name, status, blacklist, order);
                 }
+                incrementCount();
             }
-            incrementCount();
         } catch (JSONException e) {
             Log.d("mylog", "Error parsing countries: " + e.toString());
         }
@@ -480,7 +531,13 @@ public class ActivitySplash extends AppCompatActivity {
         editor.putInt("savedcount", savedCount);
         editor.commit();
         if (savedCount == 6) {
-            checkSleep();
+            //checkSleep();
+            showLangOptions();
         }
+    }
+
+    private void showLangOptions() {
+        progressBar.setVisibility(View.GONE);
+        llLang.setVisibility(View.VISIBLE);
     }
 }
