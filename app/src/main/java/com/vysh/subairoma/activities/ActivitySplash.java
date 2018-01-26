@@ -21,6 +21,7 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 
+import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -37,7 +38,9 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -57,6 +60,8 @@ public class ActivitySplash extends AppCompatActivity {
     private int savedCount = 0;
     private long startTime;
     private long sleepTime;
+    private String lang;
+    private HashMap<String, String> fParams;
 
     SharedPreferences sp;
 
@@ -79,6 +84,11 @@ public class ActivitySplash extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        sp = getSharedPreferences(SharedPrefKeys.sharedPrefName, MODE_PRIVATE);
+        if (sp.getInt(SharedPrefKeys.savedTableCount, 0) == 6) {
+            startRegisterActivity();
+            return;
+        }
         setContentView(R.layout.activity_splash);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         Fabric.with(this, new Crashlytics());
@@ -97,7 +107,11 @@ public class ActivitySplash extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 setLocale("en");
-                startRegisterActivity();
+                lang = "en";
+                fParams = new HashMap<>();
+                fParams.put("lang", lang);
+                hideLangOptions();
+                getAllData();
             }
         });
 
@@ -105,7 +119,11 @@ public class ActivitySplash extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 setLocale("np");
-                startRegisterActivity();
+                lang = "en";
+                fParams = new HashMap<>();
+                fParams.put("lang", lang);
+                hideLangOptions();
+                getAllData();
             }
         });
 
@@ -123,9 +141,6 @@ public class ActivitySplash extends AppCompatActivity {
                 }
             }
         });
-        sp = getSharedPreferences(SharedPrefKeys.sharedPrefName, MODE_PRIVATE);
-
-        getAllData();
     }
 
     private void startRegisterActivity() {
@@ -188,7 +203,7 @@ public class ActivitySplash extends AppCompatActivity {
             //Start activity directly or show splash
             //sleepTime = 2000;
             //sleepThread.start();
-            showLangOptions();
+            startRegisterActivity();
         }
     }
 
@@ -217,7 +232,7 @@ public class ActivitySplash extends AppCompatActivity {
 
     private void getTiles() {
         String api = ApplicationClass.getInstance().getAPIROOT() + tilesAPI;
-        StringRequest getRequest = new StringRequest(Request.Method.GET, api, new Response.Listener<String>() {
+        StringRequest getRequest = new StringRequest(Request.Method.POST, api, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 //SAVE RESPONSE IN LOCAL DB
@@ -233,7 +248,12 @@ public class ActivitySplash extends AppCompatActivity {
                 Log.d("mylog", "Got Tiles error: " + error.toString());
                 showErrorResponse();
             }
-        });
+        }) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                return fParams;
+            }
+        };
         RequestQueue queue = Volley.newRequestQueue(ActivitySplash.this);
         queue.add(getRequest);
     }
@@ -248,7 +268,7 @@ public class ActivitySplash extends AppCompatActivity {
 
     private void getQuestions() {
         String api = ApplicationClass.getInstance().getAPIROOT() + questionAPI;
-        StringRequest getRequest = new StringRequest(Request.Method.GET, api, new Response.Listener<String>() {
+        StringRequest getRequest = new StringRequest(Request.Method.POST, api, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 //SAVE RESPONSE IN LOCAL DB
@@ -264,14 +284,19 @@ public class ActivitySplash extends AppCompatActivity {
                 Log.d("mylog", "Error getting questions: " + error.toString());
                 showErrorResponse();
             }
-        });
+        }) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                return fParams;
+            }
+        };
         RequestQueue queue = Volley.newRequestQueue(ActivitySplash.this);
         queue.add(getRequest);
     }
 
     private void getOptions() {
         String api = ApplicationClass.getInstance().getAPIROOT() + optionsAPI;
-        StringRequest getRequest = new StringRequest(Request.Method.GET, api, new Response.Listener<String>() {
+        StringRequest getRequest = new StringRequest(Request.Method.POST, api, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 //SAVE RESPONSE IN LOCAL DB
@@ -287,14 +312,19 @@ public class ActivitySplash extends AppCompatActivity {
                 Log.d("mylog", "Error getting options: " + error.toString());
                 showErrorResponse();
             }
-        });
+        }) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                return fParams;
+            }
+        };
         RequestQueue queue = Volley.newRequestQueue(ActivitySplash.this);
         queue.add(getRequest);
     }
 
     private void getCountries() {
         String api = ApplicationClass.getInstance().getAPIROOT() + countiesAPI;
-        StringRequest getRequest = new StringRequest(Request.Method.GET, api, new Response.Listener<String>() {
+        StringRequest getRequest = new StringRequest(Request.Method.POST, api, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 //SAVE RESPONSE IN LOCAL DB
@@ -310,14 +340,19 @@ public class ActivitySplash extends AppCompatActivity {
                 Log.d("mylog", "Error getting countries: " + error.toString());
                 showErrorResponse();
             }
-        });
+        }) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                return fParams;
+            }
+        };
         RequestQueue queue = Volley.newRequestQueue(ActivitySplash.this);
         queue.add(getRequest);
     }
 
     public void getFeedbackQuestions() {
         String api = ApplicationClass.getInstance().getAPIROOT() + feedbackQuestions;
-        StringRequest getRequest = new StringRequest(Request.Method.GET, api, new Response.Listener<String>() {
+        StringRequest getRequest = new StringRequest(Request.Method.POST, api, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 //SAVE RESPONSE IN LOCAL DB
@@ -333,7 +368,12 @@ public class ActivitySplash extends AppCompatActivity {
                 Log.d("mylog", "Error getting countries: " + error.toString());
                 showErrorResponse();
             }
-        });
+        }) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                return fParams;
+            }
+        };
         RequestQueue queue = Volley.newRequestQueue(ActivitySplash.this);
         queue.add(getRequest);
     }
@@ -532,12 +572,12 @@ public class ActivitySplash extends AppCompatActivity {
         editor.commit();
         if (savedCount == 6) {
             //checkSleep();
-            showLangOptions();
+            startRegisterActivity();
         }
     }
 
-    private void showLangOptions() {
-        progressBar.setVisibility(View.GONE);
-        llLang.setVisibility(View.VISIBLE);
+    private void hideLangOptions() {
+        progressBar.setVisibility(View.VISIBLE);
+        llLang.setVisibility(View.GONE);
     }
 }

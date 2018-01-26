@@ -57,8 +57,7 @@
         android:layout_alignParentBottom="true"
         android:layout_marginBottom="@dimen/default_margin"
         android:gravity="center"
-        android:orientation="vertical"
-        android:visibility="gone">
+        android:orientation="vertical">
 
         <com.vysh.subairoma.utils.CustomTextView
             android:layout_width="wrap_content"
