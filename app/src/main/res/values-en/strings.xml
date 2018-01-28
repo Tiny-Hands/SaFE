@@ -2,31 +2,31 @@
     <string name="app_name">सुवैरोमा </string>
     <string name="user_name">विशाल श्रेष्ठ </string>
     <string name="code">CODE</string>
-    <string name="important_contacts">महत्त्वपूर्ण सम्पर्क ठेगानाहरू</string>
-    <string name="nepal_embassay">नेपाली दूतावास</string>
-    <string name="disclaimer">नेपालबाट विदेशमा काम गर्न जाने धेरै व्यक्तिहरू शोषणमा पर्ने गर्दछन् । उनीहरू ठगिन्छन्, गाह्रो अवस्थाहरूमा काम गर्न बाध्य पारिन्छन्, पिटिन्छन्, उनीहरूले भनेको तलब र सुविधा पाउने गर्दैनन् र कति त यतना र यौनशोषणमा पर्नेगर्दछन् । कति विदेशमा थुनामा पर्दछन् त कतिले आत्माहत्या गर्नेगर्दछन् । यो एपले वैदेशिक रोजगारीमा जान चाहाने नेपालीहरूलाई ठगि र शोषणबाट बचेर सुरक्षित र लाभदायक रोजगारी पत्ता लगाउन सहायता गर्दछ तर सुरक्षाको भने पूर्ण सुनिश्चितता गर्दैन ।</string>
-    <string name="disclaimer_button">मैले बुझे</string>
-    <string name="disclaimer_title">प्रतिदावी</string>
-    <string name="finalAnswerVerificationTitle">अघि बढ्नु पहिले</string>
-    <string name="finalAnswerVerification">तपाईँले यस सुवैरोमा एपको वैदेशिक रोजगारी तयारी भाग पुरा गर्नुभएको छ । अगाडि बढ्नुभन्दा पहिले तपाईँले दिनुभएका उत्तरहरू परिवर्तन गर्दिन भनेर स्वीकार्नुपर्दछ । यदि तपाईँले कुनै खण्डको उत्तर परिवर्तन गर्नुपरेमा अहिले गर्नुहोला । उत्तरहरू परिवर्तन गर्नुहुन्न भने तल चिनो लगाउनुहोस् ।.</string>
-    <string name="finalAnswerButton">म मैले दिएका उत्तरहरू परिवर्तन गर्ने छैन ।</string>
+    <string name="important_contacts">Important Contacts</string>
+    <string name="nepal_embassay">Nepal Embassy</string>
+    <string name="disclaimer">Many Nepali people who go overseas for employment end up being exploited.  They are tricked, cheated, seldom get the promised salary, forced to work in difficult conditions, beaten, tortured, and sexually abused.  Many end up in prison in foreign countries or commit suicide. This app is designed to help Nepali people seeking overseas work to avoid being deceived or exploited, and to find safe and prosperous employment. Following the steps laid out in this app will increase the chances of you having a safe foreign employment experience, however, we cannot guarantee that this will happen every time.</string>
+    <string name="disclaimer_button">I understand</string>
+    <string name="disclaimer_title">Disclaimer</string>
+    <string name="finalAnswerVerificationTitle">Before moving on</string>
+    <string name="finalAnswerVerification">You have completed the foreign employment preparation part of the app. To continue forward please agree to not to change the previous answers. If you have to change your answers please go back and do it now, otherwise please check I agree to not change my answers.</string>
+    <string name="finalAnswerButton">I Will Not Change my Answers</string>
     <string name="opt_message">We are sending an SMS with a code to your phone number. Please enter it below. It may take upto 5 minutes</string>
 
     <!-- Generic -->
-    <string name="next">अगाडि बढ्नु</string>
-    <string name="proceed">अगाडि बढ्नु</string>
-    <string name="back">फिर्ता</string>
-    <string name="okay">ठीक छ</string>
-    <string name="understand">मैले बुझें</string>
+    <string name="next">Next</string>
+    <string name="proceed">Next</string>
+    <string name="back">Back</string>
+    <string name="okay">Okay</string>
+    <string name="understand">I understand</string>
 
     <!-- Feedback -->
     <string name="feedback_trial">How did this section of the app help you?</string>
-    <string name="support">समर्थन</string>
-    <string name="send">पठाउनुहोस्</string>
-    <string name="enter_query">आफ्नो प्रश्न प्रविष्ट गर्नुहोस्</string>
+    <string name="support">Support</string>
+    <string name="send">Send</string>
+    <string name="enter_query">Enter your query</string>
 
     <!-- Error Dialogs -->
-    <string name="error">होसियार</string>
+    <string name="error">Error</string>
 
     <!-- OTP Activity -->
     <string name="no_otp_receiption">Didn\'t receive OTP?</string>
@@ -34,46 +34,46 @@
     <string name="no_otp_patient">Please be patient, You should receive the code in about 10 seconds.</string>
 
     <!-- Country Chooser -->
-    <string name="choose_another_country">अर्को देश छनौट गर्नुहोस्</string>
-    <string name="blacklisted">प्रतिबन्धित</string>
-    <string name="blacklisted_message">यो देश प्रतिबन्धित छ</string>
-    <string name="not_open">खुला छैन</string>
-    <string name="not_open_message">यो देश खुला छैन</string>
-    <string name="go_regardless">जान चाहन्छु</string>
-    <string name="select_country">कृपया देश चयन गर्नुहोस्</string>
+    <string name="choose_another_country">Choose another country</string>
+    <string name="blacklisted">Blacklisted</string>
+    <string name="blacklisted_message">This country is blacklisted</string>
+    <string name="not_open">Not open</string>
+    <string name="not_open_message">This country is not open</string>
+    <string name="go_regardless">Go anyway</string>
+    <string name="select_country">Choose a country</string>
 
     <!-- Activity Migrant List -->
-    <string name="select_migrant">प्रवासी चयन गर्नुहोस्</string>
-    <string name="not_started">अहिले सम्म सुरू भएको छैन</string>
+    <string name="select_migrant">Select a migrant</string>
+    <string name="not_started">Not started yet</string>
 
     <!-- Activity Register -->
-    <string name="edit_profile">सम्पादन गर्नु</string>
-    <string name="edit_migrant">प्रवासी सम्पादन गर्नु</string>
-    <string name="add_migrant">प्रवासी थप्नु</string>
-    <string name="register">दर्ता गर्नुहोस्</string>
-    <string name="helper">म अरूलाई सहयोग गर्दैछु</string>
-    <string name="aspiringmigrant">म इच्छुक प्रवासी हुँ</string>
+    <string name="edit_profile">Edit</string>
+    <string name="edit_migrant">Edit Migrant</string>
+    <string name="add_migrant">Add Migrant</string>
+    <string name="register">Register</string>
+    <string name="helper">I am helping others</string>
+    <string name="aspiringmigrant">I am an aspiring migrant</string>
 
     <!-- Activity Tile Home -->
-    <string name="going_to">जाँदै</string>
+    <string name="going_to"> </string>
 
     <!-- Tile Questions -->
-    <string name="need_help">सहयोग चाहियो?</string>
+    <string name="need_help">Need help?</string>
 
     <!-- Registration -->
-    <string name="migrants_name">प्रवासीको नाम</string>
-    <string name="full_name">पुरा नाम</string>
-    <string name="migrants_phone_number">प्रवासीको फोन नम्बर</string>
-    <string name="phone_number">फोन नम्बर</string>
-    <string name="migrants_age">प्रवासीको उमेर</string>
-    <string name="age">उमेर</string>
-    <string name="gender">लिङ्ग</string>
-    <string name="male">पुरुष</string>
-    <string name="female">महिला</string>
-    <string name="or">वा</string>
-    <string name="already_registered">पहिले नै दर्ता गरिएको</string>
-    <string name="facebook_login">फेसबुक लगइन</string>
-    <string name="logout">लोग आउट</string>
+    <string name="migrants_name">Migrant name</string>
+    <string name="full_name">Full name</string>
+    <string name="migrants_phone_number">Migrant phone number</string>
+    <string name="phone_number">Phone number</string>
+    <string name="migrants_age">Migrant age</string>
+    <string name="age">Age</string>
+    <string name="gender">Gender</string>
+    <string name="male">Male</string>
+    <string name="female">Female</string>
+    <string name="or">Or</string>
+    <string name="already_registered">Already Registered</string>
+    <string name="facebook_login">Facebook Login</string>
+    <string name="logout">Logout</string>
 
     <!-- Required for facebook Login -->
     <string name="facebook_app_id">118900038809550</string>
