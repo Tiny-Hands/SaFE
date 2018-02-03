@@ -26,8 +26,6 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.facebook.AccessToken;
-import com.facebook.AccessTokenTracker;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
@@ -184,8 +182,7 @@ public class ActivityProfileEdit extends AppCompatActivity implements View.OnCli
         final String fbId = id;
         String api = ApplicationClass.getInstance().getAPIROOT() + apiaddFbId;
         final ProgressDialog progressDialog = new ProgressDialog(ActivityProfileEdit.this);
-        progressDialog.setTitle("Please wait");
-        progressDialog.setMessage("Associating with Facebook Account...");
+        progressDialog.setMessage(getResources().getString(R.string.adding_fb_acc));
         progressDialog.show();
         StringRequest checkRequest = new StringRequest(Request.Method.POST, api, new Response.Listener<String>() {
             @Override
@@ -291,8 +288,8 @@ public class ActivityProfileEdit extends AppCompatActivity implements View.OnCli
     private void sendToServer(String API, final int id, final String name, final String age,
                               final String number, final String sex) {
         final ProgressDialog progressDialog = new ProgressDialog(ActivityProfileEdit.this);
-        progressDialog.setTitle("Please wait");
-        progressDialog.setMessage("Updating...");
+        //progressDialog.setTitle("Please wait");
+        progressDialog.setMessage(getResources().getString(R.string.updating));
         progressDialog.setCancelable(false);
         progressDialog.show();
         StringRequest saveRequest = new StringRequest(Request.Method.POST, API, new Response.Listener<String>() {

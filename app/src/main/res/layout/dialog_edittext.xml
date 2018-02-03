@@ -10,7 +10,7 @@
     <com.vysh.subairoma.utils.CustomTextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="LOGIN"
+        android:text="@string/login"
         app:fonts="gotham_bold.ttf" />
 
     <com.vysh.subairoma.utils.CustomTextView
@@ -18,7 +18,7 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/medium_margin"
         android:layout_marginTop="@dimen/medium_margin"
-        android:text="Enter the number that you registered"
+        android:text="@string/enter_reg_number"
         app:fonts="gotham_light.ttf" />
 
     <EditText
@@ -27,7 +27,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/default_margin"
         android:background="@drawable/bg_edittext"
-        android:hint="Phone Number"
+        android:hint="@string/phone_number"
         android:imeOptions="actionDone"
         android:inputType="number"
         android:maxLength="10"

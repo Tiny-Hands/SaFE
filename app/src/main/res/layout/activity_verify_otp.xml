@@ -25,7 +25,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
-                android:text="VERIFY PHONE"
+                android:text="@string/verify_phone"
                 android:textColor="#fff"
                 app:fonts="gotham_bold.ttf" />
         </RelativeLayout>
@@ -97,7 +97,7 @@
             android:layout_marginRight="@dimen/card_small_margin"
             android:layout_weight="1"
             android:background="@drawable/default_rounded_button_accent"
-            android:text="CHANGE NUMBER"
+            android:text="@string/change_number"
             android:textColor="#fff" />
 
         <Button
@@ -107,7 +107,7 @@
             android:layout_marginLeft="@dimen/card_small_margin"
             android:layout_weight="1"
             android:background="@drawable/default_rounded_button"
-            android:text="VERIFY"
+            android:text="@string/verify_code"
             android:textColor="#fff" />
     </LinearLayout>
 </RelativeLayout>

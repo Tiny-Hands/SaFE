@@ -41,7 +41,7 @@
                 android:layout_margin="@dimen/default_margin"
                 android:gravity="center"
                 android:textSize="@dimen/feedback_list_heading"
-                android:text="Please check one and help us improve!"
+                android:text="@string/feedback_msg"
                 android:textColor="@color/colorAccent"
                 app:fonts="gotham_light.ttf" />
 

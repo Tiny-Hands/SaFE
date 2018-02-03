@@ -148,7 +148,7 @@ public class ActivityOTPVerification extends AppCompatActivity implements View.O
     private void sendOTP() {
         String api = ApplicationClass.getInstance().getAPIROOT() + apiOTP;
         final ProgressDialog progressDialog = new ProgressDialog(ActivityOTPVerification.this);
-        progressDialog.setMessage("Sending OTP...");
+        progressDialog.setMessage(getResources().getString(R.string.sending_otp));
         progressDialog.setCancelable(false);
         progressDialog.show();
         StringRequest saveRequest = new StringRequest(Request.Method.POST, api, new Response.Listener<String>() {
@@ -200,8 +200,7 @@ public class ActivityOTPVerification extends AppCompatActivity implements View.O
     private void registerUser(String api) {
         Log.d("mylog", "API called: " + api);
         final ProgressDialog progressDialog = new ProgressDialog(ActivityOTPVerification.this);
-        progressDialog.setTitle("Please wait");
-        progressDialog.setMessage("Registering...");
+        progressDialog.setMessage(getResources().getString(R.string.registering));
         progressDialog.setCancelable(false);
         progressDialog.show();
         StringRequest saveRequest = new StringRequest(Request.Method.POST, api, new Response.Listener<String>() {
@@ -240,7 +239,7 @@ public class ActivityOTPVerification extends AppCompatActivity implements View.O
             }
         };
         RequestQueue queue = Volley.newRequestQueue(ActivityOTPVerification.this);
-        saveRequest.setRetryPolicy(new DefaultRetryPolicy(20*1000, 0, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        saveRequest.setRetryPolicy(new DefaultRetryPolicy(20 * 1000, 0, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         queue.add(saveRequest);
     }
 

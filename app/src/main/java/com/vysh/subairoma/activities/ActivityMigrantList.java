@@ -182,8 +182,7 @@ public class ActivityMigrantList extends AppCompatActivity {
     private void getMigrants() {
         String api = ApplicationClass.getInstance().getAPIROOT() + API;
         final ProgressDialog progressDialog = new ProgressDialog(ActivityMigrantList.this);
-        progressDialog.setTitle("Please wait");
-        progressDialog.setMessage("Getting migrants...");
+        progressDialog.setMessage(getResources().getString(R.string.getting_mig_details));
         try {
             progressDialog.show();
         } catch (Exception ex) {

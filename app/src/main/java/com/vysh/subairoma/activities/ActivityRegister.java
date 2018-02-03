@@ -124,8 +124,8 @@ public class ActivityRegister extends AppCompatActivity {
         final String pNumber = number;
         String api = ApplicationClass.getInstance().getAPIROOT() + apiAlreadyRegistered;
         final ProgressDialog progressDialog = new ProgressDialog(ActivityRegister.this);
-        progressDialog.setTitle("Please wait");
-        progressDialog.setMessage("Checking Registration...");
+        //progressDialog.setTitle("Please wait");
+        progressDialog.setMessage("Checking Registration");
         progressDialog.show();
         StringRequest checkRequest = new StringRequest(Request.Method.POST, api, new Response.Listener<String>() {
             @Override
@@ -305,8 +305,8 @@ public class ActivityRegister extends AppCompatActivity {
     private void registerMigrant(String api) {
         Log.d("mylog", "API called: " + api);
         final ProgressDialog progressDialog = new ProgressDialog(ActivityRegister.this);
-        progressDialog.setTitle("Please wait");
-        progressDialog.setMessage("Registering...");
+        //progressDialog.setTitle("Please wait");
+        progressDialog.setMessage(getResources().getString(R.string.registering));
         progressDialog.setCancelable(false);
         progressDialog.show();
         StringRequest saveRequest = new StringRequest(Request.Method.POST, api, new Response.Listener<String>() {
@@ -346,7 +346,7 @@ public class ActivityRegister extends AppCompatActivity {
         };
         RequestQueue queue = Volley.newRequestQueue(ActivityRegister.this);
         //saveRequest.setShouldCache(false);
-        saveRequest.setRetryPolicy(new DefaultRetryPolicy(20*1000, 0, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        saveRequest.setRetryPolicy(new DefaultRetryPolicy(20 * 1000, 0, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         queue.add(saveRequest);
     }
 
@@ -459,8 +459,8 @@ public class ActivityRegister extends AppCompatActivity {
         final String fbId = fid;
         String api = ApplicationClass.getInstance().getAPIROOT() + checkFbId;
         final ProgressDialog progressDialog = new ProgressDialog(this);
-        progressDialog.setTitle("Please wait");
-        progressDialog.setMessage("Checking Registration...");
+        //progressDialog.setTitle("Please wait");
+        progressDialog.setMessage(getResources().getString(R.string.checking_registration));
         progressDialog.show();
         StringRequest checkRequest = new StringRequest(Request.Method.POST, api, new Response.Listener<String>() {
             @Override
@@ -506,7 +506,7 @@ public class ActivityRegister extends AppCompatActivity {
         RequestQueue queue = Volley.newRequestQueue(this);
         //checkRequest.setShouldCache(false);
 
-        checkRequest.setRetryPolicy(new DefaultRetryPolicy(20*1000, 0, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        checkRequest.setRetryPolicy(new DefaultRetryPolicy(20 * 1000, 0, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         queue.add(checkRequest);
     }
 
@@ -521,8 +521,8 @@ public class ActivityRegister extends AppCompatActivity {
     public void getMigrantDetails() {
         String api = ApplicationClass.getInstance().getAPIROOT() + apiGetMigrants;
         final ProgressDialog progressDialog = new ProgressDialog(ActivityRegister.this);
-        progressDialog.setTitle("Please wait");
-        progressDialog.setMessage("Getting Migrant Details");
+        //progressDialog.setTitle("Please wait");
+        progressDialog.setMessage(getResources().getString(R.string.getting_mig_details));
         progressDialog.show();
         StringRequest getRequest = new StringRequest(Request.Method.POST, api, new Response.Listener<String>() {
             @Override
@@ -593,8 +593,8 @@ public class ActivityRegister extends AppCompatActivity {
         else
             api = ApplicationClass.getInstance().getAPIROOT() + apiGetResponses;
         final ProgressDialog pdialog = new ProgressDialog(ActivityRegister.this);
-        pdialog.setTitle("Setting Up");
-        pdialog.setMessage("Getting Migrant Responses");
+        //pdialog.setTitle("Setting Up");
+        pdialog.setMessage(getResources().getString(R.string.getting_mig_details));
         pdialog.show();
         StringRequest stringRequest = new StringRequest(Request.Method.POST, api, new Response.Listener<String>() {
             @Override

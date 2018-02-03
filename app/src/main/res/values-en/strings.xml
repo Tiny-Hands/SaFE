@@ -10,7 +10,7 @@
     <string name="finalAnswerVerificationTitle">Before moving on</string>
     <string name="finalAnswerVerification">You have completed the foreign employment preparation part of the app. To continue forward please agree to not to change the previous answers. If you have to change your answers please go back and do it now, otherwise please check I agree to not change my answers.</string>
     <string name="finalAnswerButton">I Will Not Change my Answers</string>
-    <string name="opt_message">We are sending an SMS with a code to your phone number. Please enter it below. It may take upto 5 minutes</string>
+    <string name="opt_message">We are sending an SMS with a code to your phone number. Please enter it below. It may take upto 1 minute</string>
 
     <!-- Generic -->
     <string name="next">Next</string>
@@ -31,7 +31,7 @@
     <!-- OTP Activity -->
     <string name="no_otp_receiption">Didn\'t receive OTP?</string>
     <string name="no_otp_try_again">Send Code Again</string>
-    <string name="no_otp_patient">Please be patient, You should receive the code in about 10 seconds.</string>
+    <string name="no_otp_patient">Please be patient, You should receive the code in about 1 minute.</string>
 
     <!-- Country Chooser -->
     <string name="choose_another_country">Choose another country</string>
@@ -74,6 +74,21 @@
     <string name="already_registered">Already Registered</string>
     <string name="facebook_login">Facebook Login</string>
     <string name="logout">Logout</string>
+
+    <!-- Progress Dialogs -->
+    <string name="getting_mig_details">Getting migrant details</string>
+    <string name="checking_registration">Checking registration</string>
+    <string name="getting_mig_responses">Getting migrant responses</string>
+    <string name="registering">Registering</string>
+    <string name="adding_fb_acc">Adding Facebook account</string>
+    <string name="updating">Updating</string>
+    <string name="sending_otp">Sending OTP</string>
+    <string name="feedback_msg">Please check one and help us improve</string>
+    <string name="login">Login</string>
+    <string name="enter_reg_number">Enter the number that you registered</string>
+    <string name="verify_phone">Verify Phone</string>
+    <string name="change_number">CHANGE NUMBER</string>
+    <string name="verify_code">VERIFY</string>
 
     <!-- Required for facebook Login -->
     <string name="facebook_app_id">118900038809550</string>
