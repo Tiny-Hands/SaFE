@@ -119,7 +119,7 @@ public class ActivitySplash extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 setLocale("np");
-                lang = "en";
+                lang = "np";
                 fParams = new HashMap<>();
                 fParams.put("lang", lang);
                 hideLangOptions();
