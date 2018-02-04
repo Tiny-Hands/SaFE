@@ -46,8 +46,8 @@ public class DialogLoginOptions extends DialogFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.dialog_login_options, container, false);
-        btnPhoneLogin = (Button) view.findViewById(R.id.btnPhoneLogin);
-        loginButton = (LoginButton) view.findViewById(R.id.login_button);
+        btnPhoneLogin = view.findViewById(R.id.btnPhoneLogin);
+        loginButton = view.findViewById(R.id.login_button);
         setUpListeners();
         return view;
     }
@@ -97,8 +97,8 @@ public class DialogLoginOptions extends DialogFragment {
                 final View dialogView = inflater.inflate(R.layout.dialog_edittext, null);
                 dialogBuilder.setView(dialogView);
 
-                final EditText etRNumber = (EditText) dialogView.findViewById(R.id.etInput);
-                dialogBuilder.setPositiveButton("Done", new DialogInterface.OnClickListener() {
+                final EditText etRNumber = dialogView.findViewById(R.id.etInput);
+                dialogBuilder.setPositiveButton(getResources().getString(R.string.done), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
                         final String number = etRNumber.getText().toString();
                         if (!number.isEmpty() && number.length() == 10) {
@@ -108,7 +108,7 @@ public class DialogLoginOptions extends DialogFragment {
                         }
                     }
                 });
-                dialogBuilder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                dialogBuilder.setNegativeButton(getResources().getString(R.string.cancel), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
                         dialog.dismiss();
                     }

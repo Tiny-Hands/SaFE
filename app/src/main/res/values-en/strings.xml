@@ -89,6 +89,10 @@
     <string name="verify_phone">Verify Phone</string>
     <string name="change_number">CHANGE NUMBER</string>
     <string name="verify_code">VERIFY</string>
+    <string name="done">Done</string>
+    <string name="cancel">Cancel</string>
+    <string name="login_with_phone" >Login with phone number</string>
+    <string name="login_with_fb">Login with Facebook</string>
 
     <!-- Required for facebook Login -->
     <string name="facebook_app_id">118900038809550</string>
