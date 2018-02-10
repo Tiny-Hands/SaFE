@@ -14,6 +14,7 @@ import android.widget.TextView;
 
 import com.vysh.subairoma.ApplicationClass;
 import com.vysh.subairoma.SQLHelpers.SQLDatabaseHelper;
+import com.vysh.subairoma.activities.ActivityImportantContacts;
 import com.vysh.subairoma.activities.ActivityTileHome;
 import com.vysh.subairoma.activities.ActivityTileQuestions;
 import com.vysh.subairoma.R;
@@ -26,16 +27,17 @@ import java.util.ArrayList;
  */
 
 public class TileAdapter extends RecyclerView.Adapter<TileAdapter.TileViewHolder> {
-
     ArrayList<TilesModel> tileList;
     int[] ivTiles;
     SQLDatabaseHelper sqlDatabaseHelper;
     Context context;
+    String cid;
 
-    public TileAdapter(ArrayList list, int[] tiles, Context cxt) {
+    public TileAdapter(ArrayList list, int[] tiles, Context cxt, String countryId) {
         tileList = list;
         ivTiles = tiles;
         context = cxt;
+        cid = countryId;
     }
 
     @Override
@@ -47,29 +49,35 @@ public class TileAdapter extends RecyclerView.Adapter<TileAdapter.TileViewHolder
 
     @Override
     public void onBindViewHolder(TileViewHolder holder, final int position) {
-        holder.tvTile.setText(tileList.get(position).getTitle());
-        if (ActivityTileHome.finalSection) {
-            if (tileList.get(position).getType().equalsIgnoreCase("GAS")) {
-                holder.viewDisabled.setVisibility(View.GONE);
-            } else {
-                holder.viewDisabled.setVisibility(View.VISIBLE);
+        //Show Important contacts tile at the bottom
+        if (position == tileList.size() && !ActivityTileHome.finalSection) {
+            holder.tvTile.setText(context.getResources().getString(R.string.important_contacts));
+            holder.ivTile.setImageResource(R.drawable.ic_phonebook);
+        } else {
+            holder.tvTile.setText(tileList.get(position).getTitle());
+            if (ActivityTileHome.finalSection) {
+                if (tileList.get(position).getType().equalsIgnoreCase("GAS")) {
+                    holder.viewDisabled.setVisibility(View.GONE);
+                } else {
+                    holder.viewDisabled.setVisibility(View.VISIBLE);
+                }
             }
-        }
-        int errorCount = sqlDatabaseHelper.getTileErrorCount(ApplicationClass.getInstance().getMigrantId(),
-                tileList.get(position).getTileId());
-        Log.d("mylog", "Tile Errors: " + errorCount + " For tile ID: " + tileList.get(position).getTileId());
-        if (errorCount > 0) {
-            for (int i = 0; i < errorCount; i++) {
-                ImageView imgView = new ImageView(holder.llErrorLayout.getContext());
-                LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams((int)context.getResources().getDimension(R.dimen.redflag_dimen),
-                        (int)context.getResources().getDimension(R.dimen.redflag_dimen));
-                imgView.setLayoutParams(lp);
-                imgView.setImageResource(R.drawable.ic_redflag);
-                holder.llErrorLayout.addView(imgView);
+            int errorCount = sqlDatabaseHelper.getTileErrorCount(ApplicationClass.getInstance().getMigrantId(),
+                    tileList.get(position).getTileId());
+            Log.d("mylog", "Tile Errors: " + errorCount + " For tile ID: " + tileList.get(position).getTileId());
+            if (errorCount > 0) {
+                for (int i = 0; i < errorCount; i++) {
+                    ImageView imgView = new ImageView(holder.llErrorLayout.getContext());
+                    LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams((int) context.getResources().getDimension(R.dimen.redflag_dimen),
+                            (int) context.getResources().getDimension(R.dimen.redflag_dimen));
+                    imgView.setLayoutParams(lp);
+                    imgView.setImageResource(R.drawable.ic_redflag);
+                    holder.llErrorLayout.addView(imgView);
+                }
             }
+            setTileIcons(holder.ivTile, tileList.get(position).getTileId());
+            //holder.ivTile.setBackgroundResource(ivTiles[position]);
         }
-        setTileIcons(holder.ivTile, tileList.get(position).getTileId());
-        //holder.ivTile.setBackgroundResource(ivTiles[position]);
     }
 
     private void setTileIcons(ImageView ivTile, int tileId) {
@@ -120,7 +128,11 @@ public class TileAdapter extends RecyclerView.Adapter<TileAdapter.TileViewHolder
 
     @Override
     public int getItemCount() {
-        return tileList.size();
+        //Cuz showing extra tile in the bottom of GAS
+        if (!ActivityTileHome.finalSection) {
+            return tileList.size() + 1;
+        } else
+            return tileList.size();
     }
 
     public class TileViewHolder extends RecyclerView.ViewHolder {
@@ -134,31 +146,37 @@ public class TileAdapter extends RecyclerView.Adapter<TileAdapter.TileViewHolder
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (ActivityTileHome.finalSection) {
-                        if (tileList.get(getAdapterPosition()).getType().equalsIgnoreCase("GAS")) {
-                            Intent intent = new Intent(v.getContext(), ActivityTileQuestions.class);
-                            intent.putExtra("tileId", tileList.get(getAdapterPosition()).getTileId());
-                            intent.putExtra("tileName", tileList.get(getAdapterPosition()).getTitle());
-                            v.getContext().startActivity(intent);
+                    if (getAdapterPosition() == tileList.size()) {
+                        Intent impIntent = new Intent(context.getApplicationContext(), ActivityImportantContacts.class);
+                        impIntent.putExtra("countryId", cid);
+                        context.startActivity(impIntent);
+                    } else {
+                        if (ActivityTileHome.finalSection) {
+                            if (tileList.get(getAdapterPosition()).getType().equalsIgnoreCase("GAS")) {
+                                Intent intent = new Intent(v.getContext(), ActivityTileQuestions.class);
+                                intent.putExtra("tileId", tileList.get(getAdapterPosition()).getTileId());
+                                intent.putExtra("tileName", tileList.get(getAdapterPosition()).getTitle());
+                                v.getContext().startActivity(intent);
+                            } else {
+                                Intent intent = new Intent(v.getContext(), ActivityTileQuestions.class);
+                                intent.putExtra("tileId", tileList.get(getAdapterPosition()).getTileId());
+                                intent.putExtra("tileName", tileList.get(getAdapterPosition()).getTitle());
+                                intent.putExtra("stateDisabled", true);
+                                v.getContext().startActivity(intent);
+                            }
                         } else {
                             Intent intent = new Intent(v.getContext(), ActivityTileQuestions.class);
                             intent.putExtra("tileId", tileList.get(getAdapterPosition()).getTileId());
                             intent.putExtra("tileName", tileList.get(getAdapterPosition()).getTitle());
-                            intent.putExtra("stateDisabled", true);
                             v.getContext().startActivity(intent);
                         }
-                    } else {
-                        Intent intent = new Intent(v.getContext(), ActivityTileQuestions.class);
-                        intent.putExtra("tileId", tileList.get(getAdapterPosition()).getTileId());
-                        intent.putExtra("tileName", tileList.get(getAdapterPosition()).getTitle());
-                        v.getContext().startActivity(intent);
                     }
                 }
             });
-            tvTile = (TextView) itemView.findViewById(R.id.tvTitle);
-            ivTile = (ImageView) itemView.findViewById(R.id.ivTitle);
+            tvTile = itemView.findViewById(R.id.tvTitle);
+            ivTile = itemView.findViewById(R.id.ivTitle);
             viewDisabled = itemView.findViewById(R.id.viewDisabled);
-            llErrorLayout = (LinearLayout) itemView.findViewById(R.id.llRedflags);
+            llErrorLayout = itemView.findViewById(R.id.llRedflags);
         }
     }
 }

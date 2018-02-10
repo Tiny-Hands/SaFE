@@ -62,8 +62,8 @@ public class ActivityTileHome extends AppCompatActivity {
     TextView tvCountry;
     @BindView(R.id.btnNext)
     Button btnNext;
-    @BindView(R.id.btnImportantContacts)
-    CardView btnImportantContacts;
+    //@BindView(R.id.btnImportantContacts)
+    //CardView btnImportantContacts;
     @BindView(R.id.ivAvatar)
     ImageView ivAvatar;
     @BindView(R.id.nsv)
@@ -161,14 +161,14 @@ public class ActivityTileHome extends AppCompatActivity {
             }
         });
 
-        btnImportantContacts.setOnClickListener(new View.OnClickListener() {
+        /*btnImportantContacts.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent impIntent = new Intent(ActivityTileHome.this, ActivityImportantContacts.class);
                 impIntent.putExtra("countryId", countryId);
                 startActivity(impIntent);
             }
-        });
+        });*/
     }
 
     @Override
@@ -203,7 +203,7 @@ public class ActivityTileHome extends AppCompatActivity {
             tilesGAS = new SQLDatabaseHelper(ActivityTileHome.this).getTiles("GAS");
         }
         rvTiles.setLayoutManager(new GridLayoutManager(this, 2));
-        tileAdapter = new TileAdapter(tiles, tileIcons, ActivityTileHome.this);
+        tileAdapter = new TileAdapter(tiles, tileIcons, ActivityTileHome.this, countryId);
         rvTiles.setAdapter(tileAdapter);
 
     }
