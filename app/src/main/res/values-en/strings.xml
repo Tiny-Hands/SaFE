@@ -93,7 +93,7 @@
     <string name="cancel">Cancel</string>
     <string name="login_with_phone">Login with phone number</string>
     <string name="login_with_fb">Login with Facebook</string>
-
+    <string name="loading_text">Loading</string>
     <!-- Important Contacts -->
     <string name="email">EMAIL</string>
     <string name="website">WEBSITE</string>

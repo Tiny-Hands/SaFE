@@ -12,14 +12,27 @@
         android:elevation="12dp"
         android:src="@drawable/logo_org" />
 
-    <ProgressBar
-        android:id="@+id/progressCircle"
-        android:layout_width="64dp"
-        android:layout_height="64dp"
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="@dimen/default_margin"
-        android:visibility="gone" />
+        android:gravity="center"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <ProgressBar
+            android:id="@+id/progressCircle"
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            android:layout_marginBottom="@dimen/default_margin" />
+
+        <com.vysh.subairoma.utils.CustomTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/loading_text"
+            app:fonts="gotham_light.ttf" />
+    </LinearLayout>
 
     <LinearLayout
         android:id="@+id/llBottom"
