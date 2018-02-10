@@ -10,7 +10,7 @@
     <string name="finalAnswerVerificationTitle">अघि बढ्नु पहिले</string>
     <string name="finalAnswerVerification">तपाईँले यस सुवैरोमा एपको वैदेशिक रोजगारी तयारी भाग पुरा गर्नुभएको छ । अगाडि बढ्नुभन्दा पहिले तपाईँले दिनुभएका उत्तरहरू परिवर्तन गर्दिन भनेर स्वीकार्नुपर्दछ । यदि तपाईँले कुनै खण्डको उत्तर परिवर्तन गर्नुपरेमा अहिले गर्नुहोला । उत्तरहरू परिवर्तन गर्नुहुन्न भने तल चिनो लगाउनुहोस् ।.</string>
     <string name="finalAnswerButton">म मैले दिएका उत्तरहरू परिवर्तन गर्ने छैन ।</string>
-    <string name="opt_message">We are sending an SMS with a code to your phone number. Please enter it below. It may take upto 1 minute</string>
+    <string name="opt_message">तपाईँले दिनुभएको फोनमा हामीले OTP कोड SMS गरेर पठाँउदैछौँ । कृपया त्यो OTP कोड तल राख्नुहोस् । यो कोड प्राप्त हुन १ मिनेट जस्तो लाग्नसक्छ ।</string>
 
     <!-- Generic -->
     <string name="next">अगाडि बढ्नु</string>
@@ -76,19 +76,19 @@
     <string name="logout">लोग आउट</string>
 
     <!-- Progress Dialogs -->
-    <string name="getting_mig_details">Getting migrant details</string>
-    <string name="checking_registration">Checking registration</string>
-    <string name="getting_mig_responses">Getting migrant responses</string>
-    <string name="registering">Registering</string>
-    <string name="adding_fb_acc">Adding Facebook account</string>
-    <string name="updating">Updating</string>
-    <string name="sending_otp">Sending OTP</string>
-    <string name="feedback_msg">Please check one and help us improve</string>
+    <string name="getting_mig_details">प्रवासीको विवरण प्राप्त हुँदैछ</string>
+    <string name="checking_registration">दर्ता जाँच हुँदैछ</string>
+    <string name="getting_mig_responses">प्रवासीको प्रतिक्रियाहरू प्राप्त हुँदैछ</string>
+    <string name="registering">दर्ता हुँदैछ</string>
+    <string name="adding_fb_acc">फेसबुक अकाउन्ट थप हुँदैछ</string>
+    <string name="updating">नयाँ विवरण प्राप्त हुँदैछ</string>
+    <string name="sending_otp">OTP पठाँइदैछ</string>
+    <string name="feedback_msg">कृपया एउटा छानेर हामीलाई सेवा सुधार गर्ने मौका दुनुहोस् </string>
     <string name="login">लगइन</string>
-    <string name="enter_reg_number">Enter the number that you registered</string>
-    <string name="verify_phone">Verify Phone</string>
-    <string name="change_number">CHANGE NUMBER</string>
-    <string name="verify_code">VERIFY</string>
+    <string name="enter_reg_number">तपाईँले दर्ता गर्न प्रयोग गर्नुभएको फोन नम्बर राख्नुहोस्</string>
+    <string name="verify_phone">प्रमाणित गर्नुहोस्</string>
+    <string name="change_number">फोन नम्बर परिवर्तन गर्नुहोस्</string>
+    <string name="verify_code">प्रमाणित गर्नुहोस्</string>
     <string name="done">भयो</string>
     <string name="cancel">बन्द</string>
     <string name="login_with_phone" >फोन नम्बर प्रयोग गरी लग इन गर्नुहोस्</string>
