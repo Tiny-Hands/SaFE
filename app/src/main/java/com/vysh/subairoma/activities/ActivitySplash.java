@@ -68,7 +68,7 @@ public class ActivitySplash extends AppCompatActivity {
     Thread sleepThread;
 
     @BindView(R.id.progressCircle)
-    ProgressBar progressBar;
+    LinearLayout progressBar;
     @BindView(R.id.llBottom)
     LinearLayout bottomLayoutMessage;
     @BindView(R.id.btnTryAgain)
@@ -84,6 +84,10 @@ public class ActivitySplash extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         sp = getSharedPreferences(SharedPrefKeys.sharedPrefName, MODE_PRIVATE);
+        if (sp.getString(SharedPrefKeys.lang, "").equalsIgnoreCase("en")) {
+            setLocale("en");
+        } else
+            setLocale("np");
         if (sp.getInt(SharedPrefKeys.savedTableCount, 0) == 6) {
             startRegisterActivity();
             return;
@@ -111,6 +115,10 @@ public class ActivitySplash extends AppCompatActivity {
                 fParams.put("lang", lang);
                 hideLangOptions();
                 getAllData();
+
+                SharedPreferences.Editor editor = sp.edit();
+                editor.putString(SharedPrefKeys.lang, "en");
+                editor.commit();
             }
         });
 
@@ -123,6 +131,10 @@ public class ActivitySplash extends AppCompatActivity {
                 fParams.put("lang", lang);
                 hideLangOptions();
                 getAllData();
+
+                SharedPreferences.Editor editor = sp.edit();
+                editor.putString(SharedPrefKeys.lang, "np");
+                editor.commit();
             }
         });
 
