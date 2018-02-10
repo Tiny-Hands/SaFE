@@ -1,5 +1,6 @@
 package com.vysh.subairoma.adapters;
 
+import android.app.FragmentManager;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
@@ -86,6 +87,10 @@ public class MigrantListAdapter extends RecyclerView.Adapter<MigrantListAdapter.
                 holder.llErrorLayout.setTag("shownerror");
             }
         }
+        if (migrants.size() == 1) {
+            showCountryChooser(migrants.get(1).getMigrantName(), ((AppCompatActivity) mContext).getSupportFragmentManager());
+        }
+
     }
 
     @Override
@@ -126,12 +131,18 @@ public class MigrantListAdapter extends RecyclerView.Adapter<MigrantListAdapter.
                         intent.putExtra("countryBlacklist", savedCountry.getCountryBlacklist());
                         itemView.getContext().startActivity(intent);
                     } else {
-                        DialogCountryChooser dialog = DialogCountryChooser.newInstance();
-                        dialog.setMigrantName(migrants.get(getAdapterPosition()).getMigrantName());
-                        dialog.show(((AppCompatActivity) itemView.getContext()).getSupportFragmentManager(), "tag");
+                        showCountryChooser(migrants.get(getAdapterPosition()).getMigrantName(),
+                                ((AppCompatActivity) itemView.getContext()).getSupportFragmentManager())
+                        ;
                     }
                 }
             });
         }
+    }
+
+    private void showCountryChooser(String name, android.support.v4.app.FragmentManager fragmentManager) {
+        DialogCountryChooser dialog = DialogCountryChooser.newInstance();
+        dialog.setMigrantName(name);
+        dialog.show(fragmentManager, "tag");
     }
 }
