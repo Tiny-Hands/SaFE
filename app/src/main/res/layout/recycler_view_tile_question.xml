@@ -12,7 +12,9 @@
         android:id="@+id/rlRoot"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="@dimen/medium_large_margin">
+        android:paddingLeft="@dimen/medium_large_margin"
+        android:paddingRight="@dimen/medium_large_margin"
+        android:paddingTop="@dimen/medium_large_margin">
 
         <TextView
             android:id="@+id/tvStep"
@@ -117,44 +119,16 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="2dp"
-                android:layout_marginBottom="@dimen/question_row_help_bottom_margin"
                 android:layout_marginTop="@dimen/question_row_help_top_margin"
                 android:background="#363636" />
 
-            <com.vysh.subairoma.utils.CustomTextView
+            <Button
+                android:id="@+id/btnNeedHelp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
+                android:background="?attr/selectableItemBackground"
                 android:text="@string/need_help"
-                android:textColor="@color/colorNeutral"
-                app:fonts="gotham_bold.ttf" />
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="bottom|center"
-                android:orientation="horizontal">
-
-                <Button
-                    android:id="@+id/btnCall"
-                    android:layout_width="@dimen/help_dimen"
-                    android:layout_height="@dimen/help_dimen"
-                    android:background="@drawable/ic_call" />
-
-                <Button
-                    android:id="@+id/btnHelp"
-                    android:layout_width="@dimen/help_dimen"
-                    android:layout_height="@dimen/help_dimen"
-                    android:layout_marginEnd="32dp"
-                    android:layout_marginStart="32dp"
-                    android:background="@drawable/ic_help" />
-
-                <Button
-                    android:id="@+id/btnVideo"
-                    android:layout_width="@dimen/help_dimen"
-                    android:layout_height="@dimen/help_dimen"
-                    android:background="@drawable/ic_video" />
-            </LinearLayout>
+                android:textColor="@color/colorNeutral" />
         </LinearLayout>
     </RelativeLayout>
 

@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="@dimen/default_margin">
+
+    <com.vysh.subairoma.utils.CustomTextView
+        android:id="@+id/tvHelpTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="@dimen/default_margin"
+        android:text="@string/need_help"
+        android:textSize="@dimen/need_help_dialog_text_size"
+        app:fonts="gotham_bold.ttf" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tvHelpTitle"
+        android:gravity="center_horizontal"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <Button
+                android:id="@+id/btnCall"
+                android:layout_width="@dimen/help_dimen"
+                android:layout_height="@dimen/help_dimen"
+                android:background="@drawable/ic_call" />
+
+            <com.vysh.subairoma.utils.CustomTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/small_margin"
+                android:text="@string/call"
+                app:fonts="gotham_medium.ttf" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <Button
+                android:id="@+id/btnHelp"
+                android:layout_width="@dimen/help_dimen"
+                android:layout_height="@dimen/help_dimen"
+                android:layout_marginEnd="32dp"
+                android:layout_marginStart="32dp"
+                android:background="@drawable/ic_help" />
+
+            <com.vysh.subairoma.utils.CustomTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/small_margin"
+                android:text="@string/support"
+                app:fonts="gotham_medium.ttf" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <Button
+                android:id="@+id/btnVideo"
+                android:layout_width="@dimen/help_dimen"
+                android:layout_height="@dimen/help_dimen"
+                android:background="@drawable/ic_video" />
+
+            <com.vysh.subairoma.utils.CustomTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/small_margin"
+                android:text="@string/video"
+                app:fonts="gotham_medium.ttf" />
+        </LinearLayout>
+    </LinearLayout>
+</RelativeLayout>

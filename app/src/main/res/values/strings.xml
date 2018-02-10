@@ -99,6 +99,11 @@
     <string name="website">वेबसाइट</string>
     <string name="address">ठेगाना</string>
 
+    <!-- Help Dialog -->
+    <string name="video">भिडियो</string>
+    <string name="call">कल गर्नुहोस्</string>
+    <string name="need_support">समर्थन</string>
+
     <!-- Required for facebook Login -->
     <string name="facebook_app_id">118900038809550</string>
     <string name="fb_login_protocol_scheme">fb118900038809550</string>

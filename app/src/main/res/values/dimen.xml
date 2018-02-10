@@ -35,6 +35,7 @@
     <dimen name="country_spinner_text_size">16sp</dimen>
     <dimen name="feedback_list_heading">16sp</dimen>
     <dimen name="feedback_text_size">14sp</dimen>
+    <dimen name="need_help_dialog_text_size">16sp</dimen>
 
     <!-- Help Icons -->
     <dimen name="help_dimen">36dp</dimen>

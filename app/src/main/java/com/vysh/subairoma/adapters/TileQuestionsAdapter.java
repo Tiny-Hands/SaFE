@@ -1,5 +1,6 @@
 package com.vysh.subairoma.adapters;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -41,6 +42,7 @@ import android.widget.Toast;
 import com.vysh.subairoma.ApplicationClass;
 import com.vysh.subairoma.R;
 import com.vysh.subairoma.SQLHelpers.SQLDatabaseHelper;
+import com.vysh.subairoma.dialogs.DialogNeedHelp;
 import com.vysh.subairoma.models.TileQuestionsModel;
 import com.wordpress.priyankvex.smarttextview.SmartTextCallback;
 import com.wordpress.priyankvex.smarttextview.SmartTextView;
@@ -61,7 +63,6 @@ import static android.view.View.GONE;
  */
 
 public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdapter.QuestionHolder> {
-
     final int migrantId = ApplicationClass.getInstance().getMigrantId();
 
     int previousClickedPos = -1;
@@ -578,7 +579,7 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
         positiveButton.setLayoutParams(positiveButtonLL);
     }
 
-    public class QuestionHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    public class QuestionHolder extends RecyclerView.ViewHolder {
         TextView title, question;
         SmartTextView details;
         CheckBox checkbox;
@@ -586,7 +587,7 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
         ImageView ivError, ivDone;
         Spinner spinnerOptions;
         ListView listViewOptions;
-        Button btnCall, btnHelp, btnVideo;
+        Button btnHelp;
 
         LinearLayout helpLayout;
         RelativeLayout rootLayout;
@@ -605,23 +606,28 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
             details.setPhoneNumberColorCode("#3d63f2");
 
             details.setVisibility(GONE);
-            question = (TextView) itemView.findViewById(R.id.tvQuestion);
-            checkbox = (CheckBox) itemView.findViewById(R.id.cbResponse);
-            helpLayout = (LinearLayout) itemView.findViewById(R.id.llHelp);
-            btnCall = (Button) itemView.findViewById(R.id.btnCall);
-            btnCall.setOnClickListener(this);
-            btnHelp = (Button) itemView.findViewById(R.id.btnHelp);
-            btnHelp.setOnClickListener(this);
-            btnVideo = (Button) itemView.findViewById(R.id.btnVideo);
-            btnVideo.setOnClickListener(this);
-            title = (TextView) itemView.findViewById(R.id.tvStep);
+            question = itemView.findViewById(R.id.tvQuestion);
+            checkbox = itemView.findViewById(R.id.cbResponse);
+            helpLayout = itemView.findViewById(R.id.llHelp);
+            btnHelp = itemView.findViewById(R.id.btnNeedHelp);
+            btnHelp.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    int qid = questionsListDisplay.get(getAdapterPosition()).getQuestionId();
+                    int tileId = questionsListDisplay.get(getAdapterPosition()).getTileId();
+                    DialogNeedHelp dialogNeedHelp = new DialogNeedHelp();
+                    dialogNeedHelp.setArgs(qid, tileId, context, migrantId);
+                    dialogNeedHelp.show(((Activity) context).getFragmentManager(), "DialogLoginFrag");
+                }
+            });
+            title = itemView.findViewById(R.id.tvStep);
             title.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     toggleExpandView();
                 }
             });
-            listViewOptions = (ListView) itemView.findViewById(R.id.listViewMultipleOptions);
+            listViewOptions = itemView.findViewById(R.id.listViewMultipleOptions);
             listViewOptions.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE);
             listViewOptions.setOnTouchListener(new ListView.OnTouchListener() {
                 @Override
@@ -815,51 +821,6 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
             }
             isExpanded = true;
         }
-
-        @Override
-        public void onClick(View v) {
-            switch (v.getId()) {
-                case R.id.btnCall:
-                    Toast.makeText(context, "Call helpline", Toast.LENGTH_SHORT).show();
-                    break;
-                case R.id.btnHelp:
-                    //Toast.makeText(context, "Help Link or Help Text", Toast.LENGTH_SHORT).show();
-                    int qid = questionsListDisplay.get(getAdapterPosition()).getQuestionId();
-                    int tileId = questionsListDisplay.get(getAdapterPosition()).getTileId();
-                    showSupportDialog(qid, tileId);
-                    break;
-                case R.id.btnVideo:
-                    Toast.makeText(context, "Open Video Link", Toast.LENGTH_SHORT).show();
-                    break;
-            }
-        }
-    }
-
-    private void showSupportDialog(final int qid, final int tileId) {
-        //EditText queryEt;
-        AlertDialog.Builder builder = new AlertDialog.Builder(context);
-
-        View supportView = LayoutInflater.from(context).inflate(R.layout.dialog_questionfeedback, null);
-        Button btnSaveQuery = supportView.findViewById(R.id.btnQuery);
-        builder.setView(supportView);
-        final AlertDialog dialog = builder.show();
-
-        //Query editText
-        final EditText queryEt = dialog.findViewById(R.id.etInput);
-        btnSaveQuery.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                String queryText = queryEt.getText().toString();
-                if (queryText.isEmpty() || queryText.length() < 10) {
-                    queryEt.setError("Please explain your query");
-                } else {
-                    //Save and Send Query
-                    Log.d("mylog", "Saving: " + queryText);
-                    sqlDatabaseHelper.insertQuestionQuery(qid, tileId, migrantId, queryText);
-                    dialog.dismiss();
-                }
-            }
-        });
     }
 
     private boolean getConflictingVariable(String condition) {
