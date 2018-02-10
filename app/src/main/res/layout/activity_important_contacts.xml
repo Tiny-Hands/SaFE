@@ -15,7 +15,8 @@
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
             android:text="@string/important_contacts"
-            android:textSize="@dimen/default_title_size" />
+            android:textSize="@dimen/default_title_size"
+            android:textStyle="bold" />
 
     </android.support.v7.widget.Toolbar>
 
@@ -42,7 +43,8 @@
                     android:layout_height="wrap_content"
                     android:text="@string/nepal_embassay"
                     android:textColor="@color/colorPrimary"
-                    android:textSize="@dimen/important_contacts_category_text" />
+                    android:textSize="@dimen/important_contacts_category_text"
+                    android:visibility="gone" />
 
                 <android.support.v7.widget.CardView
                     android:layout_width="match_parent"
@@ -61,7 +63,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:lineSpacingExtra="1.5dp"
-                            android:text="text"
+                            android:text=""
                             app:fonts="gotham_light.ttf" />
                     </LinearLayout>
                 </android.support.v7.widget.CardView>
@@ -88,7 +90,8 @@
                     android:layout_height="wrap_content"
                     android:text="Contact 1"
                     android:textColor="@color/colorPrimary"
-                    android:textSize="@dimen/important_contacts_category_text" />
+                    android:textSize="@dimen/important_contacts_category_text"
+                    android:visibility="gone" />
 
                 <android.support.v7.widget.CardView
                     android:layout_width="match_parent"
@@ -107,7 +110,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:lineSpacingExtra="1.5dp"
-                            android:text="text"
+                            android:text=""
                             app:fonts="gotham_light.ttf" />
                     </LinearLayout>
                 </android.support.v7.widget.CardView>
@@ -135,7 +138,8 @@
                     android:layout_height="wrap_content"
                     android:text="Contact 2"
                     android:textColor="@color/colorPrimary"
-                    android:textSize="@dimen/important_contacts_category_text" />
+                    android:textSize="@dimen/important_contacts_category_text"
+                    android:visibility="gone" />
 
                 <android.support.v7.widget.CardView
                     android:layout_width="match_parent"
@@ -154,7 +158,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:lineSpacingExtra="1.5dp"
-                            android:text="text"
+                            android:text=""
                             app:fonts="gotham_light.ttf" />
                     </LinearLayout>
                 </android.support.v7.widget.CardView>
@@ -181,7 +185,55 @@
                     android:layout_height="wrap_content"
                     android:text="Contact 3"
                     android:textColor="@color/colorPrimary"
-                    android:textSize="@dimen/important_contacts_category_text" />
+                    android:textSize="@dimen/important_contacts_category_text"
+                    android:visibility="gone" />
+
+                <android.support.v7.widget.CardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/small_margin"
+                    app:cardCornerRadius="@dimen/card_view_tile_radius"
+                    app:cardUseCompatPadding="true">
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:padding="@dimen/medium_margin">
+
+                        <com.vysh.subairoma.utils.CustomTextView
+                            android:id="@+id/tvContact4"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:lineSpacingExtra="1.5dp"
+                            android:text=""
+                            app:fonts="gotham_light.ttf" />
+                    </LinearLayout>
+                </android.support.v7.widget.CardView>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginBottom="@dimen/default_margin"
+                    android:layout_marginTop="@dimen/default_margin"
+                    android:background="@color/colorPrimaryDark" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/llContact4"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/default_margin"
+                android:layout_marginRight="@dimen/default_margin"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Contact 3"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="@dimen/important_contacts_category_text"
+                    android:visibility="gone" />
 
                 <android.support.v7.widget.CardView
                     android:layout_width="match_parent"
@@ -200,10 +252,64 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:lineSpacingExtra="1.5dp"
-                            android:text="text"
+                            android:text=""
                             app:fonts="gotham_light.ttf" />
                     </LinearLayout>
                 </android.support.v7.widget.CardView>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginBottom="@dimen/default_margin"
+                    android:layout_marginTop="@dimen/default_margin"
+                    android:background="@color/colorPrimaryDark" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/llContact5"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/default_margin"
+                android:layout_marginRight="@dimen/default_margin"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Contact 3"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="@dimen/important_contacts_category_text"
+                    android:visibility="gone" />
+
+                <android.support.v7.widget.CardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/small_margin"
+                    app:cardCornerRadius="@dimen/card_view_tile_radius"
+                    app:cardUseCompatPadding="true">
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:padding="@dimen/medium_margin">
+
+                        <com.vysh.subairoma.utils.CustomTextView
+                            android:id="@+id/tvContact5"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:lineSpacingExtra="1.5dp"
+                            android:text=""
+                            app:fonts="gotham_light.ttf" />
+                    </LinearLayout>
+                </android.support.v7.widget.CardView>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginBottom="@dimen/default_margin"
+                    android:layout_marginTop="@dimen/default_margin"
+                    android:background="@color/colorPrimaryDark" />
             </LinearLayout>
 
         </LinearLayout>

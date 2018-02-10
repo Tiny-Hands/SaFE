@@ -94,6 +94,11 @@
     <string name="login_with_phone" >Login with phone number</string>
     <string name="login_with_fb">Login with Facebook</string>
 
+    <!-- Important Contacts -->
+    <string name="email">EMAIL</string>
+    <string name="website">WEBSITE</string>
+    <string name="address">ADDRESS</string>
+
     <!-- Required for facebook Login -->
     <string name="facebook_app_id">118900038809550</string>
     <string name="fb_login_protocol_scheme">fb118900038809550</string>

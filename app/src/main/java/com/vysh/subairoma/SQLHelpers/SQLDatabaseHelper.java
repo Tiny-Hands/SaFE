@@ -73,10 +73,12 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
     final String SQL_CREATE_ContactsTable =
             "CREATE TABLE " + DatabaseTables.ImportantContacts.TABLE_NAME + " (" +
                     DatabaseTables.ImportantContacts.country_id + " TEXT PRIMARY KEY," +
-                    DatabaseTables.ImportantContacts.nepal_embassy + " TEXT," +
-                    DatabaseTables.ImportantContacts.contact1 + " TEXT," +
-                    DatabaseTables.ImportantContacts.contact2 + " TEXT," +
-                    DatabaseTables.ImportantContacts.contact3 + " TEXT" + ");";
+                    DatabaseTables.ImportantContacts.title + " TEXT," +
+                    DatabaseTables.ImportantContacts.description + " TEXT," +
+                    DatabaseTables.ImportantContacts.address + " TEXT," +
+                    DatabaseTables.ImportantContacts.phone + " TEXT," +
+                    DatabaseTables.ImportantContacts.email + " TEXT," +
+                    DatabaseTables.ImportantContacts.website + " TEXT" + ");";
     final String SQL_CREATE_MigrantsTable =
             "CREATE TABLE " + DatabaseTables.MigrantsTable.TABLE_NAME + " (" +
                     DatabaseTables.MigrantsTable.migrant_id + " INTEGER PRIMARY KEY," +
@@ -354,14 +356,16 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
         Log.d("mylog", "Inserted row ID; " + newRowId);
     }
 
-    public void insertImportantContacts(String cid, String nepalEmbassy, String contact1, String contact2, String contact3) {
+    public void insertImportantContacts(String cid, String title, String description, String address, String phone, String email, String website) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(DatabaseTables.ImportantContacts.country_id, cid);
-        values.put(DatabaseTables.ImportantContacts.nepal_embassy, nepalEmbassy);
-        values.put(DatabaseTables.ImportantContacts.contact1, contact1);
-        values.put(DatabaseTables.ImportantContacts.contact2, contact2);
-        values.put(DatabaseTables.ImportantContacts.contact3, contact3);
+        values.put(DatabaseTables.ImportantContacts.title, title);
+        values.put(DatabaseTables.ImportantContacts.description, description);
+        values.put(DatabaseTables.ImportantContacts.address, address);
+        values.put(DatabaseTables.ImportantContacts.phone, phone);
+        values.put(DatabaseTables.ImportantContacts.email, email);
+        values.put(DatabaseTables.ImportantContacts.website, website);
 
         long newRowId = db.insert(DatabaseTables.ImportantContacts.TABLE_NAME, null, values);
         Log.d("mylog", "Inserted row ID; " + newRowId);
@@ -663,16 +667,18 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
 
     public String[] getImportantContacts(String countryId) {
         SQLiteDatabase db = this.getReadableDatabase();
-        String[] contacts = new String[4];
+        String[] contacts = new String[6];
         Cursor cursor = db.rawQuery("SELECT * FROM " + DatabaseTables.ImportantContacts.TABLE_NAME
                 + " WHERE " + DatabaseTables.ImportantContacts.country_id + "=" + "'" + countryId + "'", null);
         Log.d("mylog", "Raw Data: " + cursor.toString());
         if (cursor.getCount() > 0) {
             cursor.moveToNext();
-            contacts[0] = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseTables.ImportantContacts.nepal_embassy));
-            contacts[1] = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseTables.ImportantContacts.contact1));
-            contacts[2] = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseTables.ImportantContacts.contact2));
-            contacts[3] = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseTables.ImportantContacts.contact3));
+            contacts[0] = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseTables.ImportantContacts.title));
+            contacts[1] = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseTables.ImportantContacts.description));
+            contacts[2] = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseTables.ImportantContacts.address));
+            contacts[3] = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseTables.ImportantContacts.phone));
+            contacts[4] = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseTables.ImportantContacts.email));
+            contacts[5] = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseTables.ImportantContacts.website));
             return contacts;
         } else
             return null;

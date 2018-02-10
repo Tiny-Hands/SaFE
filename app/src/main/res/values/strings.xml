@@ -94,6 +94,11 @@
     <string name="login_with_phone" >फोन नम्बर प्रयोग गरी लग इन गर्नुहोस्</string>
     <string name="login_with_fb">फेसबुक प्रयोग गरी लग इन गर्नुहोस्</string>
 
+    <!-- Important Contacts -->
+    <string name="email">इमेल</string>
+    <string name="website">वेबसाइट</string>
+    <string name="address">ठेगाना</string>
+
     <!-- Required for facebook Login -->
     <string name="facebook_app_id">118900038809550</string>
     <string name="fb_login_protocol_scheme">fb118900038809550</string>

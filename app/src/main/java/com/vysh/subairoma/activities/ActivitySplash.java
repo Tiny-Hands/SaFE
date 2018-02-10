@@ -208,7 +208,7 @@ public class ActivitySplash extends AppCompatActivity {
 
     private void getContacts() {
         String api = ApplicationClass.getInstance().getAPIROOT() + importantContactsAPI;
-        StringRequest getRequest = new StringRequest(Request.Method.GET, api, new Response.Listener<String>() {
+        StringRequest getRequest = new StringRequest(Request.Method.POST, api, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 //SAVE RESPONSE IN LOCAL DB
@@ -224,7 +224,13 @@ public class ActivitySplash extends AppCompatActivity {
                 Log.d("mylog", "Error getting questions: " + error.toString());
                 showErrorResponse();
             }
-        });
+        }) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                return fParams;
+            }
+        };
+        ;
         RequestQueue queue = Volley.newRequestQueue(ActivitySplash.this);
         queue.add(getRequest);
     }
@@ -429,12 +435,14 @@ public class ActivitySplash extends AppCompatActivity {
                 for (int i = 0; i < contactsArray.length(); i++) {
                     JSONObject contactsObject = contactsArray.getJSONObject(i);
                     String cid = contactsObject.getString("country_id");
-                    String nepalEmbassy = contactsObject.getString("nepal_embassy");
-                    String contact1 = contactsObject.getString("contact1");
-                    String contact2 = contactsObject.getString("contact2");
-                    String contact3 = contactsObject.getString("contact3");
+                    String title = contactsObject.getString("title");
+                    String description = contactsObject.getString("description");
+                    String address = contactsObject.getString("address");
+                    String phone = contactsObject.getString("phone");
+                    String email = contactsObject.getString("email");
+                    String website = contactsObject.getString("website");
                     Log.d("mylog", cid);
-                    dbHelper.insertImportantContacts(cid, nepalEmbassy, contact1, contact2, contact3);
+                    dbHelper.insertImportantContacts(cid, title, description, address, phone, email, website);
                 }
                 incrementCount();
             }

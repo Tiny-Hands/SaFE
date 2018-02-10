@@ -56,10 +56,12 @@ public final class DatabaseTables {
     public static class ImportantContacts {
         public static final String TABLE_NAME = "tbl_contacts";
         public static final String country_id = "country_id";
-        public static final String nepal_embassy = "nepal_embassy";
-        public static final String contact1 = "contact1";
-        public static final String contact2 = "contact2";
-        public static final String contact3 = "contact3";
+        public static final String title = "title";
+        public static final String description = "description";
+        public static final String address = "address";
+        public static final String phone = "phone";
+        public static final String email = "email";
+        public static final String website = "website";
     }
 
     public static class OptionsTable {

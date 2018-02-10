@@ -29,6 +29,10 @@ public class ActivityImportantContacts extends AppCompatActivity {
     LinearLayout llContact2;
     @BindView(R.id.llContact3)
     LinearLayout llContact3;
+    @BindView(R.id.llContact4)
+    LinearLayout llContact4;
+    @BindView(R.id.llContact5)
+    LinearLayout llContact5;
 
     @BindView(R.id.tvNepalEmbassy)
     TextView tvNepalEmbassy;
@@ -38,6 +42,10 @@ public class ActivityImportantContacts extends AppCompatActivity {
     TextView tvContact2;
     @BindView(R.id.tvContact3)
     TextView tvContact3;
+    @BindView(R.id.tvContact4)
+    TextView tvContact4;
+    @BindView(R.id.tvContact5)
+    TextView tvContact5;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -71,13 +79,25 @@ public class ActivityImportantContacts extends AppCompatActivity {
                     case 2:
                         if (currentInfo != null && !currentInfo.isEmpty()) {
                             llContact2.setVisibility(View.VISIBLE);
-                            tvContact2.setText(currentInfo);
+                            tvContact2.setText(getResources().getString(R.string.address)+ ": " + currentInfo);
                         }
                         break;
                     case 3:
                         if (currentInfo != null && !currentInfo.isEmpty()) {
-                            llContact2.setVisibility(View.VISIBLE);
-                            tvContact2.setText(currentInfo);
+                            llContact3.setVisibility(View.VISIBLE);
+                            tvContact3.setText(getResources().getString(R.string.phone_number)+ ": " + currentInfo);
+                        }
+                        break;
+                    case 4:
+                        if (currentInfo != null && !currentInfo.isEmpty()) {
+                            llContact4.setVisibility(View.VISIBLE);
+                            tvContact4.setText(getResources().getString(R.string.email)+ ": " +currentInfo);
+                        }
+                        break;
+                    case 5:
+                        if (currentInfo != null && !currentInfo.isEmpty()) {
+                            llContact5.setVisibility(View.VISIBLE);
+                            tvContact5.setText(getResources().getString(R.string.website)+ ": " +currentInfo);
                         }
                         break;
                 }
