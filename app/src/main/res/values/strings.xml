@@ -1,0 +1,115 @@
+<resources>
+    <string name="app_name">सुवैरोमा </string>
+    <string name="user_name">विशाल श्रेष्ठ </string>
+    <string name="code">CODE</string>
+    <string name="important_contacts">महत्त्वपूर्ण सम्पर्क ठेगानाहरू</string>
+    <string name="nepal_embassay">नेपाली दूतावास</string>
+    <string name="disclaimer">नेपालबाट विदेशमा काम गर्न जाने धेरै व्यक्तिहरू शोषणमा पर्ने गर्दछन् । उनीहरू ठगिन्छन्, गाह्रो अवस्थाहरूमा काम गर्न बाध्य पारिन्छन्, पिटिन्छन्, उनीहरूले भनेको तलब र सुविधा पाउने गर्दैनन् र कति त यतना र यौनशोषणमा पर्नेगर्दछन् । कति विदेशमा थुनामा पर्दछन् त कतिले आत्माहत्या गर्नेगर्दछन् । यो एपले वैदेशिक रोजगारीमा जान चाहाने नेपालीहरूलाई ठगि र शोषणबाट बचेर सुरक्षित र लाभदायक रोजगारी पत्ता लगाउन सहायता गर्दछ तर सुरक्षाको भने पूर्ण सुनिश्चितता गर्दैन ।</string>
+    <string name="disclaimer_button">मैले बुझे</string>
+    <string name="disclaimer_title">प्रतिदावी</string>
+    <string name="finalAnswerVerificationTitle">अघि बढ्नु पहिले</string>
+    <string name="finalAnswerVerification">तपाईँले यस सुवैरोमा एपको वैदेशिक रोजगारी तयारी भाग पुरा गर्नुभएको छ । अगाडि बढ्नुभन्दा पहिले तपाईँले दिनुभएका उत्तरहरू परिवर्तन गर्दिन भनेर स्वीकार्नुपर्दछ । यदि तपाईँले कुनै खण्डको उत्तर परिवर्तन गर्नुपरेमा अहिले गर्नुहोला । उत्तरहरू परिवर्तन गर्नुहुन्न भने तल चिनो लगाउनुहोस् ।.</string>
+    <string name="finalAnswerButton">म मैले दिएका उत्तरहरू परिवर्तन गर्ने छैन ।</string>
+    <string name="opt_message">तपाईँले दिनुभएको फोनमा हामीले OTP कोड SMS गरेर पठाँउदैछौँ । कृपया त्यो OTP कोड तल राख्नुहोस् । यो कोड प्राप्त हुन १ मिनेट जस्तो लाग्नसक्छ ।</string>
+
+    <!-- Generic -->
+    <string name="next">अगाडि बढ्नु</string>
+    <string name="proceed">अगाडि बढ्नु</string>
+    <string name="back">फिर्ता</string>
+    <string name="okay">ठीक छ</string>
+    <string name="understand">मैले बुझें</string>
+
+    <!-- Feedback -->
+    <string name="feedback_trial">How did this section of the app help you?</string>
+    <string name="support">समर्थन</string>
+    <string name="send">पठाउनुहोस्</string>
+    <string name="enter_query">आफ्नो प्रश्न प्रविष्ट गर्नुहोस्</string>
+
+    <!-- Error Dialogs -->
+    <string name="error">होसियार</string>
+
+    <!-- OTP Activity -->
+    <string name="no_otp_receiption">Didn\'t receive OTP?</string>
+    <string name="no_otp_try_again">Send Code Again</string>
+    <string name="no_otp_patient">Please be patient, You should receive the code in about 1 minute.</string>
+
+    <!-- Country Chooser -->
+    <string name="choose_another_country">अर्को देश छनौट गर्नुहोस्</string>
+    <string name="blacklisted">प्रतिबन्धित</string>
+    <string name="blacklisted_message">यो देश प्रतिबन्धित छ</string>
+    <string name="not_open">खुला छैन</string>
+    <string name="not_open_message">यो देश खुला छैन</string>
+    <string name="go_regardless">जान चाहन्छु</string>
+    <string name="select_country">कृपया देश चयन गर्नुहोस्</string>
+
+    <!-- Activity Migrant List -->
+    <string name="select_migrant">प्रवासी चयन गर्नुहोस्</string>
+    <string name="not_started">अहिले सम्म सुरू भएको छैन</string>
+
+    <!-- Activity Register -->
+    <string name="edit_profile">सम्पादन गर्नु</string>
+    <string name="edit_migrant">प्रवासी सम्पादन गर्नु</string>
+    <string name="add_migrant">प्रवासी थप्नु</string>
+    <string name="register">दर्ता गर्नुहोस्</string>
+    <string name="helper">म अरूलाई सहयोग गर्दैछु</string>
+    <string name="aspiringmigrant">म इच्छुक प्रवासी हुँ</string>
+
+    <!-- Activity Tile Home -->
+    <string name="going_to">जाँदै</string>
+
+    <!-- Tile Questions -->
+    <string name="need_help">सहयोग चाहियो?</string>
+
+    <!-- Registration -->
+    <string name="migrants_name">प्रवासीको नाम</string>
+    <string name="full_name">पुरा नाम</string>
+    <string name="migrants_phone_number">प्रवासीको फोन नम्बर</string>
+    <string name="phone_number">फोन नम्बर</string>
+    <string name="migrants_age">प्रवासीको उमेर</string>
+    <string name="age">उमेर</string>
+    <string name="gender">लिङ्ग</string>
+    <string name="male">पुरुष</string>
+    <string name="female">महिला</string>
+    <string name="or">वा</string>
+    <string name="already_registered">पहिले नै दर्ता गरिएको</string>
+    <string name="facebook_login">फेसबुक लगइन</string>
+    <string name="logout">लोग आउट</string>
+    <string name="server_noconnect">सर्भरसँग सम्पर्क गर्न असमर्थ</string>
+
+    <!-- Progress Dialogs -->
+    <string name="getting_mig_details">प्रवासीको विवरण प्राप्त हुँदैछ</string>
+    <string name="checking_registration">दर्ता जाँच हुँदैछ</string>
+    <string name="getting_mig_responses">प्रवासीको प्रतिक्रियाहरू प्राप्त हुँदैछ</string>
+    <string name="registering">दर्ता हुँदैछ</string>
+    <string name="adding_fb_acc">फेसबुक अकाउन्ट थप हुँदैछ</string>
+    <string name="updating">नयाँ विवरण प्राप्त हुँदैछ</string>
+    <string name="sending_otp">OTP पठाँइदैछ</string>
+    <string name="feedback_msg">कृपया एउटा छानेर हामीलाई सेवा सुधार गर्ने मौका दुनुहोस् </string>
+    <string name="login">लगइन</string>
+    <string name="enter_reg_number">तपाईँले दर्ता गर्न प्रयोग गर्नुभएको फोन नम्बर राख्नुहोस्</string>
+    <string name="verify_phone">प्रमाणित गर्नुहोस्</string>
+    <string name="change_number">फोन नम्बर परिवर्तन गर्नुहोस्</string>
+    <string name="verify_code">प्रमाणित गर्नुहोस्</string>
+    <string name="done">भयो</string>
+    <string name="cancel">बन्द</string>
+    <string name="login_with_phone" >फोन नम्बर प्रयोग गरी लग इन गर्नुहोस्</string>
+    <string name="login_with_fb">फेसबुक प्रयोग गरी लग इन गर्नुहोस्</string>
+    <string name="loading_text">लोड हुँदैछ</string>
+
+    <!-- Important Contacts -->
+    <string name="email">इमेल</string>
+    <string name="website">वेबसाइट</string>
+    <string name="address">ठेगाना</string>
+
+    <!-- Help Dialog -->
+    <string name="video">भिडियो</string>
+    <string name="call">कल गर्नुहोस्</string>
+    <string name="need_support">समर्थन</string>
+
+    <!-- Required for facebook Login -->
+    <string name="facebook_app_id">118900038809550</string>
+    <string name="fb_login_protocol_scheme">fb118900038809550</string>
+    <string name="failed_user_update">प्रयोगकर्ता विवरण अपडेट गर्न असफल भयो</string>
+    <string name="fb_connected">फेसबुकसँग जोडिएको</string>
+
+</resources>
