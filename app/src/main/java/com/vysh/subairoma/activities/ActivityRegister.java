@@ -141,7 +141,8 @@ public class ActivityRegister extends AppCompatActivity {
                     } else {
                         getLoggedInUserDetails(jsonRes);
                         //Gets Migrant Details and Saves in DB regardless of User Type
-                        getMigrantDetails();
+                        startMigrantistActivity();
+                        //getMigrantDetails();
                     }
                     //Getting all the saved responses for the user
                     getAllResponses(userType);
@@ -475,7 +476,8 @@ public class ActivityRegister extends AppCompatActivity {
                     } else {
                         getLoggedInUserDetails(jsonRes);
                         //Gets Migrant Details and Saves in DB regardless of User Type
-                        getMigrantDetails();
+                        //getMigrantDetails();
+                        startMigrantistActivity();
                         //Getting all the saved responses for the user
                         getAllResponses(userType);
                     }
@@ -511,11 +513,9 @@ public class ActivityRegister extends AppCompatActivity {
     }
 
     private void startMigrantistActivity() {
-        if (gotDetailCount > 1) {
-            Intent intent = new Intent(ActivityRegister.this, ActivityMigrantList.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            startActivity(intent);
-        }
+        Intent intent = new Intent(ActivityRegister.this, ActivityMigrantList.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
     }
 
     public void getMigrantDetails() {
@@ -546,8 +546,6 @@ public class ActivityRegister extends AppCompatActivity {
                                     insertMigrants(id, migName, migAge, migPhone, migSex, ApplicationClass.getInstance().getUserId());
                         }
                     }
-
-                    startMigrantistActivity();
                 } catch (Exception ex) {
                     Log.d("mylog", "response exception: " + ex.toString());
                 }

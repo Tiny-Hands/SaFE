@@ -76,8 +76,6 @@ public class ActivityMigrantList extends AppCompatActivity {
         setContentView(R.layout.activity_select_migrant);
         //getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         ButterKnife.bind(this);
-
-
         userType = ApplicationClass.getInstance().getUserId();
         migrantModels = new ArrayList();
         getMigrants();

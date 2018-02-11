@@ -88,7 +88,7 @@ public class MigrantListAdapter extends RecyclerView.Adapter<MigrantListAdapter.
             }
         }
         if (migrants.size() == 1) {
-            showCountryChooser(migrants.get(1).getMigrantName(), ((AppCompatActivity) mContext).getSupportFragmentManager());
+            showCountryChooser(migrants.get(0).getMigrantName(), ((AppCompatActivity) mContext).getSupportFragmentManager());
         }
 
     }
