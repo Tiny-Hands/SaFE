@@ -21,6 +21,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
@@ -225,9 +226,9 @@ public class ActivityMigrantList extends AppCompatActivity {
                     String err = error.toString();
                     Log.d("mylog", "error : " + err);
                     if (!err.isEmpty() && err.contains("TimeoutError"))
-                        showSnackbar(getResources().getString(R.string.server_noconnect));
+                        Toast.makeText(ActivityMigrantList.this, getResources().getString(R.string.server_noconnect), Toast.LENGTH_SHORT).show();
                     else if (!err.isEmpty() && err.contains("NoConnection")) {
-
+                        Toast.makeText(ActivityMigrantList.this, getResources().getString(R.string.server_noconnect), Toast.LENGTH_SHORT).show();
                     } else
                         showSnackbar(error.toString());
                 } catch (Exception ex) {
