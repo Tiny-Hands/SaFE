@@ -125,7 +125,7 @@ public class ActivityRegister extends AppCompatActivity {
         String api = ApplicationClass.getInstance().getAPIROOT() + apiAlreadyRegistered;
         final ProgressDialog progressDialog = new ProgressDialog(ActivityRegister.this);
         //progressDialog.setTitle("Please wait");
-        progressDialog.setMessage("Checking Registration");
+        progressDialog.setMessage(getResources().getString(R.string.checking_registration));
         progressDialog.show();
         StringRequest checkRequest = new StringRequest(Request.Method.POST, api, new Response.Listener<String>() {
             @Override
@@ -158,7 +158,7 @@ public class ActivityRegister extends AppCompatActivity {
                 String err = error.toString();
                 Log.d("mylog", "error : " + err);
                 if (!err.isEmpty() && err.contains("TimeoutError"))
-                    showSnackbar("Failed to connect to server :(");
+                    showSnackbar(getResources().getString(R.string.server_noconnect));
                 else
                     showSnackbar(error.toString());
             }
@@ -493,7 +493,7 @@ public class ActivityRegister extends AppCompatActivity {
                 String err = error.toString();
                 Log.d("mylog", "error : " + err);
                 if (!err.isEmpty() && err.contains("TimeoutError"))
-                    showSnackbar("Failed to connect to server :(");
+                    showSnackbar(getResources().getString(R.string.server_noconnect));
                 else
                     showSnackbar(error.toString());
             }

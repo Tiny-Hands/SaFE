@@ -74,6 +74,7 @@
     <string name="already_registered">पहिले नै दर्ता गरिएको</string>
     <string name="facebook_login">फेसबुक लगइन</string>
     <string name="logout">लोग आउट</string>
+    <string name="server_noconnect">सर्भरसँग सम्पर्क गर्न असमर्थ</string>
 
     <!-- Progress Dialogs -->
     <string name="getting_mig_details">प्रवासीको विवरण प्राप्त हुँदैछ</string>
@@ -108,5 +109,7 @@
     <!-- Required for facebook Login -->
     <string name="facebook_app_id">118900038809550</string>
     <string name="fb_login_protocol_scheme">fb118900038809550</string>
+    <string name="failed_user_update">प्रयोगकर्ता विवरण अपडेट गर्न असफल भयो</string>
+    <string name="fb_connected">फेसबुकसँग जोडिएको</string>
 
 </resources>

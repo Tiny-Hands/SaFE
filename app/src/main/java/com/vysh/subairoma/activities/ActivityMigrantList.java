@@ -225,10 +225,10 @@ public class ActivityMigrantList extends AppCompatActivity {
                     String err = error.toString();
                     Log.d("mylog", "error : " + err);
                     if (!err.isEmpty() && err.contains("TimeoutError"))
-                        showSnackbar("Failed to connect to server :(");
-                    else if (!err.isEmpty() && err.contains("NoConnection"))
-                        showSnackbar("Please connect to Internet for new Data :(");
-                    else
+                        showSnackbar(getResources().getString(R.string.server_noconnect));
+                    else if (!err.isEmpty() && err.contains("NoConnection")) {
+
+                    } else
                         showSnackbar(error.toString());
                 } catch (Exception ex) {
                     Log.d("mylog", "Error exception: " + ex.toString());
@@ -295,7 +295,7 @@ public class ActivityMigrantList extends AppCompatActivity {
     private void showSnackbar(String msg) {
         Snackbar snack = Snackbar.make(rootLayout, msg, Snackbar.LENGTH_LONG);
         View view = snack.getView();
-        TextView tv = (TextView) view.findViewById(android.support.design.R.id.snackbar_text);
+        TextView tv = view.findViewById(android.support.design.R.id.snackbar_text);
         tv.setTextColor(Color.WHITE);
         if (Build.VERSION.SDK_INT >= 17)
             tv.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);

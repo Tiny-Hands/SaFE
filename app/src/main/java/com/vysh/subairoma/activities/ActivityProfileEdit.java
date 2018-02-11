@@ -146,7 +146,7 @@ public class ActivityProfileEdit extends AppCompatActivity implements View.OnCli
         loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(LoginResult loginResult) {
-                if(Profile.getCurrentProfile() == null) {
+                if (Profile.getCurrentProfile() == null) {
                     mProfileTracker = new ProfileTracker() {
                         @Override
                         protected void onCurrentProfileChanged(Profile oldProfile, Profile currentProfile) {
@@ -158,8 +158,7 @@ public class ActivityProfileEdit extends AppCompatActivity implements View.OnCli
                     };
                     // no need to call startTracking() on mProfileTracker
                     // because it is called by its constructor, internally.
-                }
-                else {
+                } else {
                     Log.d("mylog", "Successful, User ID: " + Profile.getCurrentProfile().getId());
                     addFbIDToUID(Profile.getCurrentProfile().getId());
                 }
@@ -196,7 +195,7 @@ public class ActivityProfileEdit extends AppCompatActivity implements View.OnCli
                     if (error) {
                         showSnackbar(message);
                     } else
-                        showSnackbar("Facebook Account Added Successfully");
+                        showSnackbar(getResources().getString(R.string.fb_connected));
 
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -210,7 +209,7 @@ public class ActivityProfileEdit extends AppCompatActivity implements View.OnCli
                 String err = error.toString();
                 Log.d("mylog", "error : " + err);
                 if (!err.isEmpty() && err.contains("TimeoutError"))
-                    showSnackbar("Failed to connect to server :(");
+                    showSnackbar(getResources().getString(R.string.server_noconnect));
                 else
                     showSnackbar(error.toString());
             }
@@ -316,7 +315,7 @@ public class ActivityProfileEdit extends AppCompatActivity implements View.OnCli
                         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                         startActivity(intent);
                     } else {
-                        showSnackbar("Failed to update User");
+                        showSnackbar(getResources().getString(R.string.failed_user_update));
                     }
                 } catch (JSONException e) {
                     Log.d("mylog", "Error updating: " + e.toString());
@@ -329,7 +328,7 @@ public class ActivityProfileEdit extends AppCompatActivity implements View.OnCli
                 String err = error.toString();
                 Log.d("mylog", "error : " + err);
                 if (!err.isEmpty() && err.contains("TimeoutError"))
-                    showSnackbar("Failed to connect to server :(");
+                    showSnackbar(getResources().getString(R.string.server_noconnect));
                 else
                     showSnackbar(error.toString());
             }

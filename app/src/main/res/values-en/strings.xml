@@ -74,6 +74,7 @@
     <string name="already_registered">Already Registered</string>
     <string name="facebook_login">Facebook Login</string>
     <string name="logout">Logout</string>
+    <string name="server_noconnect">Unable to connect to server</string>
 
     <!-- Progress Dialogs -->
     <string name="getting_mig_details">Getting migrant details</string>
@@ -107,4 +108,6 @@
     <!-- Required for facebook Login -->
     <string name="facebook_app_id">118900038809550</string>
     <string name="fb_login_protocol_scheme">fb118900038809550</string>
+    <string name="failed_user_update">Failed to update user details</string>
+    <string name="fb_connected">Connected to Facebook</string>
 </resources>
