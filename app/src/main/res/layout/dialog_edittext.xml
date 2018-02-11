@@ -11,6 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/login"
+        
         app:fonts="gotham_bold.ttf" />
 
     <com.vysh.subairoma.utils.CustomTextView
@@ -18,6 +19,7 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/medium_margin"
         android:layout_marginTop="@dimen/medium_margin"
+        android:padding="@dimen/small_margin"
         android:text="@string/enter_reg_number"
         app:fonts="gotham_light.ttf" />
 
