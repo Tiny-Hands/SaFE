@@ -46,46 +46,7 @@ public class FeedbackQuestionAdapter extends RecyclerView.Adapter<FeedbackQuesti
 
     @Override
     public void onBindViewHolder(final FeedbackHolder holder, int position) {
-        final FeedbackQuestionModel tempModel = feedbackQuestionModels.get(position);
-        holder.tvMainText.setText(tempModel.getQuestionTitle());
-        if (tempModel.getQuestionType() == 2) {
-            holder.main.setVisibility(View.GONE);
-            holder.tvMainText.setTextSize(TypedValue.COMPLEX_UNIT_PX, mContext.getResources().getDimension(R.dimen.feedback_list_heading));
-            holder.tvMainText.setBackgroundColor(mContext.getResources().getColor(R.color.editTextBackground));
-        }
-        holder.main.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
-                if (isChecked) {
-                    holder.editText.setVisibility(View.VISIBLE);
-                    sqlDatabaseHelper.insertFeedbackResponse(migrantId, tempModel.getQuestionId(),
-                            tempModel.getQuestionVariable(), "true", "");
 
-                } else {
-                    holder.editText.setVisibility(View.GONE);
-                    sqlDatabaseHelper.insertFeedbackResponse(migrantId, tempModel.getQuestionId(),
-                            tempModel.getQuestionVariable(), "false", "");
-                }
-            }
-        });
-
-        holder.editText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
-                String feedbackText = holder.editText.getText().toString();
-                if (feedbackText.length() < 5)
-                    holder.editText.setError("Please Elaborate");
-                else {
-                    sqlDatabaseHelper.insertFeedbackResponse(migrantId, tempModel.getQuestionId(),
-                            tempModel.getQuestionVariable(), "true", feedbackText);
-                    InputMethodManager inputMethodManager = (InputMethodManager) mContext.
-                            getSystemService(Context.INPUT_METHOD_SERVICE);
-                    inputMethodManager.hideSoftInputFromWindow(holder.itemView.getWindowToken(), 0);
-                    return true;
-                }
-                return false;
-            }
-        });
     }
 
     @Override

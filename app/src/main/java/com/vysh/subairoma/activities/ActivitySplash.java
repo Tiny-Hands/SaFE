@@ -411,23 +411,11 @@ public class ActivitySplash extends AppCompatActivity {
                     if (!qidString.equalsIgnoreCase("null")) {
                         qid = Integer.parseInt(qidString);
                     }
-
                     String qTitle = questionObject.getString("question_title");
-
-                    int qType = -1;
-                    String questionType = questionObject.getString("question_type");
-                    if (!questionType.equalsIgnoreCase("null"))
-                        qType = Integer.parseInt(questionType);
-
-                    String questionVariable = questionObject.getString("question_variable");
-
-                    int qGroup = -1;
-                    String questionGroup = questionObject.getString("question_group");
-                    if (!questionGroup.equalsIgnoreCase("null"))
-                        qGroup = Integer.parseInt(questionGroup);
+                    String qOption = questionObject.getString("question_option");
 
                     Log.d("mylog", "Feedback qid: " + qid);
-                    dbHelper.insertFeedbackQuestions(qid, qTitle, qType, questionVariable, qGroup);
+                    dbHelper.insertFeedbackQuestions(qid, qTitle, qOption);
                 }
                 incrementCount();
             }

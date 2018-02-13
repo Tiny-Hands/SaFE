@@ -1,15 +1,27 @@
 package com.vysh.subairoma.SQLHelpers;
 
+import android.app.AlarmManager;
 import android.app.Application;
+import android.app.PendingIntent;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.provider.ContactsContract;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.TextView;
 
 import com.vysh.subairoma.ApplicationClass;
+import com.vysh.subairoma.R;
+import com.vysh.subairoma.SharedPrefKeys;
+import com.vysh.subairoma.activities.ActivitySplash;
 import com.vysh.subairoma.models.CountryModel;
 import com.vysh.subairoma.models.FeedbackQuestionModel;
 import com.vysh.subairoma.models.MigrantModel;
@@ -26,6 +38,7 @@ import java.util.HashMap;
 
 public class SQLDatabaseHelper extends SQLiteOpenHelper {
     // If you change the database schema, you must increment the database version.
+    Context mContext;
     public static final int DATABASE_VERSION = 1;
     public static final String DATABASE_NAME = "SubairomaLocal.db";
     final String SQL_CREATE_ResponseTable =
@@ -93,21 +106,19 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
             "CREATE TABLE " + DatabaseTables.FeedbackQuestionsTable.TABLE_NAME + " (" +
                     DatabaseTables.FeedbackQuestionsTable.question_id + " INTEGER PRIMARY KEY," +
                     DatabaseTables.FeedbackQuestionsTable.question_title + " TEXT," +
-                    DatabaseTables.FeedbackQuestionsTable.question_variable + " TEXT," +
-                    DatabaseTables.FeedbackQuestionsTable.question_type + " TEXT," +
-                    DatabaseTables.FeedbackQuestionsTable.question_group + " TEXT" + ");";
+                    DatabaseTables.FeedbackQuestionsTable.question_option + " TEXT" + ");";
     final String SQL_CREATE_FeedbackQuestionResponseTable =
             "CREATE TABLE " + DatabaseTables.FeedbackQuestionsResponseTable.TABLE_NAME + " (" +
                     DatabaseTables.FeedbackQuestionsResponseTable.question_id + " INTEGER," +
                     DatabaseTables.FeedbackQuestionsResponseTable.migrant_id + " INTEGER," +
                     DatabaseTables.FeedbackQuestionsResponseTable.response + " TEXT," +
-                    DatabaseTables.FeedbackQuestionsResponseTable.response_variable + " TEXT," +
                     DatabaseTables.FeedbackQuestionsResponseTable.response_feedback + " TEXT," +
                     " UNIQUE (" + DatabaseTables.FeedbackQuestionsResponseTable.question_id + ", " +
                     DatabaseTables.FeedbackQuestionsResponseTable.migrant_id + "));";
 
     public SQLDatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
+        mContext = context;
         Log.d("mylog", "Database created");
     }
 
@@ -127,7 +138,43 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+        db.execSQL("DROP TABLE IF EXISTS " + DatabaseTables.FeedbackQuestionsTable.TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + DatabaseTables.FeedbackQuestionsResponseTable.TABLE_NAME);
+        allowReloadData();
+        showNewDataDialog();
+        onCreate(db);
+    }
 
+    private void showNewDataDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(mContext.getApplicationContext());
+        builder.setPositiveButton("New Data Required", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                restartApp();
+            }
+        });
+        builder.show();
+    }
+
+    private void restartApp() {
+        Intent intent = new Intent(mContext, ActivitySplash.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        mContext.startActivity(intent);
+       /* PendingIntent pendingIntent = PendingIntent.getActivity(
+                ApplicationClass.getInstance().getBaseContext(), 0, intent, PendingIntent.FLAG_ONE_SHOT);
+
+        //Restart your app after 1 seconds
+        AlarmManager mgr = (AlarmManager) ApplicationClass.getInstance().getBaseContext()
+                .getSystemService(Context.ALARM_SERVICE);
+        mgr.set(AlarmManager.RTC, System.currentTimeMillis() + 500,
+                pendingIntent);*/
+    }
+
+    public void allowReloadData() {
+        SharedPreferences sp = mContext.getSharedPreferences(SharedPrefKeys.sharedPrefName, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sp.edit();
+        editor.putInt("savedcount", 0);
+        editor.commit();
     }
 
     public void insertResponseTableData(String response, int question_id, int tileId, int migrant_id, String variable) {
@@ -413,28 +460,18 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
         Log.d("mylog", "Inserted row ID; " + newRowId);
     }
 
-    public void insertFeedbackQuestions(int qid, String qTitle, int questionType, String questionVariable, int questionGroup) {
+    public void insertFeedbackQuestions(int qid, String qTitle, String qOption) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(DatabaseTables.FeedbackQuestionsTable.question_id, qid);
         values.put(DatabaseTables.FeedbackQuestionsTable.question_title, qTitle);
-        values.put(DatabaseTables.FeedbackQuestionsTable.question_variable, questionVariable);
-
-        if (questionType != -1)
-            values.put(DatabaseTables.FeedbackQuestionsTable.question_type, questionType);
-        else
-            values.putNull(DatabaseTables.FeedbackQuestionsTable.question_type);
-
-        if (questionGroup != -1)
-            values.put(DatabaseTables.FeedbackQuestionsTable.question_group, questionGroup);
-        else
-            values.putNull(DatabaseTables.FeedbackQuestionsTable.question_group);
+        values.put(DatabaseTables.FeedbackQuestionsTable.question_option, qOption);
 
         long newRowId = db.insert(DatabaseTables.FeedbackQuestionsTable.TABLE_NAME, null, values);
         Log.d("mylog", "Inserted Feedback row ID; " + newRowId);
     }
 
-    public void insertFeedbackResponse(int migrantId, int questionId, String responseVar, String response, String responseFeedback) {
+    public void insertFeedbackResponse(int migrantId, int questionId, String response, String responseFeedback) {
         // Gets the data repository in write mode
         SQLiteDatabase db = this.getWritableDatabase();
         // Create a new map of values, where column names are the keys
@@ -452,7 +489,6 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
             // Insert the new row, returning the primary key value of the new row
             values.put(DatabaseTables.FeedbackQuestionsResponseTable.migrant_id, migrantId);
             values.put(DatabaseTables.FeedbackQuestionsResponseTable.question_id, questionId);
-            values.put(DatabaseTables.FeedbackQuestionsResponseTable.response_variable, responseVar);
             long newRowId = db.insert(DatabaseTables.FeedbackQuestionsResponseTable.TABLE_NAME, null, values);
             Log.d("mylog", "Inserted feedback row ID: " + newRowId);
         }
@@ -490,31 +526,16 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getReadableDatabase();
         ArrayList<FeedbackQuestionModel> feedbackQuestions = new ArrayList<>();
         //SELECT * FROM `feedback_questions_table` ORDER BY question_group, question_type DESC
-        String statement = "SELECT * FROM " + DatabaseTables.FeedbackQuestionsTable.TABLE_NAME + " ORDER BY "
-                + DatabaseTables.FeedbackQuestionsTable.question_group + ", " + DatabaseTables.FeedbackQuestionsTable.question_type + " DESC";
+        String statement = "SELECT * FROM " + DatabaseTables.FeedbackQuestionsTable.TABLE_NAME;
         Cursor cursor = db.rawQuery(statement, null);
         while (cursor.moveToNext()) {
             int id = cursor.getInt(cursor.getColumnIndex(DatabaseTables.FeedbackQuestionsTable.question_id));
-
-            int qTypeIndex = cursor.getColumnIndex(DatabaseTables.FeedbackQuestionsTable.question_type);
-            int qType = -1;
-            if (!cursor.isNull(qTypeIndex))
-                qType = cursor.getInt(qTypeIndex);
-
-            int qGroupIndex = cursor.getColumnIndex(DatabaseTables.FeedbackQuestionsTable.question_group);
-            int qGroup = -1;
-            if (!cursor.isNull(qGroupIndex))
-                qGroup = cursor.getInt(qGroupIndex);
-
             String qTitle = cursor.getString(cursor.getColumnIndex(DatabaseTables.FeedbackQuestionsTable.question_title));
-            String qVar = cursor.getString(cursor.getColumnIndex(DatabaseTables.FeedbackQuestionsTable.question_variable));
-
+            String qOptions = cursor.getString(cursor.getColumnIndex(DatabaseTables.FeedbackQuestionsTable.question_option));
             FeedbackQuestionModel tempModel = new FeedbackQuestionModel();
             tempModel.setQuestionId(id);
-            tempModel.setQuestionGroup(qGroup);
             tempModel.setQuestionTitle(qTitle);
-            tempModel.setQuestionType(qType);
-            tempModel.setQuestionVariable(qVar);
+            tempModel.setQuestionOptions(qOptions);
             feedbackQuestions.add(tempModel);
         }
         return feedbackQuestions;

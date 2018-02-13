@@ -85,9 +85,7 @@ public final class DatabaseTables {
         public static final String TABLE_NAME = "tbl_feedbackquestions";
         public static final String question_id = "question_id";
         public static final String question_title = "question_title";
-        public static final String question_type = "question_type";
-        public static final String question_group = "question_group";
-        public static final String question_variable = "question_variable";
+        public static final String question_option = "question_option";
     }
 
     public static class FeedbackQuestionsResponseTable {
@@ -95,7 +93,6 @@ public final class DatabaseTables {
         public static final String question_id = "question_id";
         public static final String migrant_id = "migrant_id";
         public static final String response = "response";
-        public static final String response_variable = "response_variable";
         public static final String response_feedback = "response_feedback";
     }
 }

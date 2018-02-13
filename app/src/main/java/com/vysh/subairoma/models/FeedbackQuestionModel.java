@@ -7,15 +7,14 @@ import java.util.ArrayList;
  */
 
 public class FeedbackQuestionModel {
-    String questionTitle, questionVariable;
-    ArrayList<String> questionOptions;
-    int questionId, questionType, questionGroup;
+    String questionTitle, questionVariable, questionOptions;
+    int questionId;
 
-    public ArrayList<String> getQuestionOptions() {
+    public String getQuestionOptions() {
         return questionOptions;
     }
 
-    public void setQuestionOptions(ArrayList<String> questionOptions) {
+    public void setQuestionOptions(String questionOptions) {
         this.questionOptions = questionOptions;
     }
 
@@ -41,21 +40,5 @@ public class FeedbackQuestionModel {
 
     public void setQuestionId(int questionId) {
         this.questionId = questionId;
-    }
-
-    public int getQuestionType() {
-        return questionType;
-    }
-
-    public void setQuestionType(int questionType) {
-        this.questionType = questionType;
-    }
-
-    public int getQuestionGroup() {
-        return questionGroup;
-    }
-
-    public void setQuestionGroup(int questionGroup) {
-        this.questionGroup = questionGroup;
     }
 }
