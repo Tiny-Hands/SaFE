@@ -10,16 +10,29 @@
         android:layout_width="match_parent"
         android:layout_height="?android:attr/actionBarSize">
 
-        <TextView
-            android:id="@+id/tvTitle"
-            android:textSize="@dimen/tile_title_size"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginEnd="@dimen/medium_large_margin"
-            android:gravity="center_horizontal"
-            android:layout_marginTop="@dimen/default_margin"
-            android:textStyle="bold"
-            android:text="Travel and Some very long text" />
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/ivImage"
+                android:layout_width="42dp"
+                android:layout_height="42dp"
+                android:scaleType="centerCrop" />
+
+            <TextView
+                android:id="@+id/tvTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:layout_marginEnd="42dp"
+                android:text="Travel and Some very long text"
+                android:textSize="@dimen/tile_title_size"
+                android:textStyle="bold" />
+        </LinearLayout>
     </android.support.v7.widget.Toolbar>
 
     <android.support.v7.widget.RecyclerView

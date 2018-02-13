@@ -7,6 +7,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.WindowManager;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.vysh.subairoma.R;
@@ -27,14 +28,14 @@ public class ActivityTileQuestions extends AppCompatActivity {
 
     @BindView(R.id.rvTileQuestions)
     public RecyclerView rvQuestions;
-
     @BindView(R.id.tvTitle)
     public TextView tvTitle;
+    @BindView(R.id.ivImage)
+    ImageView ivTile;
 
     Boolean stateDisabled;
 
     public ArrayList<TileQuestionsModel> questionList;
-
     public TileQuestionsAdapter questionsAdapter;
 
     @Override
@@ -47,7 +48,55 @@ public class ActivityTileQuestions extends AppCompatActivity {
         stateDisabled = getIntent().hasExtra("stateDisabled");
         tvTitle.setText(getIntent().getStringExtra("tileName").toUpperCase());
         getQuestions(getIntent().getIntExtra("tileId", -1));
+        int icId = getIntent().getIntExtra("iconId", -1);
+        setTileIcons(icId);
         setUpRecyclerView();
+    }
+
+    private void setTileIcons(int tileId) {
+        switch (tileId) {
+            case 0:
+                ivTile.setImageResource(R.drawable.ic_travel_work);
+                break;
+            case 1:
+                ivTile.setImageResource(R.drawable.ic_manpower);
+                break;
+            case 2:
+                ivTile.setImageResource(R.drawable.ic_work);
+                break;
+            case 3:
+                ivTile.setImageResource(R.drawable.ic_contract);
+                break;
+            case 4:
+                ivTile.setImageResource(R.drawable.ic_cost);
+                break;
+            case 5:
+                ivTile.setImageResource(R.drawable.ic_government);
+                break;
+            case 6:
+                ivTile.setImageResource(R.drawable.ic_preparation);
+                break;
+            case 7:
+                ivTile.setImageResource(R.drawable.ic_passport_visa);
+                break;
+            case 8:
+                ivTile.setImageResource(R.drawable.ic_packing);
+                break;
+            case 9:
+                ivTile.setImageResource(R.drawable.ic_travel);
+                break;
+            case 10:
+                ivTile.setImageResource(R.drawable.ic_incountry);
+                break;
+            case 15:
+                ivTile.setImageResource(R.drawable.ic_preparation);
+                break;
+            case 16:
+                ivTile.setImageResource(R.drawable.ic_travel);
+                break;
+            default:
+                ivTile.setImageResource(R.drawable.ic_default);
+        }
     }
 
     private void getQuestions(int tileId) {
@@ -62,8 +111,7 @@ public class ActivityTileQuestions extends AppCompatActivity {
                     temp.add(i, options[i]);
                 }
                 question.setOptions(temp);
-            }
-            else if (question.getResponseType() == 3) {
+            } else if (question.getResponseType() == 3) {
                 String[] options = sqlDatabaseHelper.getOptions(question.getQuestionId());
                 ArrayList<String> temp = new ArrayList<>();
                 for (int i = 0; i < options.length; i++) {

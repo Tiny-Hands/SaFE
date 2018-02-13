@@ -593,7 +593,12 @@ public class ActivityRegister extends AppCompatActivity {
         final ProgressDialog pdialog = new ProgressDialog(ActivityRegister.this);
         //pdialog.setTitle("Setting Up");
         pdialog.setMessage(getResources().getString(R.string.getting_mig_details));
-        pdialog.show();
+        try {
+            pdialog.show();
+        }
+        catch (Exception ex){
+
+        }
         StringRequest stringRequest = new StringRequest(Request.Method.POST, api, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
