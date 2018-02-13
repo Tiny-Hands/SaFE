@@ -84,6 +84,23 @@ public class ActivitySplash extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         sp = getSharedPreferences(SharedPrefKeys.sharedPrefName, MODE_PRIVATE);
+        int currVersion = sp.getInt(SharedPrefKeys.dbVersion, -1);
+        dbHelper = new SQLDatabaseHelper(ActivitySplash.this);
+        if (dbHelper.getVersion() > currVersion && currVersion != -1) {
+            Log.d("mylog", "Greater Version dropping");
+            dbHelper.dropDB();
+            //Remove User data
+            SharedPreferences.Editor editor = sp.edit();
+            editor.putInt(SharedPrefKeys.userId, -10);
+            editor.putString(SharedPrefKeys.userType, "");
+            editor.commit();
+            finish();
+            Intent intent = new Intent(ActivitySplash.this, ActivitySplash.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(intent);
+            return;
+            //return;
+        }
         if (sp.getString(SharedPrefKeys.lang, "").equalsIgnoreCase("en")) {
             setLocale("en");
         } else

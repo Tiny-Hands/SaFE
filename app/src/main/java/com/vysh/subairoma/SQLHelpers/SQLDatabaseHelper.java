@@ -11,12 +11,14 @@ import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.os.Build;
 import android.provider.ContactsContract;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.vysh.subairoma.ApplicationClass;
 import com.vysh.subairoma.R;
@@ -39,10 +41,10 @@ import java.util.HashMap;
 public class SQLDatabaseHelper extends SQLiteOpenHelper {
     // If you change the database schema, you must increment the database version.
     Context mContext;
-    public static final int DATABASE_VERSION = 1;
+    public static final int DATABASE_VERSION = 2;
     public static final String DATABASE_NAME = "SubairomaLocal.db";
     final String SQL_CREATE_ResponseTable =
-            "CREATE TABLE " + DatabaseTables.ResponseTable.TABLE_NAME + " (" +
+            "CREATE TABLE IF NOT EXISTS " + DatabaseTables.ResponseTable.TABLE_NAME + " (" +
                     DatabaseTables.ResponseTable.migrant_id + " INTEGER," +
                     DatabaseTables.ResponseTable.question_id + " INTEGER," +
                     DatabaseTables.ResponseTable.is_error + " TEXT," +
@@ -53,14 +55,14 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
                     " UNIQUE (" + DatabaseTables.ResponseTable.question_id +
                     ", " + DatabaseTables.ResponseTable.migrant_id + "));";
     final String SQL_CREATE_TilesTable =
-            "CREATE TABLE " + DatabaseTables.TilesTable.TABLE_NAME + " (" +
+            "CREATE TABLE IF NOT EXISTS " + DatabaseTables.TilesTable.TABLE_NAME + " (" +
                     DatabaseTables.TilesTable.tile_id + " INTEGER PRIMARY KEY," +
                     DatabaseTables.TilesTable.tile_order + " INTEGER," +
                     DatabaseTables.TilesTable.tile_description + " TEXT," +
                     DatabaseTables.TilesTable.tile_type + " TEXT," +
                     DatabaseTables.TilesTable.tile_title + " TEXT" + ");";
     final String SQL_CREATE_QuestionsTable =
-            "CREATE TABLE " + DatabaseTables.QuestionsTable.TABLE_NAME + " (" +
+            "CREATE TABLE IF NOT EXISTS " + DatabaseTables.QuestionsTable.TABLE_NAME + " (" +
                     DatabaseTables.QuestionsTable.question_id + " INTEGER PRIMARY KEY," +
                     DatabaseTables.QuestionsTable.tile_id + " INTEGER," +
                     DatabaseTables.QuestionsTable.question_step + " TEXT," +
@@ -72,19 +74,19 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
                     DatabaseTables.QuestionsTable.question_order + " TEXT," +
                     DatabaseTables.QuestionsTable.response_type + " TEXT" + ");";
     final String SQL_CREATE_OptionsTable =
-            "CREATE TABLE " + DatabaseTables.OptionsTable.TABLE_NAME + " (" +
+            "CREATE TABLE IF NOT EXISTS " + DatabaseTables.OptionsTable.TABLE_NAME + " (" +
                     DatabaseTables.OptionsTable.option_id + " INTEGER PRIMARY KEY," +
                     DatabaseTables.OptionsTable.question_id + " INTEGER," +
                     DatabaseTables.OptionsTable.option_text + " TEXT" + ");";
     final String SQL_CREATE_CountriesTable =
-            "CREATE TABLE " + DatabaseTables.CountriesTable.TABLE_NAME + " (" +
+            "CREATE TABLE IF NOT EXISTS " + DatabaseTables.CountriesTable.TABLE_NAME + " (" +
                     DatabaseTables.CountriesTable.country_id + " TEXT PRIMARY KEY," +
                     DatabaseTables.CountriesTable.country_blacklist + " INTEGER," +
                     DatabaseTables.CountriesTable.country_status + " INTEGER," +
                     DatabaseTables.CountriesTable.country_order + " INTEGER," +
                     DatabaseTables.CountriesTable.country_name + " TEXT" + ");";
     final String SQL_CREATE_ContactsTable =
-            "CREATE TABLE " + DatabaseTables.ImportantContacts.TABLE_NAME + " (" +
+            "CREATE TABLE IF NOT EXISTS " + DatabaseTables.ImportantContacts.TABLE_NAME + " (" +
                     DatabaseTables.ImportantContacts.country_id + " TEXT PRIMARY KEY," +
                     DatabaseTables.ImportantContacts.title + " TEXT," +
                     DatabaseTables.ImportantContacts.description + " TEXT," +
@@ -93,7 +95,7 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
                     DatabaseTables.ImportantContacts.email + " TEXT," +
                     DatabaseTables.ImportantContacts.website + " TEXT" + ");";
     final String SQL_CREATE_MigrantsTable =
-            "CREATE TABLE " + DatabaseTables.MigrantsTable.TABLE_NAME + " (" +
+            "CREATE TABLE IF NOT EXISTS " + DatabaseTables.MigrantsTable.TABLE_NAME + " (" +
                     DatabaseTables.MigrantsTable.migrant_id + " INTEGER PRIMARY KEY," +
                     DatabaseTables.MigrantsTable.name + " TEXT," +
                     DatabaseTables.MigrantsTable.age + " INTEGER," +
@@ -103,12 +105,12 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
                     " UNIQUE (" + DatabaseTables.MigrantsTable.migrant_id +
                     ", " + DatabaseTables.MigrantsTable.user_id + "));";
     final String SQL_CREATE_FeedbackQuestionTable =
-            "CREATE TABLE " + DatabaseTables.FeedbackQuestionsTable.TABLE_NAME + " (" +
+            "CREATE TABLE IF NOT EXISTS " + DatabaseTables.FeedbackQuestionsTable.TABLE_NAME + " (" +
                     DatabaseTables.FeedbackQuestionsTable.question_id + " INTEGER PRIMARY KEY," +
                     DatabaseTables.FeedbackQuestionsTable.question_title + " TEXT," +
                     DatabaseTables.FeedbackQuestionsTable.question_option + " TEXT" + ");";
     final String SQL_CREATE_FeedbackQuestionResponseTable =
-            "CREATE TABLE " + DatabaseTables.FeedbackQuestionsResponseTable.TABLE_NAME + " (" +
+            "CREATE TABLE IF NOT EXISTS " + DatabaseTables.FeedbackQuestionsResponseTable.TABLE_NAME + " (" +
                     DatabaseTables.FeedbackQuestionsResponseTable.question_id + " INTEGER," +
                     DatabaseTables.FeedbackQuestionsResponseTable.migrant_id + " INTEGER," +
                     DatabaseTables.FeedbackQuestionsResponseTable.response + " TEXT," +
@@ -118,6 +120,10 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
 
     public SQLDatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
+        SharedPreferences sp = context.getSharedPreferences(SharedPrefKeys.sharedPrefName, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sp.edit();
+        editor.putInt(SharedPrefKeys.dbVersion, DATABASE_VERSION);
+        editor.commit();
         mContext = context;
         Log.d("mylog", "Database created");
     }
@@ -138,36 +144,43 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        db.execSQL("DROP TABLE IF EXISTS " + DatabaseTables.FeedbackQuestionsTable.TABLE_NAME);
-        db.execSQL("DROP TABLE IF EXISTS " + DatabaseTables.FeedbackQuestionsResponseTable.TABLE_NAME);
-        allowReloadData();
-        showNewDataDialog();
-        onCreate(db);
+        Log.d("mylog", "Updrading");
     }
 
-    private void showNewDataDialog() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(mContext.getApplicationContext());
-        builder.setPositiveButton("New Data Required", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                restartApp();
-            }
-        });
-        builder.show();
+    public int getVersion() {
+        return DATABASE_VERSION;
+    }
+
+    public void dropDB() {
+        SQLiteDatabase db = getWritableDatabase();
+        db.execSQL("DROP TABLE IF EXISTS " + DatabaseTables.FeedbackQuestionsResponseTable.TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + DatabaseTables.FeedbackQuestionsTable.TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + DatabaseTables.ResponseTable.TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + DatabaseTables.QuestionsTable.TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + DatabaseTables.OptionsTable.TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + DatabaseTables.CountriesTable.TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + DatabaseTables.MigrantsTable.TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + DatabaseTables.TilesTable.TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + DatabaseTables.ImportantContacts.TABLE_NAME);
+        mContext.deleteDatabase(DATABASE_NAME);
+        allowReloadData();
+        Toast.makeText(mContext, "Reloading Data, Please Wait", Toast.LENGTH_LONG).show();
+        //restartApp();
     }
 
     private void restartApp() {
         Intent intent = new Intent(mContext, ActivitySplash.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-        mContext.startActivity(intent);
-       /* PendingIntent pendingIntent = PendingIntent.getActivity(
+        //mContext.startActivity(intent);
+        PendingIntent pendingIntent = PendingIntent.getActivity(
                 ApplicationClass.getInstance().getBaseContext(), 0, intent, PendingIntent.FLAG_ONE_SHOT);
 
+        Log.d("mylog", "Reloading in 1 second");
         //Restart your app after 1 seconds
         AlarmManager mgr = (AlarmManager) ApplicationClass.getInstance().getBaseContext()
                 .getSystemService(Context.ALARM_SERVICE);
-        mgr.set(AlarmManager.RTC, System.currentTimeMillis() + 500,
-                pendingIntent);*/
+        mgr.set(AlarmManager.RTC, System.currentTimeMillis() + 100,
+                pendingIntent);
     }
 
     public void allowReloadData() {
