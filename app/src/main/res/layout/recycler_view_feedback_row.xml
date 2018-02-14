@@ -18,7 +18,8 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:padding="@dimen/small_medium_margin"
-            android:text="This app redirecteunsafe situation" />
+            android:text="This app redirecteunsafe situation"
+            android:textStyle="bold" />
 
         <android.support.v7.widget.AppCompatCheckBox
             android:id="@+id/cbQ"
@@ -50,7 +51,9 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
+        android:layout_marginBottom="@dimen/small_margin"
         android:layout_marginLeft="@dimen/medium_margin"
         android:layout_marginRight="@dimen/medium_margin"
+        android:layout_marginTop="@dimen/small_margin"
         android:background="@color/translucentGrey" />
 </LinearLayout>

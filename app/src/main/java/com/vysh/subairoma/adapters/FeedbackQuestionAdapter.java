@@ -8,6 +8,7 @@ import android.util.Log;
 import android.util.TypedValue;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
@@ -107,6 +108,27 @@ public class FeedbackQuestionAdapter extends RecyclerView.Adapter<FeedbackQuesti
                         if (editText.getVisibility() == View.VISIBLE)
                             editText.setVisibility(View.GONE);
                     }
+                }
+            });
+            listView.setOnTouchListener(new ListView.OnTouchListener() {
+                @Override
+                public boolean onTouch(View v, MotionEvent event) {
+                    int action = event.getAction();
+                    switch (action) {
+                        case MotionEvent.ACTION_DOWN:
+                            // Disallow RecyclerView to intercept touch events.
+                            v.getParent().requestDisallowInterceptTouchEvent(true);
+                            break;
+
+                        case MotionEvent.ACTION_UP:
+                            // Allow RecyclerView to intercept touch events.
+                            v.getParent().requestDisallowInterceptTouchEvent(false);
+                            break;
+                    }
+
+                    // Handle ListView touch events.
+                    v.onTouchEvent(event);
+                    return true;
                 }
             });
         }

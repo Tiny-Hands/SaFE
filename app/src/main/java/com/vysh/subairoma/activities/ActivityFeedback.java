@@ -50,7 +50,7 @@ public class ActivityFeedback extends AppCompatActivity {
         btnNext.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                getAllFeedbackResponses();
+                //getAllFeedbackResponses();
                 openTileHomeActivity();
 
             }
