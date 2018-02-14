@@ -1,24 +1,34 @@
 package com.vysh.subairoma.adapters;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.vysh.subairoma.ApplicationClass;
 import com.vysh.subairoma.R;
 import com.vysh.subairoma.SQLHelpers.SQLDatabaseHelper;
 import com.vysh.subairoma.models.FeedbackQuestionModel;
+import com.vysh.subairoma.models.TileQuestionsModel;
+
+import org.json.JSONArray;
+import org.json.JSONException;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.zip.Inflater;
 
 /**
@@ -46,7 +56,7 @@ public class FeedbackQuestionAdapter extends RecyclerView.Adapter<FeedbackQuesti
 
     @Override
     public void onBindViewHolder(final FeedbackHolder holder, int position) {
-
+        holder.tvMainText.setText(feedbackQuestionModels.get(position).getQuestionTitle());
     }
 
     @Override
@@ -59,12 +69,94 @@ public class FeedbackQuestionAdapter extends RecyclerView.Adapter<FeedbackQuesti
         CheckBox main;
         TextView tvMainText;
         EditText editText;
+        ListView listView;
 
-        public FeedbackHolder(View itemView) {
+        public FeedbackHolder(final View itemView) {
             super(itemView);
             main = itemView.findViewById(R.id.cbQ);
             tvMainText = itemView.findViewById(R.id.tvQtitle);
             editText = itemView.findViewById(R.id.etFeedback);
+            listView = itemView.findViewById(R.id.lvOptions);
+            main.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                    if (b) {
+                        String feedbackOption = feedbackQuestionModels.get(getAdapterPosition()).getQuestionOptions();
+                        Log.d("mylog", "FB Options: " + feedbackOption);
+                        if (feedbackOption.contains("red")) {
+                            Log.d("mylog", "Show Redflags");
+                            editText.setVisibility(View.VISIBLE);
+                        } else if (feedbackOption.length() > 5) {
+                            try {
+                                JSONArray optionsArray = new JSONArray(feedbackOption);
+                                ArrayList<String> options = new ArrayList<>();
+                                for (int i = 0; i < optionsArray.length(); i++) {
+                                    options.add(optionsArray.getString(i));
+                                }
+                                listView.setVisibility(View.VISIBLE);
+                                listView.setAdapter(new OptionsListViewAdapter(options, feedbackQuestionModels.get(getAdapterPosition()).getQuestionId()));
+                            } catch (JSONException e) {
+                                Log.d("mylog", "Error parsing options: " + e.toString());
+                            }
+                        } else {
+                            editText.setVisibility(View.VISIBLE);
+                        }
+                    } else {
+                        if (listView.getVisibility() == View.VISIBLE)
+                            listView.setVisibility(View.GONE);
+                        if (editText.getVisibility() == View.VISIBLE)
+                            editText.setVisibility(View.GONE);
+                    }
+                }
+            });
+        }
+    }
+
+    private class OptionsListViewAdapter extends ArrayAdapter<String> {
+        ArrayList<String> options;
+
+        public OptionsListViewAdapter(List<String> objects, int questionId) {
+            super(mContext, R.layout.listview_feedback_options_row, objects);
+            options = new ArrayList<>();
+            options.addAll(objects);
+
+        }
+
+        final class ViewHolder {
+            public TextView text;
+            public EditText editText;
+            public CheckBox checkBox;
+        }
+
+        @NonNull
+        @Override
+        public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+            ViewHolder viewHolder;
+            if (convertView == null) {
+                viewHolder = new ViewHolder();
+                convertView = LayoutInflater.from(mContext).inflate(R.layout.listview_feedback_options_row, parent, false);
+                viewHolder.text = convertView.findViewById(R.id.tvListViewOptions);
+                viewHolder.checkBox = convertView.findViewById(R.id.cbListViewOptions);
+                viewHolder.editText = convertView.findViewById(R.id.etOptFeedback);
+                final EditText et = viewHolder.editText;
+                viewHolder.checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                    @Override
+                    public void onCheckedChanged(CompoundButton buttonView, boolean ischecked) {
+                        if (ischecked) {
+                            et.setVisibility(View.VISIBLE);
+                        } else {
+                            if (et.getVisibility() == View.VISIBLE)
+                                et.setVisibility(View.GONE);
+                        }
+                    }
+                });
+
+                convertView.setTag(viewHolder);
+            } else {
+                viewHolder = (ViewHolder) convertView.getTag();
+            }
+            viewHolder.text.setText(options.get(position));
+            return convertView;
         }
     }
 }

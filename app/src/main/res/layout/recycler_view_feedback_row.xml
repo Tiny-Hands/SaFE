@@ -26,6 +26,13 @@
             android:layout_height="wrap_content" />
     </LinearLayout>
 
+    <ListView
+        android:id="@+id/lvOptions"
+        android:layout_width="match_parent"
+        android:layout_height="128dp"
+        android:layout_marginLeft="@dimen/default_margin"
+        android:visibility="gone" />
+
     <EditText
         android:id="@+id/etFeedback"
         android:layout_width="match_parent"
@@ -33,12 +40,12 @@
         android:layout_marginBottom="@dimen/medium_margin"
         android:layout_marginLeft="@dimen/small_medium_margin"
         android:layout_marginRight="@dimen/small_medium_margin"
-        android:visibility="gone"
         android:layout_marginTop="@dimen/medium_margin"
         android:background="@drawable/bg_edittext"
         android:imeOptions="actionDone"
         android:inputType="text"
-        android:padding="@dimen/small_medium_margin" />
+        android:padding="@dimen/small_medium_margin"
+        android:visibility="gone" />
 
     <View
         android:layout_width="match_parent"

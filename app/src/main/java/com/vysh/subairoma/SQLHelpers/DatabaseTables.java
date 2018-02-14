@@ -93,6 +93,7 @@ public final class DatabaseTables {
         public static final String question_id = "question_id";
         public static final String migrant_id = "migrant_id";
         public static final String response = "response";
+        public static final String option_response = "opt_response";
         public static final String response_feedback = "response_feedback";
     }
 }

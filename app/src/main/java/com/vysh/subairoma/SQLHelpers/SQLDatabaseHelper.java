@@ -114,6 +114,7 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
                     DatabaseTables.FeedbackQuestionsResponseTable.question_id + " INTEGER," +
                     DatabaseTables.FeedbackQuestionsResponseTable.migrant_id + " INTEGER," +
                     DatabaseTables.FeedbackQuestionsResponseTable.response + " TEXT," +
+                    DatabaseTables.FeedbackQuestionsResponseTable.option_response + " TEXT," +
                     DatabaseTables.FeedbackQuestionsResponseTable.response_feedback + " TEXT," +
                     " UNIQUE (" + DatabaseTables.FeedbackQuestionsResponseTable.question_id + ", " +
                     DatabaseTables.FeedbackQuestionsResponseTable.migrant_id + "));";
@@ -484,14 +485,14 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
         Log.d("mylog", "Inserted Feedback row ID; " + newRowId);
     }
 
-    public void insertFeedbackResponse(int migrantId, int questionId, String response, String responseFeedback) {
+    public void insertFeedbackResponse(int migrantId, int questionId, String response, String optResponse, String responseFeedback) {
         // Gets the data repository in write mode
         SQLiteDatabase db = this.getWritableDatabase();
         // Create a new map of values, where column names are the keys
         ContentValues values = new ContentValues();
         values.put(DatabaseTables.FeedbackQuestionsResponseTable.response, response);
         values.put(DatabaseTables.FeedbackQuestionsResponseTable.response_feedback, responseFeedback);
-
+        values.put(DatabaseTables.FeedbackQuestionsResponseTable.option_response, optResponse);
         //If already exist the Update
         String whereClause = DatabaseTables.FeedbackQuestionsResponseTable.migrant_id + " = " + migrantId + " AND " +
                 DatabaseTables.FeedbackQuestionsResponseTable.question_id + " = " + questionId;
@@ -516,11 +517,11 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
                 DatabaseTables.FeedbackQuestionsResponseTable.migrant_id + "=" + "'" + migId + "'";
         //Log.d("mylog", "Query: " + query);
         Cursor cursor = db.rawQuery(query, null);
-        String response = "", resFeedback = "";
+        String response = "", resFeedback = "", optResponse;
         Log.d("mylog", "Response for Migrant ID: " + migId);
-        int userId = ApplicationClass.getInstance().getUserId();
         while (cursor.moveToNext()) {
             response = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseTables.FeedbackQuestionsResponseTable.response));
+            optResponse = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseTables.FeedbackQuestionsResponseTable.option_response));
             resFeedback = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseTables.FeedbackQuestionsResponseTable.response_feedback));
             int mid = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseTables.FeedbackQuestionsResponseTable.migrant_id));
             int qid = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseTables.FeedbackQuestionsResponseTable.question_id));
@@ -529,6 +530,7 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
             params.put("migrant_id", "" + mid);
             params.put("question_id", "" + qid);
             params.put("response", response);
+            params.put("opt_response", optResponse);
             params.put("feedback", resFeedback);
             allResponses.add(params);
         }

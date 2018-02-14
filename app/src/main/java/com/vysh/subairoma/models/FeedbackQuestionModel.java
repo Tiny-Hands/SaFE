@@ -7,7 +7,7 @@ import java.util.ArrayList;
  */
 
 public class FeedbackQuestionModel {
-    String questionTitle, questionVariable, questionOptions;
+    String questionTitle, questionOptions;
     int questionId;
 
     public String getQuestionOptions() {
@@ -24,14 +24,6 @@ public class FeedbackQuestionModel {
 
     public void setQuestionTitle(String questionTitle) {
         this.questionTitle = questionTitle;
-    }
-
-    public String getQuestionVariable() {
-        return questionVariable;
-    }
-
-    public void setQuestionVariable(String questionVariable) {
-        this.questionVariable = questionVariable;
     }
 
     public int getQuestionId() {
