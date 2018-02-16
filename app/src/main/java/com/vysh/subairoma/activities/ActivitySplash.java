@@ -452,6 +452,7 @@ public class ActivitySplash extends AppCompatActivity {
                 for (int i = 0; i < contactsArray.length(); i++) {
                     JSONObject contactsObject = contactsArray.getJSONObject(i);
                     String cid = contactsObject.getString("country_id");
+                    int contactId = contactsObject.getInt("contact_id");
                     String title = contactsObject.getString("title");
                     String description = contactsObject.getString("description");
                     String address = contactsObject.getString("address");
@@ -459,7 +460,7 @@ public class ActivitySplash extends AppCompatActivity {
                     String email = contactsObject.getString("email");
                     String website = contactsObject.getString("website");
                     Log.d("mylog", cid);
-                    dbHelper.insertImportantContacts(cid, title, description, address, phone, email, website);
+                    dbHelper.insertImportantContacts(contactId, cid, title, description, address, phone, email, website);
                 }
                 incrementCount();
             }

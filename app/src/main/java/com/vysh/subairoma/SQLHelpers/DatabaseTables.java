@@ -55,6 +55,7 @@ public final class DatabaseTables {
 
     public static class ImportantContacts {
         public static final String TABLE_NAME = "tbl_contacts";
+        public static final String contact_id = "contact_id";
         public static final String country_id = "country_id";
         public static final String title = "title";
         public static final String description = "description";

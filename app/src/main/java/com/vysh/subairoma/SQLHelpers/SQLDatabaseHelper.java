@@ -41,7 +41,7 @@ import java.util.HashMap;
 public class SQLDatabaseHelper extends SQLiteOpenHelper {
     // If you change the database schema, you must increment the database version.
     Context mContext;
-    public static final int DATABASE_VERSION = 2;
+    public static final int DATABASE_VERSION = 3;
     public static final String DATABASE_NAME = "SubairomaLocal.db";
     final String SQL_CREATE_ResponseTable =
             "CREATE TABLE IF NOT EXISTS " + DatabaseTables.ResponseTable.TABLE_NAME + " (" +
@@ -87,7 +87,8 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
                     DatabaseTables.CountriesTable.country_name + " TEXT" + ");";
     final String SQL_CREATE_ContactsTable =
             "CREATE TABLE IF NOT EXISTS " + DatabaseTables.ImportantContacts.TABLE_NAME + " (" +
-                    DatabaseTables.ImportantContacts.country_id + " TEXT PRIMARY KEY," +
+                    DatabaseTables.ImportantContacts.contact_id + " INT PRIMARY KEY," +
+                    DatabaseTables.ImportantContacts.country_id + " TEXT," +
                     DatabaseTables.ImportantContacts.title + " TEXT," +
                     DatabaseTables.ImportantContacts.description + " TEXT," +
                     DatabaseTables.ImportantContacts.address + " TEXT," +
@@ -417,9 +418,10 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
         Log.d("mylog", "Inserted row ID; " + newRowId);
     }
 
-    public void insertImportantContacts(String cid, String title, String description, String address, String phone, String email, String website) {
+    public void insertImportantContacts(int contactId, String cid, String title, String description, String address, String phone, String email, String website) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
+        values.put(DatabaseTables.ImportantContacts.contact_id, contactId);
         values.put(DatabaseTables.ImportantContacts.country_id, cid);
         values.put(DatabaseTables.ImportantContacts.title, title);
         values.put(DatabaseTables.ImportantContacts.description, description);
