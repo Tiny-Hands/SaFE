@@ -26,6 +26,7 @@ import com.vysh.subairoma.SharedPrefKeys;
 import com.vysh.subairoma.activities.ActivitySplash;
 import com.vysh.subairoma.models.CountryModel;
 import com.vysh.subairoma.models.FeedbackQuestionModel;
+import com.vysh.subairoma.models.ImportantContactsModel;
 import com.vysh.subairoma.models.MigrantModel;
 import com.vysh.subairoma.models.TileQuestionsModel;
 import com.vysh.subairoma.models.TilesModel;
@@ -703,23 +704,30 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
         return migrantModels;
     }
 
-    public String[] getImportantContacts(String countryId) {
+    public ArrayList<ImportantContactsModel> getImportantContacts(String countryId) {
         SQLiteDatabase db = this.getReadableDatabase();
-        String[] contacts = new String[6];
         Cursor cursor = db.rawQuery("SELECT * FROM " + DatabaseTables.ImportantContacts.TABLE_NAME
                 + " WHERE " + DatabaseTables.ImportantContacts.country_id + "=" + "'" + countryId + "'", null);
         Log.d("mylog", "Raw Data: " + cursor.toString());
-        if (cursor.getCount() > 0) {
-            cursor.moveToNext();
-            contacts[0] = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseTables.ImportantContacts.title));
-            contacts[1] = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseTables.ImportantContacts.description));
-            contacts[2] = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseTables.ImportantContacts.address));
-            contacts[3] = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseTables.ImportantContacts.phone));
-            contacts[4] = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseTables.ImportantContacts.email));
-            contacts[5] = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseTables.ImportantContacts.website));
-            return contacts;
-        } else
-            return null;
+        ArrayList<ImportantContactsModel> contactsModels = new ArrayList<>();
+        while (cursor.moveToNext()) {
+            String title = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseTables.ImportantContacts.title));
+            String description = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseTables.ImportantContacts.description));
+            String address = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseTables.ImportantContacts.address));
+            String phone = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseTables.ImportantContacts.phone));
+            String email = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseTables.ImportantContacts.email));
+            String website = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseTables.ImportantContacts.website));
+
+            ImportantContactsModel tempModel = new ImportantContactsModel();
+            tempModel.setAddress(address);
+            tempModel.setPhone(phone);
+            tempModel.setTitle(title);
+            tempModel.setDescription(description);
+            tempModel.setEmail(email);
+            tempModel.setWebsite(website);
+            contactsModels.add(tempModel);
+        }
+        return contactsModels;
     }
 
     public MigrantModel getMigrantDetails() {

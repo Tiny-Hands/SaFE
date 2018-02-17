@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -22,11 +23,14 @@ import com.vysh.subairoma.ApplicationClass;
 import com.vysh.subairoma.R;
 import com.vysh.subairoma.SQLHelpers.SQLDatabaseHelper;
 import com.vysh.subairoma.SharedPrefKeys;
+import com.vysh.subairoma.adapters.ImportantContactsAdatper;
+import com.vysh.subairoma.models.ImportantContactsModel;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -40,32 +44,8 @@ import butterknife.ButterKnife;
 public class ActivityImportantContacts extends AppCompatActivity {
     private final String importantContactsAPI = "/getimportantcontacts.php";
 
-    @BindView(R.id.llNepalEmbassy)
-    LinearLayout llNepalEmbassy;
-    @BindView(R.id.llContact1)
-    LinearLayout llContact1;
-    @BindView(R.id.llContact2)
-    LinearLayout llContact2;
-    @BindView(R.id.llContact3)
-    LinearLayout llContact3;
-    @BindView(R.id.llContact4)
-    LinearLayout llContact4;
-    @BindView(R.id.llContact5)
-    LinearLayout llContact5;
-
-    @BindView(R.id.tvNepalEmbassy)
-    TextView tvNepalEmbassy;
-    @BindView(R.id.tvContact1)
-    TextView tvContact1;
-    @BindView(R.id.tvContact2)
-    TextView tvContact2;
-    @BindView(R.id.tvContact3)
-    TextView tvContact3;
-    @BindView(R.id.tvContact4)
-    TextView tvContact4;
-    @BindView(R.id.tvContact5)
-    TextView tvContact5;
-
+    @BindView(R.id.rvContacts)
+    RecyclerView rvContacts;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -78,50 +58,9 @@ public class ActivityImportantContacts extends AppCompatActivity {
 
     public void setUpInfo(String cid) {
         Log.d("mylog", "Received Country Id: " + cid);
-        String[] contacts = new SQLDatabaseHelper(this).getImportantContacts(cid);
-        if (contacts != null)
-            for (int i = 0; i < 4; i++) {
-                String currentInfo = contacts[i];
-                Log.d("mylog", "Curr Info: " + currentInfo);
-                switch (i) {
-                    case 0:
-                        if (currentInfo != null && !currentInfo.isEmpty()) {
-                            llNepalEmbassy.setVisibility(View.VISIBLE);
-                            tvNepalEmbassy.setText(currentInfo);
-                        }
-                        break;
-                    case 1:
-                        if (currentInfo != null && !currentInfo.isEmpty()) {
-                            llContact1.setVisibility(View.VISIBLE);
-                            tvContact1.setText(currentInfo);
-                        }
-                        break;
-                    case 2:
-                        if (currentInfo != null && !currentInfo.isEmpty()) {
-                            llContact2.setVisibility(View.VISIBLE);
-                            tvContact2.setText(getResources().getString(R.string.address) + ": " + currentInfo);
-                        }
-                        break;
-                    case 3:
-                        if (currentInfo != null && !currentInfo.isEmpty()) {
-                            llContact3.setVisibility(View.VISIBLE);
-                            tvContact3.setText(getResources().getString(R.string.phone_number) + ": " + currentInfo);
-                        }
-                        break;
-                    case 4:
-                        if (currentInfo != null && !currentInfo.isEmpty()) {
-                            llContact4.setVisibility(View.VISIBLE);
-                            tvContact4.setText(getResources().getString(R.string.email) + ": " + currentInfo);
-                        }
-                        break;
-                    case 5:
-                        if (currentInfo != null && !currentInfo.isEmpty()) {
-                            llContact5.setVisibility(View.VISIBLE);
-                            tvContact5.setText(getResources().getString(R.string.website) + ": " + currentInfo);
-                        }
-                        break;
-                }
-            }
+        ArrayList<ImportantContactsModel> contactsModels = new SQLDatabaseHelper(this).getImportantContacts(cid);
+        rvContacts.setLayoutManager(new LinearLayoutManager(this));
+        rvContacts.setAdapter(new ImportantContactsAdatper(contactsModels   ));
     }
 
     private void getContacts() {
