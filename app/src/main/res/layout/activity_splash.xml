@@ -29,10 +29,21 @@
             android:layout_marginBottom="@dimen/default_margin" />
 
         <com.vysh.subairoma.utils.CustomTextView
+            android:id="@+id/tvLoadingNep"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="@dimen/small_margin"
-            android:text="@string/loading_text"
+            android:text="लोड हुँदैछ"
+            android:visibility="gone"
+            app:fonts="gotham_light.ttf" />
+
+        <com.vysh.subairoma.utils.CustomTextView
+            android:id="@+id/tvLoadingEng"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/small_margin"
+            android:text="Loading"
+            android:visibility="gone"
             app:fonts="gotham_light.ttf" />
     </LinearLayout>
 

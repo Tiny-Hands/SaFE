@@ -19,6 +19,7 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
@@ -69,6 +70,10 @@ public class ActivitySplash extends AppCompatActivity {
 
     @BindView(R.id.progressCircle)
     LinearLayout progressBar;
+    @BindView(R.id.tvLoadingNep)
+    TextView tvLoadingNepali;
+    @BindView(R.id.tvLoadingEng)
+    TextView tvLoadingEng;
     @BindView(R.id.llBottom)
     LinearLayout bottomLayoutMessage;
     @BindView(R.id.btnTryAgain)
@@ -103,8 +108,9 @@ public class ActivitySplash extends AppCompatActivity {
         }
         if (sp.getString(SharedPrefKeys.lang, "").equalsIgnoreCase("en")) {
             setLocale("en");
-        } else
+        } else {
             setLocale("np");
+        }
         if (sp.getInt(SharedPrefKeys.savedTableCount, 0) == 6) {
             startRegisterActivity();
             return;
@@ -189,7 +195,7 @@ public class ActivitySplash extends AppCompatActivity {
     private void getAllData() {
         //Showing Progress
         if (sp.getInt(SharedPrefKeys.savedTableCount, 0) != 6) {
-            progressBar.setVisibility(View.VISIBLE);
+            showLoading();
             Log.d("mylog", "Starting save");
             dbHelper = new SQLDatabaseHelper(ActivitySplash.this);
             dbHelper.getWritableDatabase();
@@ -233,6 +239,14 @@ public class ActivitySplash extends AppCompatActivity {
             //sleepThread.start();
             startRegisterActivity();
         }
+    }
+
+    private void showLoading() {
+        progressBar.setVisibility(View.VISIBLE);
+        if (lang.equalsIgnoreCase("np"))
+            tvLoadingNepali.setVisibility(View.VISIBLE);
+        else if (lang.equalsIgnoreCase("en"))
+            tvLoadingEng.setVisibility(View.VISIBLE);
     }
 
     private void getContacts() {
@@ -602,7 +616,7 @@ public class ActivitySplash extends AppCompatActivity {
     }
 
     private void hideLangOptions() {
-        progressBar.setVisibility(View.VISIBLE);
+        showLoading();
         llLang.setVisibility(View.GONE);
     }
 }
