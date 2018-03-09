@@ -49,7 +49,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/tvStep"
-            android:layout_marginTop="8dp">
+            android:layout_marginBottom="@dimen/medium_margin"
+            android:layout_marginTop="@dimen/medium_margin">
 
             <com.wordpress.priyankvex.smarttextview.SmartTextView
                 android:id="@+id/tvDetail"

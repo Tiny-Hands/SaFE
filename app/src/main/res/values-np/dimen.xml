@@ -41,5 +41,5 @@
     <!-- Help Icons -->
     <dimen name="help_dimen">36dp</dimen>
     <dimen name="question_row_help_bottom_margin">24dp</dimen>
-    <dimen name="question_row_help_top_margin">32dp</dimen>
+    <dimen name="question_row_help_top_margin">24dp</dimen>
 </resources>
