@@ -21,15 +21,18 @@
                 android:id="@+id/ivImage"
                 android:layout_width="42dp"
                 android:layout_height="42dp"
-                android:scaleType="centerCrop" />
+                android:layout_marginEnd="@dimen/medium_margin"
+                android:padding="@dimen/small_margin"
+                android:src="@drawable/ic_packing"
+                android:scaleType="centerInside" />
 
             <TextView
                 android:id="@+id/tvTitle"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:gravity="center_horizontal"
                 android:layout_marginEnd="42dp"
-                android:text="Travel and Some very long text"
+                android:gravity="center_horizontal"
+                android:text="Travel"
                 android:textSize="@dimen/tile_title_size"
                 android:textStyle="bold" />
         </LinearLayout>
