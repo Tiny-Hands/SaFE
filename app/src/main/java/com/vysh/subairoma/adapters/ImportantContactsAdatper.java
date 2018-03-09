@@ -7,11 +7,10 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.vysh.subairoma.R;
-import com.vysh.subairoma.SQLHelpers.DatabaseTables;
 import com.vysh.subairoma.models.ImportantContactsModel;
+import com.wordpress.priyankvex.smarttextview.SmartTextView;
 
 import java.util.ArrayList;
-import java.util.zip.Inflater;
 
 /**
  * Created by Vishal on 2/17/2018.
@@ -32,12 +31,35 @@ public class ImportantContactsAdatper extends RecyclerView.Adapter<ImportantCont
 
     @Override
     public void onBindViewHolder(ContactHolder holder, int position) {
-        holder.tvTitle.setText(contacts.get(position).getTitle());
-        holder.tvDescription.setText(contacts.get(position).getDescription());
-        holder.tvAddress.setText(contacts.get(position).getAddress());
-        holder.tvEmail.setText(contacts.get(position).getEmail());
-        holder.tvWebsite.setText(contacts.get(position).getWebsite());
-        holder.tvPhone.setText(contacts.get(position).getPhone());
+        String title = contacts.get(position).getTitle();
+        if (!title.equalsIgnoreCase("null")) {
+            holder.tvTitle.setText(title);
+        } else holder.tvTitle.setVisibility(View.GONE);
+
+        String description = contacts.get(position).getDescription();
+        if (!description.equalsIgnoreCase("null")) {
+            holder.tvDescription.setText(description);
+        } else holder.tvDescription.setVisibility(View.GONE);
+
+        String address = contacts.get(position).getAddress();
+        if (!address.equalsIgnoreCase("null")) {
+            holder.tvAddress.setText(address);
+        } else holder.tvAddress.setVisibility(View.GONE);
+
+        String email = contacts.get(position).getEmail();
+        if (!email.equalsIgnoreCase("null")) {
+            holder.tvEmail.setText(email);
+        } else holder.tvEmail.setVisibility(View.GONE);
+
+        String website = contacts.get(position).getWebsite();
+        if (!website.equalsIgnoreCase("null")) {
+            holder.tvWebsite.setText(website);
+        } else holder.tvWebsite.setVisibility(View.GONE);
+
+        String phone = contacts.get(position).getPhone();
+        if (!phone.equalsIgnoreCase("null")) {
+            holder.tvPhone.setText(phone);
+        } else holder.tvPhone.setVisibility(View.GONE);
     }
 
     @Override
@@ -46,7 +68,8 @@ public class ImportantContactsAdatper extends RecyclerView.Adapter<ImportantCont
     }
 
     public class ContactHolder extends RecyclerView.ViewHolder {
-        TextView tvTitle, tvDescription, tvAddress, tvPhone, tvWebsite, tvEmail;
+        SmartTextView tvDescription, tvAddress, tvPhone, tvWebsite, tvEmail;
+        TextView tvTitle;
 
         public ContactHolder(View itemView) {
             super(itemView);
