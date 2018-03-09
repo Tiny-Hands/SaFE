@@ -50,10 +50,10 @@ public class TileAdapter extends RecyclerView.Adapter<TileAdapter.TileViewHolder
     @Override
     public void onBindViewHolder(TileViewHolder holder, final int position) {
         //Show Important contacts tile at the bottom
-        if (position == tileList.size() && !ActivityTileHome.finalSection) {
+        if ((position == tileList.size() && ActivityTileHome.finalSection) || (position == tileList.size() && ActivityTileHome.showIndia)) {
             holder.tvTile.setText(context.getResources().getString(R.string.important_contacts));
             holder.ivTile.setImageResource(R.drawable.ic_phonebook);
-        } else {
+        } else if (position < tileList.size()) {
             holder.tvTile.setText(tileList.get(position).getTitle());
             if (ActivityTileHome.finalSection) {
                 if (tileList.get(position).getType().equalsIgnoreCase("GAS")) {
@@ -129,7 +129,7 @@ public class TileAdapter extends RecyclerView.Adapter<TileAdapter.TileViewHolder
     @Override
     public int getItemCount() {
         //Cuz showing extra tile in the bottom of GAS
-        if (!ActivityTileHome.finalSection) {
+        if (ActivityTileHome.finalSection || ActivityTileHome.showIndia) {
             return tileList.size() + 1;
         } else
             return tileList.size();
