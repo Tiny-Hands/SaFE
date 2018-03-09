@@ -14,6 +14,7 @@
 
     <!-- Padding and Margin -->
     <dimen name="default_margin">16dp</dimen>
+    <dimen name="large_margin">24dp</dimen>
     <dimen name="medium_large_margin">12dp</dimen>
     <dimen name="medium_margin">8dp</dimen>
     <dimen name="small_margin">4dp</dimen>
