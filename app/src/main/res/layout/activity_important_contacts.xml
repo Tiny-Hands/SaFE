@@ -9,19 +9,24 @@
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
+
         <com.vysh.subairoma.utils.CustomTextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
+            android:padding="@dimen/small_margin"
             android:text="@string/important_contacts"
             android:textSize="@dimen/default_title_size"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            app:fonts="gotham_bold.ttf" />
     </android.support.v7.widget.Toolbar>
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/rvContacts"
-        android:layout_margin="@dimen/small_medium_margin"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/small_medium_margin"
+        android:layout_marginRight="@dimen/small_medium_margin"
+        android:layout_marginVertical="@dimen/small_medium_margin" />
 
 </LinearLayout>
