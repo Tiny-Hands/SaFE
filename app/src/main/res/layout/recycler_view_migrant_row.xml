@@ -17,7 +17,7 @@
             android:layout_height="54dp"
             android:src="@drawable/ic_male" />
 
-        <LinearLayout
+        <RelativeLayout
             android:id="@+id/llName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -32,19 +32,32 @@
                 android:id="@+id/tvMigrantName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
                 android:text="Vishal Shrestha"
                 android:textSize="18sp"
                 app:fonts="gotham_bold.ttf" />
+
+            <com.wordpress.priyankvex.smarttextview.SmartTextView
+                android:id="@+id/tvPhone"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@id/tvMigrantName"
+                android:layout_alignParentTop="true"
+                android:layout_toRightOf="@+id/tvMigrantName"
+                android:gravity="center_vertical|end"
+                android:text="" />
 
             <TextView
                 android:id="@+id/tvMigrantAgeSex"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
                 android:layout_marginTop="4dp"
                 android:text="23, Male"
                 android:textColor="@color/grey"
                 android:textSize="16sp" />
-        </LinearLayout>
+        </RelativeLayout>
 
         <TextView
             android:id="@+id/tvCountryGoing"
@@ -52,15 +65,15 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/ivUserLogo"
             android:layout_marginTop="@dimen/default_margin"
-            android:text="@string/enter_query"/>
+            android:text="@string/enter_query" />
 
         <LinearLayout
             android:id="@+id/llRedflags"
-            android:layout_alignParentRight="true"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignBottom="@id/tvCountryGoing"
-            android:orientation="horizontal"/>
+            android:layout_alignParentRight="true"
+            android:orientation="horizontal" />
     </RelativeLayout>
 
 </android.support.v7.widget.CardView>

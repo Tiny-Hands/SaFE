@@ -21,6 +21,7 @@ import com.vysh.subairoma.R;
 import com.vysh.subairoma.SQLHelpers.SQLDatabaseHelper;
 import com.vysh.subairoma.models.CountryModel;
 import com.vysh.subairoma.models.MigrantModel;
+import com.wordpress.priyankvex.smarttextview.SmartTextView;
 
 import java.util.ArrayList;
 
@@ -48,6 +49,7 @@ public class MigrantListAdapter extends RecyclerView.Adapter<MigrantListAdapter.
     public void onBindViewHolder(MigrantHolder holder, int position) {
         MigrantModel migrantModel = migrants.get(position);
         holder.textViewName.setText(migrantModel.getMigrantName());
+        holder.tvPhone.setText(migrantModel.getMigrantPhone());
         String tsex = migrantModel.getMigrantSex();
         if (tsex.equalsIgnoreCase("male")) {
             tsex = mContext.getResources().getString(R.string.male);
@@ -103,11 +105,13 @@ public class MigrantListAdapter extends RecyclerView.Adapter<MigrantListAdapter.
 
     public class MigrantHolder extends RecyclerView.ViewHolder {
         public TextView textViewName, sex, tvGoingCountry;
+        public SmartTextView tvPhone;
         public ImageView ivAvatar;
         public LinearLayout llErrorLayout;
 
         public MigrantHolder(final View itemView) {
             super(itemView);
+            tvPhone = itemView.findViewById(R.id.tvPhone);
             textViewName = (TextView) itemView.findViewById(R.id.tvMigrantName);
             tvGoingCountry = (TextView) itemView.findViewById(R.id.tvCountryGoing);
             ivAvatar = (ImageView) itemView.findViewById(R.id.ivUserLogo);
