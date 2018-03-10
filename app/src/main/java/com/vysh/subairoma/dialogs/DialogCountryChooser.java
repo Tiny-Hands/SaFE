@@ -81,25 +81,13 @@ public class DialogCountryChooser extends DialogFragment {
                             + " Blacklist: " + blacklist);
                     if (blacklist == 1) {
                         showDialog(getContext().getResources().getString(R.string.blacklisted),
-                                getContext().getResources().getString(R.string.blacklisted_message), cid, cname);
+                                getContext().getResources().getString(R.string.blacklisted_message), cid, cname, 0);
                     } else if (status == 1) {
                         showDialog(getContext().getResources().getString(R.string.not_open),
-                                getContext().getResources().getString(R.string.not_open_message), cid, cname);
+                                getContext().getResources().getString(R.string.not_open_message), cid, cname, 0);
                     } else {
-                        //For mg_destination -1 is question id as it's not identified as question currently.
+                        showDialog(getString(R.string.confirm), getString(R.string.confirm_message) + " " + cname + "?", cid, cname, 1);
                         Log.d("mylog", "Saving country for MID: " + ApplicationClass.getInstance().getMigrantId());
-                        new SQLDatabaseHelper(getContext()).insertResponseTableData(cid, -1, -1,
-                                ApplicationClass.getInstance().getMigrantId(), "mg_destination");
-                        Intent intent = new Intent(getContext(), ActivityTileHome.class);
-                        intent.putExtra("countryId", cid);
-                        intent.putExtra("migrantName", migName);
-                        intent.putExtra("countryName", cname);
-                        intent.putExtra("countryStatus", status);
-                        intent.putExtra("countryBlacklist", blacklist);
-                        dismiss();
-                        if (ApplicationClass.getInstance().getUserId() == -1)
-                            intent = intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                        getContext().startActivity(intent);
                     }
                 }
             }
@@ -110,12 +98,16 @@ public class DialogCountryChooser extends DialogFragment {
         });
     }
 
-    private void showDialog(String title, String message, final String cid, final String cname) {
+    private void showDialog(String title, String message, final String cid, final String cname, final int cType) {
         AlertDialog.Builder mBuilder = new AlertDialog.Builder(getContext());
         mBuilder.setTitle(title);
         mBuilder.setMessage(message);
-        mBuilder.setNegativeButton(cname.toUpperCase() + " " +
-                        getContext().getResources().getString(R.string.go_regardless),
+        String negativeMsg;
+        if (cType == 0)
+            negativeMsg = getString(R.string.go_regardless);
+        else
+            negativeMsg = getString(R.string.yes);
+        mBuilder.setNegativeButton(negativeMsg,
                 new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {

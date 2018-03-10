@@ -16,6 +16,7 @@
     <string name="next">Next</string>
     <string name="proceed">Next</string>
     <string name="back">Back</string>
+    <string name="yes">Yes</string>
     <string name="okay">Okay</string>
     <string name="understand">I understand</string>
     <string name="write_here">Write here...</string>
@@ -42,6 +43,8 @@
     <string name="not_open_message">This country is not open</string>
     <string name="go_regardless">Go anyway</string>
     <string name="select_country">Choose a country</string>
+    <string name="confirm_message">Are you sure your destination is</string>
+    <string name="confirm">Confirm</string>
 
     <!-- Activity Migrant List -->
     <string name="select_migrant">Select a migrant</string>

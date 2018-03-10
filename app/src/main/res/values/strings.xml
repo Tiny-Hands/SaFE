@@ -17,6 +17,7 @@
     <string name="proceed">अगाडि बढ्नु</string>
     <string name="back">फिर्ता</string>
     <string name="okay">ठीक छ</string>
+    <string name="yes">हो</string>
     <string name="understand">मैले बुझें</string>
     <string name="write_here">Write here...</string>
 
@@ -42,6 +43,8 @@
     <string name="not_open_message">यो देश खुला छैन</string>
     <string name="go_regardless">जान चाहन्छु</string>
     <string name="select_country">कृपया देश चयन गर्नुहोस्</string>
+    <string name="confirm_message">तपाइँ निश्चित हुनुहुन्छ कि तपाइँको गन्तव्य हो</string>
+    <string name="confirm">निश्चित गर्नुहोस्</string>
 
     <!-- Activity Migrant List -->
     <string name="select_migrant">प्रवासी चयन गर्नुहोस्</string>
