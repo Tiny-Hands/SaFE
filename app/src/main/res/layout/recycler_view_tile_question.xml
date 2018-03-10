@@ -79,6 +79,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/tvDetail"
                 android:layout_marginTop="@dimen/medium_margin"
+                android:hint="@string/write_here"
                 android:imeOptions="actionDone"
                 android:inputType="text"
                 android:paddingBottom="@dimen/small_margin"

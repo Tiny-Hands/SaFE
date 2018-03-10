@@ -18,6 +18,7 @@
     <string name="back">फिर्ता</string>
     <string name="okay">ठीक छ</string>
     <string name="understand">मैले बुझें</string>
+    <string name="write_here">यहाँ लेख्नुहोस्...</string>
 
     <!-- Feedback -->
     <string name="feedback_trial">एपको यो सेक्शनले तपाईंलाई कसरी मद्दत गर्यो?</string>

@@ -3,26 +3,25 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="center"
-    android:orientation="vertical"
-    android:paddingBottom="@dimen/medium_large_margin"
-    android:paddingTop="@dimen/medium_large_margin">
+    android:orientation="vertical">
 
     <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/default_margin"
+        android:layout_width="match_parent"
+        android:layout_height="34dp"
+        android:gravity="center"
         android:text="@string/login"
         android:textAllCaps="true"
         android:textSize="16sp"
         android:textStyle="bold" />
 
+
     <Button
         android:id="@+id/btnPhoneLogin"
         android:layout_width="wrap_content"
-        android:layout_height="@dimen/default_button_height"
-        android:layout_marginLeft="@dimen/large_margin"
-        android:layout_marginRight="@dimen/large_margin"
-        android:background="@drawable/default_rounded_button_accent"
+        android:layout_height="34dp"
+        android:layout_marginLeft="52dp"
+        android:layout_marginRight="52dp"
+        android:background="@drawable/default_button_accent"
         android:padding="@dimen/medium_margin"
         android:text="@string/login_with_phone"
         android:textAllCaps="false"
@@ -32,7 +31,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/small_margin"
+        android:layout_margin="2dp"
         android:text="@string/or" />
 
     <com.facebook.login.widget.LoginButton xmlns:facebook="http://schemas.android.com/apk/res-auto"
