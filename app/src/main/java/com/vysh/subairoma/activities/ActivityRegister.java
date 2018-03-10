@@ -35,6 +35,7 @@ import com.vysh.subairoma.R;
 import com.vysh.subairoma.SQLHelpers.SQLDatabaseHelper;
 import com.vysh.subairoma.SharedPrefKeys;
 import com.vysh.subairoma.dialogs.DialogLoginOptions;
+import com.vysh.subairoma.dialogs.DialogUsertypeChooser;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -62,7 +63,7 @@ public class ActivityRegister extends AppCompatActivity {
     private int gotDetailCount = 0;
 
     //Usertype = 0 for Helper and 1 for migrant. Order is reversed in Dialogs and Other Methods.
-    int userType;
+    public int userType;
     Boolean userRegistered = false;
     String sex = "male";
 
@@ -256,7 +257,8 @@ public class ActivityRegister extends AppCompatActivity {
     private void saveUser() {
         if (!userRegistered) {
             //Shows user type selection dialog with next button
-            showUserTypeDialogAndContinue();
+            //showUserTypeDialogAndContinue();
+            new DialogUsertypeChooser().show(getFragmentManager(), "utypechooser");
         } else {
             //Parameter 1 is for registering migrant after reading disclaimer
             showDisclaimerAndContinue(1);
@@ -380,28 +382,12 @@ public class ActivityRegister extends AppCompatActivity {
         snack.show();
     }
 
-    private void showUserTypeDialogAndContinue() {
-        userType = 0;
-        AlertDialog.Builder builder = new AlertDialog.Builder(ActivityRegister.this);
-        builder.setPositiveButton(getResources().getString(R.string.register), new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                if (userType == 0) {
-                    showDisclaimerAndContinue(1);
-                } else {
-                    showDisclaimerAndContinue(2);
-                }
-            }
-        });
-        builder.setSingleChoiceItems(new String[]{getResources().getString(R.string.aspiringmigrant),
-                getResources().getString(R.string.helper)}, 0, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                Log.d("mylog", "Which: " + which);
-                userType = which;
-            }
-        });
-        builder.show();
+    public void showUserTypeDialogAndContinue() {
+        if (userType == 0) {
+            showDisclaimerAndContinue(1);
+        } else {
+            showDisclaimerAndContinue(2);
+        }
     }
 
     private boolean validateData() {
@@ -595,8 +581,7 @@ public class ActivityRegister extends AppCompatActivity {
         pdialog.setMessage(getResources().getString(R.string.getting_mig_details));
         try {
             pdialog.show();
-        }
-        catch (Exception ex){
+        } catch (Exception ex) {
 
         }
         StringRequest stringRequest = new StringRequest(Request.Method.POST, api, new Response.Listener<String>() {

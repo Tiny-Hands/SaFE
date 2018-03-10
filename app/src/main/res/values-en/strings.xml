@@ -57,6 +57,7 @@
     <string name="register">Register</string>
     <string name="helper">I am helping others</string>
     <string name="aspiringmigrant">I am an aspiring migrant</string>
+    <string name="choose_one">Choose one</string>
 
     <!-- Activity Tile Home -->
     <string name="going_to"> </string>
