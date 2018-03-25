@@ -28,7 +28,7 @@
 
     <!-- Text -->
     <dimen name="card_view_marker_text">12sp</dimen>
-    <dimen name="tile_step_text">18sp</dimen>
+    <dimen name="tile_step_text">16sp</dimen>
     <dimen name="error_dialog_title_text_size">22sp</dimen>
     <dimen name="important_contacts_category_text">18sp</dimen>
     <dimen name="tile_title_size">24sp</dimen>

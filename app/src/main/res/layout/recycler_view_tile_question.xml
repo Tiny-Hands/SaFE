@@ -118,11 +118,11 @@
             android:gravity="bottom|center"
             android:orientation="vertical">
 
-            <View
+            <!--<View
                 android:layout_width="match_parent"
                 android:layout_height="2dp"
                 android:layout_marginTop="@dimen/question_row_help_top_margin"
-                android:background="#363636" />
+                android:background="#363636" />-->
 
             <Button
                 android:id="@+id/btnNeedHelp"
