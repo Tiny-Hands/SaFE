@@ -42,7 +42,7 @@ import java.util.HashMap;
 public class SQLDatabaseHelper extends SQLiteOpenHelper {
     // If you change the database schema, you must increment the database version.
     Context mContext;
-    public static final int DATABASE_VERSION = 4;
+    public static final int DATABASE_VERSION = 5;
     public static final String DATABASE_NAME = "SubairomaLocal.db";
     final String SQL_CREATE_ResponseTable =
             "CREATE TABLE IF NOT EXISTS " + DatabaseTables.ResponseTable.TABLE_NAME + " (" +
@@ -52,6 +52,7 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
                     DatabaseTables.ResponseTable.response_variable + " TEXT," +
                     DatabaseTables.ResponseTable.response + " TEXT," +
                     DatabaseTables.ResponseTable.question_query + " TEXT," +
+                    DatabaseTables.ResponseTable.response_time + " TEXT," +
                     DatabaseTables.ResponseTable.tile_id + " INTEGER," +
                     " UNIQUE (" + DatabaseTables.ResponseTable.question_id +
                     ", " + DatabaseTables.ResponseTable.migrant_id + "));";
@@ -106,6 +107,16 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
                     DatabaseTables.MigrantsTable.phone_number + " TEXT," +
                     " UNIQUE (" + DatabaseTables.MigrantsTable.migrant_id +
                     ", " + DatabaseTables.MigrantsTable.user_id + "));";
+    final String SQL_CREATE_MigrantsTempTable =
+            "CREATE TABLE IF NOT EXISTS " + DatabaseTables.MigrantsTempTable.TABLE_NAME + " (" +
+                    DatabaseTables.MigrantsTempTable.migrant_id + " INTEGER PRIMARY KEY AUTOINCREMENT," +
+                    DatabaseTables.MigrantsTempTable.name + " TEXT," +
+                    DatabaseTables.MigrantsTempTable.age + " INTEGER," +
+                    DatabaseTables.MigrantsTempTable.user_id + " INTEGER," +
+                    DatabaseTables.MigrantsTempTable.sex + " TEXT," +
+                    DatabaseTables.MigrantsTempTable.phone_number + " TEXT," +
+                    " UNIQUE (" + DatabaseTables.MigrantsTempTable.migrant_id +
+                    ", " + DatabaseTables.MigrantsTempTable.user_id + "));";
     final String SQL_CREATE_FeedbackQuestionTable =
             "CREATE TABLE IF NOT EXISTS " + DatabaseTables.FeedbackQuestionsTable.TABLE_NAME + " (" +
                     DatabaseTables.FeedbackQuestionsTable.question_id + " INTEGER PRIMARY KEY," +
@@ -143,6 +154,7 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
         db.execSQL(SQL_CREATE_ContactsTable);
         db.execSQL(SQL_CREATE_FeedbackQuestionTable);
         db.execSQL(SQL_CREATE_FeedbackQuestionResponseTable);
+        db.execSQL(SQL_CREATE_MigrantsTempTable);
     }
 
     @Override
@@ -193,7 +205,7 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
         editor.commit();
     }
 
-    public void insertResponseTableData(String response, int question_id, int tileId, int migrant_id, String variable) {
+    public void insertResponseTableData(String response, int question_id, int tileId, int migrant_id, String variable, String timestamp) {
         // Gets the data repository in write mode
         SQLiteDatabase db = this.getWritableDatabase();
         // Create a new map of values, where column names are the keys
@@ -201,6 +213,7 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
         values.put(DatabaseTables.ResponseTable.response, response);
         values.put(DatabaseTables.ResponseTable.response_variable, variable);
         values.put(DatabaseTables.ResponseTable.tile_id, tileId);
+        values.put(DatabaseTables.ResponseTable.response_time, timestamp);
 
         //If already exist the Update
         String whereClause = DatabaseTables.ResponseTable.migrant_id + " = " + migrant_id + " AND " +
@@ -285,6 +298,7 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
         while (cursor.moveToNext()) {
             String qvar = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseTables.ResponseTable.response_variable));
             response = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseTables.ResponseTable.response));
+            String time = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseTables.ResponseTable.response_time));
             responseQuery = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseTables.ResponseTable.question_query));
             int mid = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseTables.ResponseTable.migrant_id));
             int qid = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseTables.ResponseTable.question_id));
@@ -298,6 +312,7 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
             params.put("response", response);
             params.put("response_variable", qvar);
             params.put("tile_id", tileid + "");
+            params.put("time", time);
             if (error == null)
                 error = "false";
             params.put("is_error", error);
@@ -649,6 +664,47 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
             long newRowId = db.insert(DatabaseTables.MigrantsTable.TABLE_NAME, null, values);
             Log.d("mylog", "Inserted row ID: " + newRowId);
         }
+    }
+
+    public void insertTempMigrants(String name, int age, String phone, String sex, int userId) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(DatabaseTables.MigrantsTempTable.name, name);
+        values.put(DatabaseTables.MigrantsTempTable.age, age);
+        values.put(DatabaseTables.MigrantsTempTable.sex, sex);
+        values.put(DatabaseTables.MigrantsTempTable.name, name);
+        values.put(DatabaseTables.MigrantsTempTable.phone_number, phone);
+        values.put(DatabaseTables.MigrantsTempTable.user_id, userId);
+        long newRowId = db.insert(DatabaseTables.MigrantsTempTable.TABLE_NAME, null, values);
+        Log.d("mylog", "Inserted row ID: " + newRowId);
+    }
+
+    public void deleteTempMigrant(int migrantId) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.execSQL("DELETE FROM " + DatabaseTables.MigrantsTempTable.TABLE_NAME + " WHERE " +
+                DatabaseTables.MigrantsTempTable.migrant_id + "=" + migrantId);
+    }
+
+    public ArrayList<MigrantModel> getAllTempMigrants() {
+        SQLiteDatabase db = this.getReadableDatabase();
+        ArrayList<MigrantModel> migrantModels = new ArrayList<>();
+        Cursor cursor = db.rawQuery("SELECT * FROM " + DatabaseTables.MigrantsTempTable.TABLE_NAME, null);
+        while (cursor.moveToNext()) {
+            int id = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseTables.MigrantsTempTable.migrant_id));
+            int uid = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseTables.MigrantsTempTable.user_id));
+            String name = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseTables.MigrantsTempTable.name));
+            String phone = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseTables.MigrantsTempTable.phone_number));
+            String sex = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseTables.MigrantsTempTable.sex));
+            int age = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseTables.MigrantsTempTable.age));
+            MigrantModel migrantModel = new MigrantModel();
+            migrantModel.setMigrantName(name);
+            migrantModel.setMigrantAge(age);
+            migrantModel.setMigrantPhone(phone);
+            migrantModel.setMigrantId(id);
+            migrantModel.setMigrantSex(sex);
+            migrantModels.add(migrantModel);
+        }
+        return migrantModels;
     }
 
     public int getMigrantErrorCount(int migId) {

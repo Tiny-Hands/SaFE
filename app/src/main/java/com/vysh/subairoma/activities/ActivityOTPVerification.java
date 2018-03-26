@@ -32,6 +32,7 @@ import com.vysh.subairoma.SharedPrefKeys;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
@@ -268,7 +269,11 @@ public class ActivityOTPVerification extends AppCompatActivity implements View.O
                     ApplicationClass.getInstance().setMigrantId(mig_id);
                     editor.putInt(SharedPrefKeys.userId, mig_id);
                     editor.commit();
-                    new SQLDatabaseHelper(ActivityOTPVerification.this).insertResponseTableData(gender, -2, -1, mig_id, "mg_sex");
+
+                    Calendar cal = Calendar.getInstance();
+                    String time = cal.getTimeInMillis() + "";
+                    new SQLDatabaseHelper(ActivityOTPVerification.this).insertResponseTableData(gender, -2, -1,
+                            mig_id, "mg_sex", time);
                     //Do Next Step Now
                     Intent intent = new Intent(ActivityOTPVerification.this, ActivityMigrantList.class);
                     intent.putExtra("migrantmode", true);

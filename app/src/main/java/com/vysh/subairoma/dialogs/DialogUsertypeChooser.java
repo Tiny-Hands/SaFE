@@ -1,6 +1,5 @@
 package com.vysh.subairoma.dialogs;
 
-import android.app.Activity;
 import android.app.DialogFragment;
 import android.content.Context;
 import android.os.Bundle;
@@ -11,7 +10,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.RadioButton;
-import android.widget.Toast;
 
 import com.vysh.subairoma.R;
 import com.vysh.subairoma.activities.ActivityRegister;
@@ -43,7 +41,7 @@ public class DialogUsertypeChooser extends DialogFragment {
                 Log.d("mylog", "Current usertype: " + uType);
                 if (uType != -1) {
                     activityRegister.userType = uType;
-                    activityRegister.showUserTypeDialogAndContinue();
+                    activityRegister.showDisclaimerDialog();
                 }
             }
         });

@@ -41,6 +41,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -257,7 +258,7 @@ public class ActivityRegister extends AppCompatActivity {
     private void saveUser() {
         if (!userRegistered) {
             //Shows user type selection dialog with next button
-            //showUserTypeDialogAndContinue();
+            //showDisclaimerDialog();
             new DialogUsertypeChooser().show(getFragmentManager(), "utypechooser");
         } else {
             //Parameter 1 is for registering migrant after reading disclaimer
@@ -278,6 +279,9 @@ public class ActivityRegister extends AppCompatActivity {
                     //But Register and then redirect to migrant list.
                     if (userRegistered) {
                         String api = ApplicationClass.getInstance().getAPIROOT() + apiURLMigrant;
+                        SQLDatabaseHelper sqlDatabaseHelper = new SQLDatabaseHelper(ActivityRegister.this);
+                        sqlDatabaseHelper.insertTempMigrants(etName.getText().toString(), Integer.parseInt(etAge.getText().toString()),
+                                etNumber.getText().toString(), sex, ApplicationClass.getInstance().getUserId());
                         registerMigrant(api);
                         //Start Migrant List Activity
                     } else {
@@ -359,7 +363,9 @@ public class ActivityRegister extends AppCompatActivity {
             Boolean error = jsonObject.getBoolean("error");
             if (!error) {
                 int mig_id = jsonObject.getInt("migrant_id");
-                new SQLDatabaseHelper(ActivityRegister.this).insertResponseTableData(sex, -2, -1, mig_id, "mg_sex");
+                Calendar cal = Calendar.getInstance();
+                String time = cal.getTimeInMillis() + "";
+                new SQLDatabaseHelper(ActivityRegister.this).insertResponseTableData(sex, -2, -1, mig_id, "mg_sex", time);
                 Intent intent = new Intent(ActivityRegister.this, ActivityMigrantList.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(intent);
@@ -382,7 +388,7 @@ public class ActivityRegister extends AppCompatActivity {
         snack.show();
     }
 
-    public void showUserTypeDialogAndContinue() {
+    public void showDisclaimerDialog() {
         if (userType == 0) {
             showDisclaimerAndContinue(1);
         } else {

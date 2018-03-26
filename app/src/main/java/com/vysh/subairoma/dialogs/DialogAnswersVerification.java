@@ -19,6 +19,8 @@ import com.vysh.subairoma.activities.ActivityGasSection;
 import com.vysh.subairoma.activities.ActivityRegister;
 import com.vysh.subairoma.activities.ActivityTileHome;
 
+import java.util.Calendar;
+
 /**
  * Created by Vishal on 8/1/2017.
  */
@@ -59,8 +61,11 @@ public class DialogAnswersVerification extends DialogFragment implements View.On
                     intent.putExtra("countryBlacklist", activity.blacklist);
                     dismiss();
 
+
+                    Calendar cal = Calendar.getInstance();
+                    String time = cal.getTimeInMillis() + "";
                     new SQLDatabaseHelper(getContext()).insertResponseTableData("true", -3, -1,
-                            ApplicationClass.getInstance().getMigrantId(), "mg_verified_answers");
+                            ApplicationClass.getInstance().getMigrantId(), "mg_verified_answers", time);
                     startActivity(intent);
                 } else {
                     tvCheckTerm.setTextColor(getResources().getColor(R.color.colorError));

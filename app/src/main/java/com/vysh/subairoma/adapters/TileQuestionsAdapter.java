@@ -52,6 +52,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -662,10 +663,13 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
                                     questionsListDisplay.get(getAdapterPosition()).getQuestionId() + " Tile ID: " +
                                     questionsListDisplay.get(getAdapterPosition()).getTileId()
                             );
+
+                            Calendar cal = Calendar.getInstance();
+                            String time = cal.getTimeInMillis() + "";
                             sqlDatabaseHelper.insertResponseTableData(response,
                                     questionsListDisplay.get(getAdapterPosition()).getQuestionId(),
                                     questionsListDisplay.get(getAdapterPosition()).getTileId(),
-                                    migrantId, variable);
+                                    migrantId, variable, time);
                         }
                         InputMethodManager inputMethodManager = (InputMethodManager) context.
                                 getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -690,10 +694,13 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
                         conditionVariableValues.put(variable, response);
                     }
                     if (!fromSetView) {
+                        Calendar cal = Calendar.getInstance();
+                        String time = cal.getTimeInMillis() + "";
+
                         sqlDatabaseHelper.insertResponseTableData(response,
                                 questionsListDisplay.get(getAdapterPosition()).getQuestionId(),
                                 questionsListDisplay.get(getAdapterPosition()).getTileId(),
-                                migrantId, variable);
+                                migrantId, variable, time);
                         if (conditionVariables.contains(variable)) {
                             Log.d("mylog", "From Set View spinner: " + fromSetViewSpinner);
                             if (!fromSetViewSpinner) {
@@ -732,10 +739,13 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
                                         " Inserting response for question ID: " + questionsListDisplay.get(getAdapterPosition()).getQuestionId() +
                                         " Tile ID: " + questionsListDisplay.get(getAdapterPosition()).getTileId()
                                 );
+
+                                Calendar cal = Calendar.getInstance();
+                                String time = cal.getTimeInMillis() + "";
                                 sqlDatabaseHelper.insertResponseTableData("true",
                                         questionsListDisplay.get(getAdapterPosition()).getQuestionId(),
                                         questionsListDisplay.get(getAdapterPosition()).getTileId(),
-                                        migrantId, variable);
+                                        migrantId, variable, time);
                             }
                         }
                         if (conditionVariables.contains(variable)) {
@@ -744,10 +754,13 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
                         }
                     } else {
                         if (!fromSetView) {
+
+                            Calendar cal = Calendar.getInstance();
+                            String time = cal.getTimeInMillis() + "";
                             sqlDatabaseHelper.insertResponseTableData("false",
                                     questionsListDisplay.get(getAdapterPosition()).getQuestionId(),
                                     questionsListDisplay.get(getAdapterPosition()).getTileId(),
-                                    migrantId, variable);
+                                    migrantId, variable, time);
                         }
 
                         if (conditionVariables.contains(variable)) {
@@ -909,10 +922,12 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
                     }
                     //This needs to be inserted before error data insertion
                     TileQuestionsModel tempQuestion = questionsListDisplay.get(mainPos);
+                    Calendar cal = Calendar.getInstance();
+                    String time = cal.getTimeInMillis() + "";
                     sqlDatabaseHelper.insertResponseTableData(multiResponse,
                             tempQuestion.getQuestionId(),
                             tempQuestion.getTileId(),
-                            migrantId, tempQuestion.getVariable());
+                            migrantId, tempQuestion.getVariable(), time);
 
                     Log.d("mylog", "Multi Response Length: " + multiResponse.length());
                     if (conditionVariables.contains(tempQuestion.getVariable())) {

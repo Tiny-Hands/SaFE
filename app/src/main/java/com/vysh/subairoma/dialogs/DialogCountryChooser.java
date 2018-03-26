@@ -26,6 +26,7 @@ import com.vysh.subairoma.activities.ActivityTileHome;
 import com.vysh.subairoma.models.CountryModel;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 /**
@@ -111,8 +112,11 @@ public class DialogCountryChooser extends DialogFragment {
                 new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
+
+                        Calendar cal = Calendar.getInstance();
+                        String time = cal.getTimeInMillis() + "";
                         new SQLDatabaseHelper(getContext()).insertResponseTableData(cid, -1, -1,
-                                ApplicationClass.getInstance().getMigrantId(), "mg_destination");
+                                ApplicationClass.getInstance().getMigrantId(), "mg_destination", time);
 
                         Intent intent = new Intent(getContext(), ActivityTileHome.class);
                         intent.putExtra("countryId", cid);
