@@ -18,6 +18,8 @@
         android:id="@+id/tvDisclaimerContent"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:lineSpacingExtra="1dp"
+        android:paddingLeft="@dimen/medium_margin"
         android:paddingRight="@dimen/medium_margin"
-        android:paddingLeft="@dimen/medium_margin" />
+        android:textSize="16sp" />
 </LinearLayout>

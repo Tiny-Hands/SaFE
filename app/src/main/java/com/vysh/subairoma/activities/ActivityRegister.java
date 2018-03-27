@@ -269,13 +269,13 @@ public class ActivityRegister extends AppCompatActivity {
     private void showDisclaimerAndContinue(final int i) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         View view = LayoutInflater.from(this).inflate(R.layout.dialog_disclaimer, null);
-        TextView msg = (TextView) view.findViewById(R.id.tvDisclaimerContent);
+        TextView msg = view.findViewById(R.id.tvDisclaimerContent);
         builder.setView(view);
         builder.setPositiveButton(getResources().getString(R.string.disclaimer_button), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 if (i == 1) {
-                    //If it's a helper user, then no need to redirect to OTPActivity,
+                    //If it's a helper user registering a migrant, then no need to redirect to OTPActivity,
                     //But Register and then redirect to migrant list.
                     if (userRegistered) {
                         String api = ApplicationClass.getInstance().getAPIROOT() + apiURLMigrant;
@@ -292,7 +292,13 @@ public class ActivityRegister extends AppCompatActivity {
                 }
             }
         });
-        msg.setText(getResources().getString(R.string.disclaimer));
+
+        String text = "";
+        if (i == 1)
+            text = getString(R.string.disclaimerMigrant);
+        else
+            text = getString(R.string.disclaimerHelper);
+        msg.setText(text);
         builder.show();
     }
 
