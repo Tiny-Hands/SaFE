@@ -20,6 +20,7 @@ public final class SharedPrefKeys {
     public static String savedCountries = "savedcountries";
     public static String savedContacts = "savedcontacts";
     public static String savedFeedbackQuestions = "savedfeedbackquestions";
+    public static String feedbackResponseSaved = "savedfeedbackresponse";
     public static String otpCode = "otpCode";
     public static String lang = "lang";
 }

@@ -1,6 +1,7 @@
 package com.vysh.subairoma.activities;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -20,6 +21,7 @@ import com.android.volley.toolbox.Volley;
 import com.vysh.subairoma.ApplicationClass;
 import com.vysh.subairoma.R;
 import com.vysh.subairoma.SQLHelpers.SQLDatabaseHelper;
+import com.vysh.subairoma.SharedPrefKeys;
 import com.vysh.subairoma.adapters.FeedbackQuestionAdapter;
 import com.vysh.subairoma.models.FeedbackQuestionModel;
 
@@ -51,6 +53,10 @@ public class ActivityFeedback extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 //getAllFeedbackResponses();
+                SharedPreferences sp = getSharedPreferences(SharedPrefKeys.sharedPrefName, MODE_PRIVATE);
+                SharedPreferences.Editor editor = sp.edit();
+                editor.putInt(SharedPrefKeys.feedbackResponseSaved, 1);
+                editor.apply();
                 openTileHomeActivity();
 
             }
@@ -82,6 +88,14 @@ public class ActivityFeedback extends AppCompatActivity {
         ArrayList<FeedbackQuestionModel> questionModels = helper.getFeedbackQuestions();
         rvFeedback.setLayoutManager(new LinearLayoutManager(this));
         rvFeedback.setAdapter(new FeedbackQuestionAdapter(this, questionModels));
+    }
+
+    @Override
+    public void onBackPressed() {
+        //super.onBackPressed();
+        Intent intent = new Intent(ActivityFeedback.this, ActivityMigrantList.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
     }
 
     private void getAllFeedbackResponses() {

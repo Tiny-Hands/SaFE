@@ -25,6 +25,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.vysh.subairoma.ApplicationClass;
+import com.vysh.subairoma.SharedPrefKeys;
 import com.vysh.subairoma.dialogs.DialogAnswersVerification;
 import com.vysh.subairoma.R;
 import com.vysh.subairoma.SQLHelpers.SQLDatabaseHelper;
@@ -125,8 +126,19 @@ public class ActivityTileHome extends AppCompatActivity {
     private void checkIfVerifiedAnswers() {
         String verified = new SQLDatabaseHelper(ActivityTileHome.this).getResponse(ApplicationClass.getInstance().getMigrantId(),
                 "mg_verified_answers");
-        if (verified.equalsIgnoreCase("true"))
+        int isFeedbackSaved = getSharedPreferences(SharedPrefKeys.sharedPrefName, MODE_PRIVATE).getInt(SharedPrefKeys.feedbackResponseSaved, 0);
+        if (verified.equalsIgnoreCase("true") && isFeedbackSaved == 1)
             setUpGasSections();
+        else if (verified.equalsIgnoreCase("true")) {
+            Intent intent = new Intent(ActivityTileHome.this, ActivityFeedback.class);
+            intent.putExtra("countryId", this.countryId);
+            intent.putExtra("migrantName", this.migName);
+            intent.putExtra("countryName", this.countryName);
+            intent.putExtra("countryStatus", this.status);
+            intent.putExtra("countryBlacklist", this.blacklist);
+            startActivity(intent);
+        }
+
     }
 
     private void getAllFeedbackResponses() {
