@@ -11,6 +11,7 @@ import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.transition.TransitionManager;
 import android.util.Log;
@@ -191,7 +192,7 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
     @Override
     public void onBindViewHolder(final QuestionHolder holder, final int position) {
         //Log.d("mylog", "Position: " + position + " Previous pos: " + previousClickedPos);
-        holder.hideExpandView();
+        //holder.hideExpandView();
         TileQuestionsModel question = questionsListDisplay.get(position);
         holder.title.setText(question.getTitle());
         holder.question.setText(question.getQuestion());
@@ -282,6 +283,7 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
             ivError.setVisibility(View.VISIBLE);
             rootLayout.setBackgroundColor(context.getResources().getColor(R.color.colorErrorFaded));
             ivDone.setVisibility(GONE);
+            btnShowMore.setVisibility(GONE);
         } else {
             //Show green checkmark only if checkbox is checked and no error
             if (response.equalsIgnoreCase("true")) {
@@ -592,6 +594,7 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
         ListView listViewOptions;
         Button btnHelp;
         ImageButton btnShowMore;
+        CardView cardView;
 
         LinearLayout helpLayout;
         RelativeLayout rootLayout;
@@ -601,9 +604,10 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
             super(itemView);
 
             disabledView = itemView.findViewById(R.id.viewDisabled);
-            rootLayout = (RelativeLayout) itemView.findViewById(R.id.rlRoot);
+            rootLayout = itemView.findViewById(R.id.rlRoot);
             ivError = (ImageView) itemView.findViewById(R.id.questionMarker);
             ivDone = itemView.findViewById(R.id.questionDone);
+            cardView = itemView.findViewById(R.id.cv);
             btnShowMore = itemView.findViewById(R.id.btnShowMore);
             details = itemView.findViewById(R.id.tvDetail);
             //Setting color for phone numbers and weblinks
@@ -802,7 +806,7 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
 
         private void hideExpandView() {
             if (Build.VERSION.SDK_INT >= 19) {
-                TransitionManager.beginDelayedTransition((ViewGroup) details.getParent());
+                TransitionManager.beginDelayedTransition((ViewGroup) cardView.getParent());
             }
             details.setVisibility(GONE);
             helpLayout.setVisibility(View.GONE);
