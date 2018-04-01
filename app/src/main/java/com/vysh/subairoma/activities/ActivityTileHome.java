@@ -32,6 +32,7 @@ import com.vysh.subairoma.SQLHelpers.SQLDatabaseHelper;
 import com.vysh.subairoma.adapters.TileAdapter;
 import com.vysh.subairoma.models.TilesModel;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -63,6 +64,8 @@ public class ActivityTileHome extends AppCompatActivity {
     TextView tvCountry;
     @BindView(R.id.btnNext)
     Button btnNext;
+    @BindView(R.id.tvPercent)
+    TextView tvPercent;
     //@BindView(R.id.btnImportantContacts)
     //CardView btnImportantContacts;
     @BindView(R.id.ivAvatar)
@@ -121,6 +124,28 @@ public class ActivityTileHome extends AppCompatActivity {
         checkIfVerifiedAnswers();
         getAllResponses();
         getAllFeedbackResponses();
+        calculatePercentComplete();
+    }
+
+    private void calculatePercentComplete() {
+        int answeredQuestions = new SQLDatabaseHelper(ActivityTileHome.this)
+                .getAllResponse(ApplicationClass.getInstance().getMigrantId()).size();
+        int count = 0;
+        for (int i = 0; i < tiles.size(); i++) {
+            int tempCount = new SQLDatabaseHelper(ActivityTileHome.this).getNoRedFlagQuestionsCount(tiles.get(i).getTileId());
+            count += tempCount;
+            Log.d("mylog", "Temp count: " + tempCount);
+        }
+        for (int i = 0; i < tilesGAS.size(); i++) {
+            int tempCount = new SQLDatabaseHelper(ActivityTileHome.this).getNoRedFlagQuestionsCount(tilesGAS.get(i).getTileId());
+            count += tempCount;
+            Log.d("mylog", "Temp count GAS: " + tempCount);
+        }
+        float percent = ((float) answeredQuestions / (float) count) * 100f;
+        DecimalFormat decimalFormat = new DecimalFormat("##");
+        tvPercent.setText(decimalFormat.format(percent) + "%");
+        Log.d("mylog", "total count: " + count);
+        Log.d("mylog", "answered count: " + answeredQuestions);
     }
 
     private void checkIfVerifiedAnswers() {

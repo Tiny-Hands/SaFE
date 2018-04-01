@@ -611,6 +611,20 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
         return questionList;
     }
 
+    public int getNoRedFlagQuestionsCount(int tileId) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        ArrayList<TileQuestionsModel> questionList = new ArrayList<>();
+        String statement = "SELECT * FROM " + DatabaseTables.QuestionsTable.TABLE_NAME +
+                " WHERE " + DatabaseTables.QuestionsTable.tile_id + "=" + "'" + tileId + "'";
+        //Log.d("mylog", "Query: " + statement);
+        int count = 0;
+        Cursor cursor = db.rawQuery(statement, null);
+        while (cursor.moveToNext()) {
+            count++;
+        }
+        return count;
+    }
+
     public void insertOption(int qid, int oid, String option) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();

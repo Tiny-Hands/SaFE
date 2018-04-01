@@ -46,6 +46,19 @@
                 android:textSize="18sp"
                 android:textStyle="bold" />
 
+
+            <TextView
+                android:id="@+id/tvPercent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@id/ivAvatar"
+                android:layout_alignTop="@id/ivAvatar"
+                android:layout_marginRight="@dimen/small_margin"
+                android:layout_toLeftOf="@id/ivAvatar"
+                android:gravity="center"
+                android:text="45%"
+                android:textSize="18sp" />
+
             <ImageView
                 android:id="@+id/ivAvatar"
                 android:layout_width="@dimen/avatar_dimen"
@@ -79,40 +92,40 @@
                 android:layout_marginStart="@dimen/small_medium_margin"
                 android:clipToPadding="false"
                 android:nestedScrollingEnabled="false" />
-<!--
-            <android.support.v7.widget.CardView
-                android:id="@+id/btnImportantContacts"
-                android:layout_width="match_parent"
-                android:layout_height="72dp"
-                android:layout_gravity="bottom"
-                android:layout_marginLeft="2dp"
-                android:layout_marginRight="2dp"
-                android:clickable="true"
-                app:cardCornerRadius="@dimen/card_view_tile_radius"
-                app:cardUseCompatPadding="true">
+            <!--
+                        <android.support.v7.widget.CardView
+                            android:id="@+id/btnImportantContacts"
+                            android:layout_width="match_parent"
+                            android:layout_height="72dp"
+                            android:layout_gravity="bottom"
+                            android:layout_marginLeft="2dp"
+                            android:layout_marginRight="2dp"
+                            android:clickable="true"
+                            app:cardCornerRadius="@dimen/card_view_tile_radius"
+                            app:cardUseCompatPadding="true">
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:gravity="center"
-                    android:orientation="horizontal">
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:gravity="center"
+                                android:orientation="horizontal">
 
-                    <ImageView
-                        android:layout_width="46dp"
-                        android:layout_height="46dp"
-                        android:layout_marginRight="@dimen/medium_margin"
-                        android:scaleType="centerInside"
-                        android:src="@drawable/ic_phonebook" />
+                                <ImageView
+                                    android:layout_width="46dp"
+                                    android:layout_height="46dp"
+                                    android:layout_marginRight="@dimen/medium_margin"
+                                    android:scaleType="centerInside"
+                                    android:src="@drawable/ic_phonebook" />
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:gravity="center"
-                        android:text="@string/important_contacts"
-                        android:textSize="16sp" />
-                </LinearLayout>
-            </android.support.v7.widget.CardView>-->
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_gravity="center"
+                                    android:gravity="center"
+                                    android:text="@string/important_contacts"
+                                    android:textSize="16sp" />
+                            </LinearLayout>
+                        </android.support.v7.widget.CardView>-->
 
             <Button
                 android:id="@+id/btnNext"

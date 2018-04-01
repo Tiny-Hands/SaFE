@@ -3,7 +3,7 @@
     <color name="colorPrimary">#54b33c</color>
     <color name="colorPrimaryDark">#349429</color>
     <color name="colorAccent">#4069ff</color>
-    <color name="bgFaded">#ededed</color>
+    <color name="bgFaded">#fafafa</color>
     <color name="darkGrey">#444444</color>
     <color name="grey">#616060</color>
     <color name="translucentGrey">#a8e0e0e0</color>
