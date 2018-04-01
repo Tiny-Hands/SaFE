@@ -29,7 +29,7 @@
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
                     android:text="@string/select_migrant"
-                    android:textStyle="bold"/>
+                    android:textStyle="bold" />
 
                 <ImageView
                     android:id="@+id/ivAvatar"
@@ -46,8 +46,8 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginBottom="@dimen/default_margin"
-            android:layout_marginEnd="@dimen/default_margin"
-            android:layout_marginStart="@dimen/default_margin"
+            android:layout_marginEnd="@dimen/small_medium_margin"
+            android:layout_marginStart="@dimen/small_medium_margin"
             android:clipToPadding="false"
             android:paddingBottom="@dimen/fab_dimen" />
     </LinearLayout>

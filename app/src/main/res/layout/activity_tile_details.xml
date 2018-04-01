@@ -23,8 +23,8 @@
                 android:layout_height="42dp"
                 android:layout_marginEnd="@dimen/medium_margin"
                 android:padding="@dimen/small_margin"
-                android:src="@drawable/ic_packing"
-                android:scaleType="centerInside" />
+                android:scaleType="centerInside"
+                android:src="@drawable/ic_packing" />
 
             <TextView
                 android:id="@+id/tvTitle"
@@ -43,6 +43,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/default_margin"
-        android:layout_marginEnd="@dimen/default_margin"
-        android:layout_marginStart="@dimen/default_margin" />
+        android:layout_marginEnd="@dimen/small_medium_margin"
+        android:layout_marginStart="@dimen/small_medium_margin" />
 </LinearLayout>

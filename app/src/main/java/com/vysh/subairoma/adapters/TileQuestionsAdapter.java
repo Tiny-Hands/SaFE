@@ -30,6 +30,7 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -239,7 +240,7 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
             holder.details.setVisibility(GONE);
         }
         setValue(holder.checkbox, holder.etResponse, holder.spinnerOptions,
-                holder.question, holder.ivError, holder.ivDone, holder.listViewOptions, holder.rootLayout, position);
+                holder.question, holder.ivError, holder.ivDone, holder.btnShowMore, holder.listViewOptions, holder.rootLayout, position);
         if (disabled) {
             holder.disabledView.setVisibility(View.VISIBLE);
             holder.disabledView.setOnClickListener(new View.OnClickListener() {
@@ -267,7 +268,7 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
     }
 
     private void setValue(CheckBox checkBox, EditText etResponse, Spinner spinner, TextView question,
-                          ImageView ivError, ImageView ivDone, ListView lvOptions, RelativeLayout rootLayout, int position) {
+                          ImageView ivError, ImageView ivDone, ImageButton btnShowMore, ListView lvOptions, RelativeLayout rootLayout, int position) {
         //For showing/hiding error on condition variable change
         Log.d("mylog", "Setting value now");
         boolean isError = sqlDatabaseHelper.getIsError(migrantId, questionsListDisplay.get(position).getVariable());
@@ -283,9 +284,10 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
             ivDone.setVisibility(GONE);
         } else {
             //Show green checkmark only if checkbox is checked and no error
-            if (response.equalsIgnoreCase("true"))
+            if (response.equalsIgnoreCase("true")) {
                 ivDone.setVisibility(View.VISIBLE);
-            else
+                btnShowMore.setVisibility(GONE);
+            } else
                 ivDone.setVisibility(GONE);
             /*if (!response.isEmpty())
                 ivDone.setVisibility(View.VISIBLE);
@@ -589,6 +591,7 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
         Spinner spinnerOptions;
         ListView listViewOptions;
         Button btnHelp;
+        ImageButton btnShowMore;
 
         LinearLayout helpLayout;
         RelativeLayout rootLayout;
@@ -601,6 +604,7 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
             rootLayout = (RelativeLayout) itemView.findViewById(R.id.rlRoot);
             ivError = (ImageView) itemView.findViewById(R.id.questionMarker);
             ivDone = itemView.findViewById(R.id.questionDone);
+            btnShowMore = itemView.findViewById(R.id.btnShowMore);
             details = itemView.findViewById(R.id.tvDetail);
             //Setting color for phone numbers and weblinks
             details.setUrlColorCode("#2992dc");
