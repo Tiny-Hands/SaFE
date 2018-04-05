@@ -62,6 +62,7 @@
 
     <!-- Activity Tile Home -->
     <string name="going_to"> </string>
+    <string name="unlock_next">Unlock next steps</string>
 
     <!-- Tile Questions -->
     <string name="need_help">Need help?</string>

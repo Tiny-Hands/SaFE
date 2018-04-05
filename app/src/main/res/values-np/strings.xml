@@ -62,6 +62,7 @@
 
     <!-- Activity Tile Home -->
     <string name="going_to">जाँदै</string>
+    <string name="unlock_next">अर्को चरण अनलक गर्नुहोस्</string>
 
     <!-- Tile Questions -->
     <string name="need_help">सहयोग चाहियो?</string>

@@ -134,7 +134,7 @@
                 android:layout_gravity="bottom"
                 android:layout_margin="@dimen/default_margin"
                 android:background="@drawable/default_rounded_button"
-                android:text="@string/next"
+                android:text="@string/unlock_next"
                 android:textColor="#fff" />
         </LinearLayout>
     </android.support.v4.widget.NestedScrollView>
