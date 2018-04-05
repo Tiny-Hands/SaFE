@@ -31,12 +31,14 @@ public class TileAdapter extends RecyclerView.Adapter<TileAdapter.TileViewHolder
     int[] ivTiles;
     SQLDatabaseHelper sqlDatabaseHelper;
     Context context;
+    int impContactsPlace;
     String cid;
 
-    public TileAdapter(ArrayList list, int[] tiles, Context cxt, String countryId) {
+    public TileAdapter(ArrayList list, int impContactsPlace, int[] tiles, Context cxt, String countryId) {
         tileList = list;
         ivTiles = tiles;
         context = cxt;
+        this.impContactsPlace = impContactsPlace;
         cid = countryId;
     }
 
@@ -50,7 +52,7 @@ public class TileAdapter extends RecyclerView.Adapter<TileAdapter.TileViewHolder
     @Override
     public void onBindViewHolder(TileViewHolder holder, final int position) {
         //Show Important contacts tile at the bottom
-        if ((position == tileList.size() && ActivityTileHome.finalSection) || (position == tileList.size() && ActivityTileHome.showIndia)) {
+        if ((position == impContactsPlace && ActivityTileHome.finalSection) || (position == tileList.size() && ActivityTileHome.showIndia)) {
             holder.tvTile.setText(context.getResources().getString(R.string.important_contacts));
             holder.ivTile.setImageResource(R.drawable.ic_phonebook);
         } else if (position < tileList.size()) {
@@ -61,7 +63,13 @@ public class TileAdapter extends RecyclerView.Adapter<TileAdapter.TileViewHolder
                 } else {
                     holder.viewDisabled.setVisibility(View.VISIBLE);
                 }
+            } else {
+                if (tileList.get(position).getType().equals("FEP")) {
+                    holder.viewDisabled.setVisibility(View.GONE);
+                } else
+                    holder.viewDisabled.setVisibility(View.VISIBLE);
             }
+
             int errorCount = sqlDatabaseHelper.getTileErrorCount(ApplicationClass.getInstance().getMigrantId(),
                     tileList.get(position).getTileId());
             Log.d("mylog", "Tile Errors: " + errorCount + " For tile ID: " + tileList.get(position).getTileId());
@@ -129,10 +137,10 @@ public class TileAdapter extends RecyclerView.Adapter<TileAdapter.TileViewHolder
     @Override
     public int getItemCount() {
         //Cuz showing extra tile in the bottom of GAS
-        if (ActivityTileHome.finalSection || ActivityTileHome.showIndia) {
+        /*if (ActivityTileHome.finalSection || ActivityTileHome.showIndia) {
             return tileList.size() + 1;
-        } else
-            return tileList.size();
+        } else*/
+        return tileList.size();
     }
 
     public class TileViewHolder extends RecyclerView.ViewHolder {
@@ -146,7 +154,7 @@ public class TileAdapter extends RecyclerView.Adapter<TileAdapter.TileViewHolder
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (getAdapterPosition() == tileList.size()) {
+                    if (getAdapterPosition() == impContactsPlace) {
                         Intent impIntent = new Intent(context.getApplicationContext(), ActivityImportantContacts.class);
                         impIntent.putExtra("countryId", cid);
                         context.startActivity(impIntent);
@@ -167,6 +175,8 @@ public class TileAdapter extends RecyclerView.Adapter<TileAdapter.TileViewHolder
                                 v.getContext().startActivity(intent);
                             }
                         } else {
+                            if (getAdapterPosition() >= impContactsPlace)
+                                return;
                             Intent intent = new Intent(v.getContext(), ActivityTileQuestions.class);
                             intent.putExtra("tileId", tileList.get(getAdapterPosition()).getTileId());
                             intent.putExtra("tileName", tileList.get(getAdapterPosition()).getTitle());

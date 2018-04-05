@@ -162,7 +162,6 @@ public class ActivityTileHome extends AppCompatActivity {
         finalSection = false;
         setUpListeners();
         setUpRecyclerView();
-        checkIfVerifiedAnswers();
         getAllResponses();
         getAllFeedbackResponses();
         calculatePercentComplete();
@@ -189,13 +188,13 @@ public class ActivityTileHome extends AppCompatActivity {
         Log.d("mylog", "answered count: " + answeredQuestions);
     }
 
-    private void checkIfVerifiedAnswers() {
+    private boolean checkIfVerifiedAnswers() {
         String verified = new SQLDatabaseHelper(ActivityTileHome.this).getResponse(ApplicationClass.getInstance().getMigrantId(),
                 "mg_verified_answers");
         int isFeedbackSaved = getSharedPreferences(SharedPrefKeys.sharedPrefName, MODE_PRIVATE).getInt(SharedPrefKeys.feedbackResponseSaved, 0);
-        if (verified.equalsIgnoreCase("true") && isFeedbackSaved == 1)
-            setUpGasSections();
-        else if (verified.equalsIgnoreCase("true")) {
+        if (verified.equalsIgnoreCase("true") && isFeedbackSaved == 1) {
+            return true;
+        } else if (verified.equalsIgnoreCase("true")) {
             Intent intent = new Intent(ActivityTileHome.this, ActivityFeedback.class);
             intent.putExtra("countryId", this.countryId);
             intent.putExtra("migrantName", this.migName);
@@ -203,8 +202,9 @@ public class ActivityTileHome extends AppCompatActivity {
             intent.putExtra("countryStatus", this.status);
             intent.putExtra("countryBlacklist", this.blacklist);
             startActivity(intent);
+            return false;
         }
-
+        return false;
     }
 
     private void getAllFeedbackResponses() {
@@ -301,19 +301,27 @@ public class ActivityTileHome extends AppCompatActivity {
             tiles = new SQLDatabaseHelper(ActivityTileHome.this).getTiles("FEP");
             tilesGAS = new SQLDatabaseHelper(ActivityTileHome.this).getTiles("GAS");
         }
-        rvTiles.setLayoutManager(new GridLayoutManager(this, 2));
-        tileAdapter = new TileAdapter(tiles, tileIcons, ActivityTileHome.this, countryId);
-        rvTiles.setAdapter(tileAdapter);
-
+        if (checkIfVerifiedAnswers()) {
+            setUpGasSections();
+            return;
+        } else {
+            int afterFEP = tiles.size();
+            rvTiles.setLayoutManager(new GridLayoutManager(this, 2));
+            tiles.addAll(tilesGAS);
+            tileAdapter = new TileAdapter(tiles, afterFEP, tileIcons, ActivityTileHome.this, countryId);
+            rvTiles.setAdapter(tileAdapter);
+        }
     }
 
     public void setUpGasSections() {
+        tileAdapter = new TileAdapter(tiles, tilesGAS.size(), tileIcons, ActivityTileHome.this, countryId);
         for (int i = 0; i < tilesGAS.size(); i++) {
             tiles.add(i, tilesGAS.get(i));
         }
         finalSection = true;
         btnNext.setVisibility(View.GONE);
-        tileAdapter.notifyDataSetChanged();
+        rvTiles.setLayoutManager(new GridLayoutManager(this, 2));
+        rvTiles.setAdapter(tileAdapter);
         //float y = rvTiles.getChildAt(0).getY();
         rvTiles.smoothScrollToPosition(0);
         nsv.scrollTo(0, 0);

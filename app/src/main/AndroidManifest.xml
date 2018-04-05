@@ -40,9 +40,6 @@
             android:name=".activities.ActivityOTPVerification"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".activities.ActivityGasSection"
-            android:screenOrientation="portrait" />
-        <activity
             android:name=".activities.ActivityImportantContacts"
             android:screenOrientation="portrait" />
         <activity

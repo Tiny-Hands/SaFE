@@ -15,8 +15,6 @@ import com.vysh.subairoma.ApplicationClass;
 import com.vysh.subairoma.R;
 import com.vysh.subairoma.SQLHelpers.SQLDatabaseHelper;
 import com.vysh.subairoma.activities.ActivityFeedback;
-import com.vysh.subairoma.activities.ActivityGasSection;
-import com.vysh.subairoma.activities.ActivityRegister;
 import com.vysh.subairoma.activities.ActivityTileHome;
 
 import java.util.Calendar;
