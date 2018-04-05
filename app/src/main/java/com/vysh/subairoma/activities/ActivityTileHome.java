@@ -3,14 +3,19 @@ package com.vysh.subairoma.activities;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -31,6 +36,7 @@ import com.vysh.subairoma.R;
 import com.vysh.subairoma.SQLHelpers.SQLDatabaseHelper;
 import com.vysh.subairoma.adapters.TileAdapter;
 import com.vysh.subairoma.models.TilesModel;
+import com.vysh.subairoma.utils.CustomTextView;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -48,7 +54,7 @@ public class ActivityTileHome extends AppCompatActivity {
     private final String saveAPI = "/saveresponse.php";
     private final String saveFeedbackAPI = "/savefeedbackresponse.php";
     ArrayList<TilesModel> tiles, tilesGAS;
-    public String migName, countryName, countryId;
+    public String migName, countryName, countryId, migGender = "", migPhone;
     public int blacklist, status;
     int[] tileIcons;
     TileAdapter tileAdapter;
@@ -68,10 +74,18 @@ public class ActivityTileHome extends AppCompatActivity {
     TextView tvPercent;
     //@BindView(R.id.btnImportantContacts)
     //CardView btnImportantContacts;
-    @BindView(R.id.ivAvatar)
-    ImageView ivAvatar;
+    //@BindView(R.id.ivAvatar)
+    //ImageView ivAvatar;
+    @BindView(R.id.ivHam)
+    ImageView ivHam;
     @BindView(R.id.nsv)
     NestedScrollView nsv;
+    @BindView(R.id.drawerLayout)
+    DrawerLayout drawerLayout;
+    NavigationView navView;
+
+    CustomTextView tvName, tvPhone, tvNavCounty;
+    ImageView ivUserAvatar;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -83,6 +97,8 @@ public class ActivityTileHome extends AppCompatActivity {
 
         countryId = getIntent().getStringExtra("countryId");
         migName = getIntent().getStringExtra("migrantName");
+        migGender = getIntent().getStringExtra("migrantGender");
+        migPhone = getIntent().getStringExtra("migrantPhone");
         countryName = getIntent().getStringExtra("countryName");
         status = getIntent().getIntExtra("countryStatus", -1);
         blacklist = getIntent().getIntExtra("countryBlacklist", -1);
@@ -113,6 +129,31 @@ public class ActivityTileHome extends AppCompatActivity {
         if (blacklist == 1) {
             tvCountry.setTextColor(getResources().getColor(R.color.colorError));
         }
+
+
+        navView = findViewById(R.id.nav_view);
+        setUpNavigationButtons();
+    }
+
+    private void setUpNavigationButtons() {
+        View view = navView.getHeaderView(0);
+        if (view == null)
+            Log.d("mylog", "Header view Null");
+        if (navView == null)
+            Log.d("mylog", "Nav View Null");
+        tvName = view.findViewById(R.id.tvMName);
+        tvNavCounty = view.findViewById(R.id.tvMCountry);
+        tvPhone = view.findViewById(R.id.tvMPhone);
+
+        ivUserAvatar = view.findViewById(R.id.ivUserAva);
+
+        tvName.setText(migName);
+        tvNavCounty.setText(countryName);
+        tvPhone.setText(migPhone);
+        if (migGender.equals("male"))
+            ivUserAvatar.setImageResource(R.drawable.ic_male);
+        else
+            ivUserAvatar.setImageResource(R.drawable.ic_female);
     }
 
     @Override
@@ -189,14 +230,35 @@ public class ActivityTileHome extends AppCompatActivity {
             }
         });
 
-        ivAvatar.setOnClickListener(new View.OnClickListener() {
+        ivHam.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                drawerLayout.openDrawer(GravityCompat.END);
+            }
+        });
+
+        navView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                switch (item.getItemId()) {
+                    case R.id.nav_profile:
+                        Intent intent = new Intent(ActivityTileHome.this, ActivityProfileEdit.class);
+                        intent.putExtra("userType", 1);
+                        startActivity(intent);
+                        break;
+                }
+                return false;
+            }
+        });
+
+        /*ivAvatar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(ActivityTileHome.this, ActivityProfileEdit.class);
                 intent.putExtra("userType", 1);
                 startActivity(intent);
             }
-        });
+        });*/
 
         /*btnImportantContacts.setOnClickListener(new View.OnClickListener() {
             @Override

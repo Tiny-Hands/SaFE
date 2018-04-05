@@ -160,6 +160,8 @@ public class ActivityMigrantList extends AppCompatActivity {
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     intent.putExtra("countryId", cid);
                     intent.putExtra("migrantName", migrantModels.get(0).getMigrantName());
+                    intent.putExtra("migrantPhone", migrantModels.get(0).getMigrantPhone());
+                    intent.putExtra("migrantGender", migrantModels.get(0).getMigrantSex());
                     CountryModel savedCountry = new SQLDatabaseHelper(ActivityMigrantList.this).getCountry(cid);
                     Log.d("mylog", "Country name: " + savedCountry.getCountryName());
                     intent.putExtra("countryName", savedCountry.getCountryName().toUpperCase());

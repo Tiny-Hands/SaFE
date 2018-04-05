@@ -132,6 +132,9 @@ public class MigrantListAdapter extends RecyclerView.Adapter<MigrantListAdapter.
                         Log.d("mylog", "Country name: " + savedCountry.getCountryName());
                         intent.putExtra("countryName", savedCountry.getCountryName().toUpperCase());
                         intent.putExtra("countryStatus", savedCountry.getCountrySatus());
+                        intent.putExtra("migrantName", migrants.get(getAdapterPosition()).getMigrantName());
+                        intent.putExtra("migrantPhone", migrants.get(getAdapterPosition()).getMigrantPhone());
+                        intent.putExtra("migrantGender", migrants.get(getAdapterPosition()).getMigrantSex());
                         intent.putExtra("countryBlacklist", savedCountry.getCountryBlacklist());
                         itemView.getContext().startActivity(intent);
                     } else {

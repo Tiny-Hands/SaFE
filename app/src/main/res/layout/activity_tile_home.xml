@@ -1,142 +1,158 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/rlRoot"
+    android:id="@+id/drawerLayout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/bgFaded"
-    android:orientation="vertical">
+    android:layout_height="match_parent">
 
-    <android.support.v7.widget.Toolbar
-        android:id="@+id/toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingBottom="2dp">
-
-            <com.vysh.subairoma.utils.CustomTextView
-                android:id="@+id/tvMigrantName"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentTop="true"
-                android:layout_marginTop="@dimen/default_margin"
-                android:text="Test User"
-                android:textSize="@dimen/default_title_size" />
-
-            <!-- <com.vysh.subairoma.utils.CustomTextView
-                 android:id="@+id/tvGoingTo"
-                 android:layout_width="wrap_content"
-                 android:layout_height="wrap_content"
-                 android:layout_below="@+id/tvMigrantName"
-                 android:text="Going to: "
-                 android:textSize="18sp"
-                 app:font="gotham_light.ttf" />-->
-
-            <TextView
-                android:id="@+id/tvCountry"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/tvMigrantName"
-                android:gravity="bottom"
-                android:text="Some Country"
-                android:textColor="@color/colorPrimaryDark"
-                android:textSize="18sp"
-                android:textStyle="bold" />
-
-
-            <TextView
-                android:id="@+id/tvPercent"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignBottom="@id/ivAvatar"
-                android:layout_alignTop="@id/ivAvatar"
-                android:layout_marginRight="@dimen/small_margin"
-                android:layout_toLeftOf="@id/ivAvatar"
-                android:gravity="center"
-                android:text="45%"
-                android:textSize="18sp" />
-
-            <ImageView
-                android:id="@+id/ivAvatar"
-                android:layout_width="@dimen/avatar_dimen"
-                android:layout_height="@dimen/avatar_dimen"
-                android:layout_alignParentEnd="true"
-                android:layout_margin="@dimen/avatar_margin"
-                android:src="@drawable/ic_user" />
-        </RelativeLayout>
-
-    </android.support.v7.widget.Toolbar>
-
-    <android.support.v4.widget.NestedScrollView
-        android:id="@+id/nsv"
+    <RelativeLayout
+        android:id="@+id/rlRoot"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_alignParentStart="true"
-        android:layout_below="@+id/toolbar">
+        android:background="@color/bgFaded"
+        android:orientation="vertical">
 
-        <LinearLayout
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center_horizontal"
-            android:orientation="vertical">
+            android:layout_height="wrap_content">
 
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/rvTiles"
+            <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginEnd="@dimen/small_medium_margin"
-                android:layout_marginStart="@dimen/small_medium_margin"
-                android:clipToPadding="false"
-                android:nestedScrollingEnabled="false" />
-            <!--
-                        <android.support.v7.widget.CardView
-                            android:id="@+id/btnImportantContacts"
-                            android:layout_width="match_parent"
-                            android:layout_height="72dp"
-                            android:layout_gravity="bottom"
-                            android:layout_marginLeft="2dp"
-                            android:layout_marginRight="2dp"
-                            android:clickable="true"
-                            app:cardCornerRadius="@dimen/card_view_tile_radius"
-                            app:cardUseCompatPadding="true">
+                android:paddingBottom="2dp">
 
-                            <LinearLayout
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent"
-                                android:gravity="center"
-                                android:orientation="horizontal">
+                <com.vysh.subairoma.utils.CustomTextView
+                    android:id="@+id/tvMigrantName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true"
+                    android:layout_marginTop="@dimen/small_medium_margin"
+                    android:text="Test User"
+                    android:textSize="@dimen/default_title_size" />
 
-                                <ImageView
-                                    android:layout_width="46dp"
-                                    android:layout_height="46dp"
-                                    android:layout_marginRight="@dimen/medium_margin"
-                                    android:scaleType="centerInside"
-                                    android:src="@drawable/ic_phonebook" />
+                <!-- <com.vysh.subairoma.utils.CustomTextView
+                     android:id="@+id/tvGoingTo"
+                     android:layout_width="wrap_content"
+                     android:layout_height="wrap_content"
+                     android:layout_below="@+id/tvMigrantName"
+                     android:text="Going to: "
+                     android:textSize="18sp"
+                     app:font="gotham_light.ttf" />-->
 
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_gravity="center"
-                                    android:gravity="center"
-                                    android:text="@string/important_contacts"
-                                    android:textSize="16sp" />
-                            </LinearLayout>
-                        </android.support.v7.widget.CardView>-->
+                <TextView
+                    android:id="@+id/tvCountry"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/tvMigrantName"
+                    android:gravity="bottom"
+                    android:text="Some Country"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
 
-            <Button
-                android:id="@+id/btnNext"
+
+                <TextView
+                    android:id="@+id/tvPercent"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBottom="@+id/ivHam"
+                    android:layout_alignTop="@+id/ivHam"
+                    android:layout_marginRight="@dimen/small_margin"
+                    android:layout_toLeftOf="@+id/ivHam"
+                    android:gravity="center"
+                    android:text="45%"
+                    android:textSize="18sp" />
+
+                <ImageView
+                    android:id="@+id/ivHam"
+                    android:layout_width="@dimen/ham_dimen"
+                    android:layout_height="@dimen/ham_dimen"
+                    android:layout_alignParentEnd="true"
+                    android:layout_margin="@dimen/avatar_margin"
+                    android:src="@drawable/ic_ham" />
+            </RelativeLayout>
+
+        </android.support.v7.widget.Toolbar>
+
+        <android.support.v4.widget.NestedScrollView
+            android:id="@+id/nsv"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/toolbar">
+
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/default_button_height"
-                android:layout_gravity="bottom"
-                android:layout_margin="@dimen/default_margin"
-                android:background="@drawable/default_rounded_button"
-                android:text="@string/unlock_next"
-                android:textColor="#fff" />
-        </LinearLayout>
-    </android.support.v4.widget.NestedScrollView>
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:orientation="vertical">
 
-</RelativeLayout>
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/rvTiles"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginEnd="@dimen/small_medium_margin"
+                    android:layout_marginStart="@dimen/small_medium_margin"
+                    android:clipToPadding="false"
+                    android:nestedScrollingEnabled="false" />
+                <!--
+                            <android.support.v7.widget.CardView
+                                android:id="@+id/btnImportantContacts"
+                                android:layout_width="match_parent"
+                                android:layout_height="72dp"
+                                android:layout_gravity="bottom"
+                                android:layout_marginLeft="2dp"
+                                android:layout_marginRight="2dp"
+                                android:clickable="true"
+                                app:cardCornerRadius="@dimen/card_view_tile_radius"
+                                app:cardUseCompatPadding="true">
+
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:gravity="center"
+                                    android:orientation="horizontal">
+
+                                    <ImageView
+                                        android:layout_width="46dp"
+                                        android:layout_height="46dp"
+                                        android:layout_marginRight="@dimen/medium_margin"
+                                        android:scaleType="centerInside"
+                                        android:src="@drawable/ic_phonebook" />
+
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_gravity="center"
+                                        android:gravity="center"
+                                        android:text="@string/important_contacts"
+                                        android:textSize="16sp" />
+                                </LinearLayout>
+                            </android.support.v7.widget.CardView>-->
+
+                <Button
+                    android:id="@+id/btnNext"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/default_button_height"
+                    android:layout_gravity="bottom"
+                    android:layout_margin="@dimen/default_margin"
+                    android:background="@drawable/default_rounded_button"
+                    android:text="@string/unlock_next"
+                    android:textColor="#fff" />
+            </LinearLayout>
+        </android.support.v4.widget.NestedScrollView>
+
+    </RelativeLayout>
+
+    <android.support.design.widget.NavigationView
+        android:id="@+id/nav_view"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_gravity="end"
+        android:fitsSystemWindows="true"
+        app:headerLayout="@layout/nav_view_header"
+        app:menu="@menu/nav_menu" />
+
+</android.support.v4.widget.DrawerLayout>
