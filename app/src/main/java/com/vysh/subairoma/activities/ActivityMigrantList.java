@@ -262,7 +262,7 @@ public class ActivityMigrantList extends AppCompatActivity implements RecyclerIt
                 }
                 try {
                     boolean firstRun = false;
-                    parseResponse(response);
+                    migrantModels = parseResponse(response);
                     //if (migrantModels == null || migrantModels.size() < 1) firstRun = true;
                     //migrantListAdapter.notifyDataSetChanged();
                     if (userType == -1 && firstRun) {
