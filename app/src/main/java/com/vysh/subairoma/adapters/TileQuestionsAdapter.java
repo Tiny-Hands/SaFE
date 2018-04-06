@@ -660,7 +660,7 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
                     return true;
                 }
             });
-            etResponse = (EditText) itemView.findViewById(R.id.etResponse);
+            etResponse = itemView.findViewById(R.id.etResponse);
             etResponse.setOnEditorActionListener(new TextView.OnEditorActionListener() {
                 @Override
                 public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
@@ -683,8 +683,17 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
                         InputMethodManager inputMethodManager = (InputMethodManager) context.
                                 getSystemService(Context.INPUT_METHOD_SERVICE);
                         inputMethodManager.hideSoftInputFromWindow(itemView.getWindowToken(), 0);
+                        etResponse.setCursorVisible(false);
                         return true;
                     }
+                    etResponse.setCursorVisible(false);
+                    return false;
+                }
+            });
+            etResponse.setOnTouchListener(new View.OnTouchListener() {
+                @Override
+                public boolean onTouch(View view, MotionEvent motionEvent) {
+                    etResponse.setCursorVisible(true);
                     return false;
                 }
             });
