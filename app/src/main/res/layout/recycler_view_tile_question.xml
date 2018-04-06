@@ -18,11 +18,24 @@
         android:paddingRight="@dimen/medium_large_margin"
         android:paddingTop="@dimen/medium_large_margin">
 
+        <ImageButton
+            android:id="@+id/pointerImg"
+            android:layout_width="18dp"
+            android:layout_height="@dimen/card_view_markers_dimen"
+            android:layout_alignParentStart="true"
+            android:layout_marginEnd="4dp"
+            android:background="@null"
+            android:layout_alignTop="@+id/tvStep"
+            android:layout_alignBottom="@+id/tvStep"
+            android:scaleType="centerInside"
+            android:src="@drawable/ic_pointerarrow" />
+
         <TextView
             android:id="@+id/tvStep"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginEnd="18dp"
+            android:layout_toEndOf="@id/pointerImg"
             android:layout_toStartOf="@+id/questionMarker"
             android:text="काम छान्ने र आवेदन दिने"
             android:textColor="@color/colorPrimary"
