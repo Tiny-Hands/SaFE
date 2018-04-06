@@ -4,6 +4,7 @@ import android.Manifest;
 import android.app.ProgressDialog;
 import android.content.ClipData;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.location.Location;
@@ -11,12 +12,17 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
@@ -35,12 +41,14 @@ import com.android.volley.toolbox.Volley;
 import com.vysh.subairoma.ApplicationClass;
 import com.vysh.subairoma.R;
 import com.vysh.subairoma.SQLHelpers.SQLDatabaseHelper;
+import com.vysh.subairoma.SharedPrefKeys;
 import com.vysh.subairoma.adapters.MigrantListAdapter;
 import com.vysh.subairoma.adapters.RecyclerItemTouchHelper;
 import com.vysh.subairoma.dialogs.DialogCountryChooser;
 import com.vysh.subairoma.models.CountryModel;
 import com.vysh.subairoma.models.MigrantModel;
 import com.vysh.subairoma.services.LocationChecker;
+import com.vysh.subairoma.utils.CustomTextView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -67,8 +75,14 @@ public class ActivityMigrantList extends AppCompatActivity implements RecyclerIt
     Button btnAddMigrant;
     @BindView(R.id.rlRoot)
     RelativeLayout rootLayout;
-    @BindView(R.id.ivAvatar)
-    ImageView ivAvatar;
+    @BindView(R.id.ivHam)
+    ImageView ivHam;
+    @BindView(R.id.drawerLayout)
+    DrawerLayout drawerLayout;
+    NavigationView navView;
+
+    CustomTextView tvName, tvPhone, tvNavCounty;
+    ImageView ivUserAvatar;
 
     int userType;
     ArrayList<MigrantModel> migrantModels;
@@ -98,12 +112,31 @@ public class ActivityMigrantList extends AppCompatActivity implements RecyclerIt
                 startActivity(intent);
             }
         });
-        ivAvatar.setOnClickListener(new View.OnClickListener() {
+
+        navView = findViewById(R.id.nav_view);
+        setUpNavigationButtons();
+        setUpListeners();
+    }
+
+    private void setUpListeners() {
+        ivHam.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(ActivityMigrantList.this, ActivityProfileEdit.class);
-                intent.putExtra("userType", 0);
-                startActivity(intent);
+            public void onClick(View view) {
+                drawerLayout.openDrawer(GravityCompat.END);
+            }
+        });
+
+        navView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                switch (item.getItemId()) {
+                    case R.id.nav_profile:
+                        Intent intent = new Intent(ActivityMigrantList.this, ActivityProfileEdit.class);
+                        intent.putExtra("userType", 0);
+                        startActivity(intent);
+                        break;
+                }
+                return false;
             }
         });
     }
@@ -112,6 +145,33 @@ public class ActivityMigrantList extends AppCompatActivity implements RecyclerIt
     protected void onResume() {
         super.onResume();
         getSavedMigrants();
+    }
+
+    private void setUpNavigationButtons() {
+        View view = navView.getHeaderView(0);
+        if (view == null)
+            Log.d("mylog", "Header view Null");
+        if (navView == null)
+            Log.d("mylog", "Nav View Null");
+        tvName = view.findViewById(R.id.tvMName);
+        tvNavCounty = view.findViewById(R.id.tvMCountry);
+        tvPhone = view.findViewById(R.id.tvMPhone);
+        ivUserAvatar = view.findViewById(R.id.ivUserAva);
+
+
+        SharedPreferences sharedPreferences = getSharedPreferences(SharedPrefKeys.sharedPrefName, MODE_PRIVATE);
+        tvPhone.setText(sharedPreferences.getString(SharedPrefKeys.userPhone, ""));
+        tvName.setText(sharedPreferences.getString(SharedPrefKeys.userName, ""));
+        String sex = sharedPreferences.getString(SharedPrefKeys.userSex, "");
+        String age = sharedPreferences.getString(SharedPrefKeys.userAge, "");
+        tvNavCounty.setText("Age: " + age);
+
+        if (sex != null) {
+            if (sex.equals("male"))
+                ivUserAvatar.setImageResource(R.drawable.ic_male);
+            else
+                ivUserAvatar.setImageResource(R.drawable.ic_female);
+        }
     }
 
     @Override
