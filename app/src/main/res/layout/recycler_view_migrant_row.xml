@@ -35,17 +35,18 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentStart="true"
                 android:layout_alignParentTop="true"
+                android:layout_toLeftOf="@+id/tvPhone"
                 android:text="Vishal Shrestha"
                 android:textSize="18sp"
                 app:fonts="gotham_bold.ttf" />
 
             <com.wordpress.priyankvex.smarttextview.SmartTextView
                 android:id="@+id/tvPhone"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignBottom="@id/tvMigrantName"
+                android:layout_alignParentRight="true"
                 android:layout_alignParentTop="true"
-                android:layout_toRightOf="@+id/tvMigrantName"
                 android:gravity="center_vertical|end"
                 android:text="" />
 
