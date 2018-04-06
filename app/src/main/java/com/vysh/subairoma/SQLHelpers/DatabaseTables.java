@@ -81,6 +81,7 @@ public final class DatabaseTables {
         public static final String age = "migrant_age";
         public static final String sex = "migrant_sex";
         public static final String phone_number = "migrant_phone";
+        public static String migrant_status = "migrant_status";
     }
 
     public static class MigrantsTempTable {

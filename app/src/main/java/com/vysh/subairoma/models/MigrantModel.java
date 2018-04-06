@@ -6,7 +6,15 @@ package com.vysh.subairoma.models;
 
 public class MigrantModel {
     String migrantName, migrantPhone, migrantSex;
-    int migrantAge, migrantId, userId;
+    int migrantAge, migrantId, userId, visibility;
+
+    public int getVisibility() {
+        return visibility;
+    }
+
+    public void setVisibility(int visibility) {
+        this.visibility = visibility;
+    }
 
     public int getMigrantId() {
         return migrantId;

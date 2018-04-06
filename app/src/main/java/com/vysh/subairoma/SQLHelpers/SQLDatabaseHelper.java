@@ -42,7 +42,7 @@ import java.util.HashMap;
 public class SQLDatabaseHelper extends SQLiteOpenHelper {
     // If you change the database schema, you must increment the database version.
     Context mContext;
-    public static final int DATABASE_VERSION = 5;
+    public static final int DATABASE_VERSION = 6;
     public static final String DATABASE_NAME = "SubairomaLocal.db";
     final String SQL_CREATE_ResponseTable =
             "CREATE TABLE IF NOT EXISTS " + DatabaseTables.ResponseTable.TABLE_NAME + " (" +
@@ -103,6 +103,7 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
                     DatabaseTables.MigrantsTable.name + " TEXT," +
                     DatabaseTables.MigrantsTable.age + " INTEGER," +
                     DatabaseTables.MigrantsTable.user_id + " INTEGER," +
+                    DatabaseTables.MigrantsTable.migrant_status + " INTEGER," +
                     DatabaseTables.MigrantsTable.sex + " TEXT," +
                     DatabaseTables.MigrantsTable.phone_number + " TEXT," +
                     " UNIQUE (" + DatabaseTables.MigrantsTable.migrant_id +
@@ -657,6 +658,17 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
         db.close();
     }
 
+    public void insertMigrantDeletion(int migrantId, int userId) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(DatabaseTables.MigrantsTable.migrant_status, 1);
+        //If already exist the Update
+        String whereClause = DatabaseTables.MigrantsTable.migrant_id + " = " + migrantId + " AND " +
+                DatabaseTables.MigrantsTable.user_id + " = " + userId;
+        long updateCount = db.update(DatabaseTables.MigrantsTable.TABLE_NAME, values, whereClause, null);
+        Log.d("mylog", "Migrant Deleted row count: " + updateCount);
+    }
+
     public void insertMigrants(int id, String name, int age, String phone, String sex, int userId) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
@@ -758,6 +770,7 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
         while (cursor.moveToNext()) {
             int id = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseTables.MigrantsTable.migrant_id));
             int uid = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseTables.MigrantsTable.user_id));
+            int status = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseTables.MigrantsTable.migrant_status));
             String name = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseTables.MigrantsTable.name));
             String phone = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseTables.MigrantsTable.phone_number));
             String sex = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseTables.MigrantsTable.sex));
@@ -769,7 +782,11 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
             migrantModel.setMigrantPhone(phone);
             migrantModel.setMigrantId(id);
             migrantModel.setMigrantSex(sex);
-            migrantModels.add(migrantModel);
+
+            Log.d("mylog", "Migrant Status: " + status);
+            if (status != 1) {
+                migrantModels.add(migrantModel);
+            }
         }
         return migrantModels;
     }

@@ -2,6 +2,7 @@ package com.vysh.subairoma.activities;
 
 import android.Manifest;
 import android.app.ProgressDialog;
+import android.content.ClipData;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
@@ -14,6 +15,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
@@ -34,6 +36,7 @@ import com.vysh.subairoma.ApplicationClass;
 import com.vysh.subairoma.R;
 import com.vysh.subairoma.SQLHelpers.SQLDatabaseHelper;
 import com.vysh.subairoma.adapters.MigrantListAdapter;
+import com.vysh.subairoma.adapters.RecyclerItemTouchHelper;
 import com.vysh.subairoma.dialogs.DialogCountryChooser;
 import com.vysh.subairoma.models.CountryModel;
 import com.vysh.subairoma.models.MigrantModel;
@@ -54,7 +57,7 @@ import butterknife.ButterKnife;
  * Created by Vishal on 6/16/2017.
  */
 
-public class ActivityMigrantList extends AppCompatActivity {
+public class ActivityMigrantList extends AppCompatActivity implements RecyclerItemTouchHelper.RecyclerItemTouchHelperListener {
     private final String API = "/getmigrants.php";
     private final int REQUEST_LOCATION = 1;
 
@@ -199,8 +202,8 @@ public class ActivityMigrantList extends AppCompatActivity {
                 }
                 try {
                     boolean firstRun = false;
-                    migrantModels = parseResponse(response);
-                    if (migrantModels == null || migrantModels.size() < 1) firstRun = true;
+                    parseResponse(response);
+                    //if (migrantModels == null || migrantModels.size() < 1) firstRun = true;
                     //migrantListAdapter.notifyDataSetChanged();
                     if (userType == -1 && firstRun) {
                         DialogCountryChooser dialog = DialogCountryChooser.newInstance();
@@ -310,5 +313,41 @@ public class ActivityMigrantList extends AppCompatActivity {
         Log.d("mylog", "Number of migrants: " + migrantModels.size());
         migrantListAdapter.setMigrants(migrantModels);
         recyclerView.setAdapter(migrantListAdapter);
+
+        ItemTouchHelper.SimpleCallback itemTouchHelperCallback = new RecyclerItemTouchHelper(0, ItemTouchHelper.LEFT, this);
+        new ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(recyclerView);
+    }
+
+    @Override
+    public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction, int position) {
+        if (viewHolder instanceof MigrantListAdapter.MigrantHolder) {
+            // get the removed item name to display it in snack bar
+            String name = migrantModels.get(viewHolder.getAdapterPosition()).getMigrantName();
+
+            // backup of removed item for undo purpose
+            //final ClipData.Item deletedItem = cartList.get(viewHolder.getAdapterPosition());
+            //final int deletedIndex = viewHolder.getAdapterPosition();
+
+            // remove the item from recycler view
+
+            SQLDatabaseHelper dbHelper = new SQLDatabaseHelper(ActivityMigrantList.this);
+            dbHelper.insertMigrantDeletion(migrantModels.get(viewHolder.getAdapterPosition()).getMigrantId()
+                    , ApplicationClass.getInstance().getUserId());
+            migrantListAdapter.removeItem(viewHolder.getAdapterPosition());
+
+            // showing snack bar with Undo option
+            /*Snackbar snackbar = Snackbar
+                    .make(coordinatorLayout, name + " removed from cart!", Snackbar.LENGTH_LONG);
+            snackbar.setAction("UNDO", new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+
+                    // undo is selected, restore the deleted item
+                    mAdapter.restoreItem(deletedItem, deletedIndex);
+                }
+            });
+            snackbar.setActionTextColor(Color.YELLOW);
+            snackbar.show();*/
+        }
     }
 }

@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.vysh.subairoma.activities.ActivityTileHome;
@@ -103,11 +104,21 @@ public class MigrantListAdapter extends RecyclerView.Adapter<MigrantListAdapter.
             return migrants.size();
     }
 
+    public void removeItem(int position) {
+        migrants.remove(position);
+        // notify the item removed by position
+        // to perform recycler view delete animations
+        // NOTE: don't call notifyDataSetChanged()
+        notifyItemRemoved(position);
+        //Save Removed in Migrants Table
+    }
+
     public class MigrantHolder extends RecyclerView.ViewHolder {
         public TextView textViewName, sex, tvGoingCountry;
         public SmartTextView tvPhone;
         public ImageView ivAvatar;
         public LinearLayout llErrorLayout;
+        public RelativeLayout viewForeground;
 
         public MigrantHolder(final View itemView) {
             super(itemView);
@@ -117,6 +128,7 @@ public class MigrantListAdapter extends RecyclerView.Adapter<MigrantListAdapter.
             ivAvatar = (ImageView) itemView.findViewById(R.id.ivUserLogo);
             llErrorLayout = (LinearLayout) itemView.findViewById(R.id.llRedflags);
             sex = (TextView) itemView.findViewById(R.id.tvMigrantAgeSex);
+            viewForeground = itemView.findViewById(R.id.viewForeground);
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

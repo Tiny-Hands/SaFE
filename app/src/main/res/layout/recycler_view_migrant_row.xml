@@ -7,75 +7,100 @@
     app:cardElevation="1dp"
     app:cardUseCompatPadding="true">
 
-    <RelativeLayout
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="@dimen/medium_margin">
-
-        <ImageView
-            android:id="@+id/ivUserLogo"
-            android:layout_width="54dp"
-            android:layout_height="54dp"
-            android:src="@drawable/ic_male" />
+        android:layout_height="wrap_content">
 
         <RelativeLayout
-            android:id="@+id/llName"
+            android:id="@+id/view_background"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignBottom="@+id/ivUserLogo"
-            android:layout_alignTop="@id/ivUserLogo"
-            android:layout_marginStart="16sp"
-            android:layout_toEndOf="@+id/ivUserLogo"
-            android:gravity="center_vertical"
-            android:orientation="vertical">
+            android:layout_height="match_parent"
+            android:background="@color/colorDelete">
 
-            <com.vysh.subairoma.utils.CustomTextView
-                android:id="@+id/tvMigrantName"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentStart="true"
-                android:layout_alignParentTop="true"
-                android:layout_toLeftOf="@+id/tvPhone"
-                android:text="Vishal Shrestha"
-                android:textSize="18sp"
-                app:fonts="gotham_bold.ttf" />
-
-            <com.wordpress.priyankvex.smarttextview.SmartTextView
-                android:id="@+id/tvPhone"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignBottom="@id/tvMigrantName"
+            <ImageView
+                android:id="@+id/delete_icon"
+                android:layout_width="38dp"
+                android:layout_height="38dp"
                 android:layout_alignParentRight="true"
-                android:layout_alignParentTop="true"
-                android:gravity="center_vertical|end"
-                android:text="" />
+                android:layout_centerVertical="true"
+                android:layout_marginRight="@dimen/default_margin"
+                android:src="@drawable/ic_delete" />
 
-            <TextView
-                android:id="@+id/tvMigrantAgeSex"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:layout_marginTop="4dp"
-                android:text="23, Male"
-                android:textColor="@color/grey"
-                android:textSize="16sp" />
         </RelativeLayout>
 
-        <TextView
-            android:id="@+id/tvCountryGoing"
-            android:layout_width="wrap_content"
+        <RelativeLayout
+            android:id="@+id/viewForeground"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/ivUserLogo"
-            android:layout_marginTop="@dimen/default_margin"
-            android:text="@string/enter_query" />
+            android:background="@android:color/white"
+            android:padding="@dimen/medium_margin">
 
-        <LinearLayout
-            android:id="@+id/llRedflags"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignBottom="@id/tvCountryGoing"
-            android:layout_alignParentRight="true"
-            android:orientation="horizontal" />
-    </RelativeLayout>
+            <ImageView
+                android:id="@+id/ivUserLogo"
+                android:layout_width="54dp"
+                android:layout_height="54dp"
+                android:src="@drawable/ic_male" />
+
+            <RelativeLayout
+                android:id="@+id/llName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@+id/ivUserLogo"
+                android:layout_alignTop="@id/ivUserLogo"
+                android:layout_marginStart="16sp"
+                android:layout_toEndOf="@+id/ivUserLogo"
+                android:gravity="center_vertical"
+                android:orientation="vertical">
+
+                <com.vysh.subairoma.utils.CustomTextView
+                    android:id="@+id/tvMigrantName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentTop="true"
+                    android:layout_toLeftOf="@+id/tvPhone"
+                    android:text="Vishal Shrestha"
+                    android:textSize="18sp"
+                    app:fonts="gotham_bold.ttf" />
+
+                <com.wordpress.priyankvex.smarttextview.SmartTextView
+                    android:id="@+id/tvPhone"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBottom="@id/tvMigrantName"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentTop="true"
+                    android:gravity="center_vertical|end"
+                    android:text="" />
+
+                <TextView
+                    android:id="@+id/tvMigrantAgeSex"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginTop="4dp"
+                    android:text="23, Male"
+                    android:textColor="@color/grey"
+                    android:textSize="16sp" />
+            </RelativeLayout>
+
+            <TextView
+                android:id="@+id/tvCountryGoing"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/ivUserLogo"
+                android:layout_marginTop="@dimen/default_margin"
+                android:text="@string/enter_query" />
+
+            <LinearLayout
+                android:id="@+id/llRedflags"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@id/tvCountryGoing"
+                android:layout_alignParentRight="true"
+                android:orientation="horizontal" />
+        </RelativeLayout>
+
+    </FrameLayout>
 
 </android.support.v7.widget.CardView>
