@@ -262,11 +262,11 @@ public class ActivityRegister extends AppCompatActivity {
             new DialogUsertypeChooser().show(getFragmentManager(), "utypechooser");
         } else {
             //Parameter 1 is for registering migrant after reading disclaimer
-            showDisclaimerAndContinue(1);
+            showDisclaimerAndContinue(1, 2);
         }
     }
 
-    private void showDisclaimerAndContinue(final int i) {
+    private void showDisclaimerAndContinue(final int i, int messageType) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         View view = LayoutInflater.from(this).inflate(R.layout.dialog_disclaimer, null);
         TextView msg = view.findViewById(R.id.tvDisclaimerContent);
@@ -294,7 +294,7 @@ public class ActivityRegister extends AppCompatActivity {
         });
 
         String text = "";
-        if (i == 1)
+        if (messageType == 1)
             text = getString(R.string.disclaimerMigrant);
         else
             text = getString(R.string.disclaimerHelper);
@@ -398,9 +398,9 @@ public class ActivityRegister extends AppCompatActivity {
 
     public void showDisclaimerDialog() {
         if (userType == 0) {
-            showDisclaimerAndContinue(1);
+            showDisclaimerAndContinue(1, 1);
         } else {
-            showDisclaimerAndContinue(2);
+            showDisclaimerAndContinue(2, 2);
         }
     }
 
