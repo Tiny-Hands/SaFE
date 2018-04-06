@@ -150,10 +150,12 @@ public class ActivityTileHome extends AppCompatActivity {
         tvName.setText(migName);
         tvNavCounty.setText(countryName);
         tvPhone.setText(migPhone);
-        if (migGender.equals("male"))
-            ivUserAvatar.setImageResource(R.drawable.ic_male);
-        else
-            ivUserAvatar.setImageResource(R.drawable.ic_female);
+        if (migGender != null) {
+            if (migGender.equals("male"))
+                ivUserAvatar.setImageResource(R.drawable.ic_male);
+            else
+                ivUserAvatar.setImageResource(R.drawable.ic_female);
+        }
     }
 
     @Override

@@ -372,6 +372,8 @@ public class ActivityRegister extends AppCompatActivity {
                 Calendar cal = Calendar.getInstance();
                 String time = cal.getTimeInMillis() + "";
                 new SQLDatabaseHelper(ActivityRegister.this).insertResponseTableData(sex, -2, -1, mig_id, "mg_sex", time);
+                new SQLDatabaseHelper(ActivityRegister.this).insertMigrants(mig_id, etName.getText().toString(),
+                        Integer.parseInt(etAge.getText().toString()), etNumber.getText().toString(), sex, ApplicationClass.getInstance().getUserId());
                 Intent intent = new Intent(ActivityRegister.this, ActivityMigrantList.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(intent);
