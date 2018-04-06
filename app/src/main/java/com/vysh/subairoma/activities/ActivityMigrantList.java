@@ -263,7 +263,7 @@ public class ActivityMigrantList extends AppCompatActivity implements RecyclerIt
                 try {
                     boolean firstRun = false;
                     migrantModels = parseResponse(response);
-                    //if (migrantModels == null || migrantModels.size() < 1) firstRun = true;
+                    if (migrantModels == null || migrantModels.size() < 1) firstRun = true;
                     //migrantListAdapter.notifyDataSetChanged();
                     if (userType == -1 && firstRun) {
                         DialogCountryChooser dialog = DialogCountryChooser.newInstance();
