@@ -7,6 +7,15 @@ package com.vysh.subairoma.models;
 public class TilesModel {
     String type, title, description;
     int tileId, tileOrder;
+    float percentComplete = 0;
+
+    public float getPercentComplete() {
+        return percentComplete;
+    }
+
+    public void setPercentComplete(float percentComplete) {
+        this.percentComplete = percentComplete;
+    }
 
     public String getType() {
         return type;

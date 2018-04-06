@@ -20,6 +20,7 @@ import com.vysh.subairoma.activities.ActivityTileQuestions;
 import com.vysh.subairoma.R;
 import com.vysh.subairoma.models.TilesModel;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 /**
@@ -55,6 +56,7 @@ public class TileAdapter extends RecyclerView.Adapter<TileAdapter.TileViewHolder
         if ((position == impContactsPlace && ActivityTileHome.finalSection) || (position == tileList.size() && ActivityTileHome.showIndia)) {
             holder.tvTile.setText(context.getResources().getString(R.string.important_contacts));
             holder.ivTile.setImageResource(R.drawable.ic_phonebook);
+            holder.tvPercent.setVisibility(View.GONE);
         } else if (position < tileList.size()) {
             holder.tvTile.setText(tileList.get(position).getTitle());
             if (ActivityTileHome.finalSection) {
@@ -69,7 +71,6 @@ public class TileAdapter extends RecyclerView.Adapter<TileAdapter.TileViewHolder
                 } else
                     holder.viewDisabled.setVisibility(View.VISIBLE);
             }
-
             int errorCount = sqlDatabaseHelper.getTileErrorCount(ApplicationClass.getInstance().getMigrantId(),
                     tileList.get(position).getTileId());
             Log.d("mylog", "Tile Errors: " + errorCount + " For tile ID: " + tileList.get(position).getTileId());
@@ -83,6 +84,8 @@ public class TileAdapter extends RecyclerView.Adapter<TileAdapter.TileViewHolder
                     holder.llErrorLayout.addView(imgView);
                 }
             }
+            DecimalFormat decimalFormat = new DecimalFormat("##");
+            holder.tvPercent.setText(decimalFormat.format(tileList.get(position).getPercentComplete()) + "%");
             setTileIcons(holder.ivTile, tileList.get(position).getTileId());
             //holder.ivTile.setBackgroundResource(ivTiles[position]);
         }
@@ -144,7 +147,7 @@ public class TileAdapter extends RecyclerView.Adapter<TileAdapter.TileViewHolder
     }
 
     public class TileViewHolder extends RecyclerView.ViewHolder {
-        public TextView tvTile;
+        public TextView tvTile, tvPercent;
         public ImageView ivTile;
         public View viewDisabled;
         public LinearLayout llErrorLayout;
@@ -186,6 +189,7 @@ public class TileAdapter extends RecyclerView.Adapter<TileAdapter.TileViewHolder
                     }
                 }
             });
+            tvPercent = itemView.findViewById(R.id.tvPercent);
             tvTile = itemView.findViewById(R.id.tvTitle);
             ivTile = itemView.findViewById(R.id.ivTitle);
             viewDisabled = itemView.findViewById(R.id.viewDisabled);

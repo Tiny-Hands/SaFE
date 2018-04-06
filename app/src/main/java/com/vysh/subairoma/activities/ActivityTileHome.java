@@ -168,24 +168,28 @@ public class ActivityTileHome extends AppCompatActivity {
     }
 
     private void calculatePercentComplete() {
-        int answeredQuestions = new SQLDatabaseHelper(ActivityTileHome.this)
-                .getAllResponse(ApplicationClass.getInstance().getMigrantId()).size();
+        SQLDatabaseHelper dbHelper = new SQLDatabaseHelper(ActivityTileHome.this);
+        int answeredQuestions = dbHelper.getAllResponse(ApplicationClass.getInstance().getMigrantId()).size();
         int count = 0;
         for (int i = 0; i < tiles.size(); i++) {
-            int tempCount = new SQLDatabaseHelper(ActivityTileHome.this).getNoRedFlagQuestionsCount(tiles.get(i).getTileId());
+            int tempCount = dbHelper.getNoRedFlagQuestionsCount(tiles.get(i).getTileId());
+            int answersCount = dbHelper.getTileResponse(ApplicationClass.getInstance().getMigrantId(), tiles.get(i).getTileId());
             count += tempCount;
+            tiles.get(i).setPercentComplete(((float) answersCount / (float) tempCount) * 100);
             Log.d("mylog", "Temp count: " + tempCount);
+
         }
-        for (int i = 0; i < tilesGAS.size(); i++) {
-            int tempCount = new SQLDatabaseHelper(ActivityTileHome.this).getNoRedFlagQuestionsCount(tilesGAS.get(i).getTileId());
+       /* for (int i = 0; i < tilesGAS.size(); i++) {
+            int tempCount = dbHelper.getNoRedFlagQuestionsCount(tilesGAS.get(i).getTileId());
             count += tempCount;
             Log.d("mylog", "Temp count GAS: " + tempCount);
-        }
-        float percent = ((float) answeredQuestions / (float) count) * 100f;
+        }*/
+        float percent = ((float) answeredQuestions / (float) count) * 100;
         DecimalFormat decimalFormat = new DecimalFormat("##");
         tvPercent.setText(decimalFormat.format(percent) + "%");
         Log.d("mylog", "total count: " + count);
         Log.d("mylog", "answered count: " + answeredQuestions);
+        rvTiles.getAdapter().notifyDataSetChanged();
     }
 
     private boolean checkIfVerifiedAnswers() {

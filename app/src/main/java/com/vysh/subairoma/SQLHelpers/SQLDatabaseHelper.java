@@ -349,6 +349,22 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
         return response;
     }
 
+    public int getTileResponse(int migId, int tileId) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String query = "SELECT * FROM " + DatabaseTables.ResponseTable.TABLE_NAME +
+                " WHERE " + DatabaseTables.ResponseTable.migrant_id + " = " + "'" + migId + "'"
+                + " AND " + DatabaseTables.ResponseTable.tile_id + " = " + "'" + tileId + "'";
+
+        int count = 0;
+        Cursor cursor = db.rawQuery(query, null);
+        while (cursor.moveToNext()) {
+            count++;
+        }
+        return count;
+        //Log.d("mylog", "Query: " + query);
+
+    }
+
     public boolean getIsError(int migId, String variable) {
         SQLiteDatabase db = this.getReadableDatabase();
         String query;
