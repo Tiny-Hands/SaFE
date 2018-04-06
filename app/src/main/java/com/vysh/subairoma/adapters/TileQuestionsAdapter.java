@@ -248,6 +248,7 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
                 @Override
                 public void onClick(View v) {
                     //Toast.makeText(context, "", Toast.LENGTH_SHORT).show();
+                    holder.toggleExpandView();
                 }
             });
         }
