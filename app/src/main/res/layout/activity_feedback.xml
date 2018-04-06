@@ -42,7 +42,7 @@
                 android:layout_margin="@dimen/default_margin"
                 android:gravity="center"
                 android:padding="@dimen/small_margin"
-                android:text="@string/feedback_msg"
+                android:text="@string/feedback_msg_new"
                 android:textColor="@color/colorAccent"
                 android:textSize="@dimen/feedback_list_heading"
                 app:fonts="gotham_light.ttf" />

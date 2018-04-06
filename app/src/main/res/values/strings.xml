@@ -92,6 +92,8 @@
     <string name="updating">नयाँ विवरण प्राप्त हुँदैछ</string>
     <string name="sending_otp">OTP पठाँइदैछ</string>
     <string name="feedback_msg">कृपया एउटा छानेर हामीलाई सेवा सुधार गर्ने मौका दुनुहोस् </string>
+    <string name="feedback_msg_new">You’re almost done.
+        Fill out this final thing to get the key to unlock the last sections which include crucial information for going overseas</string>
     <string name="login">लगइन</string>
     <string name="enter_reg_number">तपाईँले दर्ता गर्न प्रयोग गर्नुभएको फोन नम्बर राख्नुहोस्</string>
     <string name="verify_phone">प्रमाणित गर्नुहोस्</string>
