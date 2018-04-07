@@ -4,6 +4,7 @@ import android.app.FragmentManager;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -66,6 +67,7 @@ public class MigrantListAdapter extends RecyclerView.Adapter<MigrantListAdapter.
         String cid = new SQLDatabaseHelper(mContext).getResponse(migrants.get(position).getMigrantId(), "mg_destination");
         if (cid == null || cid.isEmpty()) {
             holder.tvGoingCountry.setText(mContext.getResources().getString(R.string.not_started));
+            holder.tvGoingCountry.setTextColor(Color.GRAY);
         } else {
             CountryModel goingTo = new SQLDatabaseHelper(mContext).getCountry(cid);
             holder.tvGoingCountry.setText(goingTo.getCountryName().toUpperCase());
@@ -75,22 +77,23 @@ public class MigrantListAdapter extends RecyclerView.Adapter<MigrantListAdapter.
                 holder.tvGoingCountry.setTextColor(mContext.getResources().getColor(R.color.colorNeutral));
             else
                 holder.tvGoingCountry.setTextColor(mContext.getResources().getColor(R.color.colorPrimary));
-
-            //Showing error count
-            int errorCount = new SQLDatabaseHelper(mContext).getMigrantErrorCount(migrantModel.getMigrantId());
-
-            if (errorCount > 0 && (holder.llErrorLayout.getTag()) == null) {
-                for (int i = 0; i < errorCount; i++) {
-                    ImageView imgView = new ImageView(holder.llErrorLayout.getContext());
-                    LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams((int) holder.llErrorLayout.getContext().getResources().getDimension(R.dimen.redflag_dimen),
-                            (int) holder.llErrorLayout.getContext().getResources().getDimension(R.dimen.redflag_dimen));
-                    imgView.setLayoutParams(lp);
-                    imgView.setImageResource(R.drawable.ic_redflag);
-                    holder.llErrorLayout.addView(imgView);
-                }
-                holder.llErrorLayout.setTag("shownerror");
-            }
         }
+        //Showing error count
+        int errorCount = new SQLDatabaseHelper(mContext).getMigrantErrorCount(migrantModel.getMigrantId());
+
+        if (errorCount > 0) {
+            holder.llErrorLayout.setVisibility(View.VISIBLE);
+            holder.llErrorLayout.removeAllViews();
+            for (int i = 0; i < errorCount; i++) {
+                ImageView imgView = new ImageView(holder.llErrorLayout.getContext());
+                LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams((int) holder.llErrorLayout.getContext().getResources().getDimension(R.dimen.redflag_dimen),
+                        (int) holder.llErrorLayout.getContext().getResources().getDimension(R.dimen.redflag_dimen));
+                imgView.setLayoutParams(lp);
+                imgView.setImageResource(R.drawable.ic_redflag);
+                holder.llErrorLayout.addView(imgView);
+            }
+        } else if (errorCount <= 0)
+            holder.llErrorLayout.setVisibility(View.GONE);
         if (migrants.size() == 1) {
             showCountryChooser(migrants.get(0).getMigrantName(), ((AppCompatActivity) mContext).getSupportFragmentManager());
         }
