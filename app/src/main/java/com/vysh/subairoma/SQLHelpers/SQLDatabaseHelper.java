@@ -1,27 +1,18 @@
 package com.vysh.subairoma.SQLHelpers;
 
 import android.app.AlarmManager;
-import android.app.Application;
 import android.app.PendingIntent;
 import android.content.ContentValues;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.os.Build;
-import android.provider.ContactsContract;
-import android.support.v7.app.AlertDialog;
 import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.vysh.subairoma.ApplicationClass;
-import com.vysh.subairoma.R;
 import com.vysh.subairoma.SharedPrefKeys;
 import com.vysh.subairoma.activities.ActivitySplash;
 import com.vysh.subairoma.models.CountryModel;
@@ -42,7 +33,7 @@ import java.util.HashMap;
 public class SQLDatabaseHelper extends SQLiteOpenHelper {
     // If you change the database schema, you must increment the database version.
     Context mContext;
-    public static final int DATABASE_VERSION = 6;
+    public static final int DATABASE_VERSION = 7;
     public static final String DATABASE_NAME = "SubairomaLocal.db";
     final String SQL_CREATE_ResponseTable =
             "CREATE TABLE IF NOT EXISTS " + DatabaseTables.ResponseTable.TABLE_NAME + " (" +
@@ -103,7 +94,7 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
                     DatabaseTables.MigrantsTable.name + " TEXT," +
                     DatabaseTables.MigrantsTable.age + " INTEGER," +
                     DatabaseTables.MigrantsTable.user_id + " INTEGER," +
-                    DatabaseTables.MigrantsTable.migrant_status + " INTEGER," +
+                    DatabaseTables.MigrantsTable.inactivate_date + " TEXT," +
                     DatabaseTables.MigrantsTable.sex + " TEXT," +
                     DatabaseTables.MigrantsTable.phone_number + " TEXT," +
                     " UNIQUE (" + DatabaseTables.MigrantsTable.migrant_id +
@@ -674,10 +665,10 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
         db.close();
     }
 
-    public void insertMigrantDeletion(int migrantId, int userId) {
+    public void insertMigrantDeletion(int migrantId, int userId, long time) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
-        values.put(DatabaseTables.MigrantsTable.migrant_status, 1);
+        values.put(DatabaseTables.MigrantsTable.inactivate_date, time);
         //If already exist the Update
         String whereClause = DatabaseTables.MigrantsTable.migrant_id + " = " + migrantId + " AND " +
                 DatabaseTables.MigrantsTable.user_id + " = " + userId;
@@ -786,7 +777,7 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
         while (cursor.moveToNext()) {
             int id = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseTables.MigrantsTable.migrant_id));
             int uid = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseTables.MigrantsTable.user_id));
-            int status = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseTables.MigrantsTable.migrant_status));
+            String status = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseTables.MigrantsTable.inactivate_date));
             String name = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseTables.MigrantsTable.name));
             String phone = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseTables.MigrantsTable.phone_number));
             String sex = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseTables.MigrantsTable.sex));
@@ -798,11 +789,10 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
             migrantModel.setMigrantPhone(phone);
             migrantModel.setMigrantId(id);
             migrantModel.setMigrantSex(sex);
+            migrantModel.setInactiveDate(status);
 
             Log.d("mylog", "Migrant Status: " + status);
-            if (status != 1) {
-                migrantModels.add(migrantModel);
-            }
+            migrantModels.add(migrantModel);
         }
         return migrantModels;
     }

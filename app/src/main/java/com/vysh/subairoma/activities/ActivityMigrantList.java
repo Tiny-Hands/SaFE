@@ -2,12 +2,10 @@ package com.vysh.subairoma.activities;
 
 import android.Manifest;
 import android.app.ProgressDialog;
-import android.content.ClipData;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
-import android.location.Location;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -16,7 +14,6 @@ import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -24,7 +21,6 @@ import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -67,6 +63,7 @@ import butterknife.ButterKnife;
 
 public class ActivityMigrantList extends AppCompatActivity implements RecyclerItemTouchHelper.RecyclerItemTouchHelperListener {
     private final String API = "/getmigrants.php";
+    private final String ApiDISABLE = "/deactivatemigrant.php";
     private final int REQUEST_LOCATION = 1;
 
     @BindView(R.id.rvMigrants)
@@ -207,7 +204,7 @@ public class ActivityMigrantList extends AppCompatActivity implements RecyclerIt
 
     private void getSavedMigrants() {
         SQLDatabaseHelper dbHelper = new SQLDatabaseHelper(ActivityMigrantList.this);
-        migrantModels = dbHelper.getMigrants();
+        migrantModels = getMigrantsToDisplay(dbHelper.getMigrants());
         migrantListAdapter = new MigrantListAdapter();
         if (userType != -1) {
             Log.d("mylog", "Usertype: " + userType);
@@ -243,6 +240,20 @@ public class ActivityMigrantList extends AppCompatActivity implements RecyclerIt
         }
     }
 
+    private ArrayList<MigrantModel> getMigrantsToDisplay(ArrayList<MigrantModel> migs) {
+        ArrayList<MigrantModel> tempMig = new ArrayList<>();
+        ArrayList<MigrantModel> disableMigs = new ArrayList<>();
+        for (int i = 0; i < migs.size(); i++) {
+            if (migs.get(i).getInactiveDate() == null || migs.get(i).getInactiveDate().isEmpty() || (migs.get(i).getInactiveDate().length() < 5)) {
+                tempMig.add(migs.get(i));
+            } else {
+                disableMigs.add(migs.get(i));
+            }
+        }
+        sendDeactivationStatus(disableMigs);
+        return tempMig;
+    }
+
     private void getMigrants() {
         String api = ApplicationClass.getInstance().getAPIROOT() + API;
         final ProgressDialog progressDialog = new ProgressDialog(ActivityMigrantList.this);
@@ -262,7 +273,7 @@ public class ActivityMigrantList extends AppCompatActivity implements RecyclerIt
                 }
                 try {
                     boolean firstRun = false;
-                    migrantModels = parseResponse(response);
+                    migrantModels = getMigrantsToDisplay(parseResponse(response));
                     if (migrantModels == null || migrantModels.size() < 1) firstRun = true;
                     //migrantListAdapter.notifyDataSetChanged();
                     if (userType == -1 && firstRun) {
@@ -329,6 +340,7 @@ public class ActivityMigrantList extends AppCompatActivity implements RecyclerIt
                 if (migrantJSON != null) {
                     JSONObject migrantObj;
                     SQLDatabaseHelper dbHelper = new SQLDatabaseHelper(ActivityMigrantList.this);
+                    int uid = ApplicationClass.getInstance().getUserId();
                     for (int i = 0; i < migrantJSON.length(); i++) {
                         migrantObj = migrantJSON.getJSONObject(i);
                         MigrantModel migrantModel = new MigrantModel();
@@ -343,11 +355,13 @@ public class ActivityMigrantList extends AppCompatActivity implements RecyclerIt
                             migrantModel.setMigrantSex(sex);
                             String phone = migrantObj.getString("migrant_phone");
                             migrantModel.setMigrantPhone(phone);
-                            migrantModel.setUserId(ApplicationClass.getInstance().getUserId());
+                            String inactiveDate = migrantObj.getString("inactive_date");
+                            migrantModel.setInactiveDate(inactiveDate);
+                            migrantModel.setUserId(uid);
 
                             migrantModelsTemp.add(migrantModel);
                             //Saving in Database
-                            dbHelper.insertMigrants(id, name, age, phone, sex, ApplicationClass.getInstance().getUserId());
+                            dbHelper.insertMigrants(id, name, age, phone, sex, uid);
                         }
                     }
                 }
@@ -390,10 +404,13 @@ public class ActivityMigrantList extends AppCompatActivity implements RecyclerIt
 
             // remove the item from recycler view
 
+            int uid = ApplicationClass.getInstance().getUserId();
+            int mid = migrantModels.get(viewHolder.getAdapterPosition()).getMigrantId();
+            long time = System.currentTimeMillis();
             SQLDatabaseHelper dbHelper = new SQLDatabaseHelper(ActivityMigrantList.this);
-            dbHelper.insertMigrantDeletion(migrantModels.get(viewHolder.getAdapterPosition()).getMigrantId()
-                    , ApplicationClass.getInstance().getUserId());
+            dbHelper.insertMigrantDeletion(mid, uid, System.currentTimeMillis());
             migrantListAdapter.removeItem(viewHolder.getAdapterPosition());
+            deactivateUser(uid, mid, time + "", null);
 
             // showing snack bar with Undo option
             /*Snackbar snackbar = Snackbar
@@ -409,5 +426,42 @@ public class ActivityMigrantList extends AppCompatActivity implements RecyclerIt
             snackbar.setActionTextColor(Color.YELLOW);
             snackbar.show();*/
         }
+    }
+
+    public void sendDeactivationStatus(ArrayList<MigrantModel> disableMigs) {
+        int uid = ApplicationClass.getInstance().getUserId();
+        RequestQueue queue = Volley.newRequestQueue(ActivityMigrantList.this);
+        for (int i = 0; i < disableMigs.size(); i++) {
+            deactivateUser(uid, disableMigs.get(i).getMigrantId(), disableMigs.get(i).getInactiveDate(), queue);
+        }
+    }
+
+    public void deactivateUser(final int uid, final int migId, final String deactivateTime, RequestQueue queue) {
+        if (queue == null)
+            queue = Volley.newRequestQueue(ActivityMigrantList.this);
+        String api = ApplicationClass.getInstance().getAPIROOT() + ApiDISABLE;
+        StringRequest getRequest = new StringRequest(Request.Method.POST, api, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                Log.d("mylog", "deactivation response : " + response);
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.d("mylog", "Error exception: " + error.toString());
+            }
+        }) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                HashMap<String, String> params = new HashMap<>();
+                int user_id = ApplicationClass.getInstance().getUserId();
+                int mig_id = ApplicationClass.getInstance().getMigrantId();
+                params.put("user_id", uid + "");
+                params.put("migrant_id", migId + "");
+                params.put("inactive_date", deactivateTime);
+                return params;
+            }
+        };
+        queue.add(getRequest);
     }
 }

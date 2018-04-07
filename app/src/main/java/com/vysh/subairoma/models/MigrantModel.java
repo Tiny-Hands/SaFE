@@ -5,15 +5,15 @@ package com.vysh.subairoma.models;
  */
 
 public class MigrantModel {
-    String migrantName, migrantPhone, migrantSex;
-    int migrantAge, migrantId, userId, visibility;
+    String migrantName, migrantPhone, migrantSex, inactiveDate;
+    int migrantAge, migrantId, userId;
 
-    public int getVisibility() {
-        return visibility;
+    public String getInactiveDate() {
+        return inactiveDate;
     }
 
-    public void setVisibility(int visibility) {
-        this.visibility = visibility;
+    public void setInactiveDate(String inactiveDate) {
+        this.inactiveDate = inactiveDate;
     }
 
     public int getMigrantId() {

@@ -15,6 +15,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.vysh.subairoma.activities.ActivityMigrantList;
 import com.vysh.subairoma.activities.ActivityTileHome;
 import com.vysh.subairoma.ApplicationClass;
 import com.vysh.subairoma.dialogs.DialogCountryChooser;
@@ -32,12 +33,12 @@ import java.util.ArrayList;
 
 public class MigrantListAdapter extends RecyclerView.Adapter<MigrantListAdapter.MigrantHolder> {
 
+    ArrayList<MigrantModel> migrants;
+    Context mContext;
+
     public void setMigrants(ArrayList<MigrantModel> migrants) {
         this.migrants = migrants;
     }
-
-    ArrayList<MigrantModel> migrants;
-    Context mContext;
 
     @Override
     public MigrantHolder onCreateViewHolder(ViewGroup parent, int viewType) {
