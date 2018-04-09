@@ -59,6 +59,7 @@ public class TileAdapter extends RecyclerView.Adapter<TileAdapter.TileViewHolder
             holder.tvTile.setText(context.getResources().getString(R.string.important_contacts));
             holder.ivTile.setImageResource(R.drawable.ic_phonebook);
             holder.tvPercent.setVisibility(View.GONE);
+            holder.progressPercent.setVisibility(View.GONE);
             offset = 1;
         } else if (position <= tileList.size()) {
             holder.tvTile.setText(tileList.get(position - offset).getTitle());
