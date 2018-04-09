@@ -273,14 +273,14 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
                           ImageView ivError, ImageView ivDone, ImageButton btnShowMore, ListView lvOptions, RelativeLayout rootLayout, int position) {
         //For showing/hiding error on condition variable change
         Log.d("mylog", "Setting value now");
-        boolean isError = sqlDatabaseHelper.getIsError(migrantId, questionsListDisplay.get(position).getVariable());
+        String isError = sqlDatabaseHelper.getIsError(migrantId, questionsListDisplay.get(position).getVariable());
         Log.d("mylog", "Should show error for: " + questionsListDisplay.get(position).getVariable() + " : " + isError);
         String variable = questionsListDisplay.get(position).getVariable();
         Log.d("mylog", "Getting response for Migrant: " + migrantId + " Variable: " + variable);
         int responseType = questionsListDisplay.get(position).getResponseType();
         String response = sqlDatabaseHelper.getResponse(migrantId, variable);
         Log.d("mylog", "Response is: " + response);
-        if (isError) {
+        if (isError.equalsIgnoreCase("true")) {
             ivError.setVisibility(View.VISIBLE);
             rootLayout.setBackgroundColor(context.getResources().getColor(R.color.colorErrorFaded));
             ivDone.setVisibility(GONE);

@@ -268,8 +268,10 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
         ContentValues newValue = new ContentValues();
         if (isError.equalsIgnoreCase("false"))
             newValue.put(DatabaseTables.ResponseTable.is_error, "false");
-        else
+        else if (isError.equalsIgnoreCase("true"))
             newValue.put(DatabaseTables.ResponseTable.is_error, "true");
+        else
+            newValue.put(DatabaseTables.ResponseTable.is_error, "-");
         String selection = DatabaseTables.ResponseTable.migrant_id + " = " + "'" + migId + "'" + " AND " +
                 DatabaseTables.ResponseTable.response_variable + " = " + "'" + variable + "'";
         int updateCount = db.update(DatabaseTables.ResponseTable.TABLE_NAME, newValue, selection, null);
@@ -306,7 +308,7 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
             params.put("tile_id", tileid + "");
             params.put("time", time);
             if (error == null)
-                error = "false";
+                error = "-";
             params.put("is_error", error);
             if (responseQuery == null)
                 responseQuery = "";
@@ -314,6 +316,25 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
             allResponses.add(params);
         }
         return allResponses;
+    }
+
+    public int getAllResponseCount(int migId) {
+        int count = 0;
+        SQLiteDatabase db = this.getReadableDatabase();
+        String query;
+        query = "SELECT * FROM " + DatabaseTables.ResponseTable.TABLE_NAME + " WHERE " +
+                DatabaseTables.ResponseTable.migrant_id + "=" + "'" + migId + "'";
+        //Log.d("mylog", "Query: " + query);
+        Cursor cursor = db.rawQuery(query, null);
+        Log.d("mylog", "Total Res count: " + cursor.getCount());
+        while (cursor.moveToNext()) {
+            String error = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseTables.ResponseTable.is_error));
+            Log.d("mylog", "Currest Res Error: " + error);
+            if (error != null)
+                if (error.length() < 3)
+                    count++;
+        }
+        return count;
     }
 
     public String getResponse(int migId, String variable) {
@@ -349,14 +370,18 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
         int count = 0;
         Cursor cursor = db.rawQuery(query, null);
         while (cursor.moveToNext()) {
-            count++;
+            String error = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseTables.ResponseTable.is_error));
+            if (error == null)
+                error = "-";
+            if (error.length() < 3)
+                count++;
         }
         return count;
         //Log.d("mylog", "Query: " + query);
 
     }
 
-    public boolean getIsError(int migId, String variable) {
+    public String getIsError(int migId, String variable) {
         SQLiteDatabase db = this.getReadableDatabase();
         String query;
         if (variable == null) {
@@ -369,11 +394,13 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
         }
         //Log.d("mylog", "Query: " + query);
         Cursor cursor = db.rawQuery(query, null);
-        boolean isError = false;
+        String isError = "-";
         while (cursor.moveToNext()) {
-            isError = Boolean.parseBoolean(cursor.getString(cursor.getColumnIndexOrThrow(DatabaseTables.ResponseTable.is_error)));
+            isError = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseTables.ResponseTable.is_error));
             //Log.d("mylog", "Mid: " + mid + " Qid: " + qid + " rvar: " + response);
         }
+        if (isError == null)
+            isError = "-";
         return isError;
     }
 
@@ -628,7 +655,9 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
         int count = 0;
         Cursor cursor = db.rawQuery(statement, null);
         while (cursor.moveToNext()) {
-            count++;
+            String error = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseTables.QuestionsTable.question_condition));
+            if (error.length() < 5)
+                count++;
         }
         return count;
     }

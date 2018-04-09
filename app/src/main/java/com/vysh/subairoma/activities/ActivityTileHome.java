@@ -174,7 +174,7 @@ public class ActivityTileHome extends AppCompatActivity {
 
     private void calculatePercentComplete() {
         SQLDatabaseHelper dbHelper = new SQLDatabaseHelper(ActivityTileHome.this);
-        int answeredQuestions = dbHelper.getAllResponse(ApplicationClass.getInstance().getMigrantId()).size();
+        int answeredQuestions = dbHelper.getAllResponseCount(ApplicationClass.getInstance().getMigrantId());
         int count = 0;
         for (int i = 0; i < tiles.size(); i++) {
             int tempCount = dbHelper.getNoRedFlagQuestionsCount(tiles.get(i).getTileId());
@@ -352,6 +352,7 @@ public class ActivityTileHome extends AppCompatActivity {
             api = ApplicationClass.getInstance().getAPIROOT() + saveAPI;
         else
             api = ApplicationClass.getInstance().getAPIROOT() + saveFeedbackAPI;
+        final String fapi = api;
         StringRequest stringRequest = new StringRequest(Request.Method.POST, api, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
@@ -365,7 +366,7 @@ public class ActivityTileHome extends AppCompatActivity {
                     //showSnackbar("Response cannot be saved at the moment, please check your Intenet connection.");
                     Log.d("mylog", "Response cannot be saved at the moment, please check your Intenet connection.");
                 } else
-                    Log.d("mylog", "Error saving response: " + err);
+                    Log.d("mylog", "Error saving response: " + err + " \n For: " + fapi);
             }
         }) {
             @Override
