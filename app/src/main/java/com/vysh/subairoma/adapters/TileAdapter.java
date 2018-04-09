@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.vysh.subairoma.ApplicationClass;
@@ -87,7 +88,14 @@ public class TileAdapter extends RecyclerView.Adapter<TileAdapter.TileViewHolder
                 }
             }
             DecimalFormat decimalFormat = new DecimalFormat("##");
-            holder.tvPercent.setText(decimalFormat.format(tileList.get(position - offset).getPercentComplete()) + "%");
+            if (tileList.get(position - offset).getPercentComplete() > 99.9) {
+                holder.progressPercent.setVisibility(View.GONE);
+                holder.ivDone.setVisibility(View.VISIBLE);
+                holder.tvPercent.setVisibility(View.GONE);
+            } else {
+                holder.progressPercent.setProgress((int) tileList.get(position - offset).getPercentComplete());
+                holder.tvPercent.setText(decimalFormat.format(tileList.get(position - offset).getPercentComplete()));
+            }
             setTileIcons(holder.ivTile, tileList.get(position - offset).getTileId());
             //holder.ivTile.setBackgroundResource(ivTiles[position]);
         }
@@ -150,8 +158,9 @@ public class TileAdapter extends RecyclerView.Adapter<TileAdapter.TileViewHolder
 
     public class TileViewHolder extends RecyclerView.ViewHolder {
         public TextView tvTile, tvPercent;
-        public ImageView ivTile;
+        public ImageView ivTile, ivDone;
         public View viewDisabled;
+        public ProgressBar progressPercent;
         public LinearLayout llErrorLayout;
 
         public TileViewHolder(View itemView) {
@@ -191,9 +200,11 @@ public class TileAdapter extends RecyclerView.Adapter<TileAdapter.TileViewHolder
                     }
                 }
             });
+            progressPercent = itemView.findViewById(R.id.progressPercent);
             tvPercent = itemView.findViewById(R.id.tvPercent);
             tvTile = itemView.findViewById(R.id.tvTitle);
             ivTile = itemView.findViewById(R.id.ivTitle);
+            ivDone = itemView.findViewById(R.id.ivDone);
             viewDisabled = itemView.findViewById(R.id.viewDisabled);
             llErrorLayout = itemView.findViewById(R.id.llRedflags);
         }

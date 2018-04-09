@@ -19,6 +19,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -71,7 +72,9 @@ public class ActivityTileHome extends AppCompatActivity {
     @BindView(R.id.btnNext)
     Button btnNext;
     @BindView(R.id.tvPercent)
-    TextView tvPercent;
+     TextView tvPercent;
+    @BindView(R.id.progressPercent)
+    ProgressBar progressPercent;
     //@BindView(R.id.btnImportantContacts)
     //CardView btnImportantContacts;
     //@BindView(R.id.ivAvatar)
@@ -188,7 +191,8 @@ public class ActivityTileHome extends AppCompatActivity {
         }*/
         float percent = ((float) answeredQuestions / (float) count) * 100;
         DecimalFormat decimalFormat = new DecimalFormat("##");
-        tvPercent.setText(decimalFormat.format(percent) + "%");
+        tvPercent.setText(decimalFormat.format(percent)+"%");
+        progressPercent.setProgress((int) percent);
         Log.d("mylog", "total count: " + count);
         Log.d("mylog", "answered count: " + answeredQuestions);
         rvTiles.getAdapter().notifyDataSetChanged();

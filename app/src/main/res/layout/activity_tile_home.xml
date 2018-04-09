@@ -56,13 +56,28 @@
                     android:id="@+id/tvPercent"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignBottom="@+id/ivHam"
-                    android:layout_alignTop="@+id/ivHam"
-                    android:layout_marginRight="@dimen/small_margin"
+                    android:layout_alignBottom="@+id/progressPercent"
+                    android:layout_alignEnd="@+id/progressPercent"
+                    android:layout_alignStart="@+id/progressPercent"
+                    android:layout_alignTop="@+id/progressPercent"
                     android:layout_toLeftOf="@+id/ivHam"
                     android:gravity="center"
-                    android:text="45%"
-                    android:textSize="18sp" />
+                    android:text="55%"
+                    android:textSize="7sp" />
+
+                <ProgressBar
+                    android:id="@+id/progressPercent"
+                    style="?android:attr/progressBarStyleHorizontal"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBottom="@+id/ivHam"
+                    android:layout_alignTop="@+id/ivHam"
+                    android:layout_toLeftOf="@+id/ivHam"
+                    android:indeterminate="false"
+                    android:max="100"
+                    android:progress="100"
+                    android:progressDrawable="@drawable/progressbarbg"
+                    android:secondaryProgress="100" />
 
                 <ImageView
                     android:id="@+id/ivHam"
