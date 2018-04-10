@@ -26,6 +26,7 @@ import com.vysh.subairoma.adapters.FeedbackQuestionAdapter;
 import com.vysh.subairoma.models.FeedbackQuestionModel;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -53,10 +54,11 @@ public class ActivityFeedback extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 //getAllFeedbackResponses();
-                SharedPreferences sp = getSharedPreferences(SharedPrefKeys.sharedPrefName, MODE_PRIVATE);
-                SharedPreferences.Editor editor = sp.edit();
-                editor.putInt(SharedPrefKeys.feedbackResponseSaved, 1);
-                editor.apply();
+
+                Calendar cal = Calendar.getInstance();
+                String time = cal.getTimeInMillis() + "";
+                new SQLDatabaseHelper(ActivityFeedback.this).insertResponseTableData("true", -3, -1,
+                        ApplicationClass.getInstance().getMigrantId(), "mg_feedback_saved", time);
                 openTileHomeActivity();
 
             }

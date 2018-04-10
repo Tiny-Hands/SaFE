@@ -201,8 +201,9 @@ public class ActivityTileHome extends AppCompatActivity {
     private boolean checkIfVerifiedAnswers() {
         String verified = new SQLDatabaseHelper(ActivityTileHome.this).getResponse(ApplicationClass.getInstance().getMigrantId(),
                 "mg_verified_answers");
-        int isFeedbackSaved = getSharedPreferences(SharedPrefKeys.sharedPrefName, MODE_PRIVATE).getInt(SharedPrefKeys.feedbackResponseSaved, 0);
-        if (verified.equalsIgnoreCase("true") && isFeedbackSaved == 1) {
+        String isFeedbackSaved = new SQLDatabaseHelper(ActivityTileHome.this).getResponse(ApplicationClass.getInstance().getMigrantId(),
+                "mg_feedback_saved");
+        if (verified.equalsIgnoreCase("true") && isFeedbackSaved.equalsIgnoreCase("true")) {
             return true;
         } else if (verified.equalsIgnoreCase("true")) {
             Intent intent = new Intent(ActivityTileHome.this, ActivityFeedback.class);

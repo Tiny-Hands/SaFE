@@ -69,14 +69,14 @@ public class FeedbackQuestionAdapter extends RecyclerView.Adapter<FeedbackQuesti
     public class FeedbackHolder extends RecyclerView.ViewHolder {
         CheckBox main;
         TextView tvMainText;
-        EditText editText;
+        //EditText editText;
         ListView listView;
 
         public FeedbackHolder(final View itemView) {
             super(itemView);
             main = itemView.findViewById(R.id.cbQ);
             tvMainText = itemView.findViewById(R.id.tvQtitle);
-            editText = itemView.findViewById(R.id.etFeedback);
+            //editText = itemView.findViewById(R.id.etFeedback);
             listView = itemView.findViewById(R.id.lvOptions);
             main.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
@@ -86,7 +86,7 @@ public class FeedbackQuestionAdapter extends RecyclerView.Adapter<FeedbackQuesti
                         Log.d("mylog", "FB Options: " + feedbackOption);
                         if (feedbackOption.contains("red")) {
                             Log.d("mylog", "Show Redflags");
-                            editText.setVisibility(View.VISIBLE);
+                            //editText.setVisibility(View.VISIBLE);
                         } else if (feedbackOption.length() > 5) {
                             try {
                                 JSONArray optionsArray = new JSONArray(feedbackOption);
@@ -100,13 +100,13 @@ public class FeedbackQuestionAdapter extends RecyclerView.Adapter<FeedbackQuesti
                                 Log.d("mylog", "Error parsing options: " + e.toString());
                             }
                         } else {
-                            editText.setVisibility(View.VISIBLE);
+                            //editText.setVisibility(View.VISIBLE);
                         }
                     } else {
                         if (listView.getVisibility() == View.VISIBLE)
                             listView.setVisibility(View.GONE);
-                        if (editText.getVisibility() == View.VISIBLE)
-                            editText.setVisibility(View.GONE);
+                       /* if (editText.getVisibility() == View.VISIBLE)
+                            editText.setVisibility(View.GONE);*/
                     }
                 }
             });
@@ -146,7 +146,7 @@ public class FeedbackQuestionAdapter extends RecyclerView.Adapter<FeedbackQuesti
 
         final class ViewHolder {
             public TextView text;
-            public EditText editText;
+            //public EditText editText;
             public CheckBox checkBox;
         }
 
@@ -159,16 +159,16 @@ public class FeedbackQuestionAdapter extends RecyclerView.Adapter<FeedbackQuesti
                 convertView = LayoutInflater.from(mContext).inflate(R.layout.listview_feedback_options_row, parent, false);
                 viewHolder.text = convertView.findViewById(R.id.tvListViewOptions);
                 viewHolder.checkBox = convertView.findViewById(R.id.cbListViewOptions);
-                viewHolder.editText = convertView.findViewById(R.id.etOptFeedback);
-                final EditText et = viewHolder.editText;
+                //viewHolder.editText = convertView.findViewById(R.id.etOptFeedback);
+                //final EditText et = viewHolder.editText;
                 viewHolder.checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                     @Override
                     public void onCheckedChanged(CompoundButton buttonView, boolean ischecked) {
                         if (ischecked) {
-                            et.setVisibility(View.VISIBLE);
+                            //et.setVisibility(View.VISIBLE);
                         } else {
-                            if (et.getVisibility() == View.VISIBLE)
-                                et.setVisibility(View.GONE);
+                            /*if (et.getVisibility() == View.VISIBLE)
+                                et.setVisibility(View.GONE);*/
                         }
                     }
                 });

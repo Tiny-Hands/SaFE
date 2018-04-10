@@ -34,7 +34,7 @@
         android:layout_marginLeft="@dimen/default_margin"
         android:visibility="gone" />
 
-    <EditText
+    <!--<EditText
         android:id="@+id/etFeedback"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -46,7 +46,7 @@
         android:imeOptions="actionDone"
         android:inputType="text"
         android:padding="@dimen/small_medium_margin"
-        android:visibility="gone" />
+        android:visibility="gone" />-->
 
     <View
         android:layout_width="match_parent"

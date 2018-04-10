@@ -92,8 +92,7 @@
     <string name="updating">Updating</string>
     <string name="sending_otp">Sending OTP</string>
     <string name="feedback_msg">Please check one and help us improve</string>
-    <string name="feedback_msg_new">You’re almost done.
-        Fill out this final thing to get the key to unlock the last sections which include crucial information for going overseas</string>
+    <string name="feedback_msg_new">Check all that apply</string>
     <string name="login">Login</string>
     <string name="enter_reg_number">Enter the number that you registered</string>
     <string name="verify_phone">Verify Phone</string>
