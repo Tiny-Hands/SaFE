@@ -27,6 +27,7 @@
     <string name="support">समर्थन</string>
     <string name="send">पठाउनुहोस्</string>
     <string name="enter_query">आफ्नो प्रश्न प्रविष्ट गर्नुहोस्</string>
+    <string name="check_one">एक चयन गर्नुहोस्</string>
 
     <!-- Error Dialogs -->
     <string name="error">होसियार</string>

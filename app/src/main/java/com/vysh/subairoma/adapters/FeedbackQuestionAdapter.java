@@ -22,6 +22,7 @@ import android.widget.TextView;
 import com.vysh.subairoma.ApplicationClass;
 import com.vysh.subairoma.R;
 import com.vysh.subairoma.SQLHelpers.SQLDatabaseHelper;
+import com.vysh.subairoma.activities.ActivityFeedback;
 import com.vysh.subairoma.models.FeedbackQuestionModel;
 import com.vysh.subairoma.models.TileQuestionsModel;
 
@@ -41,10 +42,14 @@ public class FeedbackQuestionAdapter extends RecyclerView.Adapter<FeedbackQuesti
     Context mContext;
     ArrayList<FeedbackQuestionModel> feedbackQuestionModels;
     SQLDatabaseHelper sqlDatabaseHelper;
+    ActivityFeedback activityFeedback;
 
     public FeedbackQuestionAdapter(Context context, ArrayList<FeedbackQuestionModel> feedbackQuestionModels) {
         this.feedbackQuestionModels = feedbackQuestionModels;
-        mContext = context;
+        if (context instanceof ActivityFeedback) {
+            mContext = context;
+            activityFeedback = (ActivityFeedback) context;
+        }
         sqlDatabaseHelper = new SQLDatabaseHelper(mContext);
     }
 
@@ -82,6 +87,7 @@ public class FeedbackQuestionAdapter extends RecyclerView.Adapter<FeedbackQuesti
                 @Override
                 public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                     if (b) {
+                        activityFeedback.count++;
                         String feedbackOption = feedbackQuestionModels.get(getAdapterPosition()).getQuestionOptions();
                         Log.d("mylog", "FB Options: " + feedbackOption);
                         if (feedbackOption.contains("red")) {
@@ -103,6 +109,7 @@ public class FeedbackQuestionAdapter extends RecyclerView.Adapter<FeedbackQuesti
                             //editText.setVisibility(View.VISIBLE);
                         }
                     } else {
+                        activityFeedback.count--;
                         if (listView.getVisibility() == View.VISIBLE)
                             listView.setVisibility(View.GONE);
                        /* if (editText.getVisibility() == View.VISIBLE)

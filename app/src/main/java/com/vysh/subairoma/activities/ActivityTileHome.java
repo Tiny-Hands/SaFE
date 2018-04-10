@@ -72,7 +72,7 @@ public class ActivityTileHome extends AppCompatActivity {
     @BindView(R.id.btnNext)
     Button btnNext;
     @BindView(R.id.tvPercent)
-     TextView tvPercent;
+    TextView tvPercent;
     @BindView(R.id.progressPercent)
     ProgressBar progressPercent;
     //@BindView(R.id.btnImportantContacts)
@@ -191,7 +191,7 @@ public class ActivityTileHome extends AppCompatActivity {
         }*/
         float percent = ((float) answeredQuestions / (float) count) * 100;
         DecimalFormat decimalFormat = new DecimalFormat("##");
-        tvPercent.setText(decimalFormat.format(percent)+"%");
+        tvPercent.setText(decimalFormat.format(percent) + "%");
         progressPercent.setProgress((int) percent);
         Log.d("mylog", "total count: " + count);
         Log.d("mylog", "answered count: " + answeredQuestions);
@@ -203,6 +203,7 @@ public class ActivityTileHome extends AppCompatActivity {
                 "mg_verified_answers");
         String isFeedbackSaved = new SQLDatabaseHelper(ActivityTileHome.this).getResponse(ApplicationClass.getInstance().getMigrantId(),
                 "mg_feedback_saved");
+        Log.d("mylog", "VERIFIED ans: " + verified + " SAVED Feedback: " + isFeedbackSaved);
         if (verified.equalsIgnoreCase("true") && isFeedbackSaved.equalsIgnoreCase("true")) {
             return true;
         } else if (verified.equalsIgnoreCase("true")) {

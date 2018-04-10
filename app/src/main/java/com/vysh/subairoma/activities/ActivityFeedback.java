@@ -10,6 +10,7 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
@@ -41,6 +42,8 @@ public class ActivityFeedback extends AppCompatActivity {
     Button btnNext;
     String countryId, migName, countryName, status, blacklist;
 
+    public int count = 0;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -54,12 +57,16 @@ public class ActivityFeedback extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 //getAllFeedbackResponses();
-
-                Calendar cal = Calendar.getInstance();
-                String time = cal.getTimeInMillis() + "";
-                new SQLDatabaseHelper(ActivityFeedback.this).insertResponseTableData("true", -3, -1,
-                        ApplicationClass.getInstance().getMigrantId(), "mg_feedback_saved", time);
-                openTileHomeActivity();
+                if (count > 0) {
+                    Calendar cal = Calendar.getInstance();
+                    String time = cal.getTimeInMillis() + "";
+                    new SQLDatabaseHelper(ActivityFeedback.this).insertResponseTableData("true", -4, -1,
+                            ApplicationClass.getInstance().getMigrantId(), "mg_feedback_saved", time);
+                    openTileHomeActivity();
+                }
+                else{
+                    Toast.makeText(ActivityFeedback.this, getString(R.string.check_one), Toast.LENGTH_SHORT).show();
+                }
 
             }
         });
