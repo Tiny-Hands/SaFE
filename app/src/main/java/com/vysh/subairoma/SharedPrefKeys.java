@@ -23,4 +23,10 @@ public final class SharedPrefKeys {
     public static String feedbackResponseSaved = "savedfeedbackresponse";
     public static String otpCode = "otpCode";
     public static String lang = "lang";
+
+    //Not for shared prefrences but for questions not in tiles
+    public static int questionGender = -2;
+    public static int questionCountryId = -1;
+    public static int questionVerifiedAns = -3;
+    public static int questionFeedbackSaved = -4;
 }

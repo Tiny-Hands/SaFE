@@ -22,6 +22,7 @@ import android.widget.TextView;
 import com.vysh.subairoma.ApplicationClass;
 import com.vysh.subairoma.R;
 import com.vysh.subairoma.SQLHelpers.SQLDatabaseHelper;
+import com.vysh.subairoma.SharedPrefKeys;
 import com.vysh.subairoma.activities.ActivityTileHome;
 import com.vysh.subairoma.models.CountryModel;
 
@@ -115,7 +116,7 @@ public class DialogCountryChooser extends DialogFragment {
 
                         Calendar cal = Calendar.getInstance();
                         String time = cal.getTimeInMillis() + "";
-                        new SQLDatabaseHelper(getContext()).insertResponseTableData(cid, -1, -1,
+                        new SQLDatabaseHelper(getContext()).insertResponseTableData(cid, SharedPrefKeys.questionCountryId, -1,
                                 ApplicationClass.getInstance().getMigrantId(), "mg_destination", time);
 
                         Intent intent = new Intent(getContext(), ActivityTileHome.class);

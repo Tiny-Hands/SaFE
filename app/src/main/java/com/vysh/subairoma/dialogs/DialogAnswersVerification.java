@@ -14,6 +14,7 @@ import android.widget.TextView;
 import com.vysh.subairoma.ApplicationClass;
 import com.vysh.subairoma.R;
 import com.vysh.subairoma.SQLHelpers.SQLDatabaseHelper;
+import com.vysh.subairoma.SharedPrefKeys;
 import com.vysh.subairoma.activities.ActivityFeedback;
 import com.vysh.subairoma.activities.ActivityTileHome;
 
@@ -62,7 +63,7 @@ public class DialogAnswersVerification extends DialogFragment implements View.On
 
                     Calendar cal = Calendar.getInstance();
                     String time = cal.getTimeInMillis() + "";
-                    new SQLDatabaseHelper(getContext()).insertResponseTableData("true", -3, -1,
+                    new SQLDatabaseHelper(getContext()).insertResponseTableData("true", SharedPrefKeys.questionVerifiedAns, -1,
                             ApplicationClass.getInstance().getMigrantId(), "mg_verified_answers", time);
                     startActivity(intent);
                 } else {

@@ -371,7 +371,7 @@ public class ActivityRegister extends AppCompatActivity {
                 int mig_id = jsonObject.getInt("migrant_id");
                 Calendar cal = Calendar.getInstance();
                 String time = cal.getTimeInMillis() + "";
-                new SQLDatabaseHelper(ActivityRegister.this).insertResponseTableData(sex, -2, -1, mig_id, "mg_sex", time);
+                new SQLDatabaseHelper(ActivityRegister.this).insertResponseTableData(sex, SharedPrefKeys.questionGender, -1, mig_id, "mg_sex", time);
                 new SQLDatabaseHelper(ActivityRegister.this).insertMigrants(mig_id, etName.getText().toString(),
                         Integer.parseInt(etAge.getText().toString()), etNumber.getText().toString(), sex, ApplicationClass.getInstance().getUserId());
                 Intent intent = new Intent(ActivityRegister.this, ActivityMigrantList.class);

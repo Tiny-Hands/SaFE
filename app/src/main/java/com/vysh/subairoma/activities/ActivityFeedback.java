@@ -60,7 +60,7 @@ public class ActivityFeedback extends AppCompatActivity {
                 if (count > 0) {
                     Calendar cal = Calendar.getInstance();
                     String time = cal.getTimeInMillis() + "";
-                    new SQLDatabaseHelper(ActivityFeedback.this).insertResponseTableData("true", -4, -1,
+                    new SQLDatabaseHelper(ActivityFeedback.this).insertResponseTableData("true", SharedPrefKeys.questionFeedbackSaved, -1,
                             ApplicationClass.getInstance().getMigrantId(), "mg_feedback_saved", time);
                     openTileHomeActivity();
                 }

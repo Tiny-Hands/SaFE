@@ -272,7 +272,7 @@ public class ActivityOTPVerification extends AppCompatActivity implements View.O
 
                     Calendar cal = Calendar.getInstance();
                     String time = cal.getTimeInMillis() + "";
-                    new SQLDatabaseHelper(ActivityOTPVerification.this).insertResponseTableData(gender, -2, -1,
+                    new SQLDatabaseHelper(ActivityOTPVerification.this).insertResponseTableData(gender, SharedPrefKeys.questionGender, -1,
                             mig_id, "mg_sex", time);
                     //Do Next Step Now
                     Intent intent = new Intent(ActivityOTPVerification.this, ActivityMigrantList.class);
