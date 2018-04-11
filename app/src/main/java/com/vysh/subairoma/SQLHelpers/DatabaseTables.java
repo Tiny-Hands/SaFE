@@ -42,7 +42,9 @@ public final class DatabaseTables {
         public static final String question_order = "question_order";
         public static final String question_title = "question_title";
         public static final String question_variable = "question_variable";
-        public static String conflict_description = "conflict_description";
+        public static final String conflict_description = "conflict_description";
+        public static final String question_call = "question_call";
+        public static final String question_video = "question_video";
     }
 
     public static class CountriesTable {

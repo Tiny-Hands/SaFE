@@ -33,7 +33,7 @@ import java.util.HashMap;
 public class SQLDatabaseHelper extends SQLiteOpenHelper {
     // If you change the database schema, you must increment the database version.
     Context mContext;
-    public static final int DATABASE_VERSION = 7;
+    public static final int DATABASE_VERSION = 8;
     public static final String DATABASE_NAME = "SubairomaLocal.db";
     final String SQL_CREATE_ResponseTable =
             "CREATE TABLE IF NOT EXISTS " + DatabaseTables.ResponseTable.TABLE_NAME + " (" +
@@ -65,7 +65,10 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
                     DatabaseTables.QuestionsTable.question_condition + " TEXT," +
                     DatabaseTables.QuestionsTable.question_variable + " TEXT," +
                     DatabaseTables.QuestionsTable.question_order + " TEXT," +
-                    DatabaseTables.QuestionsTable.response_type + " TEXT" + ");";
+                    DatabaseTables.QuestionsTable.response_type + " TEXT," +
+                    DatabaseTables.QuestionsTable.question_call + " TEXT," +
+                    DatabaseTables.QuestionsTable.question_video + " TEXT" +
+                    ");";
     final String SQL_CREATE_OptionsTable =
             "CREATE TABLE IF NOT EXISTS " + DatabaseTables.OptionsTable.TABLE_NAME + " (" +
                     DatabaseTables.OptionsTable.option_id + " INTEGER PRIMARY KEY," +
@@ -508,7 +511,7 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
     }
 
     public void insertQuestion(int qid, int tid, String order, String step, String title
-            , String description, String condition, String responseType, String variable, String conflictDesc) {
+            , String description, String condition, String responseType, String variable, String conflictDesc, String number, String link) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(DatabaseTables.QuestionsTable.question_id, qid);
@@ -520,7 +523,10 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
         values.put(DatabaseTables.QuestionsTable.response_type, responseType);
         values.put(DatabaseTables.QuestionsTable.question_condition, condition);
         values.put(DatabaseTables.QuestionsTable.question_variable, variable);
-        Log.d("mylog", "Inserting conflicting desc: " + conflictDesc);
+        values.put(DatabaseTables.QuestionsTable.question_call, number);
+        values.put(DatabaseTables.QuestionsTable.question_video, link);
+        Log.d("mylog", "Inserting Link : " + link);
+        Log.d("mylog", "Inserting Number: " + number);
         values.put(DatabaseTables.QuestionsTable.conflict_description, conflictDesc);
 
         long newRowId = db.insert(DatabaseTables.QuestionsTable.TABLE_NAME, null, values);
@@ -626,6 +632,9 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
             String condition = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseTables.QuestionsTable.question_condition));
             int responseType = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseTables.QuestionsTable.response_type));
             String variable = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseTables.QuestionsTable.question_variable));
+            String link = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseTables.QuestionsTable.question_video));
+            String number = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseTables.QuestionsTable.question_call));
+            Log.d("mylog", "Got number from DB: " + number);
             int gotTileId = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseTables.QuestionsTable.tile_id));
 
             TileQuestionsModel questionModel = new TileQuestionsModel();
@@ -640,6 +649,9 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
             questionModel.setVariable(variable);
             questionModel.setTileId(gotTileId);
             questionModel.setConflictDescription(confDesc);
+            questionModel.setNumber(number);
+            questionModel.setVideoLinke(link);
+            Log.d("mylog", "Got link from DB for QID: " + questionModel.getVideoLinke() + id);
 
             questionList.add(questionModel);
         }

@@ -529,7 +529,11 @@ public class ActivitySplash extends AppCompatActivity {
                     String variable = tempQuestion.getString("variable");
                     String order = tempQuestion.getString("order");
                     String responseType = tempQuestion.getString("response_type");
-                    dbHelper.insertQuestion(id, tileId, order, step, title, description, condition, responseType, variable, confDesc);
+                    String questionCall = tempQuestion.getString("question_call");
+                    Log.d("mylog", "Got Number: " + questionCall);
+                    String questionVideo = tempQuestion.getString("question_video");
+                    Log.d("mylog", "Got Link: " + questionVideo);
+                    dbHelper.insertQuestion(id, tileId, order, step, title, description, condition, responseType, variable, confDesc, questionCall, questionVideo);
                 }
                 incrementCount();
             }

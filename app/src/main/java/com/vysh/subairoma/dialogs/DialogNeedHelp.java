@@ -2,6 +2,8 @@ package com.vysh.subairoma.dialogs;
 
 import android.app.DialogFragment;
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
@@ -11,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.vysh.subairoma.R;
@@ -22,14 +25,21 @@ import com.vysh.subairoma.SQLHelpers.SQLDatabaseHelper;
 
 public class DialogNeedHelp extends DialogFragment implements View.OnClickListener {
     Button btnHelp, btnVideo, btnCall;
+    TextView tvVideoLabel;
     int qid, tileId, migrantId;
+    String number, link;
     Context context;
 
-    public void setArgs(int qid, int tileId, Context context, int migrantId) {
+    public void setArgs(int qid, int tileId, Context context, int migrantId, String number, String link) {
         this.qid = qid;
         this.tileId = tileId;
         this.migrantId = migrantId;
         this.context = context;
+        if (number == null || number.equalsIgnoreCase("null") || number.isEmpty())
+            this.number = "1111111111";
+        else
+            this.number = number;
+        this.link = link;
     }
 
     @Nullable
@@ -37,11 +47,16 @@ public class DialogNeedHelp extends DialogFragment implements View.OnClickListen
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.dialog_help, container, false);
         btnHelp = view.findViewById(R.id.btnHelp);
-        btnVideo = view.findViewById(R.id.btnVideo);
         btnCall = view.findViewById(R.id.btnCall);
+        btnVideo = view.findViewById(R.id.btnVideo);
+        tvVideoLabel = view.findViewById(R.id.tvLabelVideo);
         btnHelp.setOnClickListener(this);
         btnCall.setOnClickListener(this);
         btnVideo.setOnClickListener(this);
+        if (link == null || link.equalsIgnoreCase("null") || link.isEmpty()) {
+            btnVideo.setVisibility(View.GONE);
+            tvVideoLabel.setVisibility(View.GONE);
+        }
         return view;
     }
 
@@ -49,11 +64,18 @@ public class DialogNeedHelp extends DialogFragment implements View.OnClickListen
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.btnCall:
+                Intent intent = new Intent(Intent.ACTION_DIAL);
+                intent.setData(Uri.parse("tel:" + number));
+                startActivity(intent);
                 break;
             case R.id.btnHelp:
                 showSupportDialog(qid, tileId);
                 break;
             case R.id.btnVideo:
+                if (!link.startsWith("http://") && !link.startsWith("http://"))
+                    link = "http://" + link;
+                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(link));
+                startActivity(browserIntent);
                 break;
         }
     }

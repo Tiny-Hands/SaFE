@@ -112,6 +112,8 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
             question.setTileId(questionModel.getTileId());
             question.setResponseType(questionModel.getResponseType());
             question.setConflictDescription(questionModel.getConflictDescription());
+            question.setVideoLinke(questionModel.getVideoLinke());
+            question.setNumber(questionModel.getNumber());
 
             //To Display question in beginning or not
             String condition = questionModel.getCondition();
@@ -606,7 +608,7 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
 
             disabledView = itemView.findViewById(R.id.viewDisabled);
             rootLayout = itemView.findViewById(R.id.rlRoot);
-            ivError = (ImageView) itemView.findViewById(R.id.questionMarker);
+            ivError = itemView.findViewById(R.id.questionMarker);
             ivDone = itemView.findViewById(R.id.questionDone);
             cardView = itemView.findViewById(R.id.cv);
             btnShowMore = itemView.findViewById(R.id.btnShowMore);
@@ -624,9 +626,14 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
                 @Override
                 public void onClick(View view) {
                     int qid = questionsListDisplay.get(getAdapterPosition()).getQuestionId();
+                    Log.d("mylog", "Getting for QID: " + qid);
                     int tileId = questionsListDisplay.get(getAdapterPosition()).getTileId();
+                    String number = questionsListDisplay.get(getAdapterPosition()).getNumber();
+                    String link = questionsListDisplay.get(getAdapterPosition()).getVideoLinke();
+                    Log.d("mylog", "Got Number Local: " + number);
+                    Log.d("mylog", "Got Link Local for qid: " + link + qid);
                     DialogNeedHelp dialogNeedHelp = new DialogNeedHelp();
-                    dialogNeedHelp.setArgs(qid, tileId, context, migrantId);
+                    dialogNeedHelp.setArgs(qid, tileId, context, migrantId, number, link);
                     dialogNeedHelp.show(((Activity) context).getFragmentManager(), "DialogLoginFrag");
                 }
             });

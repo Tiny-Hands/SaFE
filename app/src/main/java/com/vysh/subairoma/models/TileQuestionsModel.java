@@ -8,9 +8,25 @@ import java.util.ArrayList;
 
 public class TileQuestionsModel {
     String condition, title, description, question, variable;
-    String conflictDescription;
+    String conflictDescription, number, videoLinke;
     ArrayList<String> options;
     int tileId, questionId, questionNo, responseType;
+
+    public String getNumber() {
+        return number;
+    }
+
+    public void setNumber(String number) {
+        this.number = number;
+    }
+
+    public String getVideoLinke() {
+        return videoLinke;
+    }
+
+    public void setVideoLinke(String videoLinke) {
+        this.videoLinke = videoLinke;
+    }
 
     public String getVariable() {
         return variable;
