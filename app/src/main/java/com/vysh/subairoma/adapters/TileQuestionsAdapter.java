@@ -1,13 +1,10 @@
 package com.vysh.subairoma.adapters;
 
 import android.app.Activity;
-import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.database.DataSetObserver;
 import android.graphics.Color;
 import android.os.Build;
-import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
@@ -15,8 +12,6 @@ import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.transition.TransitionManager;
 import android.util.Log;
-import android.util.TypedValue;
-import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -41,14 +36,12 @@ import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.SpinnerAdapter;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.vysh.subairoma.ApplicationClass;
 import com.vysh.subairoma.R;
 import com.vysh.subairoma.SQLHelpers.SQLDatabaseHelper;
 import com.vysh.subairoma.dialogs.DialogNeedHelp;
 import com.vysh.subairoma.models.TileQuestionsModel;
-import com.wordpress.priyankvex.smarttextview.SmartTextCallback;
 import com.wordpress.priyankvex.smarttextview.SmartTextView;
 
 import org.json.JSONArray;
@@ -370,7 +363,7 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
                 rb1.setChecked(true);
             } else if (response.equalsIgnoreCase("false")) {
                 fromSetView = true;
-                rb2.setChecked(false);
+                rb2.setChecked(true);
             }
         }
         fromSetView = false;
@@ -541,7 +534,7 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
 
                         sqlDatabaseHelper.insertIsError(migrantId, key, "true");
                         //Check if question is visible
-                        showErrorDialog(mainIndex);
+                        showErrorDialog(mainIndex, "");
                         Log.d("mylog", "All variables match, showing view");
                         int mainListIdCompare = questionsList.get(mainIndex).getQuestionId();
                         boolean alreadyVisible = false;
@@ -576,7 +569,7 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
         }
     }
 
-    private void showErrorDialog(int mainIndex) {
+    private void showErrorDialog(int mainIndex, String type) {
         AlertDialog.Builder builder = new AlertDialog.Builder(context, R.style.DialogError);
         View errView = LayoutInflater.from(context).inflate(R.layout.dialog_error, null);
         TextView errDesc = errView.findViewById(R.id.tvErrorDescription);
@@ -584,7 +577,10 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
 
         builder.setView(errView);
         builder.setCancelable(false);
-        errDesc.setText(questionsList.get(mainIndex).getDescription());
+        if (mainIndex != -1)
+            errDesc.setText(questionsList.get(mainIndex).getDescription());
+        else
+            errDesc.setText(type);
         final AlertDialog dialog = builder.show();
         btnClose.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -656,7 +652,7 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
             rb1 = itemView.findViewById(R.id.rb1);
             rb2 = itemView.findViewById(R.id.rb2);
 
-            details.setVisibility(GONE);
+            //  details.setVisibility(GONE);
             question = itemView.findViewById(R.id.tvQuestion);
             checkbox = itemView.findViewById(R.id.cbResponse);
             helpLayout = itemView.findViewById(R.id.llHelp);
@@ -781,6 +777,44 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
 
                 }
             });
+            rb1.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                    if (!fromSetView) {
+                        if (b) {
+                            Calendar cal = Calendar.getInstance();
+                            String time = cal.getTimeInMillis() + "";
+                            sqlDatabaseHelper.insertResponseTableData("true",
+                                    questionsListDisplay.get(getAdapterPosition()).getQuestionId(),
+                                    questionsListDisplay.get(getAdapterPosition()).getTileId(),
+                                    migrantId, questionsListDisplay.get(getAdapterPosition()).getVariable(), time);
+                            sqlDatabaseHelper.insertIsError(migrantId, questionsListDisplay.get(getAdapterPosition()).getVariable(), "false");
+                            notifyItemChanged(getAdapterPosition());
+                        } else {
+                        }
+                    }
+                }
+            });
+            rb2.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                    if (!fromSetView) {
+                        if (b) {
+                            String message = questionsListDisplay.get(getAdapterPosition()).getConflictDescription();
+                            showErrorDialog(-1, message);
+                            Calendar cal = Calendar.getInstance();
+                            String time = cal.getTimeInMillis() + "";
+                            sqlDatabaseHelper.insertResponseTableData("false",
+                                    questionsListDisplay.get(getAdapterPosition()).getQuestionId(),
+                                    questionsListDisplay.get(getAdapterPosition()).getTileId(),
+                                    migrantId, questionsListDisplay.get(getAdapterPosition()).getVariable(), time);
+                            sqlDatabaseHelper.insertIsError(migrantId, questionsListDisplay.get(getAdapterPosition()).getVariable(), "true");
+                            notifyItemChanged(getAdapterPosition());
+                        } else {
+                        }
+                    }
+                }
+            });
             checkbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -886,21 +920,17 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
             }
             details.setVisibility(View.VISIBLE);
             helpLayout.setVisibility(View.VISIBLE);
+            question.setVisibility(View.VISIBLE);
             int responseType = questionsListDisplay.get(getAdapterPosition()).getResponseType();
             if (responseType == 0) {
-                question.setVisibility(View.VISIBLE);
                 checkbox.setVisibility(View.VISIBLE);
             } else if (responseType == 1) {
-                question.setVisibility(View.VISIBLE);
                 etResponse.setVisibility(View.VISIBLE);
             } else if (responseType == 2) {
-                question.setVisibility(View.VISIBLE);
                 spinnerOptions.setVisibility(View.VISIBLE);
             } else if (responseType == 3) {
-                question.setVisibility(View.VISIBLE);
                 listViewOptions.setVisibility(View.VISIBLE);
             } else if (responseType == 4) {
-                question.setVisibility(View.VISIBLE);
                 rbGroup.setVisibility(View.VISIBLE);
             }
             isExpanded = true;
