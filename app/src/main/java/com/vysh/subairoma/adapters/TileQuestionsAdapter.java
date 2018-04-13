@@ -35,6 +35,8 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.SpinnerAdapter;
@@ -60,6 +62,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import static android.view.View.GONE;
+import static android.view.View.VISIBLE;
 
 /**
  * Created by Vishal on 6/15/2017.
@@ -202,20 +205,23 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
         Log.d("mylog", "Response type: " + question.getResponseType());
         //Check else if for every view as notifyItemChanged giving problems otherwise
         if (question.getResponseType() == 0) {
-            holder.checkbox.setVisibility(View.VISIBLE);
-            holder.spinnerOptions.setVisibility(View.GONE);
+            //holder.checkbox.setVisibility(View.VISIBLE);
+           /*holder.spinnerOptions.setVisibility(View.GONE);
             holder.etResponse.setVisibility(View.GONE);
             holder.listViewOptions.setVisibility(View.GONE);
+            holder.rbGroup.setVisibility(View.GONE);*/
         } else if (question.getResponseType() == 1) {
-            holder.checkbox.setVisibility(GONE);
+           /* holder.checkbox.setVisibility(GONE);
             holder.spinnerOptions.setVisibility(View.GONE);
             holder.listViewOptions.setVisibility(View.GONE);
-            holder.etResponse.setVisibility(View.VISIBLE);
+            //holder.etResponse.setVisibility(View.VISIBLE);
+            holder.rbGroup.setVisibility(View.GONE);*/
         } else if (question.getResponseType() == 2) {
-            holder.checkbox.setVisibility(GONE);
+            /*holder.checkbox.setVisibility(GONE);
             holder.etResponse.setVisibility(View.GONE);
             holder.listViewOptions.setVisibility(View.GONE);
-            holder.spinnerOptions.setVisibility(View.VISIBLE);
+            //holder.spinnerOptions.setVisibility(View.VISIBLE);
+            holder.rbGroup.setVisibility(View.GONE);*/
             ArrayList<String> options = question.getOptions();
             //Showing ---- if nothing selected
             //Somehow spinner displays index at 0 multiple time when reinitialized
@@ -224,26 +230,39 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
             SpinnerAdapter adapter = new ArrayAdapter<>(context, R.layout.support_simple_spinner_dropdown_item, options);
             holder.spinnerOptions.setAdapter(adapter);
         } else if (question.getResponseType() == 3) {
-            holder.checkbox.setVisibility(GONE);
+            /*holder.checkbox.setVisibility(GONE);
             holder.etResponse.setVisibility(View.GONE);
             holder.spinnerOptions.setVisibility(View.GONE);
+            holder.rbGroup.setVisibility(View.GONE);*/
             //holder.listViewOptions.setVisibility(View.VISIBLE);
             multiOptions = question.getOptions();
             OptionsListViewAdapter adapter = new OptionsListViewAdapter(context, multiOptions, position);
             holder.listViewOptions.setAdapter(adapter);
+        } else if (question.getResponseType() == 4) {
+            //holder.rbGroup.setVisibility(View.VISIBLE);
+          /*holder.checkbox.setVisibility(GONE);
+            holder.etResponse.setVisibility(View.GONE);
+            holder.spinnerOptions.setVisibility(View.GONE);
+            holder.listViewOptions.setVisibility(View.GONE);*/
+            ArrayList<String> rbOptions = question.getOptions();
+            Log.d("mylog", "Option Question Title: " + question.getTitle());
+            if (rbOptions != null && rbOptions.size() > 1) {
+                holder.rb1.setText(rbOptions.get(0));
+                holder.rb2.setText(rbOptions.get(1));
+            }
         }
+        holder.rbGroup.setVisibility(View.GONE);
+        holder.checkbox.setVisibility(GONE);
+        holder.etResponse.setVisibility(View.GONE);
+        holder.spinnerOptions.setVisibility(View.GONE);
+        holder.listViewOptions.setVisibility(View.GONE);
 
-        //Hiding fields if no data to display in
-        String questionSet = holder.question.getText().toString();
-        String descSet = holder.details.getText().toString();
-        if (questionSet.isEmpty()) {
-            holder.question.setVisibility(GONE);
-        }
-        if (descSet.isEmpty()) {
-            holder.details.setVisibility(GONE);
-        }
+        holder.helpLayout.setVisibility(GONE);
+        holder.question.setVisibility(GONE);
+        holder.details.setVisibility(GONE);
+
         setValue(holder.checkbox, holder.etResponse, holder.spinnerOptions,
-                holder.question, holder.ivError, holder.ivDone, holder.btnShowMore, holder.listViewOptions, holder.rootLayout, position);
+                holder.question, holder.ivError, holder.ivDone, holder.btnShowMore, holder.listViewOptions, holder.rootLayout, holder.rb1, holder.rb2, position);
         if (disabled) {
             holder.disabledView.setVisibility(View.VISIBLE);
             holder.disabledView.setOnClickListener(new View.OnClickListener() {
@@ -272,7 +291,7 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
     }
 
     private void setValue(CheckBox checkBox, EditText etResponse, Spinner spinner, TextView question,
-                          ImageView ivError, ImageView ivDone, ImageButton btnShowMore, ListView lvOptions, RelativeLayout rootLayout, int position) {
+                          ImageView ivError, ImageView ivDone, ImageButton btnShowMore, ListView lvOptions, RelativeLayout rootLayout, RadioButton rb1, RadioButton rb2, int position) {
         //For showing/hiding error on condition variable change
         Log.d("mylog", "Setting value now");
         String isError = sqlDatabaseHelper.getIsError(migrantId, questionsListDisplay.get(position).getVariable());
@@ -343,6 +362,16 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
             multiResponse = response;
             OptionsListViewAdapter adapter = new OptionsListViewAdapter(context, multiOptions, position);
             lvOptions.setAdapter(adapter);
+        } else if (responseType == 4) {
+            if (response == null || response.isEmpty()) {
+                Log.d("mylog", "4 Response: " + response);
+            } else if (response.equalsIgnoreCase("true")) {
+                fromSetView = true;
+                rb1.setChecked(true);
+            } else if (response.equalsIgnoreCase("false")) {
+                fromSetView = true;
+                rb2.setChecked(false);
+            }
         }
         fromSetView = false;
     }
@@ -599,6 +628,11 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
         ImageButton btnShowMore;
         CardView cardView;
 
+        RadioGroup rbGroup;
+        RadioButton rb1;
+        RadioButton rb2;
+
+        RelativeLayout rlResponse;
         LinearLayout helpLayout;
         RelativeLayout rootLayout;
         View disabledView;
@@ -606,6 +640,7 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
         public QuestionHolder(final View itemView) {
             super(itemView);
 
+            rlResponse = itemView.findViewById(R.id.rlResponse);
             disabledView = itemView.findViewById(R.id.viewDisabled);
             rootLayout = itemView.findViewById(R.id.rlRoot);
             ivError = itemView.findViewById(R.id.questionMarker);
@@ -616,6 +651,10 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
             //Setting color for phone numbers and weblinks
             details.setUrlColorCode("#2992dc");
             details.setPhoneNumberColorCode("#3d63f2");
+
+            rbGroup = itemView.findViewById(R.id.rbGroup);
+            rb1 = itemView.findViewById(R.id.rb1);
+            rb2 = itemView.findViewById(R.id.rb2);
 
             details.setVisibility(GONE);
             question = itemView.findViewById(R.id.tvQuestion);
@@ -704,7 +743,7 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
                     return false;
                 }
             });
-            spinnerOptions = (Spinner) itemView.findViewById(R.id.spinnerOptions);
+            spinnerOptions = itemView.findViewById(R.id.spinnerOptions);
             spinnerOptions.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                 @Override
                 public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -811,7 +850,7 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
             currentClickedPos = getAdapterPosition();
             if (previousClickedPos != currentClickedPos && previousClickedPos != -1) {
                 isExpanded = false;
-                //notifyItemChanged(previousClickedPos);
+                notifyItemChanged(previousClickedPos);
             }
             Log.d("mylog", "Is Expanded: " + isExpanded);
             if (!isExpanded) {
@@ -833,6 +872,10 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
                 question.setVisibility(GONE);
             if (checkbox.getVisibility() == View.VISIBLE)
                 checkbox.setVisibility(GONE);
+            if (rbGroup.getVisibility() == View.VISIBLE)
+                rbGroup.setVisibility(GONE);
+            if (spinnerOptions.getVisibility() == VISIBLE)
+                spinnerOptions.setVisibility(GONE);
             isExpanded = false;
         }
 
@@ -856,6 +899,9 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
             } else if (responseType == 3) {
                 question.setVisibility(View.VISIBLE);
                 listViewOptions.setVisibility(View.VISIBLE);
+            } else if (responseType == 4) {
+                question.setVisibility(View.VISIBLE);
+                rbGroup.setVisibility(View.VISIBLE);
             }
             isExpanded = true;
         }

@@ -555,6 +555,7 @@ public class ActivitySplash extends AppCompatActivity {
                     int qid = tempOption.getInt("question_id");
                     int oid = tempOption.getInt("option_id");
                     String option = tempOption.getString("option_text");
+                    Log.d("mylog", "Saving options for qid: " + qid + " option: " + option);
                     dbHelper.insertOption(qid, oid, option);
                 }
                 incrementCount();

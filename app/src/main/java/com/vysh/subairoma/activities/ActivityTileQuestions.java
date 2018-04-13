@@ -104,14 +104,8 @@ public class ActivityTileQuestions extends AppCompatActivity {
         questionList = new SQLDatabaseHelper(ActivityTileQuestions.this).getQuestions(tileId);
         SQLDatabaseHelper sqlDatabaseHelper = new SQLDatabaseHelper(ActivityTileQuestions.this);
         for (TileQuestionsModel question : questionList) {
-            if (question.getResponseType() == 2) {
-                String[] options = sqlDatabaseHelper.getOptions(question.getQuestionId());
-                ArrayList<String> temp = new ArrayList<>();
-                for (int i = 0; i < options.length; i++) {
-                    temp.add(i, options[i]);
-                }
-                question.setOptions(temp);
-            } else if (question.getResponseType() == 3) {
+            int resType = question.getResponseType();
+            if (resType == 2 || resType == 3 || resType == 4) {
                 String[] options = sqlDatabaseHelper.getOptions(question.getQuestionId());
                 ArrayList<String> temp = new ArrayList<>();
                 for (int i = 0; i < options.length; i++) {
