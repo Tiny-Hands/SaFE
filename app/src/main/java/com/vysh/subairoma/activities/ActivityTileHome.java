@@ -318,6 +318,8 @@ public class ActivityTileHome extends AppCompatActivity {
             return;
         } else {
             int afterFEP = tiles.size();
+            if (countryId == null || countryId.isEmpty())
+                afterFEP = 1;
             rvTiles.setLayoutManager(new GridLayoutManager(this, 2));
             tiles.addAll(tilesGAS);
             tileAdapter = new TileAdapter(tiles, afterFEP, tileIcons, ActivityTileHome.this, countryId);

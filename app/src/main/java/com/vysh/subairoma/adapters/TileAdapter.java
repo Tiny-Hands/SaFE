@@ -60,20 +60,27 @@ public class TileAdapter extends RecyclerView.Adapter<TileAdapter.TileViewHolder
             holder.ivTile.setImageResource(R.drawable.ic_phonebook);
             holder.tvPercent.setVisibility(View.GONE);
             holder.progressPercent.setVisibility(View.GONE);
+            if (impContactsPlace == 1)
+                holder.viewDisabled.setVisibility(View.VISIBLE);
             offset = 1;
         } else if (position <= tileList.size()) {
             holder.tvTile.setText(tileList.get(position - offset).getTitle());
-            if (ActivityTileHome.finalSection) {
-                if (tileList.get(position - offset).getType().equalsIgnoreCase("GAS")) {
-                    holder.viewDisabled.setVisibility(View.GONE);
-                } else {
+            if (cid == null || cid.isEmpty()) {
+                if (position > 0)
                     holder.viewDisabled.setVisibility(View.VISIBLE);
-                }
             } else {
-                if (tileList.get(position - offset).getType().equals("FEP")) {
-                    holder.viewDisabled.setVisibility(View.GONE);
-                } else
-                    holder.viewDisabled.setVisibility(View.VISIBLE);
+                if (ActivityTileHome.finalSection) {
+                    if (tileList.get(position - offset).getType().equalsIgnoreCase("GAS")) {
+                        holder.viewDisabled.setVisibility(View.GONE);
+                    } else {
+                        holder.viewDisabled.setVisibility(View.VISIBLE);
+                    }
+                } else {
+                    if (tileList.get(position - offset).getType().equals("FEP")) {
+                        holder.viewDisabled.setVisibility(View.GONE);
+                    } else
+                        holder.viewDisabled.setVisibility(View.VISIBLE);
+                }
             }
             int errorCount = sqlDatabaseHelper.getTileErrorCount(ApplicationClass.getInstance().getMigrantId(),
                     tileList.get(position - offset).getTileId());
@@ -169,7 +176,7 @@ public class TileAdapter extends RecyclerView.Adapter<TileAdapter.TileViewHolder
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (getAdapterPosition() == impContactsPlace) {
+                    if (getAdapterPosition() == impContactsPlace && impContactsPlace > 1) {
                         Intent impIntent = new Intent(context.getApplicationContext(), ActivityImportantContacts.class);
                         impIntent.putExtra("countryId", cid);
                         context.startActivity(impIntent);
