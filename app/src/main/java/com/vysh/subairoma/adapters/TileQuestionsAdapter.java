@@ -84,6 +84,7 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
 
     String multiResponse = "";
     ArrayList<String> multiOptions;
+    Boolean initialStep = false;
 
     Context context;
 
@@ -93,6 +94,7 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
         this.context = context;
         this.disabled = disabled;
         questionsList = questions;
+        this.initialStep = initialStep;
         setConditionVariables();
         setConditionVariableValues();
 
@@ -365,6 +367,8 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
                 if (responseType == 5)
                     response = new SQLDatabaseHelper(context).getCountry(response).getCountryName();
                 fromSetView = true;
+                if (response == null || response.isEmpty())
+                    initialStep = true;
                 for (int i = 0; i < spinner.getCount(); i++) {
                     if (response.equalsIgnoreCase(spinner.getItemAtPosition(i).toString())) {
                         fromSetViewSpinner = true;
@@ -800,6 +804,8 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
                                             context.getResources().getString(R.string.confirm_message) + " " + cname + "?", cid, cname, 1);
                                     Log.d("mylog", "Saving country for MID: " + ApplicationClass.getInstance().getMigrantId());
                                 }
+                                if (!initialStep)
+                                    showCountryChangeDialog();
                             }
                         } else {
                             Calendar cal = Calendar.getInstance();
@@ -1050,6 +1056,23 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
             }
         });
         mBuilder.show();
+    }
+
+    private void showCountryChangeDialog() {
+        AlertDialog.Builder mBuilder = new AlertDialog.Builder(context);
+        mBuilder.setView(R.layout.dialog_usertype_chooser);
+        AlertDialog alertDialog = mBuilder.show();
+        RadioButton rbHelped = alertDialog.findViewById(R.id.rbHelper);
+        RadioButton rbMistake = alertDialog.findViewById(R.id.rbMigrant);
+        rbHelped.setText("Changing Country Based on Direction Provided by the App");
+        rbMistake.setText("Had Accidentally Entered a Wrong Country");
+        Button btnChosen = alertDialog.findViewById(R.id.btnChosen);
+        btnChosen.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
     }
 
     private class OptionsListViewAdapter extends ArrayAdapter<String> {
