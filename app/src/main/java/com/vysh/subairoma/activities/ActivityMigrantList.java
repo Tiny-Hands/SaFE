@@ -229,12 +229,22 @@ public class ActivityMigrantList extends AppCompatActivity implements RecyclerIt
                     intent.putExtra("countryBlacklist", savedCountry.getCountryBlacklist());
                     startActivity(intent);
                 } else {
-                    DialogCountryChooser dialog = DialogCountryChooser.newInstance();
+                    Intent intent = new Intent(ActivityMigrantList.this, ActivityTileHome.class);
+                    intent.putExtra("countryId", "");
+                    intent.putExtra("migrantName", migrantModels.get(0).getMigrantName());
+                    intent.putExtra("migrantPhone", migrantModels.get(0).getMigrantPhone());
+                    intent.putExtra("migrantGender", migrantModels.get(0).getMigrantSex());
+                    intent.putExtra("countryName", "");
+                    intent.putExtra("countryStatus", -1);
+                    intent.putExtra("countryBlacklist", -1);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    startActivity(intent);
+                    /*DialogCountryChooser dialog = DialogCountryChooser.newInstance();
                     dialog.setMigrantName(migrantModels.get(0).getMigrantName());
                     dialog.setCancelable(false);
                     Log.d("mylog", "Migrant name: " + migrantModels.get(0).getMigrantName() + " : " + migrantModels.get(0).getMigrantId());
                     dialog.show(getSupportFragmentManager(), "countrychooser");
-                    recyclerView.setVisibility(View.INVISIBLE);
+                    recyclerView.setVisibility(View.INVISIBLE);*/
                 }
             }
         }

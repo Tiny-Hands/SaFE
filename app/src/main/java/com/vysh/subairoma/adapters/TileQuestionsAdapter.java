@@ -3,6 +3,7 @@ package com.vysh.subairoma.adapters;
 import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
 import android.support.annotation.NonNull;
@@ -40,7 +41,11 @@ import android.widget.TextView;
 import com.vysh.subairoma.ApplicationClass;
 import com.vysh.subairoma.R;
 import com.vysh.subairoma.SQLHelpers.SQLDatabaseHelper;
+import com.vysh.subairoma.SharedPrefKeys;
+import com.vysh.subairoma.activities.ActivityMigrantList;
+import com.vysh.subairoma.activities.ActivityTileHome;
 import com.vysh.subairoma.dialogs.DialogNeedHelp;
+import com.vysh.subairoma.models.CountryModel;
 import com.vysh.subairoma.models.TileQuestionsModel;
 import com.wordpress.priyankvex.smarttextview.SmartTextView;
 
@@ -243,6 +248,21 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
                 holder.rb1.setText(rbOptions.get(0));
                 holder.rb2.setText(rbOptions.get(1));
             }
+        } else if (question.getResponseType() == 5) {
+            int importantCount = 0;
+            final ArrayList<CountryModel> countries = new SQLDatabaseHelper(context).getCountries();
+            ArrayList<String> countryNameList = new ArrayList<>();
+            countryNameList.add("-------");
+            for (CountryModel country : countries) {
+                Log.d("mylog", "Country name: " + country.getCountryName());
+                countryNameList.add(country.getCountryName().toUpperCase());
+                if (country.getOrder() >= 1)
+                    importantCount++;
+            }
+            if (!countryNameList.get(0).contains("-----"))
+                countryNameList.add(0, "---------");
+            CountryDropdownList adapter = new CountryDropdownList(context, R.layout.support_simple_spinner_dropdown_item, countryNameList, importantCount);
+            holder.spinnerOptions.setAdapter(adapter);
         }
         holder.rbGroup.setVisibility(View.GONE);
         holder.checkbox.setVisibility(GONE);
@@ -336,12 +356,14 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
                 fromSetView = true;
                 etResponse.setText(response);
             }
-        } else if (responseType == 2) {
+        } else if (responseType == 2 || responseType == 5) {
+            Log.d("mylog", "2/4 Response: " + response);
             if (response == null || response.isEmpty()) {
-                Log.d("mylog", "2 Response: " + response);
                 question.setVisibility(GONE);
                 spinner.setVisibility(GONE);
             } else {
+                if (responseType == 5)
+                    response = new SQLDatabaseHelper(context).getCountry(response).getCountryName();
                 fromSetView = true;
                 for (int i = 0; i < spinner.getCount(); i++) {
                     if (response.equalsIgnoreCase(spinner.getItemAtPosition(i).toString())) {
@@ -753,14 +775,41 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
                         Log.d("mylog", "Current spinner variable: " + variable + " Is in condition for some question");
                         conditionVariableValues.put(variable, response);
                     }
-                    if (!fromSetView) {
-                        Calendar cal = Calendar.getInstance();
-                        String time = cal.getTimeInMillis() + "";
+                    if (!fromSetViewSpinner) {
+                        if (questionsListDisplay.get(getAdapterPosition()).getResponseType() == 5) {
+                            Log.d("mylog", "Country position: " + position);
+                            if (position != 0) {
+                                final ArrayList<CountryModel> countries = new SQLDatabaseHelper(context).getCountries();
+                                //ArrayList<String> countryNameList = new ArrayList<>();
+                                //Subtracted one because countryNameList has 1 extra default item but countries array doesn't
+                                CountryModel country = countries.get(position - 1);
+                                String cid = country.getCountryId();
+                                String cname = country.getCountryName();
+                                int blacklist = country.getCountryBlacklist();
+                                int status = country.getCountrySatus();
+                                Log.d("mylog", "Country code: " + cid + " Status: " + status
+                                        + " Blacklist: " + blacklist);
+                                if (blacklist == 1) {
+                                    showDialog(context.getResources().getString(R.string.blacklisted),
+                                            context.getResources().getString(R.string.blacklisted_message), cid, cname, 0);
+                                } else if (status == 1) {
+                                    showDialog(context.getResources().getString(R.string.not_open),
+                                            context.getResources().getString(R.string.not_open_message), cid, cname, 0);
+                                } else {
+                                    showDialog(context.getResources().getString(R.string.confirm),
+                                            context.getResources().getString(R.string.confirm_message) + " " + cname + "?", cid, cname, 1);
+                                    Log.d("mylog", "Saving country for MID: " + ApplicationClass.getInstance().getMigrantId());
+                                }
+                            }
+                        } else {
+                            Calendar cal = Calendar.getInstance();
+                            String time = cal.getTimeInMillis() + "";
 
-                        sqlDatabaseHelper.insertResponseTableData(response,
-                                questionsListDisplay.get(getAdapterPosition()).getQuestionId(),
-                                questionsListDisplay.get(getAdapterPosition()).getTileId(),
-                                migrantId, variable, time);
+                            sqlDatabaseHelper.insertResponseTableData(response,
+                                    questionsListDisplay.get(getAdapterPosition()).getQuestionId(),
+                                    questionsListDisplay.get(getAdapterPosition()).getTileId(),
+                                    migrantId, variable, time);
+                        }
                         if (conditionVariables.contains(variable)) {
                             Log.d("mylog", "From Set View spinner: " + fromSetViewSpinner);
                             if (!fromSetViewSpinner) {
@@ -926,7 +975,7 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
                 checkbox.setVisibility(View.VISIBLE);
             } else if (responseType == 1) {
                 etResponse.setVisibility(View.VISIBLE);
-            } else if (responseType == 2) {
+            } else if (responseType == 2 || responseType == 5) {
                 spinnerOptions.setVisibility(View.VISIBLE);
             } else if (responseType == 3) {
                 listViewOptions.setVisibility(View.VISIBLE);
@@ -961,6 +1010,46 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
             Log.d("mylog", "Error getting conflicting variable value: " + e.toString());
         }
         return true;
+    }
+
+    private void showDialog(String title, String message, final String cid, final String cname, final int cType) {
+        AlertDialog.Builder mBuilder = new AlertDialog.Builder(context);
+        mBuilder.setTitle(title);
+        mBuilder.setMessage(message);
+        String negativeMsg;
+        if (cType == 0)
+            negativeMsg = context.getResources().getString(R.string.go_regardless);
+        else
+            negativeMsg = context.getResources().getString(R.string.yes);
+        mBuilder.setNegativeButton(negativeMsg,
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                        Calendar cal = Calendar.getInstance();
+                        String time = cal.getTimeInMillis() + "";
+                        new SQLDatabaseHelper(context).insertResponseTableData(cid, SharedPrefKeys.questionCountryId, -1,
+                                ApplicationClass.getInstance().getMigrantId(), "mg_destination", time);
+
+                        /*Intent intent = new Intent(context, ActivityTileHome.class);
+                        intent.putExtra("countryId", cid);
+                        intent.putExtra("migrantName", migName);
+                        intent.putExtra("countryName", cname);
+                        intent.putExtra("countryStatus", status);
+                        intent.putExtra("countryBlacklist", blacklist);
+                        dismiss();
+                        if (ApplicationClass.getInstance().getUserId() == -1)
+                            intent = intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        getContext().startActivity(intent);*/
+                    }
+                });
+        mBuilder.setPositiveButton(context.getResources().getString(R.string.choose_another_country), new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+        mBuilder.show();
     }
 
     private class OptionsListViewAdapter extends ArrayAdapter<String> {

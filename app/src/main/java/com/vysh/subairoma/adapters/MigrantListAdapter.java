@@ -65,18 +65,26 @@ public class MigrantListAdapter extends RecyclerView.Adapter<MigrantListAdapter.
 
         //Showing going to country
         String cid = new SQLDatabaseHelper(mContext).getResponse(migrants.get(position).getMigrantId(), "mg_destination");
+        Log.d("mylog", "Going To CID Received: " + cid);
+
         if (cid == null || cid.isEmpty()) {
             holder.tvGoingCountry.setText(mContext.getResources().getString(R.string.not_started));
             holder.tvGoingCountry.setTextColor(Color.GRAY);
         } else {
             CountryModel goingTo = new SQLDatabaseHelper(mContext).getCountry(cid);
-            holder.tvGoingCountry.setText(goingTo.getCountryName().toUpperCase());
-            if (goingTo.getCountryBlacklist() == 1)
-                holder.tvGoingCountry.setTextColor(mContext.getResources().getColor(R.color.colorError));
-            else if (goingTo.getCountrySatus() == 1)
-                holder.tvGoingCountry.setTextColor(mContext.getResources().getColor(R.color.colorNeutral));
-            else
-                holder.tvGoingCountry.setTextColor(mContext.getResources().getColor(R.color.colorPrimary));
+            Log.d("mylog", "Going To Received: " + goingTo);
+            if (goingTo == null)
+                holder.tvGoingCountry.setText(cid);
+            else {
+                holder.tvGoingCountry.setText(goingTo.getCountryName().toUpperCase());
+
+                if (goingTo.getCountryBlacklist() == 1)
+                    holder.tvGoingCountry.setTextColor(mContext.getResources().getColor(R.color.colorError));
+                else if (goingTo.getCountrySatus() == 1)
+                    holder.tvGoingCountry.setTextColor(mContext.getResources().getColor(R.color.colorNeutral));
+                else
+                    holder.tvGoingCountry.setTextColor(mContext.getResources().getColor(R.color.colorPrimary));
+            }
         }
         //Showing error count
         int errorCount = new SQLDatabaseHelper(mContext).getMigrantErrorCount(migrantModel.getMigrantId());
@@ -154,9 +162,19 @@ public class MigrantListAdapter extends RecyclerView.Adapter<MigrantListAdapter.
                         intent.putExtra("countryBlacklist", savedCountry.getCountryBlacklist());
                         itemView.getContext().startActivity(intent);
                     } else {
-                        showCountryChooser(migrants.get(getAdapterPosition()).getMigrantName(),
+                        /*showCountryChooser(migrants.get(getAdapterPosition()).getMigrantName(),
                                 ((AppCompatActivity) itemView.getContext()).getSupportFragmentManager())
-                        ;
+                        ;*/
+                        Intent intent = new Intent(itemView.getContext(), ActivityTileHome.class);
+                        intent.putExtra("countryId", "");
+                        intent.putExtra("migrantName", migrants.get(getAdapterPosition()).getMigrantName());
+                        intent.putExtra("countryName", "");
+                        intent.putExtra("countryStatus", -1);
+                        intent.putExtra("migrantName", migrants.get(getAdapterPosition()).getMigrantName());
+                        intent.putExtra("migrantPhone", migrants.get(getAdapterPosition()).getMigrantPhone());
+                        intent.putExtra("migrantGender", migrants.get(getAdapterPosition()).getMigrantSex());
+                        intent.putExtra("countryBlacklist", -1);
+                        itemView.getContext().startActivity(intent);
                     }
                 }
             });
