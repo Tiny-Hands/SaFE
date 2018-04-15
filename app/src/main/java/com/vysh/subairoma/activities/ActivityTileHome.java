@@ -59,7 +59,7 @@ public class ActivityTileHome extends AppCompatActivity {
     public int blacklist, status;
     int[] tileIcons;
     TileAdapter tileAdapter;
-    public static Boolean finalSection, showIndia;
+    public static Boolean finalSection, showIndia, initialStep = false;
 
     @BindView(R.id.rvTiles)
     RecyclerView rvTiles;
@@ -318,8 +318,10 @@ public class ActivityTileHome extends AppCompatActivity {
             return;
         } else {
             int afterFEP = tiles.size();
-            if (countryId == null || countryId.isEmpty())
+            if (countryId == null || countryId.isEmpty()) {
                 afterFEP = 1;
+                initialStep = true;
+            }
             rvTiles.setLayoutManager(new GridLayoutManager(this, 2));
             tiles.addAll(tilesGAS);
             tileAdapter = new TileAdapter(tiles, afterFEP, tileIcons, ActivityTileHome.this, countryId);

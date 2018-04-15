@@ -75,6 +75,8 @@ public class TileAdapter extends RecyclerView.Adapter<TileAdapter.TileViewHolder
                     } else {
                         holder.viewDisabled.setVisibility(View.VISIBLE);
                     }
+                } else if (ActivityTileHome.showIndia) {
+                    holder.viewDisabled.setVisibility(View.GONE);
                 } else {
                     if (tileList.get(position - offset).getType().equals("FEP")) {
                         holder.viewDisabled.setVisibility(View.GONE);
