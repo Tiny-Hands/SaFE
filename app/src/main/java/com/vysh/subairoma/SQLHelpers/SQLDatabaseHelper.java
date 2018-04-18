@@ -376,9 +376,13 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
         Cursor cursor = db.rawQuery(query, null);
         while (cursor.moveToNext()) {
             String error = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseTables.ResponseTable.is_error));
-            if (error == null)
+            String response = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseTables.ResponseTable.response));
+            String responseVar = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseTables.ResponseTable.response_variable));
+            Log.d("mylog", "Response Variable: " + responseVar + " Response: " + response);
+            /*if (error == null)
                 error = "-";
-            if (error.length() < 3)
+            if (error.length() < 3)*/
+            if (!responseVar.equalsIgnoreCase("percent_complete"))
                 count++;
         }
         return count;
