@@ -286,13 +286,13 @@ public class ActivityTileHome extends AppCompatActivity {
     public void onBackPressed() {
         //super.onBackPressed();
         finalSection = false;
-        if (ApplicationClass.getInstance().getUserId() == -1)
-            super.onBackPressed();
-        else {
+        //if (ApplicationClass.getInstance().getUserId() == -1)
+        super.onBackPressed();
+       /* else {
             Intent intent = new Intent(ActivityTileHome.this, ActivityMigrantList.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(intent);
-        }
+        }*/
     }
 
     private void showSnackbar(String msg) {

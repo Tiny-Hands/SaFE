@@ -88,7 +88,7 @@ public class ActivityOTPVerification extends AppCompatActivity implements View.O
         age = intent.getStringExtra("age");
         gender = intent.getStringExtra("gender");
         uType = intent.getIntExtra("userType", -10);
-        if (uType == 1) {
+        if (uType == 0) {
             apiUserRegister = ApplicationClass.getInstance().getAPIROOT() + apiURLMigrant;
             isSupervised = intent.getBooleanExtra("isSupervised", false);
         } else
@@ -230,12 +230,7 @@ public class ActivityOTPVerification extends AppCompatActivity implements View.O
                 params.put("phone_number", phoneNumber);
                 params.put("age", age);
                 params.put("gender", gender);
-
-                //Flow will not enter these two unless a migrant is being registered
-                if (uType == 1 && !isSupervised) {
-                    params.put("user_id", "-1");
-                } else if (isSupervised)
-                    params.put("user_id", ApplicationClass.getInstance().getUserId() + "");
+                params.put("user_id", ApplicationClass.getInstance().getUserId() + "");
                 return params;
             }
         };
@@ -261,22 +256,26 @@ public class ActivityOTPVerification extends AppCompatActivity implements View.O
             if (!error) {
                 SharedPreferences sharedPreferences = getSharedPreferences(SharedPrefKeys.sharedPrefName, MODE_PRIVATE);
                 SharedPreferences.Editor editor = sharedPreferences.edit();
-                if (uType == 1) {
-                    ApplicationClass.getInstance().setUserId(-1);
+                if (uType == 0) {
+                    //ApplicationClass.getInstance().setUserId(-1);
                     editor.putString(SharedPrefKeys.userType, "migrant");
                     int mig_id = jsonResponse.getInt("migrant_id");
+                    int user_id = jsonResponse.getInt("user_id");
                     Log.d("mylog", "Migrant ID: " + mig_id);
                     ApplicationClass.getInstance().setMigrantId(mig_id);
-                    editor.putInt(SharedPrefKeys.userId, mig_id);
+                    ApplicationClass.getInstance().setUserId(user_id);
+                    editor.putInt(SharedPrefKeys.userId, user_id);
+                    editor.putInt(SharedPrefKeys.defMigID, mig_id);
                     editor.commit();
 
                     Calendar cal = Calendar.getInstance();
                     String time = cal.getTimeInMillis() + "";
                     new SQLDatabaseHelper(ActivityOTPVerification.this).insertResponseTableData(gender, SharedPrefKeys.questionGender, -1,
                             mig_id, "mg_sex", time);
+                    new SQLDatabaseHelper(ActivityOTPVerification.this).insertMigrants(mig_id, name, Integer.parseInt(age), phoneNumber, gender, user_id);
                     //Do Next Step Now
                     Intent intent = new Intent(ActivityOTPVerification.this, ActivityMigrantList.class);
-                    intent.putExtra("migrantmode", true);
+                    //intent.putExtra("migrantmode", true);
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     startActivity(intent);
 

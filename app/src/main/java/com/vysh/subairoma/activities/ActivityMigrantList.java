@@ -91,16 +91,13 @@ public class ActivityMigrantList extends AppCompatActivity implements RecyclerIt
         setContentView(R.layout.activity_select_migrant);
         //getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         ButterKnife.bind(this);
-        userType = ApplicationClass.getInstance().getUserId();
+        userType = ApplicationClass.getInstance().getUserType();
         migrantModels = new ArrayList();
         getMigrants();
         if (isLocationAccessAllowed())
             getUpdatedMigrantCounties();
         else
             requestLocationAccess();
-        //setUpRecyclerView(null);
-        if (userType == -1)
-            btnAddMigrant.setVisibility(View.GONE);
         btnAddMigrant.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -206,48 +203,57 @@ public class ActivityMigrantList extends AppCompatActivity implements RecyclerIt
         SQLDatabaseHelper dbHelper = new SQLDatabaseHelper(ActivityMigrantList.this);
         migrantModels = getMigrantsToDisplay(dbHelper.getMigrants());
         migrantListAdapter = new MigrantListAdapter();
-        if (userType != -1) {
+        /*if (userType == 1) {
             Log.d("mylog", "Usertype: " + userType);
             setUpRecyclerView(migrantModels);
-        } else {
-            if (migrantModels.size() > 0) {
-                int migId = migrantModels.get(0).getMigrantId();
-                ApplicationClass.getInstance().setMigrantId(migId);
-                String cid = new SQLDatabaseHelper(ActivityMigrantList.this).getResponse(migId, "mg_destination");
-                Log.d("mylog", "Country ID: " + cid);
-                if (cid != null && !cid.isEmpty()) {
-                    Intent intent = new Intent(ActivityMigrantList.this, ActivityTileHome.class);
-                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                    intent.putExtra("countryId", cid);
-                    intent.putExtra("migrantName", migrantModels.get(0).getMigrantName());
-                    intent.putExtra("migrantPhone", migrantModels.get(0).getMigrantPhone());
-                    intent.putExtra("migrantGender", migrantModels.get(0).getMigrantSex());
-                    CountryModel savedCountry = new SQLDatabaseHelper(ActivityMigrantList.this).getCountry(cid);
-                    Log.d("mylog", "Country name: " + savedCountry.getCountryName());
-                    intent.putExtra("countryName", savedCountry.getCountryName().toUpperCase());
-                    intent.putExtra("countryStatus", savedCountry.getCountrySatus());
-                    intent.putExtra("countryBlacklist", savedCountry.getCountryBlacklist());
-                    startActivity(intent);
-                } else {
-                    Intent intent = new Intent(ActivityMigrantList.this, ActivityTileHome.class);
-                    intent.putExtra("countryId", "");
-                    intent.putExtra("migrantName", migrantModels.get(0).getMigrantName());
-                    intent.putExtra("migrantPhone", migrantModels.get(0).getMigrantPhone());
-                    intent.putExtra("migrantGender", migrantModels.get(0).getMigrantSex());
-                    intent.putExtra("countryName", "");
-                    intent.putExtra("countryStatus", -1);
-                    intent.putExtra("countryBlacklist", -1);
-                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                    startActivity(intent);
+        } else {*/
+        Log.d("mylog", "User ID: " + ApplicationClass.getInstance().getUserId() + " Migrant ID: " + ApplicationClass.getInstance().getMigrantId()
+                + " UserType: " + userType);
+        if (migrantModels.size() == 1 && userType == 0) {
+            int migId = migrantModels.get(0).getMigrantId();
+            ApplicationClass.getInstance().setMigrantId(migId);
+            String cid = new SQLDatabaseHelper(ActivityMigrantList.this).getResponse(migId, "mg_destination");
+            Log.d("mylog", "Country ID: " + cid);
+            if (cid != null && !cid.isEmpty()) {
+                Intent intent = new Intent(ActivityMigrantList.this, ActivityTileHome.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                intent.putExtra("countryId", cid);
+                intent.putExtra("migrantName", migrantModels.get(0).getMigrantName());
+                intent.putExtra("migrantPhone", migrantModels.get(0).getMigrantPhone());
+                intent.putExtra("migrantGender", migrantModels.get(0).getMigrantSex());
+                CountryModel savedCountry = new SQLDatabaseHelper(ActivityMigrantList.this).getCountry(cid);
+                Log.d("mylog", "Country name: " + savedCountry.getCountryName());
+                intent.putExtra("countryName", savedCountry.getCountryName().toUpperCase());
+                intent.putExtra("countryStatus", savedCountry.getCountrySatus());
+                intent.putExtra("countryBlacklist", savedCountry.getCountryBlacklist());
+                startActivity(intent);
+            } else {
+                Intent intent = new Intent(ActivityMigrantList.this, ActivityTileHome.class);
+                intent.putExtra("countryId", "");
+                intent.putExtra("migrantName", migrantModels.get(0).getMigrantName());
+                intent.putExtra("migrantPhone", migrantModels.get(0).getMigrantPhone());
+                intent.putExtra("migrantGender", migrantModels.get(0).getMigrantSex());
+                intent.putExtra("countryName", "");
+                intent.putExtra("countryStatus", -1);
+                intent.putExtra("countryBlacklist", -1);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intent);
                     /*DialogCountryChooser dialog = DialogCountryChooser.newInstance();
                     dialog.setMigrantName(migrantModels.get(0).getMigrantName());
                     dialog.setCancelable(false);
                     Log.d("mylog", "Migrant name: " + migrantModels.get(0).getMigrantName() + " : " + migrantModels.get(0).getMigrantId());
                     dialog.show(getSupportFragmentManager(), "countrychooser");
                     recyclerView.setVisibility(View.INVISIBLE);*/
-                }
             }
+        } else if (migrantModels.size() < 1 && ApplicationClass.getInstance().getMigrantId() == -1) {
+            Intent intent = new Intent(ActivityMigrantList.this, ActivityRegister.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+            intent.putExtra("migrantmode", true);
+            startActivity(intent);
+        } else {
+            setUpRecyclerView(migrantModels);
         }
+
     }
 
     private ArrayList<MigrantModel> getMigrantsToDisplay(ArrayList<MigrantModel> migs) {

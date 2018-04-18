@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.RadioButton;
 
+import com.vysh.subairoma.ApplicationClass;
 import com.vysh.subairoma.R;
 import com.vysh.subairoma.activities.ActivityRegister;
 
@@ -34,10 +35,13 @@ public class DialogUsertypeChooser extends DialogFragment {
             @Override
             public void onClick(View view) {
                 int uType = -1;
-                if (rbHelper.isChecked())
+                if (rbHelper.isChecked()) {
                     uType = 1;
-                else if (rbMigrant.isChecked())
+                    ApplicationClass.getInstance().setUserType(1);
+                } else if (rbMigrant.isChecked()) {
                     uType = 0;
+                    ApplicationClass.getInstance().setUserType(0);
+                }
                 Log.d("mylog", "Current usertype: " + uType);
                 if (uType != -1) {
                     activityRegister.userType = uType;

@@ -180,14 +180,14 @@ public class ActivityRegister extends AppCompatActivity {
     }
 
     private void getLoggedInUserDetails(JSONObject jsonRes) {
-        int userType = 0;
+        int userType;
         try {
             userType = jsonRes.getInt("user_type");
             int id = jsonRes.getInt("user_id");
 
             SharedPreferences sharedPreferences = getSharedPreferences(SharedPrefKeys.sharedPrefName, MODE_PRIVATE);
             SharedPreferences.Editor editor = sharedPreferences.edit();
-            if (userType == 0) {
+            if (userType == 1) {
                 ApplicationClass.getInstance().setUserId(id);
                 String userName = jsonRes.getString("user_name");
                 String userPhone = jsonRes.getString("user_phone");
@@ -203,8 +203,7 @@ public class ActivityRegister extends AppCompatActivity {
                 editor.putString(SharedPrefKeys.userType, "helper");
                 editor.putInt(SharedPrefKeys.userId, id);
                 editor.commit();
-            } else if (userType == 1) {
-                ApplicationClass.getInstance().setUserId(-1);
+            } else if (userType == 0) {
                 ApplicationClass.getInstance().setMigrantId(id);
 
                 //Saving Migrant ID and Login Status
@@ -262,11 +261,11 @@ public class ActivityRegister extends AppCompatActivity {
             new DialogUsertypeChooser().show(getFragmentManager(), "utypechooser");
         } else {
             //Parameter 1 is for registering migrant after reading disclaimer
-            showDisclaimerAndContinue(1, 2);
+            showDisclaimerAndContinue();
         }
     }
 
-    private void showDisclaimerAndContinue(final int i, int messageType) {
+    private void showDisclaimerAndContinue() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         View view = LayoutInflater.from(this).inflate(R.layout.dialog_disclaimer, null);
         TextView msg = view.findViewById(R.id.tvDisclaimerContent);
@@ -274,7 +273,7 @@ public class ActivityRegister extends AppCompatActivity {
         builder.setPositiveButton(getResources().getString(R.string.disclaimer_button), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                if (i == 1) {
+                if (userType == 1) {
                     //If it's a helper user registering a migrant, then no need to redirect to OTPActivity,
                     //But Register and then redirect to migrant list.
                     if (userRegistered) {
@@ -285,16 +284,16 @@ public class ActivityRegister extends AppCompatActivity {
                         registerMigrant(api);
                         //Start Migrant List Activity
                     } else {
-                        startOTPActivity(1);
+                        startOTPActivity(userType);
                     }
-                } else if (i == 2) {
-                    startOTPActivity(2);
+                } else if (userType == 0) {
+                    startOTPActivity(userType);
                 }
             }
         });
 
         String text = "";
-        if (messageType == 1)
+        if (userType == 0)
             text = getString(R.string.disclaimerMigrant);
         else
             text = getString(R.string.disclaimerHelper);
@@ -303,14 +302,14 @@ public class ActivityRegister extends AppCompatActivity {
     }
 
     private void startOTPActivity(int uType) {
-        //uType = 1 for Migrant, 2 for helper
+        //uType = 0 for Migrant, 1 for helper
         Intent intent = new Intent(ActivityRegister.this, ActivityOTPVerification.class);
         intent.putExtra("name", etName.getText().toString());
         intent.putExtra("phoneNumber", etNumber.getText().toString());
         intent.putExtra("age", etAge.getText().toString());
         intent.putExtra("gender", sex);
         intent.putExtra("userType", uType);
-        if (uType == 1)
+        if (uType == 0)
             intent.putExtra("isSupervised", userRegistered);
         startActivity(intent);
     }
@@ -369,6 +368,7 @@ public class ActivityRegister extends AppCompatActivity {
             Boolean error = jsonObject.getBoolean("error");
             if (!error) {
                 int mig_id = jsonObject.getInt("migrant_id");
+                int user_id = jsonObject.getInt("user_id");
                 Calendar cal = Calendar.getInstance();
                 String time = cal.getTimeInMillis() + "";
                 new SQLDatabaseHelper(ActivityRegister.this).insertResponseTableData(sex, SharedPrefKeys.questionGender, -1, mig_id, "mg_sex", time);
@@ -397,11 +397,7 @@ public class ActivityRegister extends AppCompatActivity {
     }
 
     public void showDisclaimerDialog() {
-        if (userType == 0) {
-            showDisclaimerAndContinue(1, 1);
-        } else {
-            showDisclaimerAndContinue(2, 2);
-        }
+        showDisclaimerAndContinue();
     }
 
     private boolean validateData() {
@@ -441,16 +437,22 @@ public class ActivityRegister extends AppCompatActivity {
     private boolean checkUserExists() {
         SharedPreferences sharedPreferences = getSharedPreferences(SharedPrefKeys.sharedPrefName, MODE_PRIVATE);
         int userId = sharedPreferences.getInt(SharedPrefKeys.userId, -10);
+        int migId = sharedPreferences.getInt(SharedPrefKeys.defMigID, -10);
         String type = sharedPreferences.getString(SharedPrefKeys.userType, "");
         Log.d("mylog", "User id: " + userId + " Type: " + type);
         if (userId != -10) {
             if (type.equalsIgnoreCase("helper")) {
                 Log.d("mylog", "User already exists with ID: " + userId);
+                userType = 1;
                 ApplicationClass.getInstance().setUserId(userId);
+                ApplicationClass.getInstance().setUserType(1);
             } else {
-                Log.d("mylog", "Migrant already exists, setting user ID: " + -1);
-                ApplicationClass.getInstance().setMigrantId(userId);
-                ApplicationClass.getInstance().setUserId(-1);
+                Log.d("mylog", "Migrant already exists, Setting user ID: ");
+                //ApplicationClass.getInstance().setMigrantId(userId);
+                userType = 0;
+                ApplicationClass.getInstance().setUserType(0);
+                ApplicationClass.getInstance().setUserId(userId);
+                ApplicationClass.getInstance().setMigrantId(sharedPreferences.getInt(SharedPrefKeys.defMigID, -1));
             }
             return true;
         } else return false;
@@ -516,72 +518,6 @@ public class ActivityRegister extends AppCompatActivity {
         Intent intent = new Intent(ActivityRegister.this, ActivityMigrantList.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
-    }
-
-    public void getMigrantDetails() {
-        String api = ApplicationClass.getInstance().getAPIROOT() + apiGetMigrants;
-        final ProgressDialog progressDialog = new ProgressDialog(ActivityRegister.this);
-        //progressDialog.setTitle("Please wait");
-        progressDialog.setMessage(getResources().getString(R.string.getting_mig_details));
-        progressDialog.show();
-        StringRequest getRequest = new StringRequest(Request.Method.POST, api, new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-                try {
-                    ++gotDetailCount;
-                    progressDialog.dismiss();
-                    Log.d("mylog", "response : " + response);
-                    JSONObject responseJson = new JSONObject(response);
-                    Boolean error = Boolean.parseBoolean(responseJson.getString("error"));
-                    if (!error) {
-                        JSONArray jsonArray = responseJson.getJSONArray("migrants");
-                        if (jsonArray.length() > 0) {
-                            JSONObject currMig = jsonArray.getJSONObject(0);
-                            int id = currMig.getInt("migrant_id");
-                            String migName = currMig.getString("migrant_name");
-                            String migSex = currMig.getString("migrant_sex");
-                            String migPhone = currMig.getString("migrant_phone");
-                            int migAge = currMig.getInt("migrant_age");
-                            new SQLDatabaseHelper(ActivityRegister.this).
-                                    insertMigrants(id, migName, migAge, migPhone, migSex, ApplicationClass.getInstance().getUserId());
-                        }
-                    }
-                } catch (Exception ex) {
-                    Log.d("mylog", "response exception: " + ex.toString());
-                }
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                try {
-                    progressDialog.dismiss();
-                    String err = error.toString();
-                    Log.d("mylog", "error : " + err);
-                    if (!err.isEmpty() && err.contains("TimeoutError"))
-                        showSnackbar(getResources().getString(R.string.server_noconnect));
-                    else if (!err.isEmpty() && err.contains("NoConnection"))
-                        showSnackbar("Please connect to Internet for new Data :(");
-                    else
-                        showSnackbar(error.toString());
-                } catch (Exception ex) {
-                    Log.d("mylog", "Error exception: " + ex.toString());
-                }
-            }
-        }) {
-            @Override
-            protected Map<String, String> getParams() throws AuthFailureError {
-                HashMap<String, String> params = new HashMap<>();
-                int user_id = ApplicationClass.getInstance().getUserId();
-                int mig_id = ApplicationClass.getInstance().getMigrantId();
-                Log.d("mylog", "User ID: " + user_id);
-                Log.d("mylog", "Mig ID: " + mig_id);
-                params.put("user_id", user_id + "");
-                params.put("migrant_id", mig_id + "");
-                return params;
-            }
-        };
-        RequestQueue queue = Volley.newRequestQueue(ActivityRegister.this);
-        queue.add(getRequest);
     }
 
     public void getAllResponses(final int uType) {
