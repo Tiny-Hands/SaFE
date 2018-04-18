@@ -82,6 +82,7 @@
     <string name="facebook_login">Facebook Login</string>
     <string name="logout">Logout</string>
     <string name="server_noconnect">Unable to connect to server</string>
+    <string name="under18_message">Please understand that going for foreign employment if you are under 18 is illegal.</string>
 
     <!-- Progress Dialogs -->
     <string name="getting_mig_details">Getting migrant details</string>

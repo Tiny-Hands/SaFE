@@ -1,5 +1,6 @@
 package com.vysh.subairoma.activities;
 
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -261,8 +262,30 @@ public class ActivityRegister extends AppCompatActivity {
             new DialogUsertypeChooser().show(getFragmentManager(), "utypechooser");
         } else {
             //Parameter 1 is for registering migrant after reading disclaimer
-            showDisclaimerAndContinue();
+            if (Integer.parseInt(etAge.getText().toString()) < 18) {
+                showErrorDialog();
+            }
         }
+    }
+
+    private void showErrorDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(ActivityRegister.this, R.style.DialogError);
+        View errView = LayoutInflater.from(ActivityRegister.this).inflate(R.layout.dialog_error, null);
+        TextView errDesc = errView.findViewById(R.id.tvErrorDescription);
+        Button btnClose = errView.findViewById(R.id.btnUnderstood);
+
+        builder.setView(errView);
+        builder.setCancelable(false);
+        errDesc.setText(getString(R.string.under18_message));
+
+        final AlertDialog dialog = builder.show();
+        btnClose.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.dismiss();
+                showDisclaimerAndContinue();
+            }
+        });
     }
 
     private void showDisclaimerAndContinue() {
@@ -397,7 +420,10 @@ public class ActivityRegister extends AppCompatActivity {
     }
 
     public void showDisclaimerDialog() {
-        showDisclaimerAndContinue();
+        if (userType == 0)
+            showErrorDialog();
+        else
+            showDisclaimerAndContinue();
     }
 
     private boolean validateData() {

@@ -59,6 +59,7 @@
     <string name="register">दर्ता गर्नुहोस्</string>
     <string name="helper">म अरूलाई सहयोग गर्दैछु</string>
     <string name="aspiringmigrant">म इच्छुक प्रवासी हुँ</string>
+    <string name="under18_message">१८ वर्ष मुनिकाहरू वैदेशिक रोजगारका लागि जानु गैरकानुनी हो ।</string>
 
     <!-- Activity Tile Home -->
     <string name="going_to">जाँदै</string>
