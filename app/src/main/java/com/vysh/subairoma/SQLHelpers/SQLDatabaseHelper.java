@@ -309,6 +309,8 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
             params.put("response", response);
             params.put("response_variable", qvar);
             params.put("tile_id", tileid + "");
+            if (time == null)
+                time = "";
             params.put("time", time);
             if (error == null)
                 error = "-";

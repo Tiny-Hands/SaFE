@@ -378,7 +378,7 @@ public class ActivityTileHome extends AppCompatActivity {
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
                 for (Object key : fParams.keySet()) {
-                    Log.d("mylog", key + ": " + fParams.get(key));
+                    Log.d("mylog", "Key Values: " + key + ": " + fParams.get(key));
                 }
                 return fParams;
             }
