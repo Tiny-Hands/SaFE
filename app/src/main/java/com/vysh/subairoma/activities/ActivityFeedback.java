@@ -63,8 +63,7 @@ public class ActivityFeedback extends AppCompatActivity {
                     new SQLDatabaseHelper(ActivityFeedback.this).insertResponseTableData("true", SharedPrefKeys.questionFeedbackSaved, -1,
                             ApplicationClass.getInstance().getMigrantId(), "mg_feedback_saved", time);
                     openTileHomeActivity();
-                }
-                else{
+                } else {
                     Toast.makeText(ActivityFeedback.this, getString(R.string.check_one), Toast.LENGTH_SHORT).show();
                 }
 
@@ -103,7 +102,7 @@ public class ActivityFeedback extends AppCompatActivity {
     public void onBackPressed() {
         //super.onBackPressed();
         Intent intent = new Intent(ActivityFeedback.this, ActivityMigrantList.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent);
     }
 
