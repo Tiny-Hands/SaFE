@@ -37,7 +37,7 @@ public class TileAdapter extends RecyclerView.Adapter<TileAdapter.TileViewHolder
     String cid;
     int offset = 0;
 
-    public TileAdapter(ArrayList list, int impContactsPlace, int[] tiles, Context cxt, String countryId) {
+    public TileAdapter(ArrayList<TilesModel> list, int impContactsPlace, int[] tiles, Context cxt, String countryId) {
         tileList = list;
         ivTiles = tiles;
         context = cxt;

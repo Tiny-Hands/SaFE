@@ -33,20 +33,21 @@ import java.util.HashMap;
 public class SQLDatabaseHelper extends SQLiteOpenHelper {
     // If you change the database schema, you must increment the database version.
     Context mContext;
-    public static final int DATABASE_VERSION = 8;
+    public static final int DATABASE_VERSION = 9;
     public static final String DATABASE_NAME = "SubairomaLocal.db";
     final String SQL_CREATE_ResponseTable =
             "CREATE TABLE IF NOT EXISTS " + DatabaseTables.ResponseTable.TABLE_NAME + " (" +
                     DatabaseTables.ResponseTable.migrant_id + " INTEGER," +
                     DatabaseTables.ResponseTable.question_id + " INTEGER," +
+                    DatabaseTables.ResponseTable.tile_id + " INTEGER," +
                     DatabaseTables.ResponseTable.is_error + " TEXT," +
                     DatabaseTables.ResponseTable.response_variable + " TEXT," +
                     DatabaseTables.ResponseTable.response + " TEXT," +
                     DatabaseTables.ResponseTable.question_query + " TEXT," +
                     DatabaseTables.ResponseTable.response_time + " TEXT," +
-                    DatabaseTables.ResponseTable.tile_id + " INTEGER," +
-                    " UNIQUE (" + DatabaseTables.ResponseTable.question_id +
-                    ", " + DatabaseTables.ResponseTable.migrant_id + "));";
+                    " UNIQUE (" + DatabaseTables.ResponseTable.question_id + ", " +
+                    DatabaseTables.ResponseTable.tile_id + ", " +
+                    DatabaseTables.ResponseTable.migrant_id + "));";
     final String SQL_CREATE_TilesTable =
             "CREATE TABLE IF NOT EXISTS " + DatabaseTables.TilesTable.TABLE_NAME + " (" +
                     DatabaseTables.TilesTable.tile_id + " INTEGER PRIMARY KEY," +
@@ -211,7 +212,8 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
         values.put(DatabaseTables.ResponseTable.response_time, timestamp);
 
         //If already exist the Update
-        String whereClause = DatabaseTables.ResponseTable.migrant_id + " = " + migrant_id + " AND " +
+        String whereClause = DatabaseTables.ResponseTable.tile_id + " = " + tileId + " AND " +
+                DatabaseTables.ResponseTable.migrant_id + " = " + migrant_id + " AND " +
                 DatabaseTables.ResponseTable.question_id + " = " + question_id;
         long updateCount = db.update(DatabaseTables.ResponseTable.TABLE_NAME, values, whereClause, null);
         Log.d("mylog", "Updated row count: " + updateCount);
@@ -907,6 +909,7 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
         float response = 0f;
         while (cursor.moveToNext()) {
             response = cursor.getFloat(cursor.getColumnIndexOrThrow(DatabaseTables.ResponseTable.response));
+            Log.d("mylog", "Got percent complete for MID: " + migrantId + " Tile ID: " + tileId + " : " + response);
             //Log.d("mylog", "Mid: " + mid + " Qid: " + qid + " rvar: " + response);
         }
         return response;

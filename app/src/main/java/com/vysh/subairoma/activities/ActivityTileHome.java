@@ -176,6 +176,7 @@ public class ActivityTileHome extends AppCompatActivity {
         for (int i = 0; i < tiles.size(); i++) {
             float perComplete = dbHelper.getPercentComplete(ApplicationClass.getInstance().getMigrantId(), tiles.get(i).getTileId());
             tiles.get(i).setPercentComplete(perComplete);
+            Log.d("mylog", "Setting percent complete: " + perComplete);
             totalPercent += perComplete;
         }
        /* for (int i = 0; i < tilesGAS.size(); i++) {
