@@ -662,7 +662,6 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
 
     public int getNoRedFlagQuestionsCount(int tileId) {
         SQLiteDatabase db = this.getReadableDatabase();
-        ArrayList<TileQuestionsModel> questionList = new ArrayList<>();
         String statement = "SELECT * FROM " + DatabaseTables.QuestionsTable.TABLE_NAME +
                 " WHERE " + DatabaseTables.QuestionsTable.tile_id + "=" + "'" + tileId + "'";
         //Log.d("mylog", "Query: " + statement);
@@ -888,5 +887,24 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
         migrantModel.setMigrantSex(sex);
         migrantModels.add(migrantModel);
         return migrantModel;
+    }
+
+    public float getPercentComplete(int migrantId, int tileId) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String query;
+
+        query = "SELECT * FROM " + DatabaseTables.ResponseTable.TABLE_NAME +
+                " WHERE " + DatabaseTables.ResponseTable.migrant_id + " = " + "'" + migrantId + "'" +
+                " AND " + DatabaseTables.ResponseTable.tile_id + " = " + "'" + tileId + "'" +
+                " AND " + DatabaseTables.ResponseTable.response_variable + " = " + "'percent_complete'";
+
+        //Log.d("mylog", "Query: " + query);
+        Cursor cursor = db.rawQuery(query, null);
+        float response = 0f;
+        while (cursor.moveToNext()) {
+            response = cursor.getFloat(cursor.getColumnIndexOrThrow(DatabaseTables.ResponseTable.response));
+            //Log.d("mylog", "Mid: " + mid + " Qid: " + qid + " rvar: " + response);
+        }
+        return response;
     }
 }

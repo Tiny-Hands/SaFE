@@ -302,7 +302,21 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
 
     @Override
     public int getItemCount() {
+        calculateAndSavePercentComplete();
         return questionsListDisplay.size();
+    }
+
+    private void calculateAndSavePercentComplete() {
+        int totalQuestion = questionsListDisplay.size();
+        for (int i = 0; i < questionsListDisplay.size(); i++) {
+            if (questionsListDisplay.get(i).getCondition().contains("error"))
+                totalQuestion--;
+        }
+        int answersCount = sqlDatabaseHelper.getTileResponse(migrantId, questionsList.get(0).getTileId());
+        Log.d("mylog", "Calculating Percent for : " + totalQuestion + " Questions & " + answersCount + " Answers");
+        float percent = ((float) answersCount / (float) totalQuestion) * 100;
+        sqlDatabaseHelper.insertResponseTableData(percent + "", SharedPrefKeys.percentComplete, questionsListDisplay.get(0).getTileId(),
+                migrantId, "percent_complete", Calendar.getInstance().getTimeInMillis() + "");
     }
 
     private void setValue(CheckBox checkBox, EditText etResponse, Spinner spinner, TextView question,

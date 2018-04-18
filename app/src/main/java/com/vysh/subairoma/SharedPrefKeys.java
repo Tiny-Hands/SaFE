@@ -30,4 +30,5 @@ public final class SharedPrefKeys {
     public static int questionCountryId = -1;
     public static int questionVerifiedAns = -3;
     public static int questionFeedbackSaved = -4;
+    public static int percentComplete = -5;
 }

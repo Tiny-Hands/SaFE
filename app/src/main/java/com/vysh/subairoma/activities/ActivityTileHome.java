@@ -11,7 +11,6 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.CardView;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -31,7 +30,6 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.vysh.subairoma.ApplicationClass;
-import com.vysh.subairoma.SharedPrefKeys;
 import com.vysh.subairoma.dialogs.DialogAnswersVerification;
 import com.vysh.subairoma.R;
 import com.vysh.subairoma.SQLHelpers.SQLDatabaseHelper;
@@ -169,32 +167,26 @@ public class ActivityTileHome extends AppCompatActivity {
         setUpRecyclerView();
         getAllResponses();
         getAllFeedbackResponses();
-        calculatePercentComplete();
+        getPercentComplete();
     }
 
-    private void calculatePercentComplete() {
+    private void getPercentComplete() {
         SQLDatabaseHelper dbHelper = new SQLDatabaseHelper(ActivityTileHome.this);
-        int answeredQuestions = dbHelper.getAllResponseCount(ApplicationClass.getInstance().getMigrantId());
-        int count = 0;
+        float totalPercent = 0f;
         for (int i = 0; i < tiles.size(); i++) {
-            int tempCount = dbHelper.getNoRedFlagQuestionsCount(tiles.get(i).getTileId());
-            int answersCount = dbHelper.getTileResponse(ApplicationClass.getInstance().getMigrantId(), tiles.get(i).getTileId());
-            count += tempCount;
-            tiles.get(i).setPercentComplete(((float) answersCount / (float) tempCount) * 100);
-            Log.d("mylog", "Temp count: " + tempCount);
-
+            float perComplete = dbHelper.getPercentComplete(ApplicationClass.getInstance().getMigrantId(), tiles.get(i).getTileId());
+            tiles.get(i).setPercentComplete(perComplete);
+            totalPercent += perComplete;
         }
        /* for (int i = 0; i < tilesGAS.size(); i++) {
             int tempCount = dbHelper.getNoRedFlagQuestionsCount(tilesGAS.get(i).getTileId());
             count += tempCount;
             Log.d("mylog", "Temp count GAS: " + tempCount);
         }*/
-        float percent = ((float) answeredQuestions / (float) count) * 100;
+        float percent = totalPercent / tiles.size();
         DecimalFormat decimalFormat = new DecimalFormat("##");
         tvPercent.setText(decimalFormat.format(percent) + "%");
         progressPercent.setProgress((int) percent);
-        Log.d("mylog", "total count: " + count);
-        Log.d("mylog", "answered count: " + answeredQuestions);
         rvTiles.getAdapter().notifyDataSetChanged();
     }
 
