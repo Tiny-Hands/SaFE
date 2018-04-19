@@ -341,12 +341,11 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
             if (response.equalsIgnoreCase("true")) {
                 ivDone.setVisibility(View.VISIBLE);
                 btnShowMore.setVisibility(GONE);
-            } else
-                ivDone.setVisibility(GONE);
-            /*if (!response.isEmpty())
+            } else if (!response.isEmpty() && !response.equalsIgnoreCase("false") && !response.contains("---")) {
                 ivDone.setVisibility(View.VISIBLE);
-            else
-                ivDone.setVisibility(View.GONE);*/
+                btnShowMore.setVisibility(GONE);
+            } else
+                ivDone.setVisibility(View.GONE);
             ivError.setVisibility(View.INVISIBLE);
             rootLayout.setBackgroundColor(Color.TRANSPARENT);
         }
