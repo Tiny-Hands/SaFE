@@ -36,7 +36,7 @@ public class DialogNeedHelp extends DialogFragment implements View.OnClickListen
         this.migrantId = migrantId;
         this.context = context;
         if (number == null || number.equalsIgnoreCase("null") || number.isEmpty())
-            this.number = "1111111111";
+            this.number = "+9779840337809";
         else
             this.number = number;
         this.link = link;
