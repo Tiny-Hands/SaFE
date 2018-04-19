@@ -198,7 +198,7 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
     public void onBindViewHolder(final QuestionHolder holder, final int position) {
         //Log.d("mylog", "Position: " + position + " Previous pos: " + previousClickedPos);
         //holder.hideExpandView();
-        isExpanded = false;
+        //isExpanded = false;
         TileQuestionsModel question = questionsListDisplay.get(position);
         holder.title.setText(question.getTitle());
         holder.question.setText(question.getQuestion());
@@ -860,7 +860,7 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
                                     migrantId, questionsListDisplay.get(getAdapterPosition()).getVariable(), time);
                             sqlDatabaseHelper.insertIsError(migrantId, questionsListDisplay.get(getAdapterPosition()).getVariable(), "false");
                             notifyItemChanged(getAdapterPosition());
-                            isExpanded = false;
+                            //isExpanded = false;
                         } else {
                         }
                     }
@@ -956,13 +956,12 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
             if (previousClickedPos != currentClickedPos && previousClickedPos != -1) {
                 isExpanded = false;
                 notifyItemChanged(previousClickedPos);
+            }
+            Log.d("mylog", "Is Expanded: " + isExpanded);
+            if (!isExpanded) {
+                showExpandView();
             } else {
-                Log.d("mylog", "Is Expanded: " + isExpanded);
-                if (!isExpanded) {
-                    showExpandView();
-                } else {
-                    hideExpandView();
-                }
+                hideExpandView();
             }
         }
 
