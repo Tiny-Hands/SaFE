@@ -914,4 +914,28 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
         }
         return response;
     }
+
+    public int getQuestionResponse(int migrantId, ArrayList<Integer> questionIdsToGetAnswers) {
+        int totalCount = 0;
+        SQLiteDatabase db = this.getReadableDatabase();
+        for (int i = 0; i < questionIdsToGetAnswers.size(); i++) {
+            Log.d("mylog", "Curr question ID: " + questionIdsToGetAnswers.get(i));
+            String query = "SELECT * FROM " + DatabaseTables.ResponseTable.TABLE_NAME +
+                    " WHERE " + DatabaseTables.ResponseTable.migrant_id + " = " + "'" + migrantId + "'"
+                    + " AND " + DatabaseTables.ResponseTable.question_id + " = " + "'" + questionIdsToGetAnswers.get(i) + "'";
+
+            Cursor cursor = db.rawQuery(query, null);
+            if (cursor.getCount() > 0) {
+                cursor.moveToFirst();
+                String response = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseTables.ResponseTable.response));
+                String responseVar = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseTables.ResponseTable.response_variable));
+                Log.d("mylog", "Response Variable: " + responseVar + " Response: " + response);
+                if (!response.equalsIgnoreCase("false"))
+                    totalCount++;
+                //}
+                cursor.close();
+            }
+        }
+        return totalCount;
+    }
 }

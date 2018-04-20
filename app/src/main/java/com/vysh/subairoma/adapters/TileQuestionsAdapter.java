@@ -309,11 +309,15 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
 
     private void calculateAndSavePercentComplete() {
         int totalQuestion = questionsListDisplay.size();
+        ArrayList<Integer> questionIdsToGetAnswers = new ArrayList<>();
         for (int i = 0; i < questionsListDisplay.size(); i++) {
             if (questionsListDisplay.get(i).getCondition().contains("error"))
                 totalQuestion--;
+            else
+                questionIdsToGetAnswers.add(questionsListDisplay.get(i).getQuestionId());
         }
-        int answersCount = sqlDatabaseHelper.getTileResponse(migrantId, questionsList.get(0).getTileId());
+        //int answersCount = sqlDatabaseHelper.getTileResponse(migrantId, questionsList.get(0).getTileId());
+        int answersCount = sqlDatabaseHelper.getQuestionResponse(migrantId, questionIdsToGetAnswers);
         Log.d("mylog", "Calculating Percent for : " + totalQuestion + " Questions & " + answersCount + " Answers");
         float percent = ((float) answersCount / (float) totalQuestion) * 100;
         sqlDatabaseHelper.insertResponseTableData(percent + "", SharedPrefKeys.percentComplete, questionsListDisplay.get(0).getTileId(),
@@ -809,13 +813,16 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
                                         + " Blacklist: " + blacklist);
                                 if (blacklist == 1) {
                                     showDialog(context.getResources().getString(R.string.blacklisted),
-                                            context.getResources().getString(R.string.blacklisted_message), cid, cname, 0);
+                                            context.getResources().getString(R.string.blacklisted_message), questionsListDisplay.get(getAdapterPosition()).getTileId(),
+                                            questionsListDisplay.get(getAdapterPosition()).getQuestionId(), cid, cname, 0);
                                 } else if (status == 1) {
                                     showDialog(context.getResources().getString(R.string.not_open),
-                                            context.getResources().getString(R.string.not_open_message), cid, cname, 0);
+                                            context.getResources().getString(R.string.not_open_message), questionsListDisplay.get(getAdapterPosition()).getTileId(),
+                                            questionsListDisplay.get(getAdapterPosition()).getQuestionId(), cid, cname, 0);
                                 } else {
                                     showDialog(context.getResources().getString(R.string.confirm),
-                                            context.getResources().getString(R.string.confirm_message) + " " + cname + "?", cid, cname, 1);
+                                            context.getResources().getString(R.string.confirm_message) + " " + cname + "?", questionsListDisplay.get(getAdapterPosition()).getTileId(),
+                                            questionsListDisplay.get(getAdapterPosition()).getQuestionId(), cid, cname, 1);
                                     Log.d("mylog", "Saving country for MID: " + ApplicationClass.getInstance().getMigrantId());
                                 }
                                 if (!initialStep)
@@ -1037,7 +1044,7 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
         return true;
     }
 
-    private void showDialog(String title, String message, final String cid, final String cname, final int cType) {
+    private void showDialog(String title, String message, final int tileId, final int questionID, final String cid, final String cname, final int cType) {
         AlertDialog.Builder mBuilder = new AlertDialog.Builder(context);
         mBuilder.setTitle(title);
         mBuilder.setMessage(message);
@@ -1053,7 +1060,7 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
 
                         Calendar cal = Calendar.getInstance();
                         String time = cal.getTimeInMillis() + "";
-                        new SQLDatabaseHelper(context).insertResponseTableData(cid, SharedPrefKeys.questionCountryId, -1,
+                        new SQLDatabaseHelper(context).insertResponseTableData(cid, questionID, tileId,
                                 ApplicationClass.getInstance().getMigrantId(), "mg_destination", time);
 
                         /*Intent intent = new Intent(context, ActivityTileHome.class);
@@ -1080,7 +1087,7 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
     private void showCountryChangeDialog() {
         AlertDialog.Builder mBuilder = new AlertDialog.Builder(context);
         mBuilder.setView(R.layout.dialog_usertype_chooser);
-        AlertDialog alertDialog = mBuilder.show();
+        final AlertDialog alertDialog = mBuilder.show();
         RadioButton rbHelped = alertDialog.findViewById(R.id.rbHelper);
         RadioButton rbMistake = alertDialog.findViewById(R.id.rbMigrant);
         rbHelped.setText("Changing Country Based on Direction Provided by the App");
@@ -1089,7 +1096,7 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
         btnChosen.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                alertDialog.dismiss();
             }
         });
     }
