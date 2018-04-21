@@ -93,7 +93,7 @@ public class ActivityMigrantList extends AppCompatActivity implements RecyclerIt
         ButterKnife.bind(this);
         userType = ApplicationClass.getInstance().getUserType();
         migrantModels = new ArrayList();
-        getMigrants();
+        //getMigrants();
         if (isLocationAccessAllowed())
             getUpdatedMigrantCounties();
         else
@@ -127,7 +127,14 @@ public class ActivityMigrantList extends AppCompatActivity implements RecyclerIt
                     case R.id.nav_profile:
                         Intent intent = new Intent(ActivityMigrantList.this, ActivityProfileEdit.class);
                         intent.putExtra("userType", 0);
+                        drawerLayout.closeDrawer(GravityCompat.END);
                         startActivity(intent);
+                        break;
+                    case R.id.nav_addmigrants:
+                        Intent intentMig = new Intent(ActivityMigrantList.this, ActivityRegister.class);
+                        intentMig.putExtra("migrantmode", true);
+                        drawerLayout.closeDrawer(GravityCompat.END);
+                        startActivity(intentMig);
                         break;
                 }
                 return false;
@@ -415,32 +422,34 @@ public class ActivityMigrantList extends AppCompatActivity implements RecyclerIt
             String name = migrantModels.get(viewHolder.getAdapterPosition()).getMigrantName();
 
             // backup of removed item for undo purpose
-            //final ClipData.Item deletedItem = cartList.get(viewHolder.getAdapterPosition());
-            //final int deletedIndex = viewHolder.getAdapterPosition();
+            final MigrantModel deletedMig = migrantModels.get(viewHolder.getAdapterPosition());
+            final int deletedIndex = viewHolder.getAdapterPosition();
 
             // remove the item from recycler view
 
-            int uid = ApplicationClass.getInstance().getUserId();
-            int mid = migrantModels.get(viewHolder.getAdapterPosition()).getMigrantId();
+            final int uid = ApplicationClass.getInstance().getUserId();
+            final int mid = migrantModels.get(viewHolder.getAdapterPosition()).getMigrantId();
             long time = System.currentTimeMillis();
-            SQLDatabaseHelper dbHelper = new SQLDatabaseHelper(ActivityMigrantList.this);
-            dbHelper.insertMigrantDeletion(mid, uid, System.currentTimeMillis());
+            final SQLDatabaseHelper dbHelper = new SQLDatabaseHelper(ActivityMigrantList.this);
+            dbHelper.insertMigrantDeletion(mid, uid, System.currentTimeMillis() + "");
+            ;
             migrantListAdapter.removeItem(viewHolder.getAdapterPosition());
             deactivateUser(uid, mid, time + "", null);
 
             // showing snack bar with Undo option
-            /*Snackbar snackbar = Snackbar
-                    .make(coordinatorLayout, name + " removed from cart!", Snackbar.LENGTH_LONG);
+            Snackbar snackbar = Snackbar
+                    .make(rootLayout, "Migrant Deleted!", Snackbar.LENGTH_LONG);
             snackbar.setAction("UNDO", new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
 
                     // undo is selected, restore the deleted item
-                    mAdapter.restoreItem(deletedItem, deletedIndex);
+                    migrantListAdapter.restoreItem(deletedMig, deletedIndex);
+                    dbHelper.insertMigrantDeletion(mid, uid, "");
                 }
             });
             snackbar.setActionTextColor(Color.YELLOW);
-            snackbar.show();*/
+            snackbar.show();
         }
     }
 

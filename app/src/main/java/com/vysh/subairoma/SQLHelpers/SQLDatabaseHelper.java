@@ -713,13 +713,14 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
         db.close();
     }
 
-    public void insertMigrantDeletion(int migrantId, int userId, long time) {
+    public void insertMigrantDeletion(int migrantId, int userId, String time) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(DatabaseTables.MigrantsTable.inactivate_date, time);
         //If already exist the Update
         String whereClause = DatabaseTables.MigrantsTable.migrant_id + " = " + migrantId + " AND " +
                 DatabaseTables.MigrantsTable.user_id + " = " + userId;
+        Log.d("mylog", "Setting inactive date: " + time + " For: " + migrantId);
         long updateCount = db.update(DatabaseTables.MigrantsTable.TABLE_NAME, values, whereClause, null);
         Log.d("mylog", "Migrant Deleted row count: " + updateCount);
     }

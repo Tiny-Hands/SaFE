@@ -125,6 +125,12 @@ public class MigrantListAdapter extends RecyclerView.Adapter<MigrantListAdapter.
         //Save Removed in Migrants Table
     }
 
+    public void restoreItem(MigrantModel mig, int position) {
+        migrants.add(position, mig);
+        // notify item added by position
+        notifyItemInserted(position);
+    }
+
     public class MigrantHolder extends RecyclerView.ViewHolder {
         public TextView textViewName, sex, tvGoingCountry;
         public SmartTextView tvPhone;

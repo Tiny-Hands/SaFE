@@ -251,6 +251,12 @@ public class ActivityTileHome extends AppCompatActivity {
                         intent.putExtra("userType", 1);
                         startActivity(intent);
                         break;
+                    case R.id.nav_addmigrants:
+                        Intent intentMig = new Intent(ActivityTileHome.this, ActivityRegister.class);
+                        intentMig.putExtra("migrantmode", true);
+                        drawerLayout.closeDrawer(GravityCompat.END);
+                        startActivity(intentMig);
+                        break;
                 }
                 return false;
             }

@@ -6,6 +6,10 @@
             android:id="@+id/nav_profile"
             android:icon="@drawable/ic_avatar"
             android:title="Edit Profile" />
+        <item
+            android:id="@+id/nav_addmigrants"
+            android:icon="@drawable/ic_add"
+            android:title="Add Migrant" />
     </group>
     <group
         android:id="@+id/secondaryNavOpt">
