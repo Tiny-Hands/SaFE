@@ -93,7 +93,7 @@ public class ActivityMigrantList extends AppCompatActivity implements RecyclerIt
         ButterKnife.bind(this);
         userType = ApplicationClass.getInstance().getUserType();
         migrantModels = new ArrayList();
-        //getMigrants();
+        getMigrants();
         if (isLocationAccessAllowed())
             getUpdatedMigrantCounties();
         else
