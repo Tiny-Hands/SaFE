@@ -277,7 +277,7 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
         holder.question.setVisibility(GONE);
         holder.details.setVisibility(GONE);
 
-        setValue(holder.checkbox, holder.etResponse, holder.spinnerOptions,
+        setValue(holder.title, holder.checkbox, holder.etResponse, holder.spinnerOptions,
                 holder.question, holder.ivError, holder.ivDone, holder.btnShowMore, holder.listViewOptions, holder.rootLayout, holder.rb1, holder.rb2, position);
         if (disabled) {
             holder.disabledView.setVisibility(View.VISIBLE);
@@ -324,7 +324,7 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
                 migrantId, "percent_complete", Calendar.getInstance().getTimeInMillis() + "");
     }
 
-    private void setValue(CheckBox checkBox, EditText etResponse, Spinner spinner, TextView question,
+    private void setValue(TextView tvTitle, CheckBox checkBox, EditText etResponse, Spinner spinner, TextView question,
                           ImageView ivError, ImageView ivDone, ImageButton btnShowMore, ListView lvOptions, RelativeLayout rootLayout, RadioButton rb1, RadioButton rb2, int position) {
         //For showing/hiding error on condition variable change
         Log.d("mylog", "Setting value now");
@@ -348,8 +348,10 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
             } else if (!response.isEmpty() && !response.equalsIgnoreCase("false") && !response.contains("---")) {
                 ivDone.setVisibility(View.VISIBLE);
                 btnShowMore.setVisibility(GONE);
-            } else
+            } else {
                 ivDone.setVisibility(View.GONE);
+                tvTitle.setTextColor(Color.DKGRAY);
+            }
             ivError.setVisibility(View.INVISIBLE);
             rootLayout.setBackgroundColor(Color.TRANSPARENT);
         }
