@@ -21,6 +21,7 @@ import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.DefaultRetryPolicy;
@@ -35,13 +36,16 @@ import com.vysh.subairoma.ApplicationClass;
 import com.vysh.subairoma.R;
 import com.vysh.subairoma.SQLHelpers.SQLDatabaseHelper;
 import com.vysh.subairoma.SharedPrefKeys;
+import com.vysh.subairoma.dialogs.DialogCountryChooser;
 import com.vysh.subairoma.dialogs.DialogLoginOptions;
 import com.vysh.subairoma.dialogs.DialogUsertypeChooser;
+import com.vysh.subairoma.models.MigrantModel;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
@@ -61,7 +65,7 @@ public class ActivityRegister extends AppCompatActivity {
     //For Migrant
     final String apiGetResponses = "/getresponses.php";
     final String apiAlreadyRegistered = "/checkphonenumber.php";
-    private final String apiGetMigrants = "/getmigrants.php";
+    private final String APIGETMIG = "/getmigrants.php";
     private int gotDetailCount = 0;
 
     //Usertype = 0 for Helper and 1 for migrant. Order is reversed in Dialogs and Other Methods.
@@ -144,11 +148,10 @@ public class ActivityRegister extends AppCompatActivity {
                     } else {
                         getLoggedInUserDetails(jsonRes);
                         //Gets Migrant Details and Saves in DB regardless of User Type
-                        startMigrantistActivity();
-                        //getMigrantDetails();
+                        getMigrants();
+                        //Getting all the saved responses for the user
+                        getAllResponses(userType);
                     }
-                    //Getting all the saved responses for the user
-                    getAllResponses(userType);
                 } catch (JSONException e) {
                     e.printStackTrace();
                     Log.d("mylog", "Error in getting user_id: " + e.toString());
@@ -217,6 +220,68 @@ public class ActivityRegister extends AppCompatActivity {
         }
     }
 
+    private void getMigrants() {
+        String api = ApplicationClass.getInstance().getAPIROOT() + APIGETMIG;
+        final ProgressDialog progressDialog = new ProgressDialog(ActivityRegister.this);
+        progressDialog.setMessage(getResources().getString(R.string.getting_mig_details));
+        try {
+            progressDialog.show();
+        } catch (Exception ex) {
+            Log.d("mylog", "Exception in progress list: " + ex.getMessage());
+        }
+        StringRequest getRequest = new StringRequest(Request.Method.POST, api, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                try {
+                    progressDialog.dismiss();
+                } catch (Exception ex) {
+                    Log.d("mylog", "Exception in progress dis: " + ex.getMessage());
+                }
+                try {
+                    //boolean firstRun = false;
+                    parseMigDetailResponse(response);
+                    Log.d("mylog", "response : " + response);
+                } catch (Exception ex) {
+                    Log.d("mylog", "response exception: " + ex.toString());
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                try {
+                    progressDialog.dismiss();
+                } catch (Exception ex) {
+                    Log.d("mylog", "Exception in progress dis error: " + ex.getMessage());
+                }
+                try {
+                    String err = error.toString();
+                    Log.d("mylog", "error : " + err);
+                    if (!err.isEmpty() && err.contains("TimeoutError"))
+                        Toast.makeText(ActivityRegister.this, getResources().getString(R.string.server_noconnect), Toast.LENGTH_SHORT).show();
+                    else if (!err.isEmpty() && err.contains("NoConnection")) {
+                        Toast.makeText(ActivityRegister.this, getResources().getString(R.string.server_noconnect), Toast.LENGTH_SHORT).show();
+                    } else
+                        showSnackbar(error.toString());
+                } catch (Exception ex) {
+                    Log.d("mylog", "Error exception: " + ex.toString());
+                }
+            }
+        }) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                HashMap<String, String> params = new HashMap<>();
+                int user_id = ApplicationClass.getInstance().getUserId();
+                int mig_id = ApplicationClass.getInstance().getMigrantId();
+                Log.d("mylog", "User ID: " + user_id);
+                Log.d("mylog", "Mig ID: " + mig_id);
+                params.put("user_id", user_id + "");
+                params.put("migrant_id", mig_id + "");
+                return params;
+            }
+        };
+        RequestQueue queue = Volley.newRequestQueue(ActivityRegister.this);
+        queue.add(getRequest);
+    }
 
     private void setUpComponentListeners() {
         rbFemale.setOnClickListener(new View.OnClickListener() {
@@ -409,6 +474,50 @@ public class ActivityRegister extends AppCompatActivity {
         }
     }
 
+    private ArrayList<MigrantModel> parseMigDetailResponse(String response) {
+        ArrayList<MigrantModel> migrantModelsTemp = new ArrayList<>();
+        try {
+            JSONObject jsonObject = new JSONObject(response);
+            Boolean error = jsonObject.getBoolean("error");
+            if (error) {
+                showSnackbar(jsonObject.getString("message"));
+            } else {
+                JSONArray migrantJSON = jsonObject.getJSONArray("migrants");
+                if (migrantJSON != null) {
+                    JSONObject migrantObj;
+                    SQLDatabaseHelper dbHelper = new SQLDatabaseHelper(ActivityRegister.this);
+                    int uid = ApplicationClass.getInstance().getUserId();
+                    for (int i = 0; i < migrantJSON.length(); i++) {
+                        migrantObj = migrantJSON.getJSONObject(i);
+                        MigrantModel migrantModel = new MigrantModel();
+                        if (migrantObj.has("migrant_id")) {
+                            int id = migrantObj.getInt("migrant_id");
+                            migrantModel.setMigrantId(id);
+                            String name = migrantObj.getString("migrant_name");
+                            migrantModel.setMigrantName(name);
+                            int age = migrantObj.getInt("migrant_age");
+                            migrantModel.setMigrantAge(age);
+                            String sex = migrantObj.getString("migrant_sex");
+                            migrantModel.setMigrantSex(sex);
+                            String phone = migrantObj.getString("migrant_phone");
+                            migrantModel.setMigrantPhone(phone);
+                            String inactiveDate = migrantObj.getString("inactive_date");
+                            migrantModel.setInactiveDate(inactiveDate);
+                            migrantModel.setUserId(uid);
+
+                            migrantModelsTemp.add(migrantModel);
+                            //Saving in Database
+                            dbHelper.insertMigrants(id, name, age, phone, sex, uid);
+                        }
+                    }
+                }
+            }
+        } catch (JSONException e) {
+            Log.d("mylog", "Error in parsing: " + e.toString());
+        }
+        return migrantModelsTemp;
+    }
+
     public void showSnackbar(String msg) {
         Snackbar snack = Snackbar.make(rootLayout, msg, Snackbar.LENGTH_LONG);
         View view = snack.getView();
@@ -505,7 +614,7 @@ public class ActivityRegister extends AppCompatActivity {
                         getLoggedInUserDetails(jsonRes);
                         //Gets Migrant Details and Saves in DB regardless of User Type
                         //getMigrantDetails();
-                        startMigrantistActivity();
+                        getMigrants();
                         //Getting all the saved responses for the user
                         getAllResponses(userType);
                     }

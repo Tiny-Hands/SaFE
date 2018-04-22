@@ -93,7 +93,6 @@ public class ActivityMigrantList extends AppCompatActivity implements RecyclerIt
         ButterKnife.bind(this);
         userType = ApplicationClass.getInstance().getUserType();
         migrantModels = new ArrayList();
-        getMigrants();
         if (isLocationAccessAllowed())
             getUpdatedMigrantCounties();
         else
@@ -275,124 +274,6 @@ public class ActivityMigrantList extends AppCompatActivity implements RecyclerIt
         }
         sendDeactivationStatus(disableMigs);
         return tempMig;
-    }
-
-    private void getMigrants() {
-        String api = ApplicationClass.getInstance().getAPIROOT() + API;
-        final ProgressDialog progressDialog = new ProgressDialog(ActivityMigrantList.this);
-        progressDialog.setMessage(getResources().getString(R.string.getting_mig_details));
-        try {
-            progressDialog.show();
-        } catch (Exception ex) {
-            Log.d("mylog", "Exception in progress list: " + ex.getMessage());
-        }
-        StringRequest getRequest = new StringRequest(Request.Method.POST, api, new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-                try {
-                    progressDialog.dismiss();
-                } catch (Exception ex) {
-                    Log.d("mylog", "Exception in progress dis: " + ex.getMessage());
-                }
-                try {
-                    boolean firstRun = false;
-                    migrantModels = getMigrantsToDisplay(parseResponse(response));
-                    if (migrantModels == null || migrantModels.size() < 1) firstRun = true;
-                    //migrantListAdapter.notifyDataSetChanged();
-                    if (userType == -1 && firstRun) {
-                        DialogCountryChooser dialog = DialogCountryChooser.newInstance();
-                        dialog.setMigrantName(migrantModels.get(0).getMigrantName());
-                        Log.d("mylog", "Migrant name: " + migrantModels.get(0).getMigrantName() + " : " + migrantModels.get(0).getMigrantId());
-                        dialog.show(getSupportFragmentManager(), "countrychooser");
-                        recyclerView.setVisibility(View.INVISIBLE);
-                    } else {
-                        setUpRecyclerView(migrantModels);
-                    }
-                    Log.d("mylog", "response : " + response);
-                } catch (Exception ex) {
-                    Log.d("mylog", "response exception: " + ex.toString());
-                }
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                try {
-                    progressDialog.dismiss();
-                } catch (Exception ex) {
-                    Log.d("mylog", "Exception in progress dis error: " + ex.getMessage());
-                }
-                try {
-                    String err = error.toString();
-                    Log.d("mylog", "error : " + err);
-                    if (!err.isEmpty() && err.contains("TimeoutError"))
-                        Toast.makeText(ActivityMigrantList.this, getResources().getString(R.string.server_noconnect), Toast.LENGTH_SHORT).show();
-                    else if (!err.isEmpty() && err.contains("NoConnection")) {
-                        Toast.makeText(ActivityMigrantList.this, getResources().getString(R.string.server_noconnect), Toast.LENGTH_SHORT).show();
-                    } else
-                        showSnackbar(error.toString());
-                } catch (Exception ex) {
-                    Log.d("mylog", "Error exception: " + ex.toString());
-                }
-            }
-        }) {
-            @Override
-            protected Map<String, String> getParams() throws AuthFailureError {
-                HashMap<String, String> params = new HashMap<>();
-                int user_id = ApplicationClass.getInstance().getUserId();
-                int mig_id = ApplicationClass.getInstance().getMigrantId();
-                Log.d("mylog", "User ID: " + user_id);
-                Log.d("mylog", "Mig ID: " + mig_id);
-                params.put("user_id", user_id + "");
-                params.put("migrant_id", mig_id + "");
-                return params;
-            }
-        };
-        RequestQueue queue = Volley.newRequestQueue(ActivityMigrantList.this);
-        queue.add(getRequest);
-    }
-
-    private ArrayList<MigrantModel> parseResponse(String response) {
-        ArrayList<MigrantModel> migrantModelsTemp = new ArrayList<>();
-        try {
-            JSONObject jsonObject = new JSONObject(response);
-            Boolean error = jsonObject.getBoolean("error");
-            if (error) {
-                showSnackbar(jsonObject.getString("message"));
-            } else {
-                JSONArray migrantJSON = jsonObject.getJSONArray("migrants");
-                if (migrantJSON != null) {
-                    JSONObject migrantObj;
-                    SQLDatabaseHelper dbHelper = new SQLDatabaseHelper(ActivityMigrantList.this);
-                    int uid = ApplicationClass.getInstance().getUserId();
-                    for (int i = 0; i < migrantJSON.length(); i++) {
-                        migrantObj = migrantJSON.getJSONObject(i);
-                        MigrantModel migrantModel = new MigrantModel();
-                        if (migrantObj.has("migrant_id")) {
-                            int id = migrantObj.getInt("migrant_id");
-                            migrantModel.setMigrantId(id);
-                            String name = migrantObj.getString("migrant_name");
-                            migrantModel.setMigrantName(name);
-                            int age = migrantObj.getInt("migrant_age");
-                            migrantModel.setMigrantAge(age);
-                            String sex = migrantObj.getString("migrant_sex");
-                            migrantModel.setMigrantSex(sex);
-                            String phone = migrantObj.getString("migrant_phone");
-                            migrantModel.setMigrantPhone(phone);
-                            String inactiveDate = migrantObj.getString("inactive_date");
-                            migrantModel.setInactiveDate(inactiveDate);
-                            migrantModel.setUserId(uid);
-
-                            migrantModelsTemp.add(migrantModel);
-                            //Saving in Database
-                            dbHelper.insertMigrants(id, name, age, phone, sex, uid);
-                        }
-                    }
-                }
-            }
-        } catch (JSONException e) {
-            Log.d("mylog", "Error in parsing: " + e.toString());
-        }
-        return migrantModelsTemp;
     }
 
     private void showSnackbar(String msg) {

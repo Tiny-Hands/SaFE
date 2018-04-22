@@ -350,7 +350,7 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
                 btnShowMore.setVisibility(GONE);
             } else {
                 ivDone.setVisibility(View.GONE);
-                tvTitle.setTextColor(Color.DKGRAY);
+                tvTitle.setTextColor(Color.GRAY);
             }
             ivError.setVisibility(View.INVISIBLE);
             rootLayout.setBackgroundColor(Color.TRANSPARENT);
