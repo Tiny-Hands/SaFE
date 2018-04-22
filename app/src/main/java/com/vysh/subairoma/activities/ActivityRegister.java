@@ -329,7 +329,7 @@ public class ActivityRegister extends AppCompatActivity {
             //Parameter 1 is for registering migrant after reading disclaimer
             if (Integer.parseInt(etAge.getText().toString()) < 18) {
                 showErrorDialog();
-            }
+            } else showDisclaimerAndContinue();
         }
     }
 
@@ -529,10 +529,10 @@ public class ActivityRegister extends AppCompatActivity {
     }
 
     public void showDisclaimerDialog() {
-        if (userType == 0)
+      /*  if (userType == 0)
             showErrorDialog();
-        else
-            showDisclaimerAndContinue();
+        else*/
+        showDisclaimerAndContinue();
     }
 
     private boolean validateData() {
