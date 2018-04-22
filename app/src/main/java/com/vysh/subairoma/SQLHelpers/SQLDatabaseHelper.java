@@ -228,6 +228,29 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
         }
     }
 
+    public void insertCountryResponse(String response, int migrant_id, String variable, String timestamp) {
+        // Gets the data repository in write mode
+        SQLiteDatabase db = this.getWritableDatabase();
+        // Create a new map of values, where column names are the keys
+        ContentValues values = new ContentValues();
+        values.put(DatabaseTables.ResponseTable.response, response);
+        values.put(DatabaseTables.ResponseTable.response_variable, variable);
+        values.put(DatabaseTables.ResponseTable.response_time, timestamp);
+
+        //If already exist the Update
+        String whereClause = DatabaseTables.ResponseTable.migrant_id + " = " + migrant_id + " AND " +
+                DatabaseTables.ResponseTable.response_variable + " = '" + variable + "'";
+        long updateCount = db.update(DatabaseTables.ResponseTable.TABLE_NAME, values, whereClause, null);
+        Log.d("mylog", "Updated row count: " + updateCount);
+        //If not update then insert
+        if (updateCount < 1) {
+            // Insert the new row, returning the primary key value of the new row
+            values.put(DatabaseTables.ResponseTable.migrant_id, migrant_id);
+            long newRowId = db.insert(DatabaseTables.ResponseTable.TABLE_NAME, null, values);
+            Log.d("mylog", "Inserted row ID: " + newRowId);
+        }
+    }
+
     public void insertQuestionQuery(int qid, int tileId, int migrantId, String query) {
         // Gets the data repository in write mode
         SQLiteDatabase db = this.getWritableDatabase();
