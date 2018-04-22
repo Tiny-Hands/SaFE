@@ -152,6 +152,9 @@ public class TileAdapter extends RecyclerView.Adapter<TileAdapter.TileViewHolder
             case 16:
                 ivTile.setImageResource(R.drawable.ic_travel);
                 break;
+            case 18:
+                ivTile.setImageResource(R.drawable.ic_travel_work);
+                break;
             default:
                 ivTile.setImageResource(R.drawable.ic_default);
         }
