@@ -34,7 +34,7 @@
             android:textStyle="bold"
             android:layout_marginBottom="@dimen/small_margin"
             android:text="@string/aspiringmigrant"
-            android:textSize="18sp" />
+            android:textSize="16sp" />
 
         <RadioButton
             android:id="@+id/rbHelper"
@@ -42,7 +42,7 @@
             android:layout_height="wrap_content"
             android:textStyle="bold"
             android:text="@string/helper"
-            android:textSize="18sp" />
+            android:textSize="16sp" />
     </RadioGroup>
 
     <Button
