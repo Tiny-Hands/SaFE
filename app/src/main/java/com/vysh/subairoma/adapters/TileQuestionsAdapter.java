@@ -94,7 +94,6 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
         this.context = context;
         this.disabled = disabled;
         questionsList = questions;
-        this.initialStep = initialStep;
         setConditionVariables();
         setConditionVariableValues();
 
@@ -379,16 +378,16 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
                 etResponse.setText(response);
             }
         } else if (responseType == 2 || responseType == 5) {
-            Log.d("mylog", "2/4 Response: " + response);
+            Log.d("mylog", "2/5 Response: " + response);
             if (response == null || response.isEmpty()) {
                 question.setVisibility(GONE);
                 spinner.setVisibility(GONE);
+                if (responseType == 5)
+                    initialStep = true;
             } else {
                 if (responseType == 5)
                     response = new SQLDatabaseHelper(context).getCountry(response).getCountryName();
                 fromSetView = true;
-                if (response == null || response.isEmpty())
-                    initialStep = true;
                 for (int i = 0; i < spinner.getCount(); i++) {
                     if (response.equalsIgnoreCase(spinner.getItemAtPosition(i).toString())) {
                         fromSetViewSpinner = true;
