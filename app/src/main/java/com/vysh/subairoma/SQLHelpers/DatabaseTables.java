@@ -22,6 +22,18 @@ public final class DatabaseTables {
         public static final String tile_id = "tile_id";
     }
 
+    public static class TempResponseTable {
+        public static final String TABLE_NAME = "tbl_response_temp";
+        public static final String migrant_id = "migrant_id";
+        public static final String question_id = "question_id";
+        public static final String response = "response";
+        public static final String question_query = "question_query";
+        public static final String response_variable = "response_variable";
+        public static final String response_time = "response_time";
+        public static final String is_error = "is_error";
+        public static final String tile_id = "tile_id";
+    }
+
     public static class TilesTable {
         public static final String TABLE_NAME = "tbl_tiles";
         public static final String tile_id = "tile_id";

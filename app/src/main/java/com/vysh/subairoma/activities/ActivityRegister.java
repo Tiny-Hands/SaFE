@@ -1,6 +1,5 @@
 package com.vysh.subairoma.activities;
 
-import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -36,7 +35,6 @@ import com.vysh.subairoma.ApplicationClass;
 import com.vysh.subairoma.R;
 import com.vysh.subairoma.SQLHelpers.SQLDatabaseHelper;
 import com.vysh.subairoma.SharedPrefKeys;
-import com.vysh.subairoma.dialogs.DialogCountryChooser;
 import com.vysh.subairoma.dialogs.DialogLoginOptions;
 import com.vysh.subairoma.dialogs.DialogUsertypeChooser;
 import com.vysh.subairoma.models.MigrantModel;
@@ -366,9 +364,6 @@ public class ActivityRegister extends AppCompatActivity {
                     //But Register and then redirect to migrant list.
                     if (userRegistered) {
                         String api = ApplicationClass.getInstance().getAPIROOT() + apiURLMigrant;
-                        SQLDatabaseHelper sqlDatabaseHelper = new SQLDatabaseHelper(ActivityRegister.this);
-                        sqlDatabaseHelper.insertTempMigrants(etName.getText().toString(), Integer.parseInt(etAge.getText().toString()),
-                                etNumber.getText().toString(), sex, ApplicationClass.getInstance().getUserId());
                         registerMigrant(api);
                         //Start Migrant List Activity
                     } else {
@@ -422,10 +417,24 @@ public class ActivityRegister extends AppCompatActivity {
                 progressDialog.dismiss();
                 String err = error.toString();
                 Log.d("mylog", "error : " + err);
-                if (!err.isEmpty() && err.contains("TimeoutError"))
-                    showSnackbar(getString(R.string.server_noconnect));
-                else
-                    showSnackbar(error.toString());
+                showSnackbar(getString(R.string.server_noconnect));
+
+                //Save in Temp Database to saveLater
+                Calendar cal = Calendar.getInstance();
+                String time = cal.getTimeInMillis() + "";
+                int mid = new SQLDatabaseHelper(ActivityRegister.this).insertTempMigrants(etName.getText().toString(),
+                        Integer.parseInt(etAge.getText().toString()), etNumber.getText().toString(), sex, ApplicationClass.getInstance().getUserId());
+                new SQLDatabaseHelper(ActivityRegister.this).insertTempResponseTableData(sex, SharedPrefKeys.questionGender, -1, mid, "mg_sex", time);
+
+                //Saving in corresponding real local DB
+                int fabMigId = Integer.parseInt("-1" + mid);
+                new SQLDatabaseHelper(ActivityRegister.this).insertMigrants(fabMigId, etName.getText().toString(),
+                        Integer.parseInt(etAge.getText().toString()), etNumber.getText().toString(), sex, ApplicationClass.getInstance().getUserId());
+
+                new SQLDatabaseHelper(ActivityRegister.this).insertResponseTableData(sex, SharedPrefKeys.questionGender, -1, fabMigId, "mg_sex", time);
+                Intent intent = new Intent(ActivityRegister.this, ActivityMigrantList.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intent);
             }
         }) {
             @Override

@@ -33,7 +33,7 @@ import java.util.HashMap;
 public class SQLDatabaseHelper extends SQLiteOpenHelper {
     // If you change the database schema, you must increment the database version.
     Context mContext;
-    public static final int DATABASE_VERSION = 9;
+    public static final int DATABASE_VERSION = 10;
     public static final String DATABASE_NAME = "SubairomaLocal.db";
     final String SQL_CREATE_ResponseTable =
             "CREATE TABLE IF NOT EXISTS " + DatabaseTables.ResponseTable.TABLE_NAME + " (" +
@@ -48,6 +48,19 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
                     " UNIQUE (" + DatabaseTables.ResponseTable.question_id + ", " +
                     DatabaseTables.ResponseTable.tile_id + ", " +
                     DatabaseTables.ResponseTable.migrant_id + "));";
+    final String SQL_CREATE_ResponseTempTable =
+            "CREATE TABLE IF NOT EXISTS " + DatabaseTables.TempResponseTable.TABLE_NAME + " (" +
+                    DatabaseTables.TempResponseTable.migrant_id + " INTEGER," +
+                    DatabaseTables.TempResponseTable.question_id + " INTEGER," +
+                    DatabaseTables.TempResponseTable.tile_id + " INTEGER," +
+                    DatabaseTables.TempResponseTable.is_error + " TEXT," +
+                    DatabaseTables.TempResponseTable.response_variable + " TEXT," +
+                    DatabaseTables.TempResponseTable.response + " TEXT," +
+                    DatabaseTables.TempResponseTable.question_query + " TEXT," +
+                    DatabaseTables.TempResponseTable.response_time + " TEXT," +
+                    " UNIQUE (" + DatabaseTables.TempResponseTable.question_id + ", " +
+                    DatabaseTables.TempResponseTable.tile_id + ", " +
+                    DatabaseTables.TempResponseTable.migrant_id + "));";
     final String SQL_CREATE_TilesTable =
             "CREATE TABLE IF NOT EXISTS " + DatabaseTables.TilesTable.TABLE_NAME + " (" +
                     DatabaseTables.TilesTable.tile_id + " INTEGER PRIMARY KEY," +
@@ -151,6 +164,7 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
         db.execSQL(SQL_CREATE_FeedbackQuestionTable);
         db.execSQL(SQL_CREATE_FeedbackQuestionResponseTable);
         db.execSQL(SQL_CREATE_MigrantsTempTable);
+        db.execSQL(SQL_CREATE_ResponseTempTable);
     }
 
     @Override
@@ -771,7 +785,7 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
         }
     }
 
-    public void insertTempMigrants(String name, int age, String phone, String sex, int userId) {
+    public int insertTempMigrants(String name, int age, String phone, String sex, int userId) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(DatabaseTables.MigrantsTempTable.name, name);
@@ -782,6 +796,7 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
         values.put(DatabaseTables.MigrantsTempTable.user_id, userId);
         long newRowId = db.insert(DatabaseTables.MigrantsTempTable.TABLE_NAME, null, values);
         Log.d("mylog", "Inserted row ID: " + newRowId);
+        return (int)newRowId;
     }
 
     public void deleteTempMigrant(int migrantId) {
@@ -961,5 +976,32 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
             }
         }
         return totalCount;
+    }
+
+    public void insertTempResponseTableData(String response, int question_id, int tileId, int migrant_id, String variable, String timestamp) {
+        // Gets the data repository in write mode
+        SQLiteDatabase db = this.getWritableDatabase();
+        // Create a new map of values, where column names are the keys
+        ContentValues values = new ContentValues();
+        values.put(DatabaseTables.TempResponseTable.response, response);
+        values.put(DatabaseTables.TempResponseTable.response_variable, variable);
+        values.put(DatabaseTables.TempResponseTable.tile_id, tileId);
+        values.put(DatabaseTables.TempResponseTable.response_time, timestamp);
+
+        //If already exist the Update
+        String whereClause = DatabaseTables.TempResponseTable.tile_id + " = " + tileId + " AND " +
+                DatabaseTables.TempResponseTable.migrant_id + " = " + migrant_id + " AND " +
+                DatabaseTables.TempResponseTable.question_id + " = " + question_id;
+        long updateCount = db.update(DatabaseTables.TempResponseTable.TABLE_NAME, values, whereClause, null);
+        Log.d("mylog", "Updated row count: " + updateCount);
+        //If not update then insert
+        if (updateCount < 1) {
+            // Insert the new row, returning the primary key value of the new row
+            values.put(DatabaseTables.TempResponseTable.migrant_id, migrant_id);
+            values.put(DatabaseTables.TempResponseTable.question_id, question_id);
+            values.put(DatabaseTables.TempResponseTable.tile_id, tileId);
+            long newRowId = db.insert(DatabaseTables.TempResponseTable.TABLE_NAME, null, values);
+            Log.d("mylog", "Inserted row ID: " + newRowId);
+        }
     }
 }
