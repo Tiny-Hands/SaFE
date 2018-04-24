@@ -45,6 +45,8 @@ public class DialogUsertypeChooser extends DialogFragment {
                 Log.d("mylog", "Current usertype: " + uType);
                 if (uType != -1) {
                     dismiss();
+                    if (activityRegister == null)
+                        activityRegister = (ActivityRegister) getActivity();
                     activityRegister.userType = uType;
                     activityRegister.showDisclaimerDialog();
                 }

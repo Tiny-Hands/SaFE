@@ -186,12 +186,12 @@ public class ActivityMigrantList extends AppCompatActivity implements RecyclerIt
     }
 
     private void requestLocationAccess() {
-        if (Build.VERSION.SDK_INT > 22)
+        if (Build.VERSION.SDK_INT >= 23)
             requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_LOCATION);
     }
 
     private boolean isLocationAccessAllowed() {
-        if (Build.VERSION.SDK_INT >= 22) {
+        if (Build.VERSION.SDK_INT >= 23) {
             if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION)
                     != PackageManager.PERMISSION_GRANTED) {
                 return false;
