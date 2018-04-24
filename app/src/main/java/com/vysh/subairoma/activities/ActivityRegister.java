@@ -61,7 +61,7 @@ public class ActivityRegister extends AppCompatActivity {
     //For Helper
     final String apiGetAllResponses = "/getallresponses.php";
     //For Migrant
-    final String apiGetResponses = "/getresponses.php";
+    final String apiGetResponses = "/getresponses.fphp";
     final String apiAlreadyRegistered = "/checkphonenumber.php";
     private final String APIGETMIG = "/getmigrants.php";
     private int gotDetailCount = 0;
@@ -422,9 +422,10 @@ public class ActivityRegister extends AppCompatActivity {
                 //Save in Temp Database to saveLater
                 Calendar cal = Calendar.getInstance();
                 String time = cal.getTimeInMillis() + "";
+
                 int mid = new SQLDatabaseHelper(ActivityRegister.this).insertTempMigrants(etName.getText().toString(),
                         Integer.parseInt(etAge.getText().toString()), etNumber.getText().toString(), sex, ApplicationClass.getInstance().getUserId());
-                new SQLDatabaseHelper(ActivityRegister.this).insertTempResponseTableData(sex, SharedPrefKeys.questionGender, -1, mid, "mg_sex", time);
+                //new SQLDatabaseHelper(ActivityRegister.this).insertTempResponseTableData(sex, SharedPrefKeys.questionGender, -1, mid, "mg_sex", time);
 
                 //Saving in corresponding real local DB
                 int fabMigId = Integer.parseInt("-1" + mid);

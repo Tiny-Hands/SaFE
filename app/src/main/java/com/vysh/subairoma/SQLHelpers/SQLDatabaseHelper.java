@@ -796,13 +796,7 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
         values.put(DatabaseTables.MigrantsTempTable.user_id, userId);
         long newRowId = db.insert(DatabaseTables.MigrantsTempTable.TABLE_NAME, null, values);
         Log.d("mylog", "Inserted row ID: " + newRowId);
-        return (int)newRowId;
-    }
-
-    public void deleteTempMigrant(int migrantId) {
-        SQLiteDatabase db = this.getWritableDatabase();
-        db.execSQL("DELETE FROM " + DatabaseTables.MigrantsTempTable.TABLE_NAME + " WHERE " +
-                DatabaseTables.MigrantsTempTable.migrant_id + "=" + migrantId);
+        return (int) newRowId;
     }
 
     public ArrayList<MigrantModel> getAllTempMigrants() {
@@ -1003,5 +997,33 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
             long newRowId = db.insert(DatabaseTables.TempResponseTable.TABLE_NAME, null, values);
             Log.d("mylog", "Inserted row ID: " + newRowId);
         }
+    }
+
+    public void makeMigIdChanges(int migrantIdOld, int migrantIdNew) {
+        // Gets the data repository in write mode
+        SQLiteDatabase db = this.getWritableDatabase();
+        // Create a new map of values, where column names are the keys
+        ContentValues values = new ContentValues();
+        values.put(DatabaseTables.MigrantsTable.migrant_id, migrantIdNew);
+
+        //Changing in MigrantTable first
+        String whereClause = DatabaseTables.MigrantsTable.migrant_id + " = " + migrantIdOld;
+        long updateCount = db.update(DatabaseTables.MigrantsTable.TABLE_NAME, values, whereClause, null);
+        Log.d("mylog", "Updated row count: " + updateCount);
+        if (updateCount < 1) {
+            Log.d("mylog", "Not Updated in Mig Table");
+        }
+
+        //Changing in MigrantTable first
+        String whereClause2 = DatabaseTables.ResponseTable.migrant_id + " = " + migrantIdOld;
+        long updateCount2 = db.update(DatabaseTables.ResponseTable.TABLE_NAME, values, whereClause2, null);
+        Log.d("mylog", "Updated row count: " + updateCount);
+        if (updateCount2 < 1) {
+            Log.d("mylog", "Not Updated in Responses");
+        }
+
+        //Delete Mig From Temp Table
+        db.execSQL("DELETE FROM " + DatabaseTables.MigrantsTempTable.TABLE_NAME + " WHERE " +
+                DatabaseTables.MigrantsTempTable.migrant_id + "=" + migrantIdOld);
     }
 }

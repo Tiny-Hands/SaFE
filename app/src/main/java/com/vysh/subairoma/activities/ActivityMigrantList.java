@@ -2,10 +2,12 @@ package com.vysh.subairoma.activities;
 
 import android.Manifest;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.net.ConnectivityManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -28,6 +30,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -51,6 +54,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -64,6 +68,7 @@ import butterknife.ButterKnife;
 public class ActivityMigrantList extends AppCompatActivity implements RecyclerItemTouchHelper.RecyclerItemTouchHelperListener {
     private final String API = "/getmigrants.php";
     private final String ApiDISABLE = "/deactivatemigrant.php";
+    final String apiURLMigrant = "/savemigrant.php";
     private final int REQUEST_LOCATION = 1;
 
     @BindView(R.id.rvMigrants)
@@ -85,12 +90,16 @@ public class ActivityMigrantList extends AppCompatActivity implements RecyclerIt
     ArrayList<MigrantModel> migrantModels;
     MigrantListAdapter migrantListAdapter;
 
+
+    SQLDatabaseHelper dbHelper;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_select_migrant);
         //getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         ButterKnife.bind(this);
+        dbHelper = new SQLDatabaseHelper(ActivityMigrantList.this);
         userType = ApplicationClass.getInstance().getUserType();
         migrantModels = new ArrayList();
         if (isLocationAccessAllowed())
@@ -144,7 +153,91 @@ public class ActivityMigrantList extends AppCompatActivity implements RecyclerIt
     @Override
     protected void onResume() {
         super.onResume();
-        getSavedMigrants();
+        if (isNetworkConnected()) {
+            saveLocalDataToServer();
+        } else
+            getSavedMigrants();
+    }
+
+    private void saveLocalDataToServer() {
+        migrantModels = getMigrantsToDisplay(dbHelper.getMigrants());
+        ArrayList<MigrantModel> migsLocal = new ArrayList<>();
+        for (MigrantModel migModel : migrantModels) {
+            if (migModel.getMigrantId() < 0) {
+                Log.d("mylog", "Temp Mig: " + migModel.getMigrantName() + ", Mid ID: " + migModel.getMigrantId());
+                migsLocal.add(migModel);
+            }
+        }
+        if (migsLocal.size() > 0)
+            saveMigToServer(migsLocal);
+        else
+            getSavedMigrants();
+    }
+
+    private void saveMigToServer(final ArrayList<MigrantModel> migModel) {
+        final ProgressDialog progressDialog = new ProgressDialog(ActivityMigrantList.this);
+        //progressDialog.setTitle("Please wait");
+        progressDialog.setMessage(getResources().getString(R.string.registering));
+        progressDialog.setCancelable(false);
+        progressDialog.show();
+        String api = ApplicationClass.getInstance().getAPIROOT() + apiURLMigrant;
+        RequestQueue requestQueue = Volley.newRequestQueue(ActivityMigrantList.this);
+        for (int i = 0; i < migModel.size(); i++) {
+            final int currCount = i;
+            final MigrantModel currModel = migModel.get(i);
+            StringRequest saveRequest = new StringRequest(Request.Method.POST, api, new Response.Listener<String>() {
+                @Override
+                public void onResponse(String response) {
+                    Log.d("mylog", "response : " + response);
+                    try {
+                        JSONObject jsonObj = new JSONObject(response);
+                        boolean error = jsonObj.getBoolean("error");
+                        if (!error)
+                            makeChangesInLocalDB(currModel.getMigrantId(), jsonObj.getInt("migrant_id"));
+                        if (currCount == migModel.size() - 1) {
+                            progressDialog.dismiss();
+                            getSavedMigrants();
+                        }
+                    } catch (JSONException e) {
+                        Log.d("mylog", "Exceptions: " + e.getMessage());
+                    }
+                }
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    if (currCount == migModel.size() - 1) {
+                        progressDialog.dismiss();
+                        getSavedMigrants();
+                    }
+                    String err = error.toString();
+                    Log.d("mylog", "error : " + err);
+                    showSnackbar(getString(R.string.server_noconnect));
+                }
+            }) {
+                @Override
+                protected Map<String, String> getParams() throws AuthFailureError {
+                    HashMap<String, String> params = new HashMap<>();
+                    params.put("full_name", currModel.getMigrantName());
+                    params.put("phone_number", currModel.getMigrantPhone());
+                    params.put("age", currModel.getMigrantAge() + "");
+                    params.put("gender", currModel.getMigrantSex());
+                    params.put("user_id", currModel.getUserId() + "");
+                    return params;
+                }
+            };
+            saveRequest.setRetryPolicy(new DefaultRetryPolicy(20 * 1000, 0, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+            requestQueue.add(saveRequest);
+        }
+
+    }
+
+    private void makeChangesInLocalDB(int migrantIdOld, int migrantIdNew) {
+        dbHelper.makeMigIdChanges(migrantIdOld, migrantIdNew);
+    }
+
+    private boolean isNetworkConnected() {
+        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        return cm.getActiveNetworkInfo() != null;
     }
 
     private void setUpNavigationButtons() {
@@ -206,7 +299,6 @@ public class ActivityMigrantList extends AppCompatActivity implements RecyclerIt
     }
 
     private void getSavedMigrants() {
-        SQLDatabaseHelper dbHelper = new SQLDatabaseHelper(ActivityMigrantList.this);
         migrantModels = getMigrantsToDisplay(dbHelper.getMigrants());
         migrantListAdapter = new MigrantListAdapter();
         /*if (userType == 1) {
@@ -218,7 +310,7 @@ public class ActivityMigrantList extends AppCompatActivity implements RecyclerIt
         if (migrantModels.size() == 1 && userType == 0) {
             int migId = migrantModels.get(0).getMigrantId();
             ApplicationClass.getInstance().setMigrantId(migId);
-            String cid = new SQLDatabaseHelper(ActivityMigrantList.this).getResponse(migId, "mg_destination");
+            String cid = dbHelper.getResponse(migId, "mg_destination");
             Log.d("mylog", "Country ID: " + cid);
             if (cid != null && !cid.isEmpty()) {
                 Intent intent = new Intent(ActivityMigrantList.this, ActivityTileHome.class);
@@ -227,7 +319,7 @@ public class ActivityMigrantList extends AppCompatActivity implements RecyclerIt
                 intent.putExtra("migrantName", migrantModels.get(0).getMigrantName());
                 intent.putExtra("migrantPhone", migrantModels.get(0).getMigrantPhone());
                 intent.putExtra("migrantGender", migrantModels.get(0).getMigrantSex());
-                CountryModel savedCountry = new SQLDatabaseHelper(ActivityMigrantList.this).getCountry(cid);
+                CountryModel savedCountry = dbHelper.getCountry(cid);
                 Log.d("mylog", "Country name: " + savedCountry.getCountryName());
                 intent.putExtra("countryName", savedCountry.getCountryName().toUpperCase());
                 intent.putExtra("countryStatus", savedCountry.getCountrySatus());
@@ -311,7 +403,6 @@ public class ActivityMigrantList extends AppCompatActivity implements RecyclerIt
             final int uid = ApplicationClass.getInstance().getUserId();
             final int mid = migrantModels.get(viewHolder.getAdapterPosition()).getMigrantId();
             long time = System.currentTimeMillis();
-            final SQLDatabaseHelper dbHelper = new SQLDatabaseHelper(ActivityMigrantList.this);
             dbHelper.insertMigrantDeletion(mid, uid, System.currentTimeMillis() + "");
             ;
             migrantListAdapter.removeItem(viewHolder.getAdapterPosition());
