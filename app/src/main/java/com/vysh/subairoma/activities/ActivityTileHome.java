@@ -215,10 +215,12 @@ public class ActivityTileHome extends AppCompatActivity {
     private void getAllFeedbackResponses() {
         int migId = ApplicationClass.getInstance().getMigrantId();
         SQLDatabaseHelper sqlDatabaseHelper = new SQLDatabaseHelper(ActivityTileHome.this);
-        ArrayList<HashMap> responses = sqlDatabaseHelper.getAllFeedbackResponses(migId);
-        for (int i = 0; i < responses.size(); i++) {
-            saveResponseToServer(responses.get(i), 2);
-        }
+        if (migId > 0) {
+            ArrayList<HashMap> responses = sqlDatabaseHelper.getAllFeedbackResponses(migId);
+            for (int i = 0; i < responses.size(); i++) {
+                saveResponseToServer(responses.get(i), 2);
+            }
+        } else Log.d("mylog", "MigID: " + migId + " Not saving to server");
     }
 
     private void setUpListeners() {
@@ -343,12 +345,16 @@ public class ActivityTileHome extends AppCompatActivity {
     }
 
     private void getAllResponses() {
-        ArrayList<HashMap> allParams = new SQLDatabaseHelper(ActivityTileHome.this)
-                .getAllResponse(ApplicationClass.getInstance().getMigrantId());
-        for (int i = 0; i < allParams.size(); i++) {
-            //Log.d("mylog", "Saving to server: " + i);
-            saveResponseToServer(allParams.get(i), 1);
-        }
+        int migId = ApplicationClass.getInstance().getMigrantId();
+        if (migId > 0) {
+            ArrayList<HashMap> allParams = new SQLDatabaseHelper(ActivityTileHome.this)
+                    .getAllResponse(migId);
+            for (int i = 0; i < allParams.size(); i++) {
+                //Log.d("mylog", "Saving to server: " + i);
+                saveResponseToServer(allParams.get(i), 1);
+            }
+        } else
+            Log.d("mylog", "MigID: " + migId + " Not saving to server");
     }
 
     private void saveResponseToServer(final HashMap<String, String> fParams, int responseType) {

@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -105,6 +106,10 @@ public class MigrantListAdapter extends RecyclerView.Adapter<MigrantListAdapter.
         if (migrants.size() == 1) {
             //showCountryChooser(migrants.get(0).getMigrantName(), ((AppCompatActivity) mContext).getSupportFragmentManager());
         }
+
+        if (migrantModel.getMigrantId() < 0)
+            holder.viewForeground.setBackgroundColor(mContext.getResources().getColor(R.color.colorOffline));
+        else holder.viewForeground.setBackgroundColor(Color.WHITE);
 
     }
 

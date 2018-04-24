@@ -8,6 +8,7 @@
     <color name="grey">#616060</color>
     <color name="translucentGrey">#a8e0e0e0</color>
     <color name="colorNeutral">#d9a428</color>
+    <color name="colorOffline">#fff9c4</color>
     <color name="colorComplete">#25860a</color>
     <color name="colorError">#e12b2b</color>
     <color name="colorDelete">#e53935</color>

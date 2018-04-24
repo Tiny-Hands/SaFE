@@ -338,7 +338,9 @@ public class ActivityMigrantList extends AppCompatActivity implements RecyclerIt
         int uid = ApplicationClass.getInstance().getUserId();
         RequestQueue queue = Volley.newRequestQueue(ActivityMigrantList.this);
         for (int i = 0; i < disableMigs.size(); i++) {
-            deactivateUser(uid, disableMigs.get(i).getMigrantId(), disableMigs.get(i).getInactiveDate(), queue);
+            int migId = disableMigs.get(i).getMigrantId();
+            if (migId > 0)
+                deactivateUser(uid, 0, disableMigs.get(i).getInactiveDate(), queue);
         }
     }
 
