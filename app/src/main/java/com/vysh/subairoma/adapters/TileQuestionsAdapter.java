@@ -343,9 +343,11 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
             //Show green checkmark only if checkbox is checked and no error
             if (response.equalsIgnoreCase("true")) {
                 ivDone.setVisibility(View.VISIBLE);
+                tvTitle.setTextColor(context.getResources().getColor(R.color.colorPrimary));
                 btnShowMore.setVisibility(GONE);
             } else if (!response.isEmpty() && !response.equalsIgnoreCase("false") && !response.contains("---")) {
                 ivDone.setVisibility(View.VISIBLE);
+                tvTitle.setTextColor(context.getResources().getColor(R.color.colorPrimary));
                 btnShowMore.setVisibility(GONE);
             } else {
                 ivDone.setVisibility(View.GONE);
