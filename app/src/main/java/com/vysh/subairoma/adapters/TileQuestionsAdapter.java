@@ -72,7 +72,6 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
     int previousClickedPos = -1;
     int currentClickedPos = -1;
     boolean fromSetView, fromSetViewSpinner, disabled;
-    Boolean isExpanded = false;
     ArrayList<TileQuestionsModel> questionsList;
     ArrayList<TileQuestionsModel> questionsListDisplay;
     SQLDatabaseHelper sqlDatabaseHelper;
@@ -197,7 +196,6 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
     public void onBindViewHolder(final QuestionHolder holder, final int position) {
         //Log.d("mylog", "Position: " + position + " Previous pos: " + previousClickedPos);
         //holder.hideExpandView();
-        //isExpanded = false;
         TileQuestionsModel question = questionsListDisplay.get(position);
         holder.title.setText(question.getTitle());
         holder.question.setText(question.getQuestion());
@@ -869,7 +867,6 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
                                     migrantId, questionsListDisplay.get(getAdapterPosition()).getVariable(), time);
                             sqlDatabaseHelper.insertIsError(migrantId, questionsListDisplay.get(getAdapterPosition()).getVariable(), "false");
                             notifyItemChanged(getAdapterPosition());
-                            //isExpanded = false;
                         } else {
                         }
                     }
@@ -963,40 +960,15 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
             previousClickedPos = currentClickedPos;
             currentClickedPos = getAdapterPosition();
             if (previousClickedPos != currentClickedPos && previousClickedPos != -1) {
-                isExpanded = false;
                 notifyItemChanged(previousClickedPos);
+            } else if (previousClickedPos == currentClickedPos) {
+                if (helpLayout.getVisibility() == View.VISIBLE) {
+                    notifyItemChanged(currentClickedPos);
+                } else
+                    showExpandView();
             }
-            Log.d("mylog", "Is Expanded: " + isExpanded);
-            if (!isExpanded) {
-                showExpandView();
-            } else {
-                hideExpandView();
-            }
+            showExpandView();
         }
-
-        private void hideExpandView() {
-            if (Build.VERSION.SDK_INT >= 19) {
-                TransitionManager.beginDelayedTransition((ViewGroup) cardView.getParent());
-            }
-            details.setVisibility(GONE);
-            helpLayout.setVisibility(View.GONE);
-            helpLayout.setVisibility(View.GONE);
-            question.setVisibility(View.GONE);
-            if (listViewOptions.getVisibility() == View.VISIBLE)
-                listViewOptions.setVisibility(GONE);
-            if (question.getVisibility() == View.VISIBLE)
-                question.setVisibility(GONE);
-            if (checkbox.getVisibility() == View.VISIBLE)
-                checkbox.setVisibility(GONE);
-            if (rbGroup.getVisibility() == View.VISIBLE)
-                rbGroup.setVisibility(GONE);
-            if (spinnerOptions.getVisibility() == VISIBLE)
-                spinnerOptions.setVisibility(GONE);
-            if (etResponse.getVisibility() == VISIBLE)
-                etResponse.setVisibility(GONE);
-            isExpanded = false;
-        }
-
         private void showExpandView() {
             // Start Expanding
             if (Build.VERSION.SDK_INT >= 19) {
@@ -1005,7 +977,7 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
             details.setVisibility(View.VISIBLE);
             helpLayout.setVisibility(View.VISIBLE);
             question.setVisibility(View.VISIBLE);
-            int responseType = questionsListDisplay.get(getAdapterPosition()).getResponseType();
+            int responseType = questionsListDisplay.get(currentClickedPos).getResponseType();
             if (responseType == 0) {
                 checkbox.setVisibility(View.VISIBLE);
             } else if (responseType == 1) {
@@ -1017,7 +989,6 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
             } else if (responseType == 4) {
                 rbGroup.setVisibility(View.VISIBLE);
             }
-            isExpanded = true;
         }
     }
 
