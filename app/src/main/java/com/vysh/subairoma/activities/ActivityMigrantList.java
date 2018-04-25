@@ -48,6 +48,7 @@ import com.vysh.subairoma.models.CountryModel;
 import com.vysh.subairoma.models.MigrantModel;
 import com.vysh.subairoma.services.LocationChecker;
 import com.vysh.subairoma.utils.CustomTextView;
+import com.vysh.subairoma.utils.InternetConnectionChecker;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -153,7 +154,7 @@ public class ActivityMigrantList extends AppCompatActivity implements RecyclerIt
     @Override
     protected void onResume() {
         super.onResume();
-        if (isNetworkConnected()) {
+        if (InternetConnectionChecker.isNetworkConnected(ActivityMigrantList.this)) {
             saveLocalDataToServer();
         } else
             getSavedMigrants();
@@ -233,11 +234,6 @@ public class ActivityMigrantList extends AppCompatActivity implements RecyclerIt
 
     private void makeChangesInLocalDB(int migrantIdOld, int migrantIdNew) {
         dbHelper.makeMigIdChanges(migrantIdOld, migrantIdNew);
-    }
-
-    private boolean isNetworkConnected() {
-        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        return cm.getActiveNetworkInfo() != null;
     }
 
     private void setUpNavigationButtons() {
