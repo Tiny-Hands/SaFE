@@ -28,6 +28,7 @@ import com.vysh.subairoma.ApplicationClass;
 import com.vysh.subairoma.R;
 import com.vysh.subairoma.SQLHelpers.SQLDatabaseHelper;
 import com.vysh.subairoma.SharedPrefKeys;
+import com.vysh.subairoma.utils.InternetConnectionChecker;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -67,7 +68,6 @@ public class ActivityOTPVerification extends AppCompatActivity implements View.O
     String apiUserRegister;
     String name, phoneNumber, age, gender;
     int uType;
-    Boolean isSupervised = false;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -79,9 +79,6 @@ public class ActivityOTPVerification extends AppCompatActivity implements View.O
         btnChangeNumber.setOnClickListener(this);
         btnSendOtpAgain.setOnClickListener(this);
 
-        //Sending the OTP To the mentioned number;
-        lastTime = System.currentTimeMillis();
-        sendOTP();
         Intent intent = getIntent();
         name = intent.getStringExtra("name");
         phoneNumber = intent.getStringExtra("phoneNumber");
@@ -90,10 +87,66 @@ public class ActivityOTPVerification extends AppCompatActivity implements View.O
         uType = intent.getIntExtra("userType", -10);
         if (uType == 0) {
             apiUserRegister = ApplicationClass.getInstance().getAPIROOT() + apiURLMigrant;
-            isSupervised = intent.getBooleanExtra("isSupervised", false);
         } else
             apiUserRegister = ApplicationClass.getInstance().getAPIROOT() + apiURLHelper;
+        if (InternetConnectionChecker.isNetworkConnected(ActivityOTPVerification.this)) {
+            //Sending the OTP To the mentioned number;
+            lastTime = System.currentTimeMillis();
+            sendOTP();
+        } else
+            saveUserLocally(uType);
 
+    }
+
+    private void saveUserLocally(int uType) {
+        SharedPreferences sp = getSharedPreferences(SharedPrefKeys.sharedPrefName, MODE_PRIVATE);
+        //Parse Other responses and save in SharedPref
+        SharedPreferences.Editor editor = sp.edit();
+        int user_id = -111;
+        if (uType == 1) {
+            ApplicationClass.getInstance().setUserId(user_id);
+            editor.putString(SharedPrefKeys.userName, name);
+            editor.putInt(SharedPrefKeys.userId, user_id);
+            editor.putString(SharedPrefKeys.userPhone, phoneNumber);
+            editor.putString(SharedPrefKeys.userSex, gender);
+            editor.putString(SharedPrefKeys.userAge, age);
+            editor.putString(SharedPrefKeys.userType, "helper");
+            editor.commit();
+            Intent intent = new Intent(ActivityOTPVerification.this, ActivityRegister.class);
+            intent.putExtra("migrantmode", true);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(intent);
+        } else {
+            int mid = new SQLDatabaseHelper(ActivityOTPVerification.this).insertTempMigrants(name,
+                    Integer.parseInt(age), phoneNumber, gender, ApplicationClass.getInstance().getUserId());
+            //new SQLDatabaseHelper(ActivityRegister.this).insertTempResponseTableData(sex, SharedPrefKeys.questionGender, -1, mid, "mg_sex", time);
+
+            //Getting id to save in corresponding real local DB
+            int fabMigId = Integer.parseInt("-1" + mid);
+
+            editor.putString(SharedPrefKeys.userType, "migrant");
+            Log.d("mylog", "Migrant ID: " + fabMigId);
+            ApplicationClass.getInstance().setMigrantId(fabMigId);
+            ApplicationClass.getInstance().setUserId(user_id);
+            editor.putInt(SharedPrefKeys.userId, user_id);
+            editor.putInt(SharedPrefKeys.defMigID, fabMigId);
+            editor.commit();
+
+            Calendar cal = Calendar.getInstance();
+            String time = cal.getTimeInMillis() + "";
+
+            new SQLDatabaseHelper(ActivityOTPVerification.this).insertMigrants(fabMigId, name,
+                    Integer.parseInt(age), phoneNumber, gender, ApplicationClass.getInstance().getUserId());
+
+            new SQLDatabaseHelper(ActivityOTPVerification.this).insertResponseTableData(gender, SharedPrefKeys.questionGender, -1, fabMigId, "mg_sex", time);
+
+
+            //Do Next Step Now
+            Intent intent = new Intent(ActivityOTPVerification.this, ActivityMigrantList.class);
+            //intent.putExtra("migrantmode", true);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(intent);
+        }
     }
 
     @Override

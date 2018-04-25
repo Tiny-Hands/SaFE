@@ -38,6 +38,7 @@ import com.vysh.subairoma.SharedPrefKeys;
 import com.vysh.subairoma.dialogs.DialogLoginOptions;
 import com.vysh.subairoma.dialogs.DialogUsertypeChooser;
 import com.vysh.subairoma.models.MigrantModel;
+import com.vysh.subairoma.utils.InternetConnectionChecker;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -363,8 +364,28 @@ public class ActivityRegister extends AppCompatActivity {
                     //If it's a helper user registering a migrant, then no need to redirect to OTPActivity,
                     //But Register and then redirect to migrant list.
                     if (userRegistered) {
-                        String api = ApplicationClass.getInstance().getAPIROOT() + apiURLMigrant;
-                        registerMigrant(api);
+                        if (InternetConnectionChecker.isNetworkConnected(ActivityRegister.this)) {
+                            String api = ApplicationClass.getInstance().getAPIROOT() + apiURLMigrant;
+                            registerMigrant(api);
+                        } else {
+                            //Save in Temp Database to saveLater
+                            Calendar cal = Calendar.getInstance();
+                            String time = cal.getTimeInMillis() + "";
+
+                            int mid = new SQLDatabaseHelper(ActivityRegister.this).insertTempMigrants(etName.getText().toString(),
+                                    Integer.parseInt(etAge.getText().toString()), etNumber.getText().toString(), sex, ApplicationClass.getInstance().getUserId());
+                            //new SQLDatabaseHelper(ActivityRegister.this).insertTempResponseTableData(sex, SharedPrefKeys.questionGender, -1, mid, "mg_sex", time);
+
+                            //Saving in corresponding real local DB
+                            int fabMigId = Integer.parseInt("-1" + mid);
+                            new SQLDatabaseHelper(ActivityRegister.this).insertMigrants(fabMigId, etName.getText().toString(),
+                                    Integer.parseInt(etAge.getText().toString()), etNumber.getText().toString(), sex, ApplicationClass.getInstance().getUserId());
+
+                            new SQLDatabaseHelper(ActivityRegister.this).insertResponseTableData(sex, SharedPrefKeys.questionGender, -1, fabMigId, "mg_sex", time);
+                            Intent intent = new Intent(ActivityRegister.this, ActivityMigrantList.class);
+                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                            startActivity(intent);
+                        }
                         //Start Migrant List Activity
                     } else {
                         startOTPActivity(userType);
@@ -418,24 +439,6 @@ public class ActivityRegister extends AppCompatActivity {
                 String err = error.toString();
                 Log.d("mylog", "error : " + err);
                 showSnackbar(getString(R.string.server_noconnect));
-
-                //Save in Temp Database to saveLater
-                Calendar cal = Calendar.getInstance();
-                String time = cal.getTimeInMillis() + "";
-
-                int mid = new SQLDatabaseHelper(ActivityRegister.this).insertTempMigrants(etName.getText().toString(),
-                        Integer.parseInt(etAge.getText().toString()), etNumber.getText().toString(), sex, ApplicationClass.getInstance().getUserId());
-                //new SQLDatabaseHelper(ActivityRegister.this).insertTempResponseTableData(sex, SharedPrefKeys.questionGender, -1, mid, "mg_sex", time);
-
-                //Saving in corresponding real local DB
-                int fabMigId = Integer.parseInt("-1" + mid);
-                new SQLDatabaseHelper(ActivityRegister.this).insertMigrants(fabMigId, etName.getText().toString(),
-                        Integer.parseInt(etAge.getText().toString()), etNumber.getText().toString(), sex, ApplicationClass.getInstance().getUserId());
-
-                new SQLDatabaseHelper(ActivityRegister.this).insertResponseTableData(sex, SharedPrefKeys.questionGender, -1, fabMigId, "mg_sex", time);
-                Intent intent = new Intent(ActivityRegister.this, ActivityMigrantList.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                startActivity(intent);
             }
         }) {
             @Override
