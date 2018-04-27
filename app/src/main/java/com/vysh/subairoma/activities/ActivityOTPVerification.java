@@ -210,7 +210,7 @@ public class ActivityOTPVerification extends AppCompatActivity implements View.O
             public void onResponse(String response) {
                 progressDialog.dismiss();
                 Log.d("mylog", "response : " + response);
-                parseResponse(response);
+                //parseResponse(response);
             }
         }, new Response.ErrorListener() {
             @Override
@@ -337,8 +337,15 @@ public class ActivityOTPVerification extends AppCompatActivity implements View.O
                 //Means the registered person was Helper
                 else {
                     //startOTPActivity();
+
                     int user_id = jsonResponse.getInt("user_id");
                     Log.d("mylog", "Saving user ID: " + user_id);
+
+                    int oldUid = ApplicationClass.getInstance().getUserId();
+                    if (oldUid == -111) {
+                        new SQLDatabaseHelper(ActivityOTPVerification.this).makeUserIdChanges(-111, user_id);
+                    }
+
                     ApplicationClass.getInstance().setUserId(user_id);
                     //Parse Other responses and save in SharedPref
                     editor.putString(SharedPrefKeys.userName, name);

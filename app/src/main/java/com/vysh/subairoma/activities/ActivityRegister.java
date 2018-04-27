@@ -413,8 +413,6 @@ public class ActivityRegister extends AppCompatActivity {
         intent.putExtra("age", etAge.getText().toString());
         intent.putExtra("gender", sex);
         intent.putExtra("userType", uType);
-        if (uType == 0)
-            intent.putExtra("isSupervised", userRegistered);
         startActivity(intent);
     }
 
@@ -589,21 +587,46 @@ public class ActivityRegister extends AppCompatActivity {
         String type = sharedPreferences.getString(SharedPrefKeys.userType, "");
         Log.d("mylog", "User id: " + userId + " Type: " + type);
         if (userId != -10) {
-            if (type.equalsIgnoreCase("helper")) {
-                Log.d("mylog", "User already exists with ID: " + userId);
-                userType = 1;
-                ApplicationClass.getInstance().setUserId(userId);
-                ApplicationClass.getInstance().setUserType(1);
+            if (userId < 0 && InternetConnectionChecker.isNetworkConnected(ActivityRegister.this)) {
+                //Just need to save user to server and change the UserId in migrant table to new IDs
+                //Migrants will be saved to server on Activity Migrant List;
+                Log.d("mylog", "Saving User to Server");
+                saveUserToServer();
+                return false;
             } else {
-                Log.d("mylog", "Migrant already exists, Setting user ID: ");
-                //ApplicationClass.getInstance().setMigrantId(userId);
-                userType = 0;
-                ApplicationClass.getInstance().setUserType(0);
-                ApplicationClass.getInstance().setUserId(userId);
-                ApplicationClass.getInstance().setMigrantId(sharedPreferences.getInt(SharedPrefKeys.defMigID, -1));
+                if (type.equalsIgnoreCase("helper")) {
+                    Log.d("mylog", "User already exists with ID: " + userId);
+                    userType = 1;
+                    ApplicationClass.getInstance().setUserId(userId);
+                    ApplicationClass.getInstance().setUserType(1);
+                } else {
+                    Log.d("mylog", "Migrant already exists, Setting user ID: ");
+                    //ApplicationClass.getInstance().setMigrantId(userId);
+                    userType = 0;
+                    ApplicationClass.getInstance().setUserType(0);
+                    ApplicationClass.getInstance().setUserId(userId);
+                    ApplicationClass.getInstance().setMigrantId(sharedPreferences.getInt(SharedPrefKeys.defMigID, -1));
+                }
             }
             return true;
         } else return false;
+    }
+
+    private void saveUserToServer() {
+        SharedPreferences sp = getSharedPreferences(SharedPrefKeys.sharedPrefName, MODE_PRIVATE);
+
+        String name = sp.getString(SharedPrefKeys.userName, "");
+        String phoneNumber = sp.getString(SharedPrefKeys.userPhone, "");
+        String age = sp.getString(SharedPrefKeys.userAge, "");
+        String gender = sp.getString(SharedPrefKeys.userSex, "");
+
+        Intent intent = new Intent(ActivityRegister.this, ActivityOTPVerification.class);
+        intent.putExtra("name", name);
+        intent.putExtra("phoneNumber", phoneNumber);
+        intent.putExtra("age", age);
+        intent.putExtra("gender", gender);
+        intent.putExtra("userType", 1);
+        startActivity(intent);
     }
 
     public void checkIfFBUserExists(String fid) {

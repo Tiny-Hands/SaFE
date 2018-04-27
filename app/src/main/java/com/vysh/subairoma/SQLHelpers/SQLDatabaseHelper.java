@@ -1026,4 +1026,20 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
         db.execSQL("DELETE FROM " + DatabaseTables.MigrantsTempTable.TABLE_NAME + " WHERE " +
                 DatabaseTables.MigrantsTempTable.migrant_id + "=" + migrantIdOld);
     }
+
+    public void makeUserIdChanges(int userIdOld, int userIdNew) {
+        // Gets the data repository in write mode
+        SQLiteDatabase db = this.getWritableDatabase();
+        // Create a new map of values, where column names are the keys
+        ContentValues values = new ContentValues();
+        values.put(DatabaseTables.MigrantsTable.user_id, userIdNew);
+
+        //Changing in MigrantTable first
+        String whereClause = DatabaseTables.MigrantsTable.user_id + " = " + userIdOld;
+        long updateCount = db.update(DatabaseTables.MigrantsTable.TABLE_NAME, values, whereClause, null);
+        Log.d("mylog", "Updated User ID row count: " + updateCount);
+        if (updateCount < 1) {
+            Log.d("mylog", "Not Updated User ID");
+        }
+    }
 }
