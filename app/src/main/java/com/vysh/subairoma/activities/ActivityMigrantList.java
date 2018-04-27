@@ -135,7 +135,7 @@ public class ActivityMigrantList extends AppCompatActivity implements RecyclerIt
                 switch (item.getItemId()) {
                     case R.id.nav_profile:
                         Intent intent = new Intent(ActivityMigrantList.this, ActivityProfileEdit.class);
-                        intent.putExtra("userType", 0);
+                        intent.putExtra("userType", 1);
                         drawerLayout.closeDrawer(GravityCompat.END);
                         startActivity(intent);
                         break;

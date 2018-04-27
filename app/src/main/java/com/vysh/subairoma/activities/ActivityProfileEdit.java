@@ -39,6 +39,7 @@ import com.vysh.subairoma.SQLHelpers.SQLDatabaseHelper;
 import com.vysh.subairoma.SharedPrefKeys;
 import com.vysh.subairoma.models.MigrantModel;
 import com.vysh.subairoma.utils.CustomTextView;
+import com.vysh.subairoma.utils.InternetConnectionChecker;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -103,7 +104,7 @@ public class ActivityProfileEdit extends AppCompatActivity implements View.OnCli
         //tvHint.setText("Edit Details");
         btnAlreadyRegistered.setVisibility(GONE);
         btnNext.setOnClickListener(this);
-        if (userType == 1) {
+        if (userType == 0) {
             tvTitle.setText(getResources().getString(R.string.edit_migrant));
             if (ApplicationClass.getInstance().getUserId() != -1) {
                 loginButton.setVisibility(GONE);
@@ -112,7 +113,7 @@ public class ActivityProfileEdit extends AppCompatActivity implements View.OnCli
             } else
                 setUpFBLogin();
             getData();
-        } else if (userType == 0) {
+        } else if (userType == 1) {
             tvTitle.setText(getResources().getString(R.string.edit_profile));
             setUpUserData();
             setUpFBLogin();
@@ -218,11 +219,11 @@ public class ActivityProfileEdit extends AppCompatActivity implements View.OnCli
             protected Map<String, String> getParams() throws AuthFailureError {
                 HashMap<String, String> params = new HashMap<>();
                 params.put("fb_id", fbId);
-                if (userType == 1) {
+                if (userType == 0) {
                     params.put("user_type", userType + "");
                     params.put("uid", ApplicationClass.getInstance().getMigrantId() + "");
                 } else {
-                    int userType = 0;
+                    int userType = 1;
                     params.put("user_type", userType + "");
                     params.put("uid", ApplicationClass.getInstance().getUserId() + "");
                 }
@@ -268,10 +269,10 @@ public class ActivityProfileEdit extends AppCompatActivity implements View.OnCli
     private void updateUser() {
         String API = "";
         int id = -2;
-        if (userType == 0) {
+        if (userType == 1) {
             API = ApplicationClass.getInstance().getAPIROOT() + apiUpdateUser;
             id = ApplicationClass.getInstance().getUserId();
-        } else if (userType == 1) {
+        } else if (userType == 0) {
             API = ApplicationClass.getInstance().getAPIROOT() + apiUpdateMigrant;
             id = ApplicationClass.getInstance().getMigrantId();
         }
@@ -281,7 +282,23 @@ public class ActivityProfileEdit extends AppCompatActivity implements View.OnCli
         String sex = "";
         if (rbFemale.isChecked()) sex = "female";
         else if (rbMale.isChecked()) sex = "male";
-        sendToServer(API, id, name, age, number, sex);
+        if (InternetConnectionChecker.isNetworkConnected(ActivityProfileEdit.this))
+            sendToServer(API, id, name, age, number, sex);
+        else {
+            if (userType == 1) {
+                //Save the new user info in SharedPrefs
+                SharedPreferences sharedPreferences = getSharedPreferences(SharedPrefKeys.sharedPrefName, MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.putString(SharedPrefKeys.userName, name);
+                editor.putString(SharedPrefKeys.userPhone, number);
+                editor.putString(SharedPrefKeys.userSex, sex);
+                editor.putString(SharedPrefKeys.userAge, age);
+                editor.putString(SharedPrefKeys.userType, "helper");
+                editor.commit();
+            } else {
+                showSnackbar(getString(R.string.server_noconnect));
+            }
+        }
     }
 
     private void sendToServer(String API, final int id, final String name, final String age,
@@ -300,7 +317,7 @@ public class ActivityProfileEdit extends AppCompatActivity implements View.OnCli
                     JSONObject jsonObject = new JSONObject(response);
                     Boolean error = jsonObject.getBoolean("error");
                     if (!error) {
-                        if (userType == 0) {
+                        if (userType == 1) {
                             //Save the new user info in SharedPrefs
                             SharedPreferences sharedPreferences = getSharedPreferences(SharedPrefKeys.sharedPrefName, MODE_PRIVATE);
                             SharedPreferences.Editor editor = sharedPreferences.edit();
@@ -340,9 +357,9 @@ public class ActivityProfileEdit extends AppCompatActivity implements View.OnCli
                 params.put("phone_number", number);
                 params.put("age", age);
                 params.put("gender", sex);
-                if (userType == 0) {
+                if (userType == 1) {
                     params.put("user_id", id + "");
-                } else if (userType == 1) {
+                } else if (userType == 0) {
                     params.put("migrant_id", id + "");
                     params.put("user_id", ApplicationClass.getInstance().getUserId() + "");
                 }

@@ -250,7 +250,7 @@ public class ActivityTileHome extends AppCompatActivity {
                 switch (item.getItemId()) {
                     case R.id.nav_profile:
                         Intent intent = new Intent(ActivityTileHome.this, ActivityProfileEdit.class);
-                        intent.putExtra("userType", 1);
+                        intent.putExtra("userType", 0);
                         startActivity(intent);
                         break;
                     case R.id.nav_addmigrants:
