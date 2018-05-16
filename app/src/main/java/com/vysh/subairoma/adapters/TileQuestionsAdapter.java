@@ -23,6 +23,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
@@ -662,7 +663,7 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
         TextView title, question;
         SmartTextView details;
         CheckBox checkbox;
-        EditText etResponse;
+        AutoCompleteTextView etResponse;
         ImageView ivError, ivDone;
         Spinner spinnerOptions;
         ListView listViewOptions;
@@ -749,6 +750,7 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
                 }
             });
             etResponse = itemView.findViewById(R.id.etResponse);
+            setAdapter();
             etResponse.setOnEditorActionListener(new TextView.OnEditorActionListener() {
                 @Override
                 public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
@@ -955,6 +957,17 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
 
                 }
             });
+        }
+
+        public void setAdapter() {/*
+        labelNames = labels;
+        labelIds = ids;
+        Log.d("mylog", "Label: " + labelNames[2]);
+        Log.d("mylog", "Labels: " + labels[2]);
+        Log.d("mylog", "Label size: " + labelNames.length);*/
+            ArrayList<String> manpowerNames = new SQLDatabaseHelper(context).getManpowers();
+            ArrayAdapter<String> adapter = new ArrayAdapter<String>(context, android.R.layout.simple_list_item_1, manpowerNames);
+            etResponse.setAdapter(adapter);
         }
 
         private void toggleExpandView() {

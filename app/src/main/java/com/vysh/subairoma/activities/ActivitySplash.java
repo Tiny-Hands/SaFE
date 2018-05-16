@@ -55,9 +55,11 @@ public class ActivitySplash extends AppCompatActivity {
     private final String questionAPI = "/getallquestions.php";
     private final String optionsAPI = "/getalloptions.php";
     private final String countiesAPI = "/getcountries.php";
+    private final String manpowersAPI = "/getmanpowers.php";
     private final String importantContactsAPI = "/getimportantcontacts.php";
     private final String feedbackQuestions = "/getfeedbackquestions.php";
     private int savedCount = 0;
+    private int apiCount = 7;
     private long startTime;
     private long sleepTime;
     private String lang;
@@ -111,7 +113,7 @@ public class ActivitySplash extends AppCompatActivity {
         } else {
             setLocale("np");
         }
-        if (sp.getInt(SharedPrefKeys.savedTableCount, 0) == 6) {
+        if (sp.getInt(SharedPrefKeys.savedTableCount, 0) == apiCount) {
             startRegisterActivity();
             return;
         }
@@ -194,7 +196,7 @@ public class ActivitySplash extends AppCompatActivity {
 
     private void getAllData() {
         //Showing Progress
-        if (sp.getInt(SharedPrefKeys.savedTableCount, 0) != 6) {
+        if (sp.getInt(SharedPrefKeys.savedTableCount, 0) != apiCount) {
             showLoading();
             Log.d("mylog", "Starting save");
             dbHelper = new SQLDatabaseHelper(ActivitySplash.this);
@@ -206,6 +208,7 @@ public class ActivitySplash extends AppCompatActivity {
             getCountries();
             getContacts();
             getFeedbackQuestions();
+            getManpowers();
             /*
             if (!sp.getBoolean(SharedPrefKeys.savedTiles, false)) {
                 Log.d("mylog", "Getting tiles");
@@ -394,6 +397,29 @@ public class ActivitySplash extends AppCompatActivity {
                 return fParams;
             }
         };
+        RequestQueue queue = Volley.newRequestQueue(ActivitySplash.this);
+        queue.add(getRequest);
+    }
+
+    private void getManpowers() {
+        String api = ApplicationClass.getInstance().getAPIROOT() + manpowersAPI;
+        StringRequest getRequest = new StringRequest(Request.Method.GET, api, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                //SAVE RESPONSE IN LOCAL DB
+                parseAndSaveManpowers(response);
+                Log.d("mylog", "Got Manpowers: " + response);
+                SharedPreferences.Editor editor = sp.edit();
+                editor.putBoolean(SharedPrefKeys.savedManpowers, true);
+                editor.commit();
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.d("mylog", "Error getting manpowers: " + error.toString());
+                showErrorResponse();
+            }
+        });
         RequestQueue queue = Volley.newRequestQueue(ActivitySplash.this);
         queue.add(getRequest);
     }
@@ -593,8 +619,29 @@ public class ActivitySplash extends AppCompatActivity {
         }
     }
 
+    private void parseAndSaveManpowers(String response) {
+        try {
+            JSONObject jsonMan = new JSONObject(response);
+            boolean error = jsonMan.getBoolean("error");
+            if (error) {
+                Log.d("mylog", "Error getting manpowers: " + response);
+            } else {
+                JSONArray jsonManpowerArray = jsonMan.getJSONArray("manpowers");
+                for (int i = 0; i < jsonManpowerArray.length(); i++) {
+                    JSONObject tempManpower = jsonManpowerArray.getJSONObject(i);
+                    int id = tempManpower.getInt("id");
+                    String name = tempManpower.getString("manpower");
+                    dbHelper.insertManpower(id, name);
+                }
+            }
+        } catch (JSONException ex) {
+            Log.d("mylog", "Error parsing manpower: " + response);
+        }
+        incrementCount();
+    }
+
     private synchronized void checkSleep() {
-        if (savedCount == 6) {
+        if (savedCount == apiCount) {
             long currTime = System.currentTimeMillis();
             sleepTime = currTime - startTime;
             Log.d("mylog", "Count is 4, Sleep Time: " + sleepTime);
@@ -614,7 +661,7 @@ public class ActivitySplash extends AppCompatActivity {
         SharedPreferences.Editor editor = sp.edit();
         editor.putInt("savedcount", savedCount);
         editor.commit();
-        if (savedCount == 6) {
+        if (savedCount == apiCount) {
             //checkSleep();
             startRegisterActivity();
         }

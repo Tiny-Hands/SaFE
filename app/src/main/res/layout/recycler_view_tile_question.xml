@@ -100,7 +100,7 @@
                 android:textColor="@color/darkGrey"
                 android:textStyle="bold" />
 
-            <EditText
+            <AutoCompleteTextView
                 android:id="@+id/etResponse"
                 style="@style/editTextBackground"
                 android:layout_width="match_parent"

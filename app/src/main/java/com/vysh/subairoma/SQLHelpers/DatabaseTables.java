@@ -68,6 +68,12 @@ public final class DatabaseTables {
         public static final String country_order = "country_order";
     }
 
+    public static class ManpowersTable {
+        public static final String TABLE_NAME = "tbl_manpowers";
+        public static final String manpower_id = "manpower_id";
+        public static final String manpower_name = "manpower_name";
+    }
+
     public static class ImportantContacts {
         public static final String TABLE_NAME = "tbl_contacts";
         public static final String contact_id = "contact_id";

@@ -33,7 +33,8 @@ import java.util.HashMap;
 public class SQLDatabaseHelper extends SQLiteOpenHelper {
     // If you change the database schema, you must increment the database version.
     Context mContext;
-    public static final int DATABASE_VERSION = 10;
+    public static final int DATABASE_VERSION = 12
+            ;
     public static final String DATABASE_NAME = "SubairomaLocal.db";
     final String SQL_CREATE_ResponseTable =
             "CREATE TABLE IF NOT EXISTS " + DatabaseTables.ResponseTable.TABLE_NAME + " (" +
@@ -68,6 +69,10 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
                     DatabaseTables.TilesTable.tile_description + " TEXT," +
                     DatabaseTables.TilesTable.tile_type + " TEXT," +
                     DatabaseTables.TilesTable.tile_title + " TEXT" + ");";
+    final String SQL_CREATE_ManpowerTable =
+            "CREATE TABLE IF NOT EXISTS " + DatabaseTables.ManpowersTable.TABLE_NAME + " (" +
+                    DatabaseTables.ManpowersTable.manpower_id + " INTEGER PRIMARY KEY," +
+                    DatabaseTables.ManpowersTable.manpower_name + " TEXT" + ");";
     final String SQL_CREATE_QuestionsTable =
             "CREATE TABLE IF NOT EXISTS " + DatabaseTables.QuestionsTable.TABLE_NAME + " (" +
                     DatabaseTables.QuestionsTable.question_id + " INTEGER PRIMARY KEY," +
@@ -165,6 +170,7 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
         db.execSQL(SQL_CREATE_FeedbackQuestionResponseTable);
         db.execSQL(SQL_CREATE_MigrantsTempTable);
         db.execSQL(SQL_CREATE_ResponseTempTable);
+        db.execSQL(SQL_CREATE_ManpowerTable);
     }
 
     @Override
@@ -1041,5 +1047,30 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
         if (updateCount < 1) {
             Log.d("mylog", "Not Updated User ID");
         }
+    }
+
+    public void insertManpower(int id, String name) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(DatabaseTables.ManpowersTable.manpower_id, id);
+        values.put(DatabaseTables.ManpowersTable.manpower_name, name);
+
+        long newRowId = db.insert(DatabaseTables.ManpowersTable.TABLE_NAME, null, values);
+        Log.d("mylog", "Inserted manpower row ID; " + newRowId);
+    }
+
+    public ArrayList<String> getManpowers() {
+        SQLiteDatabase db = this.getReadableDatabase();
+        ArrayList<String> names = new ArrayList<>();
+        String statement = "SELECT * FROM " + DatabaseTables.ManpowersTable.TABLE_NAME;
+        //Log.d("mylog", "Query: " + statement);
+        Cursor cursor = db.rawQuery(statement, null);
+        while (cursor.moveToNext()) {
+            int id = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseTables.ManpowersTable.manpower_id));
+            String name = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseTables.ManpowersTable.manpower_name));
+            Log.d("mylog", "Got Manpower from DB:" + name);
+            names.add(name);
+        }
+        return names;
     }
 }

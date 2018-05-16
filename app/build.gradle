@@ -21,8 +21,8 @@ android {
         applicationId "com.vysh.subairoma"
         minSdkVersion 18
         targetSdkVersion 27
-        versionCode 21
-        versionName "0.16.6 "
+        versionCode 22
+        versionName "0.16.7"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
