@@ -61,6 +61,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
+import static android.graphics.Typeface.BOLD;
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
 
@@ -338,6 +339,8 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
         if (isError.equalsIgnoreCase("true")) {
             ivError.setVisibility(View.VISIBLE);
             rootLayout.setBackgroundColor(context.getResources().getColor(R.color.colorErrorFaded));
+            tvTitle.setTextColor(Color.DKGRAY);
+            tvTitle.setTypeface(null, BOLD);
             ivDone.setVisibility(GONE);
             btnShowMore.setVisibility(GONE);
         } else {
