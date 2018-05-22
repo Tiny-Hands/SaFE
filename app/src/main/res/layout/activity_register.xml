@@ -34,14 +34,16 @@
         </RelativeLayout>
     </android.support.v7.widget.Toolbar>
 
-    <ImageView
+    <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/ivRegister"
         android:layout_width="124dp"
         android:layout_height="124dp"
+        android:scaleType="centerCrop"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="84dp"
-        android:src="@drawable/register_green" />
-
+        android:src="@drawable/register_green"
+        app:civ_border_width="2dp"
+        app:civ_border_color="#fff"/>
 
     <ScrollView
         android:layout_width="match_parent"

@@ -10,6 +10,7 @@ public final class SharedPrefKeys {
     public static String userName = "username";
     public static String userAge = "userage";
     public static String userPhone = "userphone";
+    public static String userImg = "userimg";
     public static String userSex = "usersex";
     public static String userId = "id";
     public static String userType = "type";

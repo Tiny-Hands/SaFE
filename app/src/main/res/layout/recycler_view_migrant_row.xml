@@ -35,7 +35,7 @@
             android:background="@android:color/white"
             android:padding="@dimen/medium_margin">
 
-            <ImageView
+            <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/ivUserLogo"
                 android:layout_width="54dp"
                 android:layout_height="54dp"

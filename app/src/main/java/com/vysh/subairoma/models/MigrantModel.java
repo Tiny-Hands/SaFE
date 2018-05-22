@@ -5,8 +5,16 @@ package com.vysh.subairoma.models;
  */
 
 public class MigrantModel {
-    String migrantName, migrantPhone, migrantSex, inactiveDate;
+    String migrantName, migrantPhone, migrantSex, inactiveDate, migImg;
     int migrantAge, migrantId, userId;
+
+    public String getMigImg() {
+        return migImg;
+    }
+
+    public void setMigImg(String migImg) {
+        this.migImg = migImg;
+    }
 
     public String getInactiveDate() {
         return inactiveDate;

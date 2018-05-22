@@ -53,6 +53,8 @@
     <string name="not_started">अहिले सम्म सुरू भएको छैन</string>
 
     <!-- Activity Register -->
+    <string name="take_photo">तस्बिर खिच्नुहोस्</string>
+    <string name="choose_from_gallery">गैलरीबाट छान्नुहोस्</string>
     <string name="edit_profile">सम्पादन गर्नु</string>
     <string name="edit_migrant">प्रवासी सम्पादन गर्नु</string>
     <string name="add_migrant">प्रवासी थप्नु</string>

@@ -1,6 +1,7 @@
 package com.vysh.subairoma.activities;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -30,10 +31,12 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.vysh.subairoma.ApplicationClass;
+import com.vysh.subairoma.SharedPrefKeys;
 import com.vysh.subairoma.dialogs.DialogAnswersVerification;
 import com.vysh.subairoma.R;
 import com.vysh.subairoma.SQLHelpers.SQLDatabaseHelper;
 import com.vysh.subairoma.adapters.TileAdapter;
+import com.vysh.subairoma.imageHelpers.ImageEncoder;
 import com.vysh.subairoma.models.TilesModel;
 import com.vysh.subairoma.utils.CustomTextView;
 
@@ -58,6 +61,7 @@ public class ActivityTileHome extends AppCompatActivity {
     int[] tileIcons;
     TileAdapter tileAdapter;
     public static Boolean finalSection, showIndia, initialStep = false;
+    String uname, unumber, uage, uimg;
 
     @BindView(R.id.rvTiles)
     RecyclerView rvTiles;
@@ -133,7 +137,16 @@ public class ActivityTileHome extends AppCompatActivity {
 
 
         navView = findViewById(R.id.nav_view);
+        getUserDetails();
         setUpNavigationButtons();
+    }
+
+    private void getUserDetails() {
+        SharedPreferences sp = getSharedPreferences(SharedPrefKeys.sharedPrefName, MODE_PRIVATE);
+        uname = sp.getString(SharedPrefKeys.userName, "");
+        uage = sp.getString(SharedPrefKeys.userAge, "");
+        unumber = sp.getString(SharedPrefKeys.userPhone, "");
+        uimg = sp.getString(SharedPrefKeys.userImg, "");
     }
 
     private void setUpNavigationButtons() {
@@ -148,14 +161,18 @@ public class ActivityTileHome extends AppCompatActivity {
 
         ivUserAvatar = view.findViewById(R.id.ivUserAva);
 
-        tvName.setText(migName);
-        tvNavCounty.setText(countryName);
-        tvPhone.setText(migPhone);
-        if (migGender != null) {
-            if (migGender.equals("male"))
-                ivUserAvatar.setImageResource(R.drawable.ic_male);
-            else
-                ivUserAvatar.setImageResource(R.drawable.ic_female);
+        tvName.setText(uname);
+        tvNavCounty.setText(unumber);
+        tvPhone.setText(uage);
+        if (uimg != null && uimg.length() > 10)
+            ivUserAvatar.setImageBitmap(ImageEncoder.decodeFromBase64(uimg));
+        else {
+            if (migGender != null) {
+                if (migGender.equals("male"))
+                    ivUserAvatar.setImageResource(R.drawable.ic_male);
+                else
+                    ivUserAvatar.setImageResource(R.drawable.ic_female);
+            }
         }
     }
 
@@ -250,7 +267,7 @@ public class ActivityTileHome extends AppCompatActivity {
                 switch (item.getItemId()) {
                     case R.id.nav_profile:
                         Intent intent = new Intent(ActivityTileHome.this, ActivityProfileEdit.class);
-                        intent.putExtra("userType", 0);
+                        intent.putExtra("userType", 1);
                         startActivity(intent);
                         break;
                     case R.id.nav_addmigrants:

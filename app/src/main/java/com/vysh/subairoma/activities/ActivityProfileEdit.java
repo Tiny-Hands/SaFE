@@ -1,19 +1,30 @@
 package com.vysh.subairoma.activities;
 
+import android.Manifest;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
+import android.support.v4.content.FileProvider;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Base64;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RelativeLayout;
@@ -37,6 +48,9 @@ import com.vysh.subairoma.ApplicationClass;
 import com.vysh.subairoma.R;
 import com.vysh.subairoma.SQLHelpers.SQLDatabaseHelper;
 import com.vysh.subairoma.SharedPrefKeys;
+import com.vysh.subairoma.imageHelpers.ImageEncoder;
+import com.vysh.subairoma.imageHelpers.ImageResizer;
+import com.vysh.subairoma.imageHelpers.ImageSaveHelper;
 import com.vysh.subairoma.models.MigrantModel;
 import com.vysh.subairoma.utils.CustomTextView;
 import com.vysh.subairoma.utils.InternetConnectionChecker;
@@ -44,6 +58,9 @@ import com.vysh.subairoma.utils.InternetConnectionChecker;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -62,6 +79,16 @@ public class ActivityProfileEdit extends AppCompatActivity implements View.OnCli
     final String apiUpdateMigrant = "/updatemigrant.php";
     final String apiaddFbId = "/savefbid.php";
 
+    private final int REQUEST_SELECT_FILE = 1;
+    private final int REQUEST_TAKE_PIC = 0;
+    String pathToImage, encodedImage = "";
+    final static int PERMISSION_ALL = 2;
+    final static String[] PERMISSIONS = {
+            Manifest.permission.WRITE_EXTERNAL_STORAGE,
+            Manifest.permission.CAMERA};
+
+    @BindView(R.id.ivRegister)
+    ImageView ivRegister;
     @BindView(R.id.btnNext)
     Button btnNext;
     @BindView(R.id.tvTitle)
@@ -118,6 +145,78 @@ public class ActivityProfileEdit extends AppCompatActivity implements View.OnCli
             setUpUserData();
             setUpFBLogin();
         }
+        ivRegister.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (Build.VERSION.SDK_INT >= 23) {
+                    if (hasCameraPermissions())
+                        showPicTakerDialog();
+                    else
+                        requestPermissions(PERMISSIONS, PERMISSION_ALL);
+                } else
+                    showPicTakerDialog();
+            }
+        });
+    }
+
+    private boolean hasCameraPermissions() {
+        for (String permission : PERMISSIONS) {
+            if (checkSelfPermission(permission)
+                    != PackageManager.PERMISSION_GRANTED) {
+                return false;
+            }
+        }
+        return true;
+        //requestPermissions(CAMERA);
+    }
+
+    private void showPicTakerDialog() {
+        final CharSequence[] items = {getString(R.string.take_photo),
+                getResources().getString(R.string.choose_from_gallery)};
+        //final CharSequence[] items = {"Take Photo", "Cancel"};
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        //builder.setTitle(getResources().getString(R.string.add_photo));
+        builder.setItems(items, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int item) {
+                if (items[item].equals(getResources().getString(R.string.take_photo))) {
+                    dispatchPictureTakeIntent();
+                } else if (items[item].equals(getResources().getString(R.string.choose_from_gallery))) {
+                    Intent intent = new Intent(
+                            Intent.ACTION_PICK,
+                            android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                    intent.setType("image/*");
+                    startActivityForResult(
+                            Intent.createChooser(intent, getResources().getString(R.string.choose_from_gallery)), REQUEST_SELECT_FILE);
+                }
+            }
+        });
+        builder.show();
+    }
+
+    private void dispatchPictureTakeIntent() {
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+            // Create the File where the photo should go
+            File photoFile = null;
+            try {
+                photoFile = ImageSaveHelper.createImageFile();
+                pathToImage = photoFile.getAbsolutePath();
+            } catch (IOException ex) {
+                // Error occurred while creating the File
+                Log.d("mylog", "Exception while creating file: " + ex.toString());
+            }
+            // Continue only if the File was successfully created
+            if (photoFile != null) {
+                Log.d("mylog", "Photofile not null");
+                Uri photoURI = FileProvider.getUriForFile(ActivityProfileEdit.this,
+                        "com.vysh.subairoma.fileprovider",
+                        photoFile);
+                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
+                startActivityForResult(takePictureIntent, REQUEST_TAKE_PIC);
+            }
+
+        }
     }
 
     private void setUpUserData() {
@@ -126,6 +225,11 @@ public class ActivityProfileEdit extends AppCompatActivity implements View.OnCli
         etName.setText(sharedPreferences.getString(SharedPrefKeys.userName, ""));
         String sex = sharedPreferences.getString(SharedPrefKeys.userSex, "");
         String age = sharedPreferences.getString(SharedPrefKeys.userAge, "");
+        String img = sharedPreferences.getString(SharedPrefKeys.userImg, "");
+        if (img.length() > 10) {
+            ivRegister.setImageBitmap(ImageEncoder.decodeFromBase64(img));
+            encodedImage = img;
+        }
         etAge.setText(age);
         if (sex.equalsIgnoreCase("male"))
             rbMale.setChecked(true);
@@ -243,6 +347,10 @@ public class ActivityProfileEdit extends AppCompatActivity implements View.OnCli
         MigrantModel migrantModel = new SQLDatabaseHelper(ActivityProfileEdit.this).getMigrantDetails();
         etName.setText(migrantModel.getMigrantName());
         etNumber.setText(migrantModel.getMigrantPhone());
+        if (migrantModel.getMigImg() != null && migrantModel.getMigImg().length() > 10) {
+            ivRegister.setImageBitmap(ImageEncoder.decodeFromBase64(migrantModel.getMigImg()));
+            encodedImage = migrantModel.getMigImg();
+        }
         Log.d("mylog", "Age: " + migrantModel.getMigrantAge());
 
         //Appending empty string as if it's Int, it's considered resource id
@@ -261,9 +369,45 @@ public class ActivityProfileEdit extends AppCompatActivity implements View.OnCli
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        callbackManager.onActivityResult(requestCode, resultCode, data);
+        Log.d("mylog", "On Activity Result");
+        if (resultCode == RESULT_OK) {
+            Log.d("mylog", "result is ok with request code : " + requestCode);
+            if (requestCode == REQUEST_TAKE_PIC) {
+                Log.d("mylog", "request was camera");
+                Bitmap picTaken = getPic();
+                encodeImage(picTaken);
+                getPic();
+                ivRegister.setImageBitmap(picTaken);
+            } else if (requestCode == REQUEST_SELECT_FILE) {
+                Log.d("mylog", "request was to select");
+                Uri selectedImageUri = data.getData();
+                try {
+                    Bitmap bitmap = ImageResizer.
+                            calculateInSampleSize(MediaStore.Images.Media.getBitmap(getContentResolver(), selectedImageUri));
+                    //encodeImage(bitmap);
+                    //pathToImage = selectedImageUri.toString();
+                    encodeImage(ImageResizer.calculateInSampleSize(bitmap));
+                    ivRegister.setImageBitmap(bitmap);
+                } catch (IOException ex) {
+                    Log.d("mylog", "error getting photo: " + ex.toString());
+                }
+            } else
+                callbackManager.onActivityResult(requestCode, resultCode, data);
+        }
+    }
+
+    private void encodeImage(Bitmap bitmap) {
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 90, bytes);
+        byte[] byte_arr = bytes.toByteArray();
+        encodedImage = Base64.encodeToString(byte_arr, 0);
+    }
+
+    private Bitmap getPic() {
+        Bitmap bitmap = BitmapFactory.decodeFile(pathToImage);
+        return ImageResizer.calculateInSampleSize(bitmap);
     }
 
     private void updateUser() {
@@ -293,6 +437,7 @@ public class ActivityProfileEdit extends AppCompatActivity implements View.OnCli
                 editor.putString(SharedPrefKeys.userPhone, number);
                 editor.putString(SharedPrefKeys.userSex, sex);
                 editor.putString(SharedPrefKeys.userAge, age);
+                editor.putString(SharedPrefKeys.userImg, encodedImage);
                 editor.putString(SharedPrefKeys.userType, "helper");
                 editor.commit();
             } else {
@@ -325,8 +470,13 @@ public class ActivityProfileEdit extends AppCompatActivity implements View.OnCli
                             editor.putString(SharedPrefKeys.userPhone, number);
                             editor.putString(SharedPrefKeys.userSex, sex);
                             editor.putString(SharedPrefKeys.userAge, age);
+                            editor.putString(SharedPrefKeys.userImg, encodedImage);
                             editor.putString(SharedPrefKeys.userType, "helper");
                             editor.commit();
+                        } else {
+                            new SQLDatabaseHelper(ActivityProfileEdit.this).
+                                    insertMigrants(id, name, Integer.parseInt(age), number, sex, ApplicationClass.getInstance().getUserId(),
+                                            encodedImage);
                         }
                         Intent intent = new Intent(ActivityProfileEdit.this, ActivityMigrantList.class);
                         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -357,6 +507,7 @@ public class ActivityProfileEdit extends AppCompatActivity implements View.OnCli
                 params.put("phone_number", number);
                 params.put("age", age);
                 params.put("gender", sex);
+                params.put("user_img", encodedImage);
                 if (userType == 1) {
                     params.put("user_id", id + "");
                 } else if (userType == 0) {

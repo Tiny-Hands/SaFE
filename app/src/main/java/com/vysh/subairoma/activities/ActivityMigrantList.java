@@ -44,6 +44,7 @@ import com.vysh.subairoma.SharedPrefKeys;
 import com.vysh.subairoma.adapters.MigrantListAdapter;
 import com.vysh.subairoma.adapters.RecyclerItemTouchHelper;
 import com.vysh.subairoma.dialogs.DialogCountryChooser;
+import com.vysh.subairoma.imageHelpers.ImageEncoder;
 import com.vysh.subairoma.models.CountryModel;
 import com.vysh.subairoma.models.MigrantModel;
 import com.vysh.subairoma.services.LocationChecker;
@@ -67,7 +68,7 @@ import butterknife.ButterKnife;
  */
 
 public class ActivityMigrantList extends AppCompatActivity implements RecyclerItemTouchHelper.RecyclerItemTouchHelperListener {
-    private final String API = "/getmigrants.php";
+    private final String APIGetMig = "/getmigrants.php";
     private final String ApiDISABLE = "/deactivatemigrant.php";
     final String apiURLMigrant = "/savemigrant.php";
     private final int REQUEST_LOCATION = 1;
@@ -156,8 +157,10 @@ public class ActivityMigrantList extends AppCompatActivity implements RecyclerIt
         super.onResume();
         if (InternetConnectionChecker.isNetworkConnected(ActivityMigrantList.this)) {
             saveLocalDataToServer();
-        } else
+        } else {
             getSavedMigrants();
+            getMigrants();
+        }
     }
 
     private void saveLocalDataToServer() {
@@ -232,6 +235,98 @@ public class ActivityMigrantList extends AppCompatActivity implements RecyclerIt
 
     }
 
+    private void getMigrants() {
+        String api = ApplicationClass.getInstance().getAPIROOT() + APIGetMig;
+        StringRequest getRequest = new StringRequest(Request.Method.POST, api, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                try {
+                    //boolean firstRun = false;
+                    parseMigDetailResponse(response);
+                    Log.d("mylog", "mig response : " + response);
+                } catch (Exception ex) {
+                    Log.d("mylog", "response exception: " + ex.toString());
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                try {
+                    String err = error.toString();
+                    Log.d("mylog", "error : " + err);
+                    if (!err.isEmpty() && err.contains("TimeoutError"))
+                        Toast.makeText(ActivityMigrantList.this, getResources().getString(R.string.server_noconnect), Toast.LENGTH_SHORT).show();
+                    else if (!err.isEmpty() && err.contains("NoConnection")) {
+                        Toast.makeText(ActivityMigrantList.this, getResources().getString(R.string.server_noconnect), Toast.LENGTH_SHORT).show();
+                    } else
+                        showSnackbar(error.toString());
+                } catch (Exception ex) {
+                    Log.d("mylog", "Error exception: " + ex.toString());
+                }
+            }
+        }) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                HashMap<String, String> params = new HashMap<>();
+                int user_id = ApplicationClass.getInstance().getUserId();
+                int mig_id = ApplicationClass.getInstance().getMigrantId();
+                Log.d("mylog", "User ID: " + user_id);
+                Log.d("mylog", "Mig ID: " + mig_id);
+                params.put("user_id", user_id + "");
+                params.put("migrant_id", mig_id + "");
+                return params;
+            }
+        };
+        RequestQueue queue = Volley.newRequestQueue(ActivityMigrantList.this);
+        queue.add(getRequest);
+    }
+
+    private ArrayList<MigrantModel> parseMigDetailResponse(String response) {
+        ArrayList<MigrantModel> migrantModelsTemp = new ArrayList<>();
+        try {
+            JSONObject jsonObject = new JSONObject(response);
+            Boolean error = jsonObject.getBoolean("error");
+            if (error) {
+                showSnackbar(jsonObject.getString("message"));
+            } else {
+                JSONArray migrantJSON = jsonObject.getJSONArray("migrants");
+                if (migrantJSON != null) {
+                    JSONObject migrantObj;
+                    SQLDatabaseHelper dbHelper = new SQLDatabaseHelper(ActivityMigrantList.this);
+                    int uid = ApplicationClass.getInstance().getUserId();
+                    for (int i = 0; i < migrantJSON.length(); i++) {
+                        migrantObj = migrantJSON.getJSONObject(i);
+                        MigrantModel migrantModel = new MigrantModel();
+                        if (migrantObj.has("migrant_id")) {
+                            int id = migrantObj.getInt("migrant_id");
+                            migrantModel.setMigrantId(id);
+                            String name = migrantObj.getString("migrant_name");
+                            migrantModel.setMigrantName(name);
+                            int age = migrantObj.getInt("migrant_age");
+                            migrantModel.setMigrantAge(age);
+                            String sex = migrantObj.getString("migrant_sex");
+                            migrantModel.setMigrantSex(sex);
+                            String phone = migrantObj.getString("migrant_phone");
+                            migrantModel.setMigrantPhone(phone);
+                            String inactiveDate = migrantObj.getString("inactive_date");
+                            migrantModel.setInactiveDate(inactiveDate);
+                            String migImg = migrantObj.getString("user_img");
+                            migrantModel.setMigImg(migImg);
+                            migrantModel.setUserId(uid);
+
+                            migrantModelsTemp.add(migrantModel);
+                            //Saving in Database
+                            dbHelper.insertMigrants(id, name, age, phone, sex, uid, migImg);
+                        }
+                    }
+                }
+            }
+        } catch (JSONException e) {
+            Log.d("mylog", "Error in parsing: " + e.toString());
+        }
+        return migrantModelsTemp;
+    }
+
     private void makeChangesInLocalDB(int migrantIdOld, int migrantIdNew) {
         dbHelper.makeMigIdChanges(migrantIdOld, migrantIdNew);
     }
@@ -253,9 +348,12 @@ public class ActivityMigrantList extends AppCompatActivity implements RecyclerIt
         tvName.setText(sharedPreferences.getString(SharedPrefKeys.userName, ""));
         String sex = sharedPreferences.getString(SharedPrefKeys.userSex, "");
         String age = sharedPreferences.getString(SharedPrefKeys.userAge, "");
+        String img = sharedPreferences.getString(SharedPrefKeys.userImg, "");
         tvNavCounty.setText("Age: " + age);
 
-        if (sex != null) {
+        if (img.length() > 10) {
+            ivUserAvatar.setImageBitmap(ImageEncoder.decodeFromBase64(img));
+        } else {
             if (sex.equals("male"))
                 ivUserAvatar.setImageResource(R.drawable.ic_male);
             else

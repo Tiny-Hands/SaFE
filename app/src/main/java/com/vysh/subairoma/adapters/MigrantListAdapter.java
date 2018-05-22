@@ -23,6 +23,7 @@ import com.vysh.subairoma.ApplicationClass;
 import com.vysh.subairoma.dialogs.DialogCountryChooser;
 import com.vysh.subairoma.R;
 import com.vysh.subairoma.SQLHelpers.SQLDatabaseHelper;
+import com.vysh.subairoma.imageHelpers.ImageEncoder;
 import com.vysh.subairoma.models.CountryModel;
 import com.vysh.subairoma.models.MigrantModel;
 import com.wordpress.priyankvex.smarttextview.SmartTextView;
@@ -61,8 +62,15 @@ public class MigrantListAdapter extends RecyclerView.Adapter<MigrantListAdapter.
             tsex = mContext.getResources().getString(R.string.female);
         }
         holder.sex.setText(tsex + ", " + migrantModel.getMigrantAge());
-        if (migrantModel.getMigrantSex().equalsIgnoreCase("female"))
-            holder.ivAvatar.setImageBitmap(BitmapFactory.decodeResource(mContext.getResources(), R.drawable.ic_female));
+        Log.d("mylog", "Migrant Image: " + migrantModel.getMigImg());
+        if (migrantModel.getMigImg() == null || migrantModel.getMigImg().length() < 10) {
+            if (migrantModel.getMigrantSex().equalsIgnoreCase("female"))
+                holder.ivAvatar.setImageBitmap(BitmapFactory.decodeResource(mContext.getResources(), R.drawable.ic_female));
+            else
+                holder.ivAvatar.setImageBitmap(BitmapFactory.decodeResource(mContext.getResources(), R.drawable.ic_male));
+        } else {
+            holder.ivAvatar.setImageBitmap(ImageEncoder.decodeFromBase64(migrantModel.getMigImg()));
+        }
 
         //Showing going to country
         String cid = new SQLDatabaseHelper(mContext).getResponse(migrants.get(position).getMigrantId(), "mg_destination");

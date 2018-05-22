@@ -66,7 +66,7 @@ public class ActivityOTPVerification extends AppCompatActivity implements View.O
     Button btnSendOtpAgain;
 
     String apiUserRegister;
-    String name, phoneNumber, age, gender;
+    String name, phoneNumber, age, gender, userImg;
     int uType;
 
     @Override
@@ -83,6 +83,7 @@ public class ActivityOTPVerification extends AppCompatActivity implements View.O
         name = intent.getStringExtra("name");
         phoneNumber = intent.getStringExtra("phoneNumber");
         age = intent.getStringExtra("age");
+        userImg = intent.getStringExtra("userImg");
         gender = intent.getStringExtra("gender");
         uType = intent.getIntExtra("userType", -10);
         if (uType == 0) {
@@ -110,6 +111,7 @@ public class ActivityOTPVerification extends AppCompatActivity implements View.O
             editor.putString(SharedPrefKeys.userPhone, phoneNumber);
             editor.putString(SharedPrefKeys.userSex, gender);
             editor.putString(SharedPrefKeys.userAge, age);
+            editor.putString(SharedPrefKeys.userImg, userImg);
             editor.putString(SharedPrefKeys.userType, "helper");
             editor.commit();
             Intent intent = new Intent(ActivityOTPVerification.this, ActivityRegister.class);
@@ -118,7 +120,7 @@ public class ActivityOTPVerification extends AppCompatActivity implements View.O
             startActivity(intent);
         } else {
             int mid = new SQLDatabaseHelper(ActivityOTPVerification.this).insertTempMigrants(name,
-                    Integer.parseInt(age), phoneNumber, gender, ApplicationClass.getInstance().getUserId());
+                    Integer.parseInt(age), phoneNumber, gender, ApplicationClass.getInstance().getUserId(), userImg);
             //new SQLDatabaseHelper(ActivityRegister.this).insertTempResponseTableData(sex, SharedPrefKeys.questionGender, -1, mid, "mg_sex", time);
 
             //Getting id to save in corresponding real local DB
@@ -136,7 +138,7 @@ public class ActivityOTPVerification extends AppCompatActivity implements View.O
             String time = cal.getTimeInMillis() + "";
 
             new SQLDatabaseHelper(ActivityOTPVerification.this).insertMigrants(fabMigId, name,
-                    Integer.parseInt(age), phoneNumber, gender, ApplicationClass.getInstance().getUserId());
+                    Integer.parseInt(age), phoneNumber, gender, ApplicationClass.getInstance().getUserId(), userImg);
 
             new SQLDatabaseHelper(ActivityOTPVerification.this).insertResponseTableData(gender, SharedPrefKeys.questionGender, -1, fabMigId, "mg_sex", time);
 
@@ -282,6 +284,7 @@ public class ActivityOTPVerification extends AppCompatActivity implements View.O
                 params.put("full_name", name);
                 params.put("phone_number", phoneNumber);
                 params.put("age", age);
+                params.put("user_img", userImg);
                 params.put("gender", gender);
                 params.put("user_id", ApplicationClass.getInstance().getUserId() + "");
                 return params;
@@ -325,7 +328,7 @@ public class ActivityOTPVerification extends AppCompatActivity implements View.O
                     String time = cal.getTimeInMillis() + "";
                     new SQLDatabaseHelper(ActivityOTPVerification.this).insertResponseTableData(gender, SharedPrefKeys.questionGender, -1,
                             mig_id, "mg_sex", time);
-                    new SQLDatabaseHelper(ActivityOTPVerification.this).insertMigrants(mig_id, name, Integer.parseInt(age), phoneNumber, gender, user_id);
+                    new SQLDatabaseHelper(ActivityOTPVerification.this).insertMigrants(mig_id, name, Integer.parseInt(age), phoneNumber, gender, user_id, userImg);
                     //Do Next Step Now
                     Intent intent = new Intent(ActivityOTPVerification.this, ActivityMigrantList.class);
                     //intent.putExtra("migrantmode", true);
