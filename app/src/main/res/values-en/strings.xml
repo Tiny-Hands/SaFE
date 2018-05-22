@@ -123,4 +123,5 @@
     <string name="failed_user_update">Failed to update user details</string>
     <string name="fb_connected">Connected to Facebook</string>
     <string name="check_one">Check atleast one</string>
+    <string name="connect_to_fb">Connect to Facebook</string>
 </resources>

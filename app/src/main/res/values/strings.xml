@@ -124,5 +124,6 @@
     <string name="fb_login_protocol_scheme">fb118900038809550</string>
     <string name="failed_user_update">प्रयोगकर्ता विवरण अपडेट गर्न असफल भयो</string>
     <string name="fb_connected">फेसबुकसँग जोडिएको</string>
+    <string name="connect_to_fb">फेसबुकसँग जोड्नुहोस्</string>
 
 </resources>
