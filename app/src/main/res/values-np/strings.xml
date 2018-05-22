@@ -82,6 +82,7 @@
     <string name="male">पुरुष</string>
     <string name="female">महिला</string>
     <string name="or">वा</string>
+    <string name="save">भयो</string>
     <string name="already_registered">पहिले नै दर्ता गरिएको</string>
     <string name="facebook_login">फेसबुक लगइन</string>
     <string name="logout">लोग आउट</string>

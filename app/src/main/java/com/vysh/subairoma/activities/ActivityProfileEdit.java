@@ -130,6 +130,7 @@ public class ActivityProfileEdit extends AppCompatActivity implements View.OnCli
 
         //tvHint.setText("Edit Details");
         btnAlreadyRegistered.setVisibility(GONE);
+        btnNext.setText(R.string.save);
         btnNext.setOnClickListener(this);
         if (userType == 0) {
             tvTitle.setText(getResources().getString(R.string.edit_migrant));
