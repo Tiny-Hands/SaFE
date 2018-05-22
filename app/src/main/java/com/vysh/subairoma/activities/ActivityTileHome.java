@@ -1,5 +1,6 @@
 package com.vysh.subairoma.activities;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
@@ -11,6 +12,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.NestedScrollView;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -276,6 +278,9 @@ public class ActivityTileHome extends AppCompatActivity {
                         drawerLayout.closeDrawer(GravityCompat.END);
                         startActivity(intentMig);
                         break;
+                    case R.id.delete_migrant:
+                        deleteMigrant();
+                        break;
                 }
                 return false;
             }
@@ -298,6 +303,35 @@ public class ActivityTileHome extends AppCompatActivity {
                 startActivity(impIntent);
             }
         });*/
+    }
+
+    private void deleteMigrant() {
+        new SQLDatabaseHelper(ActivityTileHome.this).insertMigrantDeletion(ApplicationClass.getInstance().getMigrantId()
+                , ApplicationClass.getInstance().getUserId(), System.currentTimeMillis() + "");
+
+        // showing snack bar with Undo option
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.dismiss();
+                Intent deleteMig = new Intent(ActivityTileHome.this, ActivityMigrantList.class);
+                deleteMig.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                drawerLayout.closeDrawer(GravityCompat.END);
+                startActivity(deleteMig);
+            }
+        });
+        builder.setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.dismiss();
+                new SQLDatabaseHelper(ActivityTileHome.this).insertMigrantDeletion(ApplicationClass.getInstance().getMigrantId(),
+                        ApplicationClass.getInstance().getUserId(), "");
+            }
+        });
+        builder.setMessage(R.string.mig_delete_confirmation);
+        builder.show();
+        builder.setCancelable(false);
     }
 
     @Override

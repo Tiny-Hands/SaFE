@@ -10,6 +10,11 @@
             android:id="@+id/nav_addmigrants"
             android:icon="@drawable/ic_add"
             android:title="Add Migrant" />
+        <item
+            android:id="@+id/delete_migrant"
+            android:icon="@drawable/ic_delete_nav"
+            android:title="Delete Migrant" />
+
     </group>
     <group
         android:id="@+id/secondaryNavOpt">

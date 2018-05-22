@@ -23,6 +23,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -334,6 +335,11 @@ public class ActivityMigrantList extends AppCompatActivity implements RecyclerIt
     }
 
     private void setUpNavigationButtons() {
+        //Hiding Delete Migrant Button
+        Menu menu = navView.getMenu();
+        MenuItem target = menu.findItem(R.id.delete_migrant);
+        target.setVisible(false);
+
         View view = navView.getHeaderView(0);
         if (view == null)
             Log.d("mylog", "Header view Null");
@@ -499,7 +505,7 @@ public class ActivityMigrantList extends AppCompatActivity implements RecyclerIt
             final int uid = ApplicationClass.getInstance().getUserId();
             final int mid = migrantModels.get(viewHolder.getAdapterPosition()).getMigrantId();
             long time = System.currentTimeMillis();
-            dbHelper.insertMigrantDeletion(mid, uid, System.currentTimeMillis() + "");
+            dbHelper.insertMigrantDeletion(mid, uid, time + "");
             ;
             migrantListAdapter.removeItem(viewHolder.getAdapterPosition());
             deactivateUser(uid, mid, time + "", null);
@@ -515,6 +521,7 @@ public class ActivityMigrantList extends AppCompatActivity implements RecyclerIt
             builder.setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialogInterface, int i) {
+                    dialogInterface.dismiss();
                     migrantListAdapter.restoreItem(deletedMig, deletedIndex);
                     dbHelper.insertMigrantDeletion(mid, uid, "");
                 }
