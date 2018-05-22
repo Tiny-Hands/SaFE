@@ -18,7 +18,7 @@
         android:paddingRight="@dimen/medium_large_margin"
         android:paddingTop="@dimen/medium_large_margin">
 
-        <ImageButton
+        <ImageView
             android:id="@+id/pointerImg"
             android:layout_width="18dp"
             android:layout_height="@dimen/card_view_markers_dimen"
@@ -92,9 +92,9 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/tvDetail"
                 android:layout_marginEnd="18dp"
-                android:paddingLeft="@dimen/small_margin"
                 android:layout_marginTop="12dp"
                 android:layout_toStartOf="@+id/cbResponse"
+                android:paddingLeft="@dimen/small_margin"
                 android:text="तपाईँले काम छानेर आवेदन याहाँ चिनो लगाउनुहोस् ।"
                 android:textColor="@color/darkGrey"
                 android:textStyle="bold" />

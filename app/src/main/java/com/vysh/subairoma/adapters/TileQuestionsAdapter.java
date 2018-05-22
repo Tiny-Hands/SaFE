@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.Build;
 import android.support.annotation.NonNull;
@@ -201,6 +202,7 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
         holder.title.setText(question.getTitle());
         holder.question.setText(question.getQuestion());
         holder.details.setText(question.getDescription());
+        holder.ivPointer.setImageResource(R.drawable.ic_pointerarrow);
         Log.d("mylog", "Response type: " + question.getResponseType());
         //Check else if for every view as notifyItemChanged giving problems otherwise
         if (question.getResponseType() == 0) {
@@ -664,7 +666,7 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
         SmartTextView details;
         CheckBox checkbox;
         AutoCompleteTextView etResponse;
-        ImageView ivError, ivDone;
+        ImageView ivError, ivDone, ivPointer;
         Spinner spinnerOptions;
         ListView listViewOptions;
         Button btnHelp;
@@ -691,6 +693,7 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
             cardView = itemView.findViewById(R.id.cv);
             btnShowMore = itemView.findViewById(R.id.btnShowMore);
             details = itemView.findViewById(R.id.tvDetail);
+            ivPointer = itemView.findViewById(R.id.pointerImg);
             //Setting color for phone numbers and weblinks
             details.setUrlColorCode("#2992dc");
             details.setPhoneNumberColorCode("#3d63f2");
@@ -992,6 +995,7 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
             details.setVisibility(View.VISIBLE);
             helpLayout.setVisibility(View.VISIBLE);
             question.setVisibility(View.VISIBLE);
+            ivPointer.setImageBitmap(BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_pointerarrow_down));
             int responseType = questionsListDisplay.get(currentClickedPos).getResponseType();
             if (responseType == 0) {
                 checkbox.setVisibility(View.VISIBLE);
