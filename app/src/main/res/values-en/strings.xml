@@ -18,9 +18,13 @@
     <string name="proceed">Next</string>
     <string name="back">Back</string>
     <string name="yes">Yes</string>
+    <string name="no">No</string>
     <string name="okay">Okay</string>
     <string name="understand">I understand</string>
     <string name="write_here">Write here...</string>
+
+    <!-- Migrant List -->
+    <string name="mig_delete_confirmation">Are you sure you want to delete migrant?</string>
 
     <!-- Feedback -->
     <string name="feedback_trial">How did this section of the app help you?</string>

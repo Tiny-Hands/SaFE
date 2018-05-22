@@ -19,8 +19,12 @@
     <string name="back">फिर्ता</string>
     <string name="okay">ठीक छ</string>
     <string name="yes">हो</string>
+    <string name="no">होइन</string>
     <string name="understand">मैले बुझें</string>
     <string name="write_here">यहाँ लेख्नुहोस्...</string>
+
+    <!-- Migrant List -->
+    <string name="mig_delete_confirmation">के तपाईं पक्का प्रवासी मेटाउन चाहनुहुन्छ?</string>
 
     <!-- Feedback -->
     <string name="feedback_trial">एपको यो सेक्शनले तपाईंलाई कसरी मद्दत गर्यो?</string>
