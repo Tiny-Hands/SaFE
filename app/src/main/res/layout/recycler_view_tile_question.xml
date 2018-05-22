@@ -66,8 +66,7 @@
             android:layout_alignParentEnd="true"
             android:layout_marginEnd="4dp"
             android:background="@null"
-            android:scaleType="centerInside"
-            android:src="@drawable/ic_showmore" />
+            android:scaleType="centerInside" />
 
         <RelativeLayout
             android:id="@+id/rlResponse"
