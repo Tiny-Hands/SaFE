@@ -143,6 +143,23 @@ public class ActivityTileHome extends AppCompatActivity {
         setUpNavigationButtons();
     }
 
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        countryId = intent.getStringExtra("countryId");
+        countryName = intent.getStringExtra("countryName");
+        tvCountry.setText(countryName);
+        if (countryId.equalsIgnoreCase("in")) {
+            //GET GIS TILES
+            Log.d("mylog", "Received Country is India");
+            showIndia = true;
+        } else {
+            Log.d("mylog", "Setting show India to False");
+            showIndia = false;
+        }
+        Log.d("mylog", "new CID: " + countryId);
+    }
+
     private void getUserDetails() {
         SharedPreferences sp = getSharedPreferences(SharedPrefKeys.sharedPrefName, MODE_PRIVATE);
         uname = sp.getString(SharedPrefKeys.userName, "");

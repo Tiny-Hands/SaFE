@@ -85,6 +85,7 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
     HashMap<Integer, Integer> conditionQuestionIndex;
 
     String multiResponse = "";
+    String orgCountryId = "";
     ArrayList<String> multiOptions;
     Boolean initialStep = false;
 
@@ -392,8 +393,12 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
                 if (responseType == 5)
                     initialStep = true;
             } else {
-                if (responseType == 5)
-                    response = new SQLDatabaseHelper(context).getCountry(response).getCountryName();
+                if (responseType == 5) {
+                    CountryModel cm = new SQLDatabaseHelper(context).getCountry(response);
+                    response = cm.getCountryName();
+                    orgCountryId = cm.getCountryId();
+                    Log.d("mylog", "cname: " + response + " cid: " + orgCountryId);
+                }
                 fromSetView = true;
                 for (int i = 0; i < spinner.getCount(); i++) {
                     if (response.equalsIgnoreCase(spinner.getItemAtPosition(i).toString())) {
@@ -1058,7 +1063,13 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
                         String time = cal.getTimeInMillis() + "";
                         new SQLDatabaseHelper(context).insertCountryResponse(cid,
                                 ApplicationClass.getInstance().getMigrantId(), "mg_destination", time);
-
+                        if (!orgCountryId.equalsIgnoreCase(cid)) {
+                            Intent intent = new Intent(context, ActivityTileHome.class);
+                            intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                            intent.putExtra("countryId", cid);
+                            intent.putExtra("countryName", cname);
+                            context.startActivity(intent);
+                        }
                         /*Intent intent = new Intent(context, ActivityTileHome.class);
                         intent.putExtra("countryId", cid);
                         intent.putExtra("migrantName", migName);

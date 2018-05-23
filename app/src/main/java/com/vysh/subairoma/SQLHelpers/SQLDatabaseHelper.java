@@ -33,8 +33,7 @@ import java.util.HashMap;
 public class SQLDatabaseHelper extends SQLiteOpenHelper {
     // If you change the database schema, you must increment the database version.
     Context mContext;
-    public static final int DATABASE_VERSION = 13
-            ;
+    public static final int DATABASE_VERSION = 13;
     public static final String DATABASE_NAME = "SubairomaLocal.db";
     final String SQL_CREATE_ResponseTable =
             "CREATE TABLE IF NOT EXISTS " + DatabaseTables.ResponseTable.TABLE_NAME + " (" +
@@ -503,10 +502,12 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
             String name = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseTables.CountriesTable.country_name));
             int status = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseTables.CountriesTable.country_status));
             int blacklist = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseTables.CountriesTable.country_blacklist));
+            String c_id = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseTables.CountriesTable.country_id));
             CountryModel countryModel = new CountryModel();
             countryModel.setCountryName(name);
             countryModel.setCountryBlacklist(blacklist);
             countryModel.setCountrySatus(status);
+            countryModel.setCountryId(c_id);
             return countryModel;
         }
         return null;
