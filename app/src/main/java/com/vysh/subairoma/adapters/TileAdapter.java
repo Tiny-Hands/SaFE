@@ -58,7 +58,7 @@ public class TileAdapter extends RecyclerView.Adapter<TileAdapter.TileViewHolder
         if ((position == impContactsPlace) || (position == tileList.size() && ActivityTileHome.showIndia)) {
             holder.tvTile.setText(context.getResources().getString(R.string.important_contacts));
             holder.ivTile.setImageResource(R.drawable.ic_phonebook);
-            holder.tvPercent.setVisibility(View.GONE);
+            //holder.tvPercent.setVisibility(View.GONE);
             holder.progressPercent.setVisibility(View.GONE);
             if (impContactsPlace == 1)
                 holder.viewDisabled.setVisibility(View.VISIBLE);
@@ -101,10 +101,10 @@ public class TileAdapter extends RecyclerView.Adapter<TileAdapter.TileViewHolder
             if (tileList.get(position - offset).getPercentComplete() > 99.9) {
                 holder.progressPercent.setVisibility(View.GONE);
                 holder.ivDone.setVisibility(View.VISIBLE);
-                holder.tvPercent.setVisibility(View.GONE);
+                //holder.tvPercent.setVisibility(View.GONE);
             } else {
                 holder.progressPercent.setProgress((int) tileList.get(position - offset).getPercentComplete());
-                holder.tvPercent.setText(decimalFormat.format(tileList.get(position - offset).getPercentComplete()));
+                //holder.tvPercent.setText(decimalFormat.format(tileList.get(position - offset).getPercentComplete()));
             }
             setTileIcons(holder.ivTile, tileList.get(position - offset).getTileId());
             //holder.ivTile.setBackgroundResource(ivTiles[position]);
@@ -170,7 +170,7 @@ public class TileAdapter extends RecyclerView.Adapter<TileAdapter.TileViewHolder
     }
 
     public class TileViewHolder extends RecyclerView.ViewHolder {
-        public TextView tvTile, tvPercent;
+        public TextView tvTile;
         public ImageView ivTile, ivDone;
         public View viewDisabled;
         public ProgressBar progressPercent;
@@ -214,7 +214,7 @@ public class TileAdapter extends RecyclerView.Adapter<TileAdapter.TileViewHolder
                 }
             });
             progressPercent = itemView.findViewById(R.id.progressPercent);
-            tvPercent = itemView.findViewById(R.id.tvPercent);
+            //tvPercent = itemView.findViewById(R.id.tvPercent);
             tvTile = itemView.findViewById(R.id.tvTitle);
             ivTile = itemView.findViewById(R.id.ivTitle);
             ivDone = itemView.findViewById(R.id.ivDone);

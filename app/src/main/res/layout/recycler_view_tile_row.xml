@@ -27,8 +27,9 @@
             android:id="@+id/llRedflags"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_margin="@dimen/medium_margin"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginTop="9dp"
             android:orientation="horizontal" />
 
         <!--<TextView
@@ -47,8 +48,8 @@
         <ProgressBar
             android:id="@+id/progressPercent"
             style="?android:attr/progressBarStyleHorizontal"
-            android:layout_width="32dp"
-            android:layout_height="32dp"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
             android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
             android:indeterminate="false"
@@ -57,7 +58,7 @@
             android:progressDrawable="@drawable/progressbarbg"
             android:secondaryProgress="100" />
 
-        <TextView
+        <!--<TextView
             android:id="@+id/tvPercent"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -67,16 +68,16 @@
             android:layout_alignTop="@id/progressPercent"
             android:gravity="center"
             android:text="56"
-            android:textSize="6dp" />
+            android:textSize="6dp" />-->
 
         <ImageView
             android:id="@+id/ivDone"
-            android:layout_width="28dp"
-            android:layout_height="28dp"
+            android:layout_width="42dp"
+            android:layout_height="42dp"
             android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
             android:padding="@dimen/small_medium_margin"
-            android:src="@drawable/ic_checkmark"
+            android:src="@drawable/ic_badge"
             android:visibility="gone" />
 
 
