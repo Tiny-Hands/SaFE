@@ -6,7 +6,15 @@ package com.vysh.subairoma.models;
 
 public class MigrantModel {
     String migrantName, migrantPhone, migrantSex, inactiveDate, migImg;
-    int migrantAge, migrantId, userId;
+    int migrantAge, migrantId, userId, percentComp;
+
+    public int getPercentComp() {
+        return percentComp;
+    }
+
+    public void setPercentComp(int percentComp) {
+        this.percentComp = percentComp;
+    }
 
     public String getMigImg() {
         return migImg;

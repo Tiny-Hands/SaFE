@@ -33,7 +33,7 @@ import java.util.HashMap;
 public class SQLDatabaseHelper extends SQLiteOpenHelper {
     // If you change the database schema, you must increment the database version.
     Context mContext;
-    public static final int DATABASE_VERSION = 13;
+    public static final int DATABASE_VERSION = 14;
     public static final String DATABASE_NAME = "SubairomaLocal.db";
     final String SQL_CREATE_ResponseTable =
             "CREATE TABLE IF NOT EXISTS " + DatabaseTables.ResponseTable.TABLE_NAME + " (" +
@@ -115,6 +115,7 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
                     DatabaseTables.MigrantsTable.name + " TEXT," +
                     DatabaseTables.MigrantsTable.age + " INTEGER," +
                     DatabaseTables.MigrantsTable.user_id + " INTEGER," +
+                    DatabaseTables.MigrantsTable.percent_comp + " INTEGER," +
                     DatabaseTables.MigrantsTable.inactivate_date + " TEXT," +
                     DatabaseTables.MigrantsTable.sex + " TEXT," +
                     DatabaseTables.MigrantsTable.migrant_img + " TEXT," +
@@ -249,6 +250,25 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
         }
     }
 
+    public void insertPercentComp(int migId, int percentComp) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(DatabaseTables.MigrantsTable.percent_comp, percentComp);
+        String whereClause = DatabaseTables.MigrantsTable.migrant_id + " = " + migId;
+        long updateCount = db.update(DatabaseTables.MigrantsTable.TABLE_NAME, values, whereClause, null);
+        Log.d("mylog", "Percent Complete for MIG: " + migId + " Percent: " + percentComp + " Updated: " + updateCount);
+    }
+
+    public int getPercentComp(int migId) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        String query = "SELECT * FROM " + DatabaseTables.MigrantsTable.TABLE_NAME + " WHERE " +
+                DatabaseTables.MigrantsTable.migrant_id + "=" + "'" + migId + "'";
+        Cursor cursor = db.rawQuery(query, null);
+        int percent = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseTables.MigrantsTable.percent_comp));
+        return percent;
+
+    }
+
     public void insertCountryResponse(String response, int migrant_id, String variable, String timestamp) {
         // Gets the data repository in write mode
         SQLiteDatabase db = this.getWritableDatabase();
@@ -366,6 +386,7 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
             params.put("question_query", responseQuery);
             allResponses.add(params);
         }
+        cursor.close();
         return allResponses;
     }
 
@@ -771,7 +792,7 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
         Log.d("mylog", "Migrant Deleted row count: " + updateCount);
     }
 
-    public void insertMigrants(int id, String name, int age, String phone, String sex, int userId, String migImg) {
+    public void insertMigrants(int id, String name, int age, String phone, String sex, int userId, String migImg, int percentComp) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(DatabaseTables.MigrantsTable.name, name);
@@ -780,6 +801,9 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
         values.put(DatabaseTables.MigrantsTable.name, name);
         values.put(DatabaseTables.MigrantsTable.phone_number, phone);
         values.put(DatabaseTables.MigrantsTable.migrant_img, migImg);
+        //Checking this as not sending current percent from update mig, rather just sending -1
+        if (percentComp != -1)
+            values.put(DatabaseTables.MigrantsTable.percent_comp, percentComp);
         //If already exist the Update
         String whereClause = DatabaseTables.MigrantsTable.migrant_id + " = " + id + " AND " +
                 DatabaseTables.MigrantsTable.user_id + " = " + userId;
@@ -875,6 +899,7 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
             String sex = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseTables.MigrantsTable.sex));
             String img = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseTables.MigrantsTable.migrant_img));
             int age = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseTables.MigrantsTable.age));
+            int percentComp = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseTables.MigrantsTable.percent_comp));
             MigrantModel migrantModel = new MigrantModel();
             migrantModel.setMigrantName(name);
             migrantModel.setUserId(uid);
@@ -884,6 +909,7 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
             migrantModel.setMigrantSex(sex);
             migrantModel.setMigImg(img);
             migrantModel.setInactiveDate(status);
+            migrantModel.setPercentComp(percentComp);
 
             Log.d("mylog", "Migrant Status: " + status);
             migrantModels.add(migrantModel);
@@ -946,7 +972,6 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
     public float getPercentComplete(int migrantId, int tileId) {
         SQLiteDatabase db = this.getReadableDatabase();
         String query;
-
         query = "SELECT * FROM " + DatabaseTables.ResponseTable.TABLE_NAME +
                 " WHERE " + DatabaseTables.ResponseTable.migrant_id + " = " + "'" + migrantId + "'" +
                 " AND " + DatabaseTables.ResponseTable.tile_id + " = " + "'" + tileId + "'" +
@@ -960,6 +985,7 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
             Log.d("mylog", "Got percent complete for MID: " + migrantId + " Tile ID: " + tileId + " : " + response);
             //Log.d("mylog", "Mid: " + mid + " Qid: " + qid + " rvar: " + response);
         }
+        cursor.close();
         return response;
     }
 

@@ -74,6 +74,14 @@
                     android:text="" />
 
                 <TextView
+                    android:id="@+id/tvPercentComplete"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textStyle="italic"
+                    android:layout_alignParentEnd="true"
+                    android:layout_below="@id/tvPhone" />
+
+                <TextView
                     android:id="@+id/tvMigrantAgeSex"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

@@ -55,6 +55,7 @@ public class MigrantListAdapter extends RecyclerView.Adapter<MigrantListAdapter.
         MigrantModel migrantModel = migrants.get(position);
         holder.textViewName.setText(migrantModel.getMigrantName());
         holder.tvPhone.setText(migrantModel.getMigrantPhone());
+        holder.tvPercentComp.setText("Completed: " + migrantModel.getPercentComp() + "%");
         String tsex = migrantModel.getMigrantSex();
         if (tsex.equalsIgnoreCase("male")) {
             tsex = mContext.getResources().getString(R.string.male);
@@ -145,7 +146,7 @@ public class MigrantListAdapter extends RecyclerView.Adapter<MigrantListAdapter.
     }
 
     public class MigrantHolder extends RecyclerView.ViewHolder {
-        public TextView textViewName, sex, tvGoingCountry;
+        public TextView textViewName, sex, tvPercentComp, tvGoingCountry;
         public SmartTextView tvPhone;
         public ImageView ivAvatar;
         public LinearLayout llErrorLayout;
@@ -154,6 +155,7 @@ public class MigrantListAdapter extends RecyclerView.Adapter<MigrantListAdapter.
         public MigrantHolder(final View itemView) {
             super(itemView);
             tvPhone = itemView.findViewById(R.id.tvPhone);
+            tvPercentComp = itemView.findViewById(R.id.tvPercentComplete);
             textViewName = (TextView) itemView.findViewById(R.id.tvMigrantName);
             tvGoingCountry = (TextView) itemView.findViewById(R.id.tvCountryGoing);
             ivAvatar = (ImageView) itemView.findViewById(R.id.ivUserLogo);

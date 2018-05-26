@@ -74,6 +74,7 @@ public class ActivityMigrantList extends AppCompatActivity implements RecyclerIt
     private final String APIGetMig = "/getmigrants.php";
     private final String ApiDISABLE = "/deactivatemigrant.php";
     final String apiURLMigrant = "/savemigrant.php";
+    final String apiURLMigrantPercent = "/updatepercentcomplete.php";
     private final int REQUEST_LOCATION = 1;
 
     @BindView(R.id.rvMigrants)
@@ -95,13 +96,14 @@ public class ActivityMigrantList extends AppCompatActivity implements RecyclerIt
     ArrayList<MigrantModel> migrantModels;
     MigrantListAdapter migrantListAdapter;
 
-
+    RequestQueue requestQueue;
     SQLDatabaseHelper dbHelper;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_select_migrant);
+        requestQueue = Volley.newRequestQueue(ActivityMigrantList.this);
         //getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         ButterKnife.bind(this);
         dbHelper = new SQLDatabaseHelper(ActivityMigrantList.this);
@@ -160,10 +162,41 @@ public class ActivityMigrantList extends AppCompatActivity implements RecyclerIt
         super.onResume();
         if (InternetConnectionChecker.isNetworkConnected(ActivityMigrantList.this)) {
             saveLocalDataToServer();
+            saveMigPercent();
         } else {
             getSavedMigrants();
-            getMigrants();
         }
+        //getMigrants();
+    }
+
+    private void saveMigPercent() {
+        String api = ApplicationClass.getInstance().getAPIROOT() + apiURLMigrantPercent;
+        if (migrantModels != null)
+            for (int i = 0; i < migrantModels.size(); i++) {
+                final MigrantModel currModel = migrantModels.get(i);
+                StringRequest saveRequest = new StringRequest(Request.Method.POST, api, new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        Log.d("mylog", "response : " + response);
+                    }
+                }, new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        String err = error.toString();
+                        Log.d("mylog", "error : " + err);
+                    }
+                }) {
+                    @Override
+                    protected Map<String, String> getParams() throws AuthFailureError {
+                        HashMap<String, String> params = new HashMap<>();
+                        params.put("migrant_id", currModel.getMigrantId() + "");
+                        params.put("percent_complete", currModel.getPercentComp() + "");
+                        return params;
+                    }
+                };
+                saveRequest.setRetryPolicy(new DefaultRetryPolicy(20 * 1000, 0, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+                requestQueue.add(saveRequest);
+            }
     }
 
     private void saveLocalDataToServer() {
@@ -188,7 +221,6 @@ public class ActivityMigrantList extends AppCompatActivity implements RecyclerIt
         progressDialog.setCancelable(false);
         progressDialog.show();
         String api = ApplicationClass.getInstance().getAPIROOT() + apiURLMigrant;
-        RequestQueue requestQueue = Volley.newRequestQueue(ActivityMigrantList.this);
         for (int i = 0; i < migModel.size(); i++) {
             final int currCount = i;
             final MigrantModel currModel = migModel.get(i);
@@ -316,10 +348,12 @@ public class ActivityMigrantList extends AppCompatActivity implements RecyclerIt
                             String migImg = migrantObj.getString("user_img");
                             migrantModel.setMigImg(migImg);
                             migrantModel.setUserId(uid);
+                            int percentComp = migrantObj.getInt("percent_comp");
+                            migrantModel.setPercentComp(percentComp);
 
                             migrantModelsTemp.add(migrantModel);
                             //Saving in Database
-                            dbHelper.insertMigrants(id, name, age, phone, sex, uid, migImg);
+                            dbHelper.insertMigrants(id, name, age, phone, sex, uid, migImg, percentComp);
                         }
                     }
                 }

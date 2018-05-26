@@ -535,7 +535,7 @@ public class ActivityRegister extends AppCompatActivity {
                             //Saving in corresponding real local DB
                             int fabMigId = Integer.parseInt("-1" + mid);
                             new SQLDatabaseHelper(ActivityRegister.this).insertMigrants(fabMigId, etName.getText().toString(),
-                                    Integer.parseInt(etAge.getText().toString()), etNumber.getText().toString(), sex, ApplicationClass.getInstance().getUserId(), encodedImage);
+                                    Integer.parseInt(etAge.getText().toString()), etNumber.getText().toString(), sex, ApplicationClass.getInstance().getUserId(), encodedImage, 0);
 
                             new SQLDatabaseHelper(ActivityRegister.this).insertResponseTableData(sex, SharedPrefKeys.questionGender, -1, fabMigId, "mg_sex", time);
                             Intent intent = new Intent(ActivityRegister.this, ActivityMigrantList.class);
@@ -630,7 +630,7 @@ public class ActivityRegister extends AppCompatActivity {
                 String time = cal.getTimeInMillis() + "";
                 new SQLDatabaseHelper(ActivityRegister.this).insertResponseTableData(sex, SharedPrefKeys.questionGender, -1, mig_id, "mg_sex", time);
                 new SQLDatabaseHelper(ActivityRegister.this).insertMigrants(mig_id, etName.getText().toString(),
-                        Integer.parseInt(etAge.getText().toString()), etNumber.getText().toString(), sex, ApplicationClass.getInstance().getUserId(), encodedImage);
+                        Integer.parseInt(etAge.getText().toString()), etNumber.getText().toString(), sex, ApplicationClass.getInstance().getUserId(), encodedImage, 0);
                 Intent intent = new Intent(ActivityRegister.this, ActivityMigrantList.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(intent);
@@ -675,10 +675,12 @@ public class ActivityRegister extends AppCompatActivity {
                             String migImg = migrantObj.getString("user_img");
                             migrantModel.setMigImg(migImg);
                             migrantModel.setUserId(uid);
+                            int percentComp = migrantObj.getInt("percent_comp");
+                            migrantModel.setPercentComp(percentComp);
 
                             migrantModelsTemp.add(migrantModel);
                             //Saving in Database
-                            dbHelper.insertMigrants(id, name, age, phone, sex, uid, migImg);
+                            dbHelper.insertMigrants(id, name, age, phone, sex, uid, migImg, percentComp);
                         }
                     }
                 }

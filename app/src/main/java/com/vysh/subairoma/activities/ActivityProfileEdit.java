@@ -477,7 +477,7 @@ public class ActivityProfileEdit extends AppCompatActivity implements View.OnCli
                         } else {
                             new SQLDatabaseHelper(ActivityProfileEdit.this).
                                     insertMigrants(id, name, Integer.parseInt(age), number, sex, ApplicationClass.getInstance().getUserId(),
-                                            encodedImage);
+                                            encodedImage, -1);
                         }
                         Intent intent = new Intent(ActivityProfileEdit.this, ActivityMigrantList.class);
                         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);

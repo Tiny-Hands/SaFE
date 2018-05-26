@@ -57,6 +57,7 @@ import butterknife.ButterKnife;
 public class ActivityTileHome extends AppCompatActivity {
     private final String saveAPI = "/saveresponse.php";
     private final String saveFeedbackAPI = "/savefeedbackresponse.php";
+    final String apiURLMigrantPercent = "/updatepercentcomplete.php";
     ArrayList<TilesModel> tiles, tilesGAS;
     public String migName, countryName, countryId, migGender = "", migPhone;
     public int blacklist, status;
@@ -223,6 +224,7 @@ public class ActivityTileHome extends AppCompatActivity {
         float percent = totalPercent / tiles.size();
         DecimalFormat decimalFormat = new DecimalFormat("##");
         tvPercent.setText(decimalFormat.format(percent) + "%");
+        dbHelper.insertPercentComp(ApplicationClass.getInstance().getMigrantId(), (int) percent);
         progressPercent.setProgress((int) percent);
         rvTiles.getAdapter().notifyDataSetChanged();
     }

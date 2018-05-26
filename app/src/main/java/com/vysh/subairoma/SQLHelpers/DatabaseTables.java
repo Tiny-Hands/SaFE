@@ -102,6 +102,7 @@ public final class DatabaseTables {
         public static final String sex = "migrant_sex";
         public static final String migrant_img = "migrant_img";
         public static final String phone_number = "migrant_phone";
+        public static final String percent_comp = "percent_comp";
         public static String inactivate_date = "inactivate_date";
     }
 

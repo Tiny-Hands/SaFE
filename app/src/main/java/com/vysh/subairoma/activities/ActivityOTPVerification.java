@@ -138,7 +138,7 @@ public class ActivityOTPVerification extends AppCompatActivity implements View.O
             String time = cal.getTimeInMillis() + "";
 
             new SQLDatabaseHelper(ActivityOTPVerification.this).insertMigrants(fabMigId, name,
-                    Integer.parseInt(age), phoneNumber, gender, ApplicationClass.getInstance().getUserId(), userImg);
+                    Integer.parseInt(age), phoneNumber, gender, ApplicationClass.getInstance().getUserId(), userImg, 0);
 
             new SQLDatabaseHelper(ActivityOTPVerification.this).insertResponseTableData(gender, SharedPrefKeys.questionGender, -1, fabMigId, "mg_sex", time);
 
@@ -328,7 +328,7 @@ public class ActivityOTPVerification extends AppCompatActivity implements View.O
                     String time = cal.getTimeInMillis() + "";
                     new SQLDatabaseHelper(ActivityOTPVerification.this).insertResponseTableData(gender, SharedPrefKeys.questionGender, -1,
                             mig_id, "mg_sex", time);
-                    new SQLDatabaseHelper(ActivityOTPVerification.this).insertMigrants(mig_id, name, Integer.parseInt(age), phoneNumber, gender, user_id, userImg);
+                    new SQLDatabaseHelper(ActivityOTPVerification.this).insertMigrants(mig_id, name, Integer.parseInt(age), phoneNumber, gender, user_id, userImg, 0);
                     //Do Next Step Now
                     Intent intent = new Intent(ActivityOTPVerification.this, ActivityMigrantList.class);
                     //intent.putExtra("migrantmode", true);
