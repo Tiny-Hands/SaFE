@@ -3,6 +3,7 @@ package com.vysh.subairoma.activities;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -49,6 +50,7 @@ import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import de.hdodenhof.circleimageview.CircleImageView;
 
 /**
  * Created by Vishal on 6/12/2017.
@@ -64,8 +66,10 @@ public class ActivityTileHome extends AppCompatActivity {
     int[] tileIcons;
     TileAdapter tileAdapter;
     public static Boolean finalSection, showIndia, initialStep = false;
-    String uname, unumber, uage, uimg;
+    String uname, unumber, uage, uimg, uavatar;
 
+    @BindView(R.id.ivUserAvatar)
+    CircleImageView ivMigrantImage;
     @BindView(R.id.rvTiles)
     RecyclerView rvTiles;
     @BindView(R.id.rlRoot)
@@ -110,6 +114,15 @@ public class ActivityTileHome extends AppCompatActivity {
         countryName = getIntent().getStringExtra("countryName");
         status = getIntent().getIntExtra("countryStatus", -1);
         blacklist = getIntent().getIntExtra("countryBlacklist", -1);
+
+
+        navView = findViewById(R.id.nav_view);
+        getUserDetails();
+        setMigDetails();
+        setUpNavigationButtons();
+    }
+
+    private void setMigDetails() {
         if (countryId.equalsIgnoreCase("in")) {
             //GET GIS TILES
             Log.d("mylog", "Received Country is India");
@@ -137,11 +150,19 @@ public class ActivityTileHome extends AppCompatActivity {
         if (blacklist == 1) {
             tvCountry.setTextColor(getResources().getColor(R.color.colorError));
         }
-
-
-        navView = findViewById(R.id.nav_view);
-        getUserDetails();
-        setUpNavigationButtons();
+        String img = new SQLDatabaseHelper(ActivityTileHome.this).getMigrantImg(ApplicationClass.getInstance().getMigrantId());
+        if (img != null && img.length() > 5)
+            ivMigrantImage.setImageBitmap(ImageEncoder.decodeFromBase64(img));
+        else if (migGender != null && migGender.equalsIgnoreCase("female"))
+            ivMigrantImage.setImageResource(R.drawable.ic_female);
+        ivMigrantImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(ActivityTileHome.this, ActivityProfileEdit.class);
+                intent.putExtra("userType", 0);
+                startActivity(intent);
+            }
+        });
     }
 
     @Override
@@ -186,14 +207,8 @@ public class ActivityTileHome extends AppCompatActivity {
         tvPhone.setText(uage);
         if (uimg != null && uimg.length() > 10)
             ivUserAvatar.setImageBitmap(ImageEncoder.decodeFromBase64(uimg));
-        else {
-            if (migGender != null) {
-                if (migGender.equals("male"))
-                    ivUserAvatar.setImageResource(R.drawable.ic_male);
-                else
-                    ivUserAvatar.setImageResource(R.drawable.ic_female);
-            }
-        }
+        else
+            ivUserAvatar.setImageResource(R.drawable.ic_male);
     }
 
     @Override

@@ -917,6 +917,16 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
         return migrantModels;
     }
 
+    public String getMigrantImg(int migId) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        ArrayList<MigrantModel> migrantModels = new ArrayList<>();
+        Cursor cursor = db.rawQuery("SELECT " + DatabaseTables.MigrantsTable.migrant_img + " FROM " +
+                DatabaseTables.MigrantsTable.TABLE_NAME + " WHERE " +
+                DatabaseTables.MigrantsTable.migrant_id + "=" + "'" + migId + "'", null);
+        cursor.moveToFirst();
+        return cursor.getString(cursor.getColumnIndexOrThrow(DatabaseTables.MigrantsTable.migrant_img));
+    }
+
     public ArrayList<ImportantContactsModel> getImportantContacts(String countryId) {
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery("SELECT * FROM " + DatabaseTables.ImportantContacts.TABLE_NAME

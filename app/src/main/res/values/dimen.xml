@@ -36,6 +36,7 @@
     <dimen name="important_contacts_category_text">18sp</dimen>
     <dimen name="tile_title_size">24sp</dimen>
     <dimen name="default_title_size">20sp</dimen>
+    <dimen name="tile_toolbar_migname">16sp</dimen>
     <dimen name="country_spinner_text_size">16sp</dimen>
     <dimen name="feedback_list_heading">16sp</dimen>
     <dimen name="feedback_text_size">14sp</dimen>
