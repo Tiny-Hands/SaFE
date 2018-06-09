@@ -59,8 +59,9 @@ public class ActivityImportantContacts extends AppCompatActivity {
     public void setUpInfo(String cid) {
         Log.d("mylog", "Received Country Id: " + cid);
         ArrayList<ImportantContactsModel> contactsModels = new SQLDatabaseHelper(this).getImportantContacts(cid);
+
         rvContacts.setLayoutManager(new LinearLayoutManager(this));
-        rvContacts.setAdapter(new ImportantContactsAdatper(contactsModels   ));
+        rvContacts.setAdapter(new ImportantContactsAdatper(contactsModels));
     }
 
     private void getContacts() {

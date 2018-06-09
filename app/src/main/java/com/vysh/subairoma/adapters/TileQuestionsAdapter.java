@@ -312,16 +312,20 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
     private void calculateAndSavePercentComplete() {
         int totalQuestion = questionsListDisplay.size();
         ArrayList<Integer> questionIdsToGetAnswers = new ArrayList<>();
-        for (int i = 0; i < questionsListDisplay.size(); i++) {
-            if (questionsListDisplay.get(i).getCondition().contains("error"))
+        ArrayList<Integer> questionIdsWithPossibleRedflags = new ArrayList<>();
+        for (int i = 0; i < totalQuestion; i++) {
+            if (questionsListDisplay.get(i).getCondition().contains("error")) {
                 totalQuestion--;
-            else
+                questionIdsWithPossibleRedflags.add(questionsListDisplay.get(i).getQuestionId());
+            } else
                 questionIdsToGetAnswers.add(questionsListDisplay.get(i).getQuestionId());
         }
         //int answersCount = sqlDatabaseHelper.getTileResponse(migrantId, questionsList.get(0).getTileId());
         int answersCount = sqlDatabaseHelper.getQuestionResponse(migrantId, questionIdsToGetAnswers);
-        Log.d("mylog", "Calculating Percent for : " + totalQuestion + " Questions & " + answersCount + " Answers");
-        float percent = ((float) answersCount / (float) totalQuestion) * 100;
+        int redflagsCount = sqlDatabaseHelper.getRedflagsQuestionCount(migrantId, questionIdsWithPossibleRedflags);
+        float percent = ((float) answersCount / (float) (totalQuestion + redflagsCount)) * 100;
+        Log.d("mylog", "Calculating Percent for : " +
+                totalQuestion + " Questions & " + answersCount + " Answers" + " Redflags to consider: " + redflagsCount);
         sqlDatabaseHelper.insertResponseTableData(percent + "", SharedPrefKeys.percentComplete, questionsListDisplay.get(0).getTileId(),
                 migrantId, "percent_complete", Calendar.getInstance().getTimeInMillis() + "");
     }
@@ -762,25 +766,21 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
             });
             etResponse = itemView.findViewById(R.id.etResponse);
             setAdapter();
+            etResponse.setOnKeyListener(new View.OnKeyListener() {
+                @Override
+                public boolean onKey(View view, int i, KeyEvent keyEvent) {
+                    switch (i) {
+                        case KeyEvent.KEYCODE_BACK:
+                            saveTextInput();
+                    }
+                    return true;
+                }
+            });
             etResponse.setOnEditorActionListener(new TextView.OnEditorActionListener() {
                 @Override
                 public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                     if (actionId == EditorInfo.IME_ACTION_DONE) {
-                        String response = etResponse.getText().toString();
-                        String variable = questionsList.get(getAdapterPosition()).getVariable();
-                        if (!response.isEmpty()) {
-                            Log.d("mylog", "Inserting text response for question: " +
-                                    questionsListDisplay.get(getAdapterPosition()).getQuestionId() + " Tile ID: " +
-                                    questionsListDisplay.get(getAdapterPosition()).getTileId()
-                            );
-
-                            Calendar cal = Calendar.getInstance();
-                            String time = cal.getTimeInMillis() + "";
-                            sqlDatabaseHelper.insertResponseTableData(response,
-                                    questionsListDisplay.get(getAdapterPosition()).getQuestionId(),
-                                    questionsListDisplay.get(getAdapterPosition()).getTileId(),
-                                    migrantId, variable, time);
-                        }
+                        saveTextInput();
                         InputMethodManager inputMethodManager = (InputMethodManager) context.
                                 getSystemService(Context.INPUT_METHOD_SERVICE);
                         inputMethodManager.hideSoftInputFromWindow(itemView.getWindowToken(), 0);
@@ -979,6 +979,24 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
             ArrayList<String> manpowerNames = new SQLDatabaseHelper(context).getManpowers();
             ArrayAdapter<String> adapter = new ArrayAdapter<String>(context, android.R.layout.simple_list_item_1, manpowerNames);
             etResponse.setAdapter(adapter);
+        }
+
+        private void saveTextInput() {
+            String response = etResponse.getText().toString();
+            String variable = questionsList.get(getAdapterPosition()).getVariable();
+            if (!response.isEmpty()) {
+                Log.d("mylog", "Inserting text response for question: " +
+                        questionsListDisplay.get(getAdapterPosition()).getQuestionId() + " Tile ID: " +
+                        questionsListDisplay.get(getAdapterPosition()).getTileId()
+                );
+
+                Calendar cal = Calendar.getInstance();
+                String time = cal.getTimeInMillis() + "";
+                sqlDatabaseHelper.insertResponseTableData(response,
+                        questionsListDisplay.get(getAdapterPosition()).getQuestionId(),
+                        questionsListDisplay.get(getAdapterPosition()).getTileId(),
+                        migrantId, variable, time);
+            }
         }
 
         private void toggleExpandView() {

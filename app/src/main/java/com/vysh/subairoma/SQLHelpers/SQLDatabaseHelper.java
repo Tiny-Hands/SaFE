@@ -1118,4 +1118,26 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
         }
         return names;
     }
+
+    public int getRedflagsQuestionCount(int migrantId, ArrayList<Integer> questionIdsWithPossibleRedflags) {
+        int totalCount = 0;
+        SQLiteDatabase db = this.getReadableDatabase();
+        for (int i = 0; i < questionIdsWithPossibleRedflags.size(); i++) {
+            Log.d("mylog", "Curr question ID: " + questionIdsWithPossibleRedflags.get(i));
+            String query = "SELECT * FROM " + DatabaseTables.ResponseTable.TABLE_NAME +
+                    " WHERE " + DatabaseTables.ResponseTable.migrant_id + " = " + "'" + migrantId + "'"
+                    + " AND " + DatabaseTables.ResponseTable.question_id + " = " + "'" + questionIdsWithPossibleRedflags.get(i) + "'";
+
+            Cursor cursor = db.rawQuery(query, null);
+            if (cursor.getCount() > 0) {
+                cursor.moveToFirst();
+                String isError = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseTables.ResponseTable.is_error));
+                Log.d("mylog", "Percent is error: " + isError);
+                if (!isError.equalsIgnoreCase("true"))
+                    totalCount++;
+                cursor.close();
+            }
+        }
+        return totalCount;
+    }
 }
