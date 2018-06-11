@@ -33,7 +33,7 @@ import java.util.HashMap;
 public class SQLDatabaseHelper extends SQLiteOpenHelper {
     // If you change the database schema, you must increment the database version.
     Context mContext;
-    public static final int DATABASE_VERSION = 14;
+    public static final int DATABASE_VERSION = 15;
     public static final String DATABASE_NAME = "SubairomaLocal.db";
     final String SQL_CREATE_ResponseTable =
             "CREATE TABLE IF NOT EXISTS " + DatabaseTables.ResponseTable.TABLE_NAME + " (" +
@@ -109,6 +109,15 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
                     DatabaseTables.ImportantContacts.phone + " TEXT," +
                     DatabaseTables.ImportantContacts.email + " TEXT," +
                     DatabaseTables.ImportantContacts.website + " TEXT" + ");";
+    final String SQL_CREATE_ContactsTableDefault =
+            "CREATE TABLE IF NOT EXISTS " + DatabaseTables.ImportantContactsDefault.TABLE_NAME + " (" +
+                    DatabaseTables.ImportantContactsDefault.contact_id + " INT PRIMARY KEY," +
+                    DatabaseTables.ImportantContactsDefault.title + " TEXT," +
+                    DatabaseTables.ImportantContactsDefault.description + " TEXT," +
+                    DatabaseTables.ImportantContactsDefault.address + " TEXT," +
+                    DatabaseTables.ImportantContactsDefault.phone + " TEXT," +
+                    DatabaseTables.ImportantContactsDefault.email + " TEXT," +
+                    DatabaseTables.ImportantContactsDefault.website + " TEXT" + ");";
     final String SQL_CREATE_MigrantsTable =
             "CREATE TABLE IF NOT EXISTS " + DatabaseTables.MigrantsTable.TABLE_NAME + " (" +
                     DatabaseTables.MigrantsTable.migrant_id + " INTEGER PRIMARY KEY," +
@@ -168,6 +177,7 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
         db.execSQL(SQL_CREATE_CountriesTable);
         db.execSQL(SQL_CREATE_MigrantsTable);
         db.execSQL(SQL_CREATE_ContactsTable);
+        db.execSQL(SQL_CREATE_ContactsTableDefault);
         db.execSQL(SQL_CREATE_FeedbackQuestionTable);
         db.execSQL(SQL_CREATE_FeedbackQuestionResponseTable);
         db.execSQL(SQL_CREATE_MigrantsTempTable);
@@ -563,6 +573,21 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
         Log.d("mylog", "Inserted row ID; " + newRowId);
     }
 
+    public void insertImportantContactsDefault(int contactId, String title, String description, String address, String phone, String email, String website) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(DatabaseTables.ImportantContactsDefault.contact_id, contactId);
+        values.put(DatabaseTables.ImportantContactsDefault.title, title);
+        values.put(DatabaseTables.ImportantContactsDefault.description, description);
+        values.put(DatabaseTables.ImportantContactsDefault.address, address);
+        values.put(DatabaseTables.ImportantContactsDefault.phone, phone);
+        values.put(DatabaseTables.ImportantContactsDefault.email, email);
+        values.put(DatabaseTables.ImportantContactsDefault.website, website);
+
+        long newRowId = db.insert(DatabaseTables.ImportantContactsDefault.TABLE_NAME, null, values);
+        Log.d("mylog", "Inserted Default row ID; " + newRowId);
+    }
+
     public ArrayList<TilesModel> getTiles(String type) {
         SQLiteDatabase db = this.getReadableDatabase();
         ArrayList<TilesModel> tileList = new ArrayList<>();
@@ -950,6 +975,31 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
             tempModel.setWebsite(website);
             contactsModels.add(tempModel);
         }
+        return contactsModels;
+    }
+
+    public ArrayList<ImportantContactsModel> getDefaultImportantContacts() {
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT * FROM " + DatabaseTables.ImportantContactsDefault.TABLE_NAME, null);
+        Log.d("mylog", "Raw Data: " + cursor.toString());
+        ArrayList<ImportantContactsModel> contactsModels = new ArrayList<>();
+        cursor.moveToNext();
+        String title = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseTables.ImportantContactsDefault.title));
+        String description = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseTables.ImportantContactsDefault.description));
+        String address = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseTables.ImportantContactsDefault.address));
+        String phone = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseTables.ImportantContactsDefault.phone));
+        String email = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseTables.ImportantContactsDefault.email));
+        String website = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseTables.ImportantContactsDefault.website));
+
+        ImportantContactsModel tempModel = new ImportantContactsModel();
+        tempModel.setAddress(address);
+        tempModel.setPhone(phone);
+        tempModel.setTitle(title);
+        tempModel.setDescription(description);
+        tempModel.setEmail(email);
+        tempModel.setWebsite(website);
+        contactsModels.add(tempModel);
+
         return contactsModels;
     }
 

@@ -43,29 +43,44 @@ import butterknife.ButterKnife;
 
 public class ActivityImportantContacts extends AppCompatActivity {
     private final String importantContactsAPI = "/getimportantcontacts.php";
+    private final String importantContactsDefaultAPI = "/getimportantcontactsdefault.php";
 
+    boolean finalSec;
     @BindView(R.id.rvContacts)
     RecyclerView rvContacts;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_important_contacts);
         ButterKnife.bind(this);
         String countryId = getIntent().getStringExtra("countryId");
+        finalSec = getIntent().getBooleanExtra("section", false);
         setUpInfo(countryId);
-        getContacts();
+        getContacts(1);
+        getContacts(2);
     }
 
     public void setUpInfo(String cid) {
         Log.d("mylog", "Received Country Id: " + cid);
         ArrayList<ImportantContactsModel> contactsModels = new SQLDatabaseHelper(this).getImportantContacts(cid);
-
+        ArrayList<ImportantContactsModel> defaultContactsModels = new SQLDatabaseHelper(this).getDefaultImportantContacts();
         rvContacts.setLayoutManager(new LinearLayoutManager(this));
-        rvContacts.setAdapter(new ImportantContactsAdatper(contactsModels));
+        if (finalSec) {
+            contactsModels.addAll(defaultContactsModels);
+            rvContacts.setAdapter(new ImportantContactsAdatper(contactsModels));
+        } else {
+            defaultContactsModels.addAll(contactsModels);
+            rvContacts.setAdapter(new ImportantContactsAdatper(defaultContactsModels));
+        }
     }
 
-    private void getContacts() {
-        String api = ApplicationClass.getInstance().getAPIROOT() + importantContactsAPI;
+    private void getContacts(int type) {
+        String api;
+        if (type == 1)
+            api = ApplicationClass.getInstance().getAPIROOT() + importantContactsAPI;
+        else
+            api = ApplicationClass.getInstance().getAPIROOT() + importantContactsDefaultAPI;
         StringRequest getRequest = new StringRequest(Request.Method.POST, api, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
@@ -104,8 +119,18 @@ public class ActivityImportantContacts extends AppCompatActivity {
                 JSONArray contactsArray = jsonContacts.getJSONArray("contacts");
                 for (int i = 0; i < contactsArray.length(); i++) {
                     JSONObject contactsObject = contactsArray.getJSONObject(i);
-                    String cid = contactsObject.getString("country_id");
-                    int contactId = contactsObject.getInt("contact_id");
+                    String cid;
+                    if (contactsObject.has("country_id"))
+                        cid = contactsObject.getString("country_id");
+                    else
+                        cid = "default";
+
+                    int contactId;
+                    if (contactsObject.has("contact_id"))
+                        contactId = contactsObject.getInt("contact_id");
+                    else
+                        contactId = contactsObject.getInt("id");
+
                     String title = contactsObject.getString("title");
                     String description = contactsObject.getString("description");
                     String address = contactsObject.getString("address");
@@ -113,7 +138,10 @@ public class ActivityImportantContacts extends AppCompatActivity {
                     String email = contactsObject.getString("email");
                     String website = contactsObject.getString("website");
                     Log.d("mylog", cid);
-                    dbHelper.insertImportantContacts(contactId, cid, title, description, address, phone, email, website);
+                    if (cid.equalsIgnoreCase("default"))
+                        dbHelper.insertImportantContactsDefault(contactId, title, description, address, phone, email, website);
+                    else
+                        dbHelper.insertImportantContacts(contactId, cid, title, description, address, phone, email, website);
                 }
             }
         } catch (JSONException e) {

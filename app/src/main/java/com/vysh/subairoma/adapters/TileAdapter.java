@@ -184,6 +184,7 @@ public class TileAdapter extends RecyclerView.Adapter<TileAdapter.TileViewHolder
                     if (getAdapterPosition() == impContactsPlace && impContactsPlace > 1) {
                         Intent impIntent = new Intent(context.getApplicationContext(), ActivityImportantContacts.class);
                         impIntent.putExtra("countryId", cid);
+                        impIntent.putExtra("section", ActivityTileHome.finalSection);
                         context.startActivity(impIntent);
                     } else {
                         if (ActivityTileHome.finalSection) {

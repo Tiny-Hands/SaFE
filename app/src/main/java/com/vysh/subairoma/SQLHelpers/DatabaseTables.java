@@ -86,6 +86,17 @@ public final class DatabaseTables {
         public static final String website = "website";
     }
 
+    public static class ImportantContactsDefault {
+        public static final String TABLE_NAME = "tbl_contacts";
+        public static final String contact_id = "contact_id";
+        public static final String title = "title";
+        public static final String description = "description";
+        public static final String address = "address";
+        public static final String phone = "phone";
+        public static final String email = "email";
+        public static final String website = "website";
+    }
+
     public static class OptionsTable {
         public static final String TABLE_NAME = "tbl_options";
         public static final String option_id = "option_id";

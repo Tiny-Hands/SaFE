@@ -57,6 +57,7 @@ public class ActivitySplash extends AppCompatActivity {
     private final String countiesAPI = "/getcountries.php";
     private final String manpowersAPI = "/getmanpowers.php";
     private final String importantContactsAPI = "/getimportantcontacts.php";
+    private final String importantContactsDefaultAPI = "/getimportantcontactsdefault.php";
     private final String feedbackQuestions = "/getfeedbackquestions.php";
     private int savedCount = 0;
     private int apiCount = 7;
@@ -206,7 +207,8 @@ public class ActivitySplash extends AppCompatActivity {
             getQuestions();
             getOptions();
             getCountries();
-            getContacts();
+            getContacts(1);
+            getContacts(2);
             getFeedbackQuestions();
             getManpowers();
             /*
@@ -252,8 +254,13 @@ public class ActivitySplash extends AppCompatActivity {
             tvLoadingEng.setVisibility(View.VISIBLE);
     }
 
-    private void getContacts() {
-        String api = ApplicationClass.getInstance().getAPIROOT() + importantContactsAPI;
+    private void getContacts(int type) {
+        String api;
+        if (type == 1)
+            api = ApplicationClass.getInstance().getAPIROOT() + importantContactsAPI;
+        else
+            api = ApplicationClass.getInstance().getAPIROOT() + importantContactsDefaultAPI;
+
         StringRequest getRequest = new StringRequest(Request.Method.POST, api, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
@@ -491,8 +498,18 @@ public class ActivitySplash extends AppCompatActivity {
                 JSONArray contactsArray = jsonContacts.getJSONArray("contacts");
                 for (int i = 0; i < contactsArray.length(); i++) {
                     JSONObject contactsObject = contactsArray.getJSONObject(i);
-                    String cid = contactsObject.getString("country_id");
-                    int contactId = contactsObject.getInt("contact_id");
+                    String cid;
+                    if (contactsObject.has("country_id"))
+                        cid = contactsObject.getString("country_id");
+                    else
+                        cid = "default";
+
+                    int contactId;
+                    if (contactsObject.has("contact_id"))
+                        contactId = contactsObject.getInt("contact_id");
+                    else
+                        contactId = contactsObject.getInt("id");
+
                     String title = contactsObject.getString("title");
                     String description = contactsObject.getString("description");
                     String address = contactsObject.getString("address");
@@ -500,7 +517,13 @@ public class ActivitySplash extends AppCompatActivity {
                     String email = contactsObject.getString("email");
                     String website = contactsObject.getString("website");
                     Log.d("mylog", cid);
-                    dbHelper.insertImportantContacts(contactId, cid, title, description, address, phone, email, website);
+                    if (cid.equalsIgnoreCase("default")) {
+                        Log.d("myimplog", "Saving default:" + contactId);
+                        dbHelper.insertImportantContactsDefault(contactId, title, description, address, phone, email, website);
+                    } else {
+                        Log.d("myimplog", "Saving specific:" + cid);
+                        dbHelper.insertImportantContacts(contactId, cid, title, description, address, phone, email, website);
+                    }
                 }
                 incrementCount();
             }
