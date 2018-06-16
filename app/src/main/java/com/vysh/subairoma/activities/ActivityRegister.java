@@ -230,8 +230,6 @@ public class ActivityRegister extends AppCompatActivity {
                         getLoggedInUserDetails(jsonRes);
                         //Gets Migrant Details and Saves in DB regardless of User Type
                         getMigrants();
-                        //Getting all the saved responses for the user
-                        getAllResponses(userType);
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -316,13 +314,16 @@ public class ActivityRegister extends AppCompatActivity {
             @Override
             public void onResponse(String response) {
                 try {
-                    progressDialog.dismiss();
-                } catch (Exception ex) {
-                    Log.d("mylog", "Exception in progress dis: " + ex.getMessage());
-                }
-                try {
                     //boolean firstRun = false;
                     parseMigDetailResponse(response);
+                    //Getting all the saved responses for the user
+                    try {
+                        progressDialog.dismiss();
+                    } catch (Exception ex) {
+                        Log.d("mylog", "Exception in progress dis: " + ex.getMessage());
+                    }
+                    getAllResponses(userType);
+
                     Log.d("mylog", "response : " + response);
                 } catch (Exception ex) {
                     Log.d("mylog", "response exception: " + ex.toString());
@@ -813,8 +814,6 @@ public class ActivityRegister extends AppCompatActivity {
                         //Gets Migrant Details and Saves in DB regardless of User Type
                         //getMigrantDetails();
                         getMigrants();
-                        //Getting all the saved responses for the user
-                        getAllResponses(userType);
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
