@@ -311,14 +311,19 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
 
     private void calculateAndSavePercentComplete() {
         int totalQuestion = questionsListDisplay.size();
+        Log.d("mylog", "Total Questions:" + totalQuestion);
         ArrayList<Integer> questionIdsToGetAnswers = new ArrayList<>();
         ArrayList<Integer> questionIdsWithPossibleRedflags = new ArrayList<>();
-        for (int i = 0; i < totalQuestion; i++) {
+        for (int i = 0; i < questionsListDisplay.size(); i++) {
+            Log.d("mylog", "Normal Question ID: " + questionsListDisplay.get(i).getQuestionId() +
+                    "Variable: " + questionsListDisplay.get(i).getVariable() + " Condition: " + questionsListDisplay.get(i).getCondition());
             if (questionsListDisplay.get(i).getCondition().contains("error")) {
                 totalQuestion--;
+                Log.d("mylog", "Redflag Question: " + questionsListDisplay.get(i).getVariable());
                 questionIdsWithPossibleRedflags.add(questionsListDisplay.get(i).getQuestionId());
-            } else
+            } else {
                 questionIdsToGetAnswers.add(questionsListDisplay.get(i).getQuestionId());
+            }
         }
         //int answersCount = sqlDatabaseHelper.getTileResponse(migrantId, questionsList.get(0).getTileId());
         int answersCount = sqlDatabaseHelper.getQuestionResponse(migrantId, questionIdsToGetAnswers);

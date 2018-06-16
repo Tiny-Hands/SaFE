@@ -458,7 +458,7 @@ public class ActivityMigrantList extends AppCompatActivity implements RecyclerIt
         } else {*/
         Log.d("mylog", "User ID: " + ApplicationClass.getInstance().getUserId() + " Migrant ID: " + ApplicationClass.getInstance().getMigrantId()
                 + " UserType: " + userType);
-        if (migrantModels.size() >= 1 && userType == 0) {
+        if (migrantModels.size() == 1 && userType == 0) {
             int migId = migrantModels.get(0).getMigrantId();
             ApplicationClass.getInstance().setMigrantId(migId);
             String cid = dbHelper.getResponse(migId, "mg_destination");

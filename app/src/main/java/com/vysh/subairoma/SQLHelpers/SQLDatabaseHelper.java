@@ -1183,8 +1183,9 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
                 cursor.moveToFirst();
                 String isError = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseTables.ResponseTable.is_error));
                 Log.d("mylog", "Percent is error: " + isError);
-                if (!isError.equalsIgnoreCase("true"))
-                    totalCount++;
+                if (isError != null)
+                    if (isError.equalsIgnoreCase("true"))
+                        totalCount++;
                 cursor.close();
             }
         }
