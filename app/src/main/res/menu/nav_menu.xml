@@ -19,11 +19,11 @@
     <group
         android:id="@+id/secondaryNavOpt">
         <item
-            android:id="@+id/nav_faq"
+            android:id="@+id/nav_about"
             android:icon="@drawable/ic_about"
             android:title="About Us" />
         <item
-            android:id="@+id/nav_about"
+            android:id="@+id/nav_faq"
             android:icon="@drawable/ic_faq"
             android:title="Frequntly Asked Questions" />
         <item

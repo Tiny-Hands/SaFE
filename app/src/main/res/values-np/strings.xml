@@ -26,6 +26,9 @@
     <!-- Migrant List -->
     <string name="mig_delete_confirmation">के तपाईं पक्का प्रवासी मेटाउन चाहनुहुन्छ?</string>
 
+    <!-- About Us -->
+    <string name="about_us">हाम्रोबारे</string>
+
     <!-- Feedback -->
     <string name="feedback_trial">एपको यो सेक्शनले तपाईंलाई कसरी मद्दत गर्यो?</string>
     <string name="support">समर्थन</string>

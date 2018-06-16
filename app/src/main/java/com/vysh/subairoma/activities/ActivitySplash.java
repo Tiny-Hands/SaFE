@@ -60,7 +60,7 @@ public class ActivitySplash extends AppCompatActivity {
     private final String importantContactsDefaultAPI = "/getimportantcontactsdefault.php";
     private final String feedbackQuestions = "/getfeedbackquestions.php";
     private int savedCount = 0;
-    private int apiCount = 7;
+    private int apiCount = 8;
     private long startTime;
     private long sleepTime;
     private String lang;

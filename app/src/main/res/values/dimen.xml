@@ -14,6 +14,7 @@
     <dimen name="redflag_dimen">18dp</dimen>
     <dimen name="nested_list">12dp</dimen>
     <dimen name="error_dialog_title_bg">40dp</dimen>
+    <dimen name="backdrop_circle_image">124dp</dimen>
 
     <!-- Padding and Margin -->
     <dimen name="default_margin">16dp</dimen>
@@ -41,6 +42,7 @@
     <dimen name="feedback_list_heading">16sp</dimen>
     <dimen name="feedback_text_size">14sp</dimen>
     <dimen name="need_help_dialog_text_size">16sp</dimen>
+    <dimen name="about_us_section_title">16sp</dimen>
 
     <!-- Help Icons -->
     <dimen name="help_dimen">36dp</dimen>

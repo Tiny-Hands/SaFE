@@ -2,10 +2,11 @@
     package="com.vysh.subairoma">
 
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
-    <uses-permission android:name="android.permission.CAMERA"/>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
     <application
         android:name=".ApplicationClass"
         android:allowBackup="true"
@@ -33,10 +34,13 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".activities.ActivityFeedback"/>
+        <activity android:name=".activities.ActivityFeedback" />
 
         <activity
             android:name=".activities.ActivityTileHome"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activities.ActivityAboutUs"
             android:screenOrientation="portrait" />
         <activity
             android:name=".activities.ActivityTileQuestions"
@@ -61,7 +65,7 @@
             android:windowSoftInputMode="stateHidden" />
 
         <!-- for getting country -->
-        <service android:name=".services.LocationChecker"/>
+        <service android:name=".services.LocationChecker" />
 
         <!-- For Facebook Login -->
         <meta-data

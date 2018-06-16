@@ -151,6 +151,21 @@ public class ActivityMigrantList extends AppCompatActivity implements RecyclerIt
                         drawerLayout.closeDrawer(GravityCompat.END);
                         startActivity(intentMig);
                         break;
+                    case R.id.nav_about:
+                        Intent intentAbout = new Intent(ActivityMigrantList.this, ActivityAboutUs.class);
+                        drawerLayout.closeDrawer(GravityCompat.END);
+                        startActivity(intentAbout);
+                        break;
+                    case R.id.nav_contact: Intent intentContact = new Intent(ActivityMigrantList.this, ActivityAboutUs.class);
+                        intentContact.putExtra("contact", true);
+                        drawerLayout.closeDrawer(GravityCompat.END);
+                        startActivity(intentContact);
+                        break;
+                    case R.id.nav_faq: Intent intentFaq = new Intent(ActivityMigrantList.this, ActivityAboutUs.class);
+                        intentFaq.putExtra("faq", true);
+                        drawerLayout.closeDrawer(GravityCompat.END);
+                        startActivity(intentFaq);
+                        break;
                 }
                 return false;
             }

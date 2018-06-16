@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/rlRoot"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <View
+        android:id="@+id/backdrop"
+        android:layout_width="match_parent"
+        android:layout_height="148dp"
+        android:background="@color/colorPrimaryDark" />
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?android:attr/actionBarSize">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center">
+
+            <TextView
+                android:id="@+id/tvTitle"
+                style="@style/TitleText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:text="@string/about_us"
+                android:textColor="#fff"
+                android:textStyle="bold" />
+        </RelativeLayout>
+    </android.support.v7.widget.Toolbar>
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/ivRegister"
+        android:layout_width="@dimen/backdrop_circle_image"
+        android:layout_height="@dimen/backdrop_circle_image"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="84dp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/logo_org"
+        app:civ_border_color="#fff"
+        app:civ_border_width="2dp" />
+
+    <android.support.v4.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/ivRegister"
+        android:fillViewport="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="@dimen/default_margin">
+
+            <com.vysh.subairoma.utils.CustomTextView
+                android:id="@+id/tvfaq1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Who are we?"
+                android:textSize="@dimen/about_us_section_title"
+                app:fonts="gotham_bold.ttf" />
+
+            <com.vysh.subairoma.utils.CustomTextView
+                android:id="@+id/tvDetail1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:lineSpacingExtra="5dp"
+                android:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla tempor nunc non justo fermentum."
+                app:fonts="gotham_light.ttf" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginBottom="@dimen/default_margin"
+                android:layout_marginTop="@dimen/default_margin"
+                android:background="#333" />
+
+            <com.vysh.subairoma.utils.CustomTextView
+                android:id="@+id/tvfaq2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="What we do?"
+                android:textSize="@dimen/about_us_section_title"
+                app:fonts="gotham_bold.ttf" />
+
+            <com.vysh.subairoma.utils.CustomTextView
+                android:id="@+id/tvDetail2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:lineSpacingExtra="5dp"
+                android:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla tempor nunc non justo fermentum porttitor. Etiam a est non enim accumsan efficitur. In mollis sollicitudin enim sed interdum. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices."
+                app:fonts="gotham_light.ttf" />
+
+            <View
+                android:id="@+id/viewseperator2"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginBottom="@dimen/default_margin"
+                android:layout_marginTop="@dimen/default_margin"
+                android:background="#333"
+                android:visibility="gone" />
+
+            <com.vysh.subairoma.utils.CustomTextView
+                android:id="@+id/tvfaq3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Address"
+                android:textSize="@dimen/about_us_section_title"
+                android:visibility="gone"
+                app:fonts="gotham_bold.ttf" />
+
+            <com.vysh.subairoma.utils.CustomTextView
+                android:id="@+id/tvDetail3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:lineSpacingExtra="5dp"
+                android:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla tempor nunc non justo fermentum porttitor. Etiam a est non enim accumsan efficitur. In mollis sollicitudin enim sed interdum. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices."
+                android:visibility="gone"
+                app:fonts="gotham_light.ttf" />
+
+        </LinearLayout>
+    </android.support.v4.widget.NestedScrollView>
+
+</RelativeLayout>

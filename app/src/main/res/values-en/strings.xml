@@ -26,6 +26,10 @@
     <!-- Migrant List -->
     <string name="mig_delete_confirmation">Are you sure you want to delete migrant?</string>
 
+
+    <!-- About Us -->
+    <string name="about_us">About Us</string>
+
     <!-- Feedback -->
     <string name="feedback_trial">How did this section of the app help you?</string>
     <string name="support">Support</string>
