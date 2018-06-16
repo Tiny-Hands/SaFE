@@ -592,7 +592,7 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getReadableDatabase();
         ArrayList<TilesModel> tileList = new ArrayList<>();
         Cursor cursor = db.rawQuery("SELECT * FROM " + DatabaseTables.TilesTable.TABLE_NAME + " WHERE "
-                + DatabaseTables.TilesTable.tile_type + "=" + "'" + type + "'", null);
+                + DatabaseTables.TilesTable.tile_type + "=" + "'" + type + "'" + " ORDER BY " + DatabaseTables.TilesTable.tile_order, null);
         while (cursor.moveToNext()) {
             int id = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseTables.TilesTable.tile_id));
             String title = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseTables.TilesTable.tile_title));
