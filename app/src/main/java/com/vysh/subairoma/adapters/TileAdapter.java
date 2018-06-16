@@ -2,6 +2,8 @@ package com.vysh.subairoma.adapters;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.Typeface;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.util.TypedValue;
@@ -24,6 +26,8 @@ import com.vysh.subairoma.models.TilesModel;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 
+import pl.droidsonroids.gif.GifImageView;
+
 /**
  * Created by Vishal on 6/12/2017.
  */
@@ -36,6 +40,7 @@ public class TileAdapter extends RecyclerView.Adapter<TileAdapter.TileViewHolder
     int impContactsPlace;
     String cid;
     int offset = 0;
+    boolean showNextStep = true;
 
     public TileAdapter(ArrayList<TilesModel> list, int impContactsPlace, int[] tiles, Context cxt, String countryId) {
         tileList = list;
@@ -63,7 +68,23 @@ public class TileAdapter extends RecyclerView.Adapter<TileAdapter.TileViewHolder
             if (impContactsPlace == 1)
                 holder.viewDisabled.setVisibility(View.VISIBLE);
             offset = 1;
-        } else if (position <= tileList.size()) {
+        } else if (showNextStep && position == impContactsPlace + 1) {
+            holder.tvTile.setText("Unlock Next Steps");
+            holder.gifImageView.setVisibility(View.VISIBLE);
+            holder.ivTile.setVisibility(View.INVISIBLE);
+            holder.tvTile.setTypeface(null, Typeface.BOLD_ITALIC);
+            holder.tvTile.setText(R.string.unlock_next);
+            //holder.tvPercent.setVisibility(View.GONE);
+            holder.progressPercent.setVisibility(View.GONE);
+            holder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (context instanceof ActivityTileHome)
+                        ((ActivityTileHome) context).goToNextSection();
+                }
+            });
+            offset = 2;
+        } else if ((position - offset) <= tileList.size()) {
             holder.tvTile.setText(tileList.get(position - offset).getTitle());
             if (cid == null || cid.isEmpty()) {
                 if (position > 0)
@@ -166,7 +187,13 @@ public class TileAdapter extends RecyclerView.Adapter<TileAdapter.TileViewHolder
         /*if (ActivityTileHome.finalSection || ActivityTileHome.showIndia) {
             return tileList.size() + 1;
         } else*/
-        return tileList.size() + 1;
+        if (ActivityTileHome.finalSection || ActivityTileHome.showIndia) {
+            showNextStep = false;
+            return tileList.size() + 1;
+        } else {
+            showNextStep = true;
+            return tileList.size() + 2;
+        }
     }
 
     public class TileViewHolder extends RecyclerView.ViewHolder {
@@ -175,6 +202,7 @@ public class TileAdapter extends RecyclerView.Adapter<TileAdapter.TileViewHolder
         public View viewDisabled;
         public ProgressBar progressPercent;
         public LinearLayout llErrorLayout;
+        public GifImageView gifImageView;
 
         public TileViewHolder(View itemView) {
             super(itemView);
@@ -219,6 +247,7 @@ public class TileAdapter extends RecyclerView.Adapter<TileAdapter.TileViewHolder
             tvTile = itemView.findViewById(R.id.tvTitle);
             ivTile = itemView.findViewById(R.id.ivTitle);
             ivDone = itemView.findViewById(R.id.ivDone);
+            gifImageView = itemView.findViewById(R.id.gifView);
             viewDisabled = itemView.findViewById(R.id.viewDisabled);
             llErrorLayout = itemView.findViewById(R.id.llRedflags);
         }

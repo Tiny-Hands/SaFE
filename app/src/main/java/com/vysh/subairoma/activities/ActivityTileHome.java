@@ -280,13 +280,7 @@ public class ActivityTileHome extends AppCompatActivity {
         btnNext.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!finalSection)
-                    new DialogAnswersVerification().show(getSupportFragmentManager(), "dialog");
-                else {
-                    //Toast.makeText(ActivityTileHome.this, "Completed", Toast.LENGTH_SHORT).show();
-                    showSnackbar("The steps are Completed");
-                }
-                getAllResponses();
+                goToNextSection();
             }
         });
 
@@ -337,6 +331,16 @@ public class ActivityTileHome extends AppCompatActivity {
                 startActivity(impIntent);
             }
         });*/
+    }
+
+    public void goToNextSection() {
+        if (!finalSection)
+            new DialogAnswersVerification().show(getSupportFragmentManager(), "dialog");
+        else {
+            //Toast.makeText(ActivityTileHome.this, "Completed", Toast.LENGTH_SHORT).show();
+            showSnackbar("The steps are Completed");
+        }
+        getAllResponses();
     }
 
     private void deleteMigrant() {
@@ -399,7 +403,7 @@ public class ActivityTileHome extends AppCompatActivity {
             tiles = new SQLDatabaseHelper(ActivityTileHome.this).getTiles("FEP");
             tilesGAS = new SQLDatabaseHelper(ActivityTileHome.this).getTiles("GAS");
         }
-        if (checkIfVerifiedAnswers()) {
+        if (checkIfVerifiedAnswers() && !countryId.equalsIgnoreCase("in")) {
             setUpGasSections();
             return;
         } else {
