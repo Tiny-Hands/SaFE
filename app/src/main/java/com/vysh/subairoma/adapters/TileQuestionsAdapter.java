@@ -740,9 +740,9 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
                 }
             });
             title = itemView.findViewById(R.id.tvStep);
-            itemView.setOnClickListener(new View.OnClickListener() {
+            title.setOnClickListener(new View.OnClickListener() {
                 @Override
-                public void onClick(View v) {
+                public void onClick(View view) {
                     toggleExpandView();
                 }
             });

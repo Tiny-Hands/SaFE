@@ -2,11 +2,11 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:gravity="center_horizontal"
+    android:orientation="vertical"
     android:paddingLeft="@dimen/default_margin"
     android:paddingRight="@dimen/default_margin"
-    android:paddingTop="@dimen/default_margin"
-    android:gravity="center_horizontal"
-    android:orientation="vertical">
+    android:paddingTop="@dimen/default_margin">
 
     <TextView
         android:id="@+id/tvTermHeader"
@@ -14,8 +14,8 @@
         android:layout_height="wrap_content"
         android:text="@string/finalAnswerVerificationTitle"
         android:textColor="@color/colorAccent"
-        android:textStyle="bold"
-        android:textSize="22sp" />
+        android:textSize="22sp"
+        android:textStyle="bold" />
 
     <TextView
         android:id="@+id/tvTerms"
@@ -38,20 +38,22 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
+        <TextView
+            android:id="@+id/tvCheckTerm"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:layout_weight="1"
+            android:padding="4dp"
+            android:text="@string/finalAnswerButton"
+            android:textColor="@color/colorAccent"
+            android:textStyle="bold" />
+
         <CheckBox
             android:id="@+id/checkboxTermsAccept"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
 
-        <TextView
-            android:id="@+id/tvCheckTerm"
-            android:gravity="center"
-            android:padding="4dp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/finalAnswerButton"
-            android:textColor="@color/colorAccent"
-            android:textStyle="bold" />
     </LinearLayout>
 
     <Button
@@ -67,8 +69,8 @@
         android:id="@+id/btnBack"
         android:layout_width="@dimen/default_button_width"
         android:layout_height="@dimen/default_button_height"
+        android:layout_marginBottom="@dimen/default_margin"
         android:background="@drawable/default_rounded_button_accent"
         android:text="@string/back"
-        android:layout_marginBottom="@dimen/default_margin"
         android:textColor="@color/bgFaded" />
 </LinearLayout>
