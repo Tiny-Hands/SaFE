@@ -132,5 +132,7 @@
     <string name="failed_user_update">प्रयोगकर्ता विवरण अपडेट गर्न असफल भयो</string>
     <string name="fb_connected">फेसबुकसँग जोडिएको</string>
     <string name="connect_to_fb">फेसबुकसँग जोड्नुहोस्</string>
+    <string name="contact_us">हामीलाई सम्पर्क गर्नुहोस</string>
+    <string name="faqs">बारम्बार सोधिने प्रश्नहरू</string>
 
 </resources>

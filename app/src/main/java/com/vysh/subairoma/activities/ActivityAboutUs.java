@@ -42,18 +42,18 @@ public class ActivityAboutUs extends AppCompatActivity {
         if (getIntent().hasExtra("faq")) {
             faq1.setText("Question 1");
             faq2.setText("Question 2");
-            tvTitle.setText("FAQs");
+            tvTitle.setText(R.string.faqs);
         } else if (getIntent().hasExtra("contact")) {
-            faq1.setText("Email");
+            faq1.setText(R.string.email);
             tvDetail1.setText("subairoma@gmail.com");
-            faq2.setText("Phone");
+            faq2.setText(R.string.phone_number);
             tvDetail2.setText("9800111111");
             viewSeperator.setVisibility(View.VISIBLE);
-            faq3.setText("Address");
+            faq3.setText(R.string.address);
             faq3.setVisibility(View.VISIBLE);
             tvDetail3.setText("Lorem ipsum dolor sit amet, consectetur adipiscing elit.");
             tvDetail3.setVisibility(View.VISIBLE);
-            tvTitle.setText("Contact US");
+            tvTitle.setText(R.string.contact_us);
         }
     }
 }

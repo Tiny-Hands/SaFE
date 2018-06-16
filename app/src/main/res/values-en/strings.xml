@@ -132,4 +132,6 @@
     <string name="fb_connected">Connected to Facebook</string>
     <string name="check_one">Check atleast one</string>
     <string name="connect_to_fb">Connect to Facebook</string>
+    <string name="contact_us">Contact Us</string>
+    <string name="faqs">FAQs</string>
 </resources>
