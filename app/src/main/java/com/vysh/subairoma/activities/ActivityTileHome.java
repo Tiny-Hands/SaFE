@@ -309,6 +309,23 @@ public class ActivityTileHome extends AppCompatActivity {
                     case R.id.delete_migrant:
                         deleteMigrant();
                         break;
+                    case R.id.nav_about:
+                        Intent intentAbout = new Intent(ActivityTileHome.this, ActivityAboutUs.class);
+                        drawerLayout.closeDrawer(GravityCompat.END);
+                        startActivity(intentAbout);
+                        break;
+                    case R.id.nav_contact:
+                        Intent intentContact = new Intent(ActivityTileHome.this, ActivityAboutUs.class);
+                        intentContact.putExtra("contact", true);
+                        drawerLayout.closeDrawer(GravityCompat.END);
+                        startActivity(intentContact);
+                        break;
+                    case R.id.nav_faq:
+                        Intent intentFaq = new Intent(ActivityTileHome.this, ActivityAboutUs.class);
+                        intentFaq.putExtra("faq", true);
+                        drawerLayout.closeDrawer(GravityCompat.END);
+                        startActivity(intentFaq);
+                        break;
                 }
                 return false;
             }
