@@ -1025,7 +1025,8 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
             }
             details.setVisibility(View.VISIBLE);
             helpLayout.setVisibility(View.VISIBLE);
-            question.setVisibility(View.VISIBLE);
+            if (!question.getText().toString().equalsIgnoreCase("null"))
+                question.setVisibility(View.VISIBLE);
             ivPointer.setImageBitmap(BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_pointerarrow_down));
             int responseType = questionsListDisplay.get(currentClickedPos).getResponseType();
             if (responseType == 0) {
