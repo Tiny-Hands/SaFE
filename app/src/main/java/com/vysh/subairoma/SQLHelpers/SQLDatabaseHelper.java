@@ -279,7 +279,7 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
 
     }
 
-    public void insertCountryResponse(String response, int migrant_id, String variable, String timestamp) {
+    public void insertCountryResponse(String response, int qid, int migrant_id, String variable, String timestamp) {
         // Gets the data repository in write mode
         SQLiteDatabase db = this.getWritableDatabase();
         // Create a new map of values, where column names are the keys
@@ -297,6 +297,7 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
         if (updateCount < 1) {
             // Insert the new row, returning the primary key value of the new row
             values.put(DatabaseTables.ResponseTable.migrant_id, migrant_id);
+            values.put(DatabaseTables.ResponseTable.question_id, qid);
             long newRowId = db.insert(DatabaseTables.ResponseTable.TABLE_NAME, null, values);
             Log.d("mylog", "Inserted row ID: " + newRowId);
         }

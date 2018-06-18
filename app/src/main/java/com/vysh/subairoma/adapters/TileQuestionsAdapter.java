@@ -1085,7 +1085,7 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
 
                         Calendar cal = Calendar.getInstance();
                         String time = cal.getTimeInMillis() + "";
-                        new SQLDatabaseHelper(context).insertCountryResponse(cid,
+                        new SQLDatabaseHelper(context).insertCountryResponse(cid, questionID,
                                 ApplicationClass.getInstance().getMigrantId(), "mg_destination", time);
                         if (!orgCountryId.equalsIgnoreCase(cid)) {
                             Intent intent = new Intent(context, ActivityTileHome.class);
