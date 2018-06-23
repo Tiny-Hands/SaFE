@@ -778,7 +778,7 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
                         case KeyEvent.KEYCODE_BACK:
                             saveTextInput();
                     }
-                    return true;
+                    return false;
                 }
             });
             etResponse.setOnEditorActionListener(new TextView.OnEditorActionListener() {
