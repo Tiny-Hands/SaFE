@@ -272,12 +272,16 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
 
     public int getPercentComp(int migId) {
         SQLiteDatabase db = this.getWritableDatabase();
-        String query = "SELECT * FROM " + DatabaseTables.MigrantsTable.TABLE_NAME + " WHERE " +
-                DatabaseTables.MigrantsTable.migrant_id + "=" + "'" + migId + "'";
-        Cursor cursor = db.rawQuery(query, null);
-        int percent = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseTables.MigrantsTable.percent_comp));
+        Cursor cursor = db.rawQuery("SELECT * FROM " + DatabaseTables.MigrantsTable.TABLE_NAME + " WHERE "
+                + DatabaseTables.MigrantsTable.migrant_id + "=" + "'" + migId + "'", null);
+        int percent = 0;
+        cursor.moveToFirst();
+        if (cursor.getCount() > 0)
+            percent = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseTables.MigrantsTable.percent_comp));
+        else
+            Log.d("mylog", "Cursor size: " + 0);
+        cursor.close();
         return percent;
-
     }
 
     public void insertCountryResponse(String response, int qid, int migrant_id, String variable, String timestamp) {

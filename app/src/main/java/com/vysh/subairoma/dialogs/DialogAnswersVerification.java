@@ -1,9 +1,11 @@
 package com.vysh.subairoma.dialogs;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
+import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -51,21 +53,13 @@ public class DialogAnswersVerification extends DialogFragment implements View.On
                 break;
             case R.id.btnProceed:
                 if (checkbox.isChecked()) {
-                    ActivityTileHome activity = (ActivityTileHome) getActivity();
-
-                    Intent intent = new Intent(getContext(), ActivityFeedback.class);
-                    intent.putExtra("countryId", activity.countryId);
-                    intent.putExtra("migrantName", activity.migName);
-                    intent.putExtra("countryName", activity.countryName);
-                    intent.putExtra("countryStatus", activity.status);
-                    intent.putExtra("countryBlacklist", activity.blacklist);
-                    dismiss();
-
-                    Calendar cal = Calendar.getInstance();
-                    String time = cal.getTimeInMillis() + "";
-                    new SQLDatabaseHelper(getContext()).insertResponseTableData("true", SharedPrefKeys.questionVerifiedAns, -1,
-                            ApplicationClass.getInstance().getMigrantId(), "mg_verified_answers", time);
-                    startActivity(intent);
+                    int migId = ApplicationClass.getInstance().getMigrantId();
+                    int percent = new SQLDatabaseHelper(getContext()).getPercentComp(migId);
+                    if (percent < 80) {
+                        showPercentLessDialog(percent);
+                        return;
+                    }
+                    goToGas();
                 } else {
                     tvCheckTerm.setTextColor(getResources().getColor(R.color.colorError));
                 }
@@ -76,5 +70,42 @@ public class DialogAnswersVerification extends DialogFragment implements View.On
                 else
                     checkbox.setChecked(true);
         }
+    }
+
+    private void goToGas() {
+        ActivityTileHome activity = (ActivityTileHome) getActivity();
+        Intent intent = new Intent(getContext(), ActivityFeedback.class);
+        intent.putExtra("countryId", activity.countryId);
+        intent.putExtra("migrantName", activity.migName);
+        intent.putExtra("countryName", activity.countryName);
+        intent.putExtra("countryStatus", activity.status);
+        intent.putExtra("countryBlacklist", activity.blacklist);
+        dismiss();
+
+        Calendar cal = Calendar.getInstance();
+        String time = cal.getTimeInMillis() + "";
+        new SQLDatabaseHelper(getContext()).insertResponseTableData("true", SharedPrefKeys.questionVerifiedAns, -1,
+                ApplicationClass.getInstance().getMigrantId(), "mg_verified_answers", time);
+        startActivity(intent);
+    }
+
+    private void showPercentLessDialog(int percent) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        builder.setMessage("You've only complete " + percent + " % of the questions, are you sure you want to proceed?");
+        builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.dismiss();
+                dismiss();
+            }
+        });
+        builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.dismiss();
+                goToGas();
+            }
+        });
+        builder.show();
     }
 }
