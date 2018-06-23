@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
 import android.text.InputFilter;
+import android.text.InputType;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -70,6 +71,7 @@ public class DialogUsertypeChooser extends DialogFragment {
 
         final EditText etName = dialogView.findViewById(R.id.etInput);
         etName.setHint("Name");
+        etName.setInputType(InputType.TYPE_CLASS_TEXT);
         etName.setFilters(new InputFilter[]{new InputFilter.LengthFilter(20)});
         dialogBuilder.setPositiveButton(getResources().getString(R.string.done), new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {

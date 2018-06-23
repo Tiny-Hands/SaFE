@@ -215,6 +215,7 @@ public class ActivityRegister extends AppCompatActivity {
         //progressDialog.setTitle("Please wait");
         progressDialog.setMessage(getResources().getString(R.string.checking_registration));
         progressDialog.show();
+        progressDialog.setCancelable(false);
         StringRequest checkRequest = new StringRequest(Request.Method.POST, api, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
@@ -305,6 +306,7 @@ public class ActivityRegister extends AppCompatActivity {
         String api = ApplicationClass.getInstance().getAPIROOT() + APIGETMIG;
         final ProgressDialog progressDialog = new ProgressDialog(ActivityRegister.this);
         progressDialog.setMessage(getResources().getString(R.string.getting_mig_details));
+        progressDialog.setCancelable(false);
         try {
             progressDialog.show();
         } catch (Exception ex) {
@@ -860,11 +862,12 @@ public class ActivityRegister extends AppCompatActivity {
             api = ApplicationClass.getInstance().getAPIROOT() + apiGetResponses;
         final ProgressDialog pdialog = new ProgressDialog(ActivityRegister.this);
         //pdialog.setTitle("Setting Up");
-        pdialog.setMessage(getResources().getString(R.string.getting_mig_details));
+        pdialog.setMessage(getResources().getString(R.string.getting_mig_responses));
+        pdialog.setCancelable(false);
         try {
             pdialog.show();
         } catch (Exception ex) {
-
+            Log.d("mylog", "Couldn't show dialgo: " + ex.getMessage());
         }
         StringRequest stringRequest = new StringRequest(Request.Method.POST, api, new Response.Listener<String>() {
             @Override
