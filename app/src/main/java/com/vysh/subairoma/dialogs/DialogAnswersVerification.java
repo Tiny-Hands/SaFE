@@ -33,10 +33,11 @@ public class DialogAnswersVerification extends DialogFragment implements View.On
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.dialog_final_answers_verification, container, false);
-        back = (Button) view.findViewById(R.id.btnBack);
-        proceed = (Button) view.findViewById(R.id.btnProceed);
-        tvCheckTerm = (TextView) view.findViewById(R.id.tvCheckTerm);
-        checkbox = (CheckBox) view.findViewById(R.id.checkboxTermsAccept);
+        back = view.findViewById(R.id.btnBack);
+        proceed = view.findViewById(R.id.btnProceed);
+        tvCheckTerm = view.findViewById(R.id.tvCheckTerm);
+        checkbox = view.findViewById(R.id.checkboxTermsAccept);
+        tvCheckTerm.setOnClickListener(this);
         back.setOnClickListener(this);
         proceed.setOnClickListener(this);
         return view;
@@ -60,7 +61,6 @@ public class DialogAnswersVerification extends DialogFragment implements View.On
                     intent.putExtra("countryBlacklist", activity.blacklist);
                     dismiss();
 
-
                     Calendar cal = Calendar.getInstance();
                     String time = cal.getTimeInMillis() + "";
                     new SQLDatabaseHelper(getContext()).insertResponseTableData("true", SharedPrefKeys.questionVerifiedAns, -1,
@@ -70,6 +70,11 @@ public class DialogAnswersVerification extends DialogFragment implements View.On
                     tvCheckTerm.setTextColor(getResources().getColor(R.color.colorError));
                 }
                 break;
+            case R.id.tvCheckTerm:
+                if (checkbox.isChecked())
+                    checkbox.setChecked(false);
+                else
+                    checkbox.setChecked(true);
         }
     }
 }
