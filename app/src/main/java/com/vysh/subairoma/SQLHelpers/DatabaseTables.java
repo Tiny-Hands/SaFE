@@ -114,6 +114,7 @@ public final class DatabaseTables {
         public static final String migrant_img = "migrant_img";
         public static final String phone_number = "migrant_phone";
         public static final String percent_comp = "percent_comp";
+        public static final String helper_name = "helper_name";
         public static String inactivate_date = "inactivate_date";
     }
 

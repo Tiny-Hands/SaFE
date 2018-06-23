@@ -2,14 +2,20 @@ package com.vysh.subairoma.dialogs;
 
 import android.app.DialogFragment;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.app.AlertDialog;
+import android.text.InputFilter;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.RadioButton;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.vysh.subairoma.ApplicationClass;
 import com.vysh.subairoma.R;
@@ -38,21 +44,55 @@ public class DialogUsertypeChooser extends DialogFragment {
                 if (rbHelper.isChecked()) {
                     uType = 1;
                     ApplicationClass.getInstance().setUserType(1);
-                } else if (rbMigrant.isChecked()) {
-                    uType = 0;
-                    ApplicationClass.getInstance().setUserType(0);
-                }
-                Log.d("mylog", "Current usertype: " + uType);
-                if (uType != -1) {
-                    dismiss();
                     if (activityRegister == null)
                         activityRegister = (ActivityRegister) getActivity();
                     activityRegister.userType = uType;
                     activityRegister.showDisclaimerDialog();
+                } else if (rbMigrant.isChecked()) {
+                    uType = 0;
+                    ApplicationClass.getInstance().setUserType(0);
+                    showHelperDialog(uType);
                 }
             }
         });
         return view;
+    }
+
+    private void showHelperDialog(final int uType) {
+        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getActivity());
+        LayoutInflater inflater = activityRegister.getLayoutInflater();
+        final View dialogView = inflater.inflate(R.layout.dialog_edittext, null);
+        TextView tvTitle = dialogView.findViewById(R.id.tvTitle);
+        tvTitle.setText("Helper Details");
+        TextView tvMsg = dialogView.findViewById(R.id.tvMsg);
+        tvMsg.setText("If you are being helped by someone, enter the helpers' name below.");
+        dialogBuilder.setView(dialogView);
+
+        final EditText etName = dialogView.findViewById(R.id.etInput);
+        etName.setHint("Name");
+        etName.setFilters(new InputFilter[]{new InputFilter.LengthFilter(20)});
+        dialogBuilder.setPositiveButton(getResources().getString(R.string.done), new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+                final String name = etName.getText().toString();
+                if (!name.isEmpty() && name.length() > 3) {
+                    //activityRegister.checkUserRegistration(number);
+                    Toast.makeText(activityRegister, "Helper Added", Toast.LENGTH_SHORT).show();
+                    if (activityRegister == null)
+                        activityRegister = (ActivityRegister) getActivity();
+                    activityRegister.userType = uType;
+                    activityRegister.showDisclaimerDialog();
+                } else {
+                    etName.setError("Please enter a valid name");
+                }
+            }
+        });
+        dialogBuilder.setNegativeButton(getResources().getString(R.string.cancel), new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+                dialog.dismiss();
+            }
+        });
+        AlertDialog b = dialogBuilder.create();
+        b.show();
     }
 
     @Override

@@ -8,14 +8,16 @@
     android:paddingTop="@dimen/default_margin">
 
     <com.vysh.subairoma.utils.CustomTextView
+        android:id="@+id/tvTitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:padding="@dimen/small_margin"
         android:text="@string/login"
         android:textSize="18dp"
-        android:padding="@dimen/small_margin"
         app:fonts="gotham_bold.ttf" />
 
     <com.vysh.subairoma.utils.CustomTextView
+        android:id="@+id/tvMsg"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="@dimen/small_margin"
@@ -30,7 +32,6 @@
         android:background="@drawable/bg_edittext"
         android:hint="@string/phone_number"
         android:imeOptions="actionDone"
-        android:inputType="number"
         android:maxLength="10"
         android:padding="@dimen/small_medium_margin"
         android:textSize="16sp" />

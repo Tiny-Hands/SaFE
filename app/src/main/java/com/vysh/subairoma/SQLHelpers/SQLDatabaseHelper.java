@@ -129,6 +129,7 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
                     DatabaseTables.MigrantsTable.sex + " TEXT," +
                     DatabaseTables.MigrantsTable.migrant_img + " TEXT," +
                     DatabaseTables.MigrantsTable.phone_number + " TEXT," +
+                    DatabaseTables.MigrantsTable.helper_name + " TEXT," +
                     " UNIQUE (" + DatabaseTables.MigrantsTable.migrant_id +
                     ", " + DatabaseTables.MigrantsTable.user_id + "));";
     final String SQL_CREATE_MigrantsTempTable =
