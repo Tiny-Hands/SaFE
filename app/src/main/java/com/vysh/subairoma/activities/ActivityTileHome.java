@@ -225,7 +225,12 @@ public class ActivityTileHome extends AppCompatActivity {
     private void getPercentComplete() {
         SQLDatabaseHelper dbHelper = new SQLDatabaseHelper(ActivityTileHome.this);
         float totalPercent = 0f;
-        for (int i = 0; i < tiles.size(); i++) {
+        int tilesCount;
+        if (finalSection)
+            tilesCount = tiles.size();
+        else
+            tilesCount = tiles.size() - tilesGAS.size();
+        for (int i = 0; i < tilesCount; i++) {
             float perComplete = dbHelper.getPercentComplete(ApplicationClass.getInstance().getMigrantId(), tiles.get(i).getTileId());
             tiles.get(i).setPercentComplete(perComplete);
             Log.d("mylog", "Setting percent complete: " + perComplete);
@@ -239,6 +244,10 @@ public class ActivityTileHome extends AppCompatActivity {
         float percent = totalPercent / tiles.size();
         DecimalFormat decimalFormat = new DecimalFormat("##");
         tvPercent.setText(decimalFormat.format(percent) + "%");
+        //0 is tile type for GAS, 1 for FEP
+        int tileType = 0;
+        if (finalSection)
+            tileType = 1;
         dbHelper.insertPercentComp(ApplicationClass.getInstance().getMigrantId(), (int) percent);
         progressPercent.setProgress((int) percent);
         rvTiles.getAdapter().notifyDataSetChanged();
