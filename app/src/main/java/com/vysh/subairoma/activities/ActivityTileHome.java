@@ -241,7 +241,7 @@ public class ActivityTileHome extends AppCompatActivity {
             count += tempCount;
             Log.d("mylog", "Temp count GAS: " + tempCount);
         }*/
-        float percent = totalPercent / tiles.size();
+        float percent = totalPercent / tilesCount;
         DecimalFormat decimalFormat = new DecimalFormat("##");
         tvPercent.setText(decimalFormat.format(percent) + "%");
         //0 is tile type for GAS, 1 for FEP
