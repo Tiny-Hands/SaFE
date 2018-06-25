@@ -55,7 +55,7 @@ public class DialogAnswersVerification extends DialogFragment implements View.On
                 if (checkbox.isChecked()) {
                     int migId = ApplicationClass.getInstance().getMigrantId();
                     int percent = new SQLDatabaseHelper(getContext()).getPercentComp(migId);
-                    if (percent < 80) {
+                    if (percent < 100) {
                         showPercentLessDialog(percent);
                         return;
                     }
