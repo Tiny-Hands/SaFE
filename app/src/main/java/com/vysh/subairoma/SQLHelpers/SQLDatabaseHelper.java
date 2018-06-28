@@ -259,6 +259,7 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
             long newRowId = db.insert(DatabaseTables.ResponseTable.TABLE_NAME, null, values);
             Log.d("mylog", "Inserted row ID: " + newRowId);
         }
+        db.close();
     }
 
     public void insertPercentComp(int migId, int percentComp) {
@@ -268,6 +269,7 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
         String whereClause = DatabaseTables.MigrantsTable.migrant_id + " = " + migId;
         long updateCount = db.update(DatabaseTables.MigrantsTable.TABLE_NAME, values, whereClause, null);
         Log.d("mylog", "Percent Complete for MIG: " + migId + " Percent: " + percentComp + " Updated: " + updateCount);
+        db.close();
     }
 
     public int getPercentComp(int migId) {
@@ -281,6 +283,7 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
         else
             Log.d("mylog", "Cursor size: " + 0);
         cursor.close();
+        db.close();
         return percent;
     }
 
@@ -306,6 +309,7 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
             long newRowId = db.insert(DatabaseTables.ResponseTable.TABLE_NAME, null, values);
             Log.d("mylog", "Inserted row ID: " + newRowId);
         }
+        db.close();
     }
 
     public void insertQuestionQuery(int qid, int tileId, int migrantId, String query) {
@@ -329,6 +333,7 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
             long newRowId = db.insert(DatabaseTables.ResponseTable.TABLE_NAME, null, values);
             Log.d("mylog", "Inserted query row ID: " + newRowId);
         }
+        db.close();
     }
 
     //This is used when we have isError, when response is fetched from server
@@ -345,6 +350,7 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
         values.put(DatabaseTables.ResponseTable.tile_id, tileId);
         long newRowId = db.insert(DatabaseTables.ResponseTable.TABLE_NAME, null, values);
         Log.d("mylog", "Inserted row ID: " + newRowId);
+        db.close();
     }
 
     public void insertIsError(int migId, String variable, String isError) {
@@ -361,6 +367,7 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
                 DatabaseTables.ResponseTable.response_variable + " = " + "'" + variable + "'";
         int updateCount = db.update(DatabaseTables.ResponseTable.TABLE_NAME, newValue, selection, null);
         Log.d("mylog", "Updated iserror rows: " + updateCount);
+        db.close();
     }
 
     public ArrayList<HashMap> getAllResponse(int migId) {
@@ -403,6 +410,7 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
             allResponses.add(params);
         }
         cursor.close();
+        db.close();
         return allResponses;
     }
 
@@ -422,6 +430,8 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
                 if (error.length() < 3)
                     count++;
         }
+        cursor.close();
+        db.close();
         return count;
     }
 
@@ -446,6 +456,8 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
             int qid = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseTables.ResponseTable.question_id));
             //Log.d("mylog", "Mid: " + mid + " Qid: " + qid + " rvar: " + response);
         }
+        cursor.close();
+        db.close();
         return response;
     }
 
@@ -493,6 +505,8 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
         }
         if (isError == null)
             isError = "-";
+        cursor.close();
+        db.close();
         return isError;
     }
 
@@ -507,6 +521,7 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
 
         long newRowId = db.insert(DatabaseTables.CountriesTable.TABLE_NAME, null, values);
         Log.d("mylog", "Inserted row ID; " + newRowId);
+        db.close();
     }
 
     public ArrayList<CountryModel> getCountries() {
@@ -527,6 +542,8 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
             countryModel.setOrder(order);
             countryList.add(countryModel);
         }
+        cursor.close();
+        db.close();
         return countryList;
     }
 
@@ -547,6 +564,8 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
             countryModel.setCountryId(c_id);
             return countryModel;
         }
+        cursor.close();
+        db.close();
         return null;
     }
 
@@ -577,6 +596,7 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
 
         long newRowId = db.insert(DatabaseTables.ImportantContacts.TABLE_NAME, null, values);
         Log.d("mylog", "Inserted row ID; " + newRowId);
+        db.close();
     }
 
     public void insertImportantContactsDefault(int contactId, String title, String description, String address, String phone, String email, String website) {
@@ -592,6 +612,7 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
 
         long newRowId = db.insert(DatabaseTables.ImportantContactsDefault.TABLE_NAME, null, values);
         Log.d("mylog", "Inserted Default row ID; " + newRowId);
+        db.close();
     }
 
     public ArrayList<TilesModel> getTiles(String type) {
@@ -613,6 +634,8 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
             );
             tileList.add(tilesModel);
         }
+        cursor.close();
+        db.close();
         return tileList;
     }
 
@@ -637,6 +660,7 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
 
         long newRowId = db.insert(DatabaseTables.QuestionsTable.TABLE_NAME, null, values);
         Log.d("mylog", "Inserted row ID; " + newRowId);
+        db.close();
     }
 
     public void insertFeedbackQuestions(int qid, String qTitle, String qOption) {
@@ -648,6 +672,7 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
 
         long newRowId = db.insert(DatabaseTables.FeedbackQuestionsTable.TABLE_NAME, null, values);
         Log.d("mylog", "Inserted Feedback row ID; " + newRowId);
+        db.close();
     }
 
     public void insertFeedbackResponse(int migrantId, int questionId, String response, String optResponse, String responseFeedback) {
@@ -671,6 +696,7 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
             long newRowId = db.insert(DatabaseTables.FeedbackQuestionsResponseTable.TABLE_NAME, null, values);
             Log.d("mylog", "Inserted feedback row ID: " + newRowId);
         }
+        db.close();
 
     }
 
@@ -699,6 +725,8 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
             params.put("feedback", resFeedback);
             allResponses.add(params);
         }
+        cursor.close();
+        db.close();
         return allResponses;
     }
 
@@ -718,6 +746,8 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
             tempModel.setQuestionOptions(qOptions);
             feedbackQuestions.add(tempModel);
         }
+        cursor.close();
+        db.close();
         return feedbackQuestions;
     }
 
@@ -761,6 +791,8 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
 
             questionList.add(questionModel);
         }
+        cursor.close();
+        db.close();
         return questionList;
     }
 
@@ -788,6 +820,7 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
 
         long newRowId = db.insert(DatabaseTables.OptionsTable.TABLE_NAME, null, values);
         Log.d("mylog", "Inserted row ID; " + newRowId);
+        db.close();
     }
 
     public String[] getOptions(int qid) {
@@ -802,6 +835,8 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
             options[i] = title.toUpperCase();
             i++;
         }
+        cursor.close();
+        db.close();
         return options;
     }
 
@@ -848,6 +883,7 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
             long newRowId = db.insert(DatabaseTables.MigrantsTable.TABLE_NAME, null, values);
             Log.d("mylog", "Inserted row ID: " + newRowId);
         }
+        db.close();
     }
 
     public int insertTempMigrants(String name, int age, String phone, String sex, int userId, String migImg) {
@@ -862,6 +898,7 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
         values.put(DatabaseTables.MigrantsTempTable.user_id, userId);
         long newRowId = db.insert(DatabaseTables.MigrantsTempTable.TABLE_NAME, null, values);
         Log.d("mylog", "Inserted row ID: " + newRowId);
+        db.close();
         return (int) newRowId;
     }
 
@@ -898,6 +935,8 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
             String variable = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseTables.ResponseTable.response_variable));
             Log.d("mylog", "Got error: " + isError + " FOR: " + variable);
         }
+        cursor.close();
+        db.close();
         return cursor.getCount();
     }
 
@@ -913,7 +952,10 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
             String variable = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseTables.ResponseTable.response_variable));
             Log.d("mylog", "Got error: " + isError + " FOR: " + variable);
         }
-        return cursor.getCount();
+        int count = cursor.getCount();
+        cursor.close();
+        db.close();
+        return count;
     }
 
     public ArrayList<MigrantModel> getMigrants() {
@@ -945,6 +987,8 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
             Log.d("mylog", "Migrant Status: " + status);
             migrantModels.add(migrantModel);
         }
+        cursor.close();
+        db.close();
         return migrantModels;
     }
 
@@ -954,8 +998,13 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
         Cursor cursor = db.rawQuery("SELECT " + DatabaseTables.MigrantsTable.migrant_img + " FROM " +
                 DatabaseTables.MigrantsTable.TABLE_NAME + " WHERE " +
                 DatabaseTables.MigrantsTable.migrant_id + "=" + "'" + migId + "'", null);
+        if (cursor.getCount() < 1)
+            return "";
         cursor.moveToFirst();
-        return cursor.getString(cursor.getColumnIndexOrThrow(DatabaseTables.MigrantsTable.migrant_img));
+        String img = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseTables.MigrantsTable.migrant_img));
+        cursor.close();
+        db.close();
+        return img;
     }
 
     public ArrayList<ImportantContactsModel> getImportantContacts(String countryId) {
@@ -981,6 +1030,8 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
             tempModel.setWebsite(website);
             contactsModels.add(tempModel);
         }
+        cursor.close();
+        db.close();
         return contactsModels;
     }
 
@@ -1005,7 +1056,8 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
         tempModel.setEmail(email);
         tempModel.setWebsite(website);
         contactsModels.add(tempModel);
-
+        cursor.close();
+        db.close();
         return contactsModels;
     }
 
@@ -1032,6 +1084,8 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
         migrantModel.setMigImg(img);
         migrantModel.setMigrantSex(sex);
         migrantModels.add(migrantModel);
+        cursor.close();
+        db.close();
         return migrantModel;
     }
 
@@ -1052,6 +1106,7 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
             //Log.d("mylog", "Mid: " + mid + " Qid: " + qid + " rvar: " + response);
         }
         cursor.close();
+        db.close();
         return response;
     }
 
@@ -1076,6 +1131,7 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
                 cursor.close();
             }
         }
+        db.close();
         return totalCount;
     }
 
@@ -1132,6 +1188,7 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
         //Delete Mig From Temp Table
         db.execSQL("DELETE FROM " + DatabaseTables.MigrantsTempTable.TABLE_NAME + " WHERE " +
                 DatabaseTables.MigrantsTempTable.migrant_id + "=" + migrantIdOld);
+        db.close();
     }
 
     public void makeUserIdChanges(int userIdOld, int userIdNew) {
@@ -1148,6 +1205,7 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
         if (updateCount < 1) {
             Log.d("mylog", "Not Updated User ID");
         }
+        db.close();
     }
 
     public void insertManpower(int id, String name) {
@@ -1157,6 +1215,7 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
         values.put(DatabaseTables.ManpowersTable.manpower_name, name);
 
         long newRowId = db.insert(DatabaseTables.ManpowersTable.TABLE_NAME, null, values);
+        db.close();
         Log.d("mylog", "Inserted manpower row ID; " + newRowId);
     }
 
@@ -1167,11 +1226,12 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
         //Log.d("mylog", "Query: " + statement);
         Cursor cursor = db.rawQuery(statement, null);
         while (cursor.moveToNext()) {
-            int id = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseTables.ManpowersTable.manpower_id));
             String name = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseTables.ManpowersTable.manpower_name));
             Log.d("mylog", "Got Manpower from DB:" + name);
             names.add(name);
         }
+        cursor.close();
+        db.close();
         return names;
     }
 
@@ -1195,6 +1255,8 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
                 cursor.close();
             }
         }
+
+        db.close();
         return totalCount;
     }
 }
