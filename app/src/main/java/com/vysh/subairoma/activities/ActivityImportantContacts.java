@@ -137,10 +137,11 @@ public class ActivityImportantContacts extends AppCompatActivity {
                     String phone = contactsObject.getString("phone");
                     String email = contactsObject.getString("email");
                     String website = contactsObject.getString("website");
-                    Log.d("mylog", cid);
-                    if (cid.equalsIgnoreCase("default"))
+                    Log.d("mylog", "Current CID: " + cid);
+                    if (cid.equalsIgnoreCase("default")) {
                         dbHelper.insertImportantContactsDefault(contactId, title, description, address, phone, email, website);
-                    else
+                        Log.d("mylog", "Inserting Default: " + title);
+                    } else
                         dbHelper.insertImportantContacts(contactId, cid, title, description, address, phone, email, website);
                 }
             }

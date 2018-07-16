@@ -33,7 +33,7 @@ import java.util.HashMap;
 public class SQLDatabaseHelper extends SQLiteOpenHelper {
     // If you change the database schema, you must increment the database version.
     Context mContext;
-    public static final int DATABASE_VERSION = 15;
+    public static final int DATABASE_VERSION = 16;
     public static final String DATABASE_NAME = "SubairomaLocal.db";
     final String SQL_CREATE_ResponseTable =
             "CREATE TABLE IF NOT EXISTS " + DatabaseTables.ResponseTable.TABLE_NAME + " (" +
@@ -1056,6 +1056,7 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
         tempModel.setEmail(email);
         tempModel.setWebsite(website);
         contactsModels.add(tempModel);
+        Log.d("mylog", "Default Contact title: " + title);
         cursor.close();
         db.close();
         return contactsModels;

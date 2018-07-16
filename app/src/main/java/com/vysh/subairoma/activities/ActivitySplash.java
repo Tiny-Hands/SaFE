@@ -520,6 +520,7 @@ public class ActivitySplash extends AppCompatActivity {
                     if (cid.equalsIgnoreCase("default")) {
                         Log.d("myimplog", "Saving default:" + contactId);
                         dbHelper.insertImportantContactsDefault(contactId, title, description, address, phone, email, website);
+                        Log.d("mylog", "Inserting Default: " + title);
                     } else {
                         Log.d("myimplog", "Saving specific:" + cid);
                         dbHelper.insertImportantContacts(contactId, cid, title, description, address, phone, email, website);
