@@ -1040,25 +1040,28 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
         Cursor cursor = db.rawQuery("SELECT * FROM " + DatabaseTables.ImportantContactsDefault.TABLE_NAME, null);
         Log.d("mylog", "Raw Data: " + cursor.toString());
         ArrayList<ImportantContactsModel> contactsModels = new ArrayList<>();
-        cursor.moveToNext();
-        String title = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseTables.ImportantContactsDefault.title));
-        String description = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseTables.ImportantContactsDefault.description));
-        String address = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseTables.ImportantContactsDefault.address));
-        String phone = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseTables.ImportantContactsDefault.phone));
-        String email = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseTables.ImportantContactsDefault.email));
-        String website = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseTables.ImportantContactsDefault.website));
+        cursor.moveToFirst();
 
-        ImportantContactsModel tempModel = new ImportantContactsModel();
-        tempModel.setAddress(address);
-        tempModel.setPhone(phone);
-        tempModel.setTitle(title);
-        tempModel.setDescription(description);
-        tempModel.setEmail(email);
-        tempModel.setWebsite(website);
-        contactsModels.add(tempModel);
-        Log.d("mylog", "Default Contact title: " + title);
-        cursor.close();
-        db.close();
+        while (cursor.moveToNext()) {
+            String title = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseTables.ImportantContactsDefault.title));
+            String description = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseTables.ImportantContactsDefault.description));
+            String address = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseTables.ImportantContactsDefault.address));
+            String phone = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseTables.ImportantContactsDefault.phone));
+            String email = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseTables.ImportantContactsDefault.email));
+            String website = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseTables.ImportantContactsDefault.website));
+
+            ImportantContactsModel tempModel = new ImportantContactsModel();
+            tempModel.setAddress(address);
+            tempModel.setPhone(phone);
+            tempModel.setTitle(title);
+            tempModel.setDescription(description);
+            tempModel.setEmail(email);
+            tempModel.setWebsite(website);
+            contactsModels.add(tempModel);
+            Log.d("mylog", "Default Contact title: " + title);
+            cursor.close();
+            db.close();
+        }
         return contactsModels;
     }
 
