@@ -1038,10 +1038,8 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
     public ArrayList<ImportantContactsModel> getDefaultImportantContacts() {
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery("SELECT * FROM " + DatabaseTables.ImportantContactsDefault.TABLE_NAME, null);
-        Log.d("mylog", "Raw Data: " + cursor.toString());
         ArrayList<ImportantContactsModel> contactsModels = new ArrayList<>();
-        cursor.moveToFirst();
-
+        //cursor.moveToFirst();
         while (cursor.moveToNext()) {
             String title = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseTables.ImportantContactsDefault.title));
             String description = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseTables.ImportantContactsDefault.description));
@@ -1059,9 +1057,9 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
             tempModel.setWebsite(website);
             contactsModels.add(tempModel);
             Log.d("mylog", "Default Contact title: " + title);
-            cursor.close();
-            db.close();
         }
+        cursor.close();
+        db.close();
         return contactsModels;
     }
 
