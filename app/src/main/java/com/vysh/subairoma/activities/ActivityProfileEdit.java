@@ -50,6 +50,7 @@ import com.vysh.subairoma.SQLHelpers.SQLDatabaseHelper;
 import com.vysh.subairoma.SharedPrefKeys;
 import com.vysh.subairoma.imageHelpers.ImageEncoder;
 import com.vysh.subairoma.imageHelpers.ImageResizer;
+import com.vysh.subairoma.imageHelpers.ImageRotator;
 import com.vysh.subairoma.imageHelpers.ImageSaveHelper;
 import com.vysh.subairoma.models.MigrantModel;
 import com.vysh.subairoma.utils.CustomTextView;
@@ -378,6 +379,7 @@ public class ActivityProfileEdit extends AppCompatActivity implements View.OnCli
             if (requestCode == REQUEST_TAKE_PIC) {
                 Log.d("mylog", "request was camera");
                 Bitmap picTaken = getPic();
+                picTaken = ImageRotator.getBitmapRotatedByDegree(picTaken, 90);
                 encodeImage(picTaken);
                 getPic();
                 ivRegister.setImageBitmap(picTaken);
