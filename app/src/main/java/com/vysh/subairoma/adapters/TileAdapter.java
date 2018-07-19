@@ -76,14 +76,18 @@ public class TileAdapter extends RecyclerView.Adapter<TileAdapter.TileViewHolder
             holder.tvTile.setText(R.string.unlock_next);
             //holder.tvPercent.setVisibility(View.GONE);
             holder.progressPercent.setVisibility(View.GONE);
-            holder.itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    if (context instanceof ActivityTileHome)
-                        ((ActivityTileHome) context).goToNextSection();
-                }
-            });
+            if (position != 2)
+                holder.itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        if (context instanceof ActivityTileHome)
+                            ((ActivityTileHome) context).goToNextSection();
+                    }
+                });
             offset = 2;
+            //Meaning country not selected yet
+            if (position == 2)
+                holder.viewDisabled.setVisibility(View.VISIBLE);
         } else if ((position - offset) <= tileList.size()) {
             holder.tvTile.setText(tileList.get(position - offset).getTitle());
             if (cid == null || cid.isEmpty()) {
