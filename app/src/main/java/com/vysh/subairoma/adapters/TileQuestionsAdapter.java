@@ -198,9 +198,17 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
 
     @Override
     public void onBindViewHolder(final QuestionHolder holder, final int position) {
-        //Log.d("mylog", "Position: " + position + " Previous pos: " + previousClickedPos);
         //holder.hideExpandView();
         TileQuestionsModel question = questionsListDisplay.get(position);
+        //If mg_destination is not answered, don't show other questions and return;
+        if (!question.getVariable().equalsIgnoreCase("mg_destination")) {
+            String response = sqlDatabaseHelper.getResponse(migrantId, "mg_destination");
+            if (response == null || response.isEmpty() || response.length() < 2) {
+                holder.cardView.setVisibility(GONE);
+                return;
+            }
+        }
+
         holder.title.setText(question.getTitle());
         holder.question.setText(question.getQuestion());
         holder.details.setText(question.getDescription());
@@ -281,6 +289,7 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
 
         setValue(holder.title, holder.checkbox, holder.etResponse, holder.spinnerOptions,
                 holder.question, holder.ivError, holder.ivDone, holder.btnShowMore, holder.listViewOptions, holder.rootLayout, holder.rb1, holder.rb2, position);
+
         if (disabled) {
             holder.disabledView.setVisibility(View.VISIBLE);
             holder.disabledView.setOnClickListener(new View.OnClickListener() {
