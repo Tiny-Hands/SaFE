@@ -790,6 +790,15 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
                     return false;
                 }
             });
+            etResponse.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+                @Override
+                public void onFocusChange(View view, boolean b) {
+                    if (!b) {
+                        saveTextInput();
+                        notifyItemChanged(getAdapterPosition());
+                    }
+                }
+            });
             etResponse.setOnEditorActionListener(new TextView.OnEditorActionListener() {
                 @Override
                 public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
