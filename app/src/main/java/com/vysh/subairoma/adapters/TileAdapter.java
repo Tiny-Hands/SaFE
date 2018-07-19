@@ -118,7 +118,7 @@ public class TileAdapter extends RecyclerView.Adapter<TileAdapter.TileViewHolder
                     holder.llErrorLayout.addView(imgView);
                 }
             }
-            DecimalFormat decimalFormat = new DecimalFormat("##");
+            //DecimalFormat decimalFormat = new DecimalFormat("##");
             if (tileList.get(position - offset).getPercentComplete() > 99.9) {
                 holder.progressPercent.setVisibility(View.GONE);
                 holder.ivDone.setVisibility(View.VISIBLE);

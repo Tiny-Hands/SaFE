@@ -19,9 +19,9 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/medium_margin"
             android:text="Title"
-            android:lineSpacingExtra="2dp"
+            android:padding="2dp"
             android:textColor="@android:color/white"
-            android:textSize="20sp"
+            android:textSize="18sp"
             app:fonts="gotham_bold.ttf" />
 
         <com.wordpress.priyankvex.smarttextview.SmartTextView
