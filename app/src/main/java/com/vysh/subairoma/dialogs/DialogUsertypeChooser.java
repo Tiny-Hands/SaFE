@@ -88,9 +88,13 @@ public class DialogUsertypeChooser extends DialogFragment {
                 }
             }
         });
-        dialogBuilder.setNegativeButton(getResources().getString(R.string.cancel), new DialogInterface.OnClickListener() {
+        dialogBuilder.setNegativeButton(getResources().getString(R.string.not_being_helped), new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
                 dialog.dismiss();
+                if (activityRegister == null)
+                    activityRegister = (ActivityRegister) getActivity();
+                activityRegister.userType = uType;
+                activityRegister.showDisclaimerDialog();
             }
         });
         AlertDialog b = dialogBuilder.create();
