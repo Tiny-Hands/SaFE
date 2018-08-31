@@ -464,7 +464,7 @@ public class ActivityMigrantList extends AppCompatActivity implements RecyclerIt
             String cid = dbHelper.getResponse(migId, "mg_destination");
             Log.d("mylog", "Country ID: " + cid);
             if (cid != null && !cid.isEmpty()) {
-                Intent intent = new Intent(ActivityMigrantList.this, ActivityTileHome.class);
+                Intent intent = new Intent(ActivityMigrantList.this, ActivityTileChooser.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 intent.putExtra("countryId", cid);
                 intent.putExtra("migrantName", migrantModels.get(0).getMigrantName());
@@ -477,7 +477,7 @@ public class ActivityMigrantList extends AppCompatActivity implements RecyclerIt
                 intent.putExtra("countryBlacklist", savedCountry.getCountryBlacklist());
                 startActivity(intent);
             } else {
-                Intent intent = new Intent(ActivityMigrantList.this, ActivityTileHome.class);
+                Intent intent = new Intent(ActivityMigrantList.this, ActivityTileChooser.class);
                 intent.putExtra("countryId", "");
                 intent.putExtra("migrantName", migrantModels.get(0).getMigrantName());
                 intent.putExtra("migrantPhone", migrantModels.get(0).getMigrantPhone());

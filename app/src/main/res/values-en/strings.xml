@@ -135,4 +135,9 @@
     <string name="contact_us">Contact Us</string>
     <string name="faqs">FAQs</string>
     <string name="not_being_helped">Not being helped</string>
+    <string name="country">COUNTRY</string>
+    <string name="complete">Complete</string>
+    <string name="preparation">PREPARATION</string>
+    <string name="travel">TRAVEL</string>
+    <string name="section_locked">Section Locked</string>
 </resources>

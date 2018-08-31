@@ -66,7 +66,7 @@ public class ActivityTileHome extends AppCompatActivity {
     int[] tileIcons;
     TileAdapter tileAdapter;
     public static Boolean finalSection, showIndia, initialStep = false;
-    String uname, unumber, uage, uimg, uavatar;
+    String uname, unumber, uage, uimg, uavatar, tileType;
 
     @BindView(R.id.ivUserAvatar)
     CircleImageView ivMigrantImage;
@@ -114,6 +114,7 @@ public class ActivityTileHome extends AppCompatActivity {
         countryName = getIntent().getStringExtra("countryName");
         status = getIntent().getIntExtra("countryStatus", -1);
         blacklist = getIntent().getIntExtra("countryBlacklist", -1);
+        tileType = getIntent().getStringExtra("tiletype");
 
 
         navView = findViewById(R.id.nav_view);
@@ -422,14 +423,18 @@ public class ActivityTileHome extends AppCompatActivity {
 
     private void setUpRecyclerView() {
         Log.d("mylog", "Received Country ID: " + countryId + " And showIndia: " + showIndia);
+        tilesGAS = new ArrayList<>();
         if (showIndia) {
             tiles = new SQLDatabaseHelper(ActivityTileHome.this).getTiles("GIS");
-            tilesGAS = new ArrayList<>();
-        } else {
+            //tilesGAS = new ArrayList<>();
+        } else if (tileType.equalsIgnoreCase("fep")) {
             tiles = new SQLDatabaseHelper(ActivityTileHome.this).getTiles("FEP");
-            tilesGAS = new SQLDatabaseHelper(ActivityTileHome.this).getTiles("GAS");
+            //tilesGAS = new ArrayList<>();
+        } else {
+            tiles = new SQLDatabaseHelper(ActivityTileHome.this).getTiles("GAS");
         }
-        if (checkIfVerifiedAnswers() && !countryId.equalsIgnoreCase("in")) {
+        setUpGasSections();
+        /*if (checkIfVerifiedAnswers() && !countryId.equalsIgnoreCase("in")) {
             setUpGasSections();
             return;
         } else {
@@ -442,15 +447,16 @@ public class ActivityTileHome extends AppCompatActivity {
             tiles.addAll(tilesGAS);
             tileAdapter = new TileAdapter(tiles, afterFEP, tileIcons, ActivityTileHome.this, countryId);
             rvTiles.setAdapter(tileAdapter);
-        }
+        }*/
     }
 
     public void setUpGasSections() {
         tileAdapter = new TileAdapter(tiles, tilesGAS.size(), tileIcons, ActivityTileHome.this, countryId);
-        for (int i = 0; i < tilesGAS.size(); i++) {
+       /* for (int i = 0; i < tilesGAS.size(); i++) {
             tiles.add(i, tilesGAS.get(i));
         }
         finalSection = true;
+        */
         btnNext.setVisibility(View.GONE);
         rvTiles.setLayoutManager(new GridLayoutManager(this, 2));
         rvTiles.setAdapter(tileAdapter);

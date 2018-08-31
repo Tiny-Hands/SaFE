@@ -17,8 +17,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.vysh.subairoma.activities.ActivityMigrantList;
-import com.vysh.subairoma.activities.ActivityTileHome;
+import com.vysh.subairoma.activities.ActivityTileChooser;
 import com.vysh.subairoma.ApplicationClass;
 import com.vysh.subairoma.dialogs.DialogCountryChooser;
 import com.vysh.subairoma.R;
@@ -170,7 +169,7 @@ public class MigrantListAdapter extends RecyclerView.Adapter<MigrantListAdapter.
                     String cid = new SQLDatabaseHelper(itemView.getContext()).getResponse(migId, "mg_destination");
                     Log.d("mylog", "Country ID: " + cid);
                     if (cid != null && !cid.isEmpty()) {
-                        Intent intent = new Intent(itemView.getContext(), ActivityTileHome.class);
+                        Intent intent = new Intent(itemView.getContext(), ActivityTileChooser.class);
                         intent.putExtra("countryId", cid);
                         intent.putExtra("migrantName", migrants.get(getAdapterPosition()).getMigrantName());
                         CountryModel savedCountry = new SQLDatabaseHelper(itemView.getContext()).getCountry(cid);
@@ -186,7 +185,7 @@ public class MigrantListAdapter extends RecyclerView.Adapter<MigrantListAdapter.
                         /*showCountryChooser(migrants.get(getAdapterPosition()).getMigrantName(),
                                 ((AppCompatActivity) itemView.getContext()).getSupportFragmentManager())
                         ;*/
-                        Intent intent = new Intent(itemView.getContext(), ActivityTileHome.class);
+                        Intent intent = new Intent(itemView.getContext(), ActivityTileChooser.class);
                         intent.putExtra("countryId", "");
                         intent.putExtra("migrantName", migrants.get(getAdapterPosition()).getMigrantName());
                         intent.putExtra("countryName", "");
@@ -204,7 +203,6 @@ public class MigrantListAdapter extends RecyclerView.Adapter<MigrantListAdapter.
 
     private void showCountryChooser(String name, android.support.v4.app.FragmentManager fragmentManager) {
         DialogCountryChooser dialog = DialogCountryChooser.newInstance();
-        dialog.setMigrantName(name);
         dialog.show(fragmentManager, "tag");
     }
 }

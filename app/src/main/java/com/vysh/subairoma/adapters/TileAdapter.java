@@ -60,7 +60,7 @@ public class TileAdapter extends RecyclerView.Adapter<TileAdapter.TileViewHolder
     @Override
     public void onBindViewHolder(TileViewHolder holder, final int position) {
         //Show Important contacts tile at the bottom
-        if ((position == impContactsPlace) || (position == tileList.size() && ActivityTileHome.showIndia)) {
+     /*   if ((position == impContactsPlace) || (position == tileList.size() && ActivityTileHome.showIndia)) {
             holder.tvTile.setText(context.getResources().getString(R.string.important_contacts));
             holder.ivTile.setImageResource(R.drawable.ic_phonebook);
             //holder.tvPercent.setVisibility(View.GONE);
@@ -133,7 +133,50 @@ public class TileAdapter extends RecyclerView.Adapter<TileAdapter.TileViewHolder
             }
             setTileIcons(holder.ivTile, tileList.get(position - offset).getTileId());
             //holder.ivTile.setBackgroundResource(ivTiles[position]);
+        }*/
+        holder.tvTile.setText(tileList.get(position - offset).getTitle());
+        if (cid == null || cid.isEmpty()) {
+            if (position > 0)
+                holder.viewDisabled.setVisibility(View.VISIBLE);
+        } else {
+            if (ActivityTileHome.finalSection) {
+                if (tileList.get(position - offset).getType().equalsIgnoreCase("GAS")) {
+                    holder.viewDisabled.setVisibility(View.GONE);
+                } else {
+                    holder.viewDisabled.setVisibility(View.VISIBLE);
+                }
+            } else if (ActivityTileHome.showIndia) {
+                holder.viewDisabled.setVisibility(View.GONE);
+            } else {
+                if (tileList.get(position - offset).getType().equals("FEP")) {
+                    holder.viewDisabled.setVisibility(View.GONE);
+                } else
+                    holder.viewDisabled.setVisibility(View.VISIBLE);
+            }
         }
+        int errorCount = sqlDatabaseHelper.getTileErrorCount(ApplicationClass.getInstance().getMigrantId(),
+                tileList.get(position - offset).getTileId());
+        Log.d("mylog", "Tile Errors: " + errorCount + " For tile ID: " + tileList.get(position - offset).getTileId());
+        if (errorCount > 0) {
+            for (int i = 0; i < errorCount; i++) {
+                ImageView imgView = new ImageView(holder.llErrorLayout.getContext());
+                LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams((int) context.getResources().getDimension(R.dimen.redflag_dimen),
+                        (int) context.getResources().getDimension(R.dimen.redflag_dimen));
+                imgView.setLayoutParams(lp);
+                imgView.setImageResource(R.drawable.ic_redflag);
+                holder.llErrorLayout.addView(imgView);
+            }
+        }
+        //DecimalFormat decimalFormat = new DecimalFormat("##");
+        if (tileList.get(position - offset).getPercentComplete() > 99.9) {
+            holder.progressPercent.setVisibility(View.GONE);
+            holder.ivDone.setVisibility(View.VISIBLE);
+            //holder.tvPercent.setVisibility(View.GONE);
+        } else {
+            holder.progressPercent.setProgress((int) tileList.get(position - offset).getPercentComplete());
+            //holder.tvPercent.setText(decimalFormat.format(tileList.get(position - offset).getPercentComplete()));
+        }
+        setTileIcons(holder.ivTile, tileList.get(position - offset).getTileId());
     }
 
     private void setTileIcons(ImageView ivTile, int tileId) {
@@ -191,13 +234,14 @@ public class TileAdapter extends RecyclerView.Adapter<TileAdapter.TileViewHolder
         /*if (ActivityTileHome.finalSection || ActivityTileHome.showIndia) {
             return tileList.size() + 1;
         } else*/
-        if (ActivityTileHome.finalSection || ActivityTileHome.showIndia) {
+       /* if (ActivityTileHome.finalSection || ActivityTileHome.showIndia) {
             showNextStep = false;
             return tileList.size() + 1;
         } else {
             showNextStep = true;
             return tileList.size() + 2;
-        }
+        }*/
+        return tileList.size();
     }
 
     public class TileViewHolder extends RecyclerView.ViewHolder {

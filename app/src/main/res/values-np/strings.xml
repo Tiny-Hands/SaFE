@@ -134,6 +134,11 @@
     <string name="connect_to_fb">फेसबुकसँग जोड्नुहोस्</string>
     <string name="contact_us">हामीलाई सम्पर्क गर्नुहोस</string>
     <string name="faqs">बारम्बार सोधिने प्रश्नहरू</string>
-    <string name="not_being_helped">Not being helped</string>
+    <string name="not_being_helped">सहयोग गरिएन</string>
+    <string name="country">देश</string>
+    <string name="complete">पूर्ण भयो</string>
+    <string name="preparation">तयारी</string>
+    <string name="travel">यात्रा</string>
+    <string name="section_locked">खण्ड लक छ</string>
 
 </resources>
