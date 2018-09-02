@@ -3,7 +3,6 @@ package com.vysh.subairoma.activities;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -115,12 +114,40 @@ public class ActivityTileHome extends AppCompatActivity {
         status = getIntent().getIntExtra("countryStatus", -1);
         blacklist = getIntent().getIntExtra("countryBlacklist", -1);
         tileType = getIntent().getStringExtra("tiletype");
-
+        Log.d("mylog", "Tile Type: " + tileType);
 
         navView = findViewById(R.id.nav_view);
         getUserDetails();
         setMigDetails();
         setUpNavigationButtons();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        finalSection = checkIfVerifiedAnswers();
+        setUpListeners();
+        setUpRecyclerView();
+        getAllResponses();
+        getAllFeedbackResponses();
+        getPercentComplete();
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        countryId = intent.getStringExtra("countryId");
+        countryName = intent.getStringExtra("countryName");
+        tvCountry.setText(countryName);
+        if (countryId.equalsIgnoreCase("in")) {
+            //GET GIS TILES
+            Log.d("mylog", "Received Country is India");
+            showIndia = true;
+        } else {
+            Log.d("mylog", "Setting show India to False");
+            showIndia = false;
+        }
+        Log.d("mylog", "new CID: " + countryId);
     }
 
     private void setMigDetails() {
@@ -166,23 +193,6 @@ public class ActivityTileHome extends AppCompatActivity {
         });
     }
 
-    @Override
-    protected void onNewIntent(Intent intent) {
-        super.onNewIntent(intent);
-        countryId = intent.getStringExtra("countryId");
-        countryName = intent.getStringExtra("countryName");
-        tvCountry.setText(countryName);
-        if (countryId.equalsIgnoreCase("in")) {
-            //GET GIS TILES
-            Log.d("mylog", "Received Country is India");
-            showIndia = true;
-        } else {
-            Log.d("mylog", "Setting show India to False");
-            showIndia = false;
-        }
-        Log.d("mylog", "new CID: " + countryId);
-    }
-
     private void getUserDetails() {
         SharedPreferences sp = getSharedPreferences(SharedPrefKeys.sharedPrefName, MODE_PRIVATE);
         uname = sp.getString(SharedPrefKeys.userName, "");
@@ -212,17 +222,6 @@ public class ActivityTileHome extends AppCompatActivity {
             ivUserAvatar.setImageResource(R.drawable.ic_male);
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        finalSection = false;
-        setUpListeners();
-        setUpRecyclerView();
-        getAllResponses();
-        getAllFeedbackResponses();
-        getPercentComplete();
-    }
-
     private void getPercentComplete() {
         SQLDatabaseHelper dbHelper = new SQLDatabaseHelper(ActivityTileHome.this);
         float totalPercent = 0f;
@@ -245,10 +244,6 @@ public class ActivityTileHome extends AppCompatActivity {
         float percent = totalPercent / tilesCount;
         DecimalFormat decimalFormat = new DecimalFormat("##");
         tvPercent.setText(decimalFormat.format(percent) + "%");
-        //0 is tile type for GAS, 1 for FEP
-        int tileType = 0;
-        if (finalSection)
-            tileType = 1;
         dbHelper.insertPercentComp(ApplicationClass.getInstance().getMigrantId(), (int) percent);
         progressPercent.setProgress((int) percent);
         rvTiles.getAdapter().notifyDataSetChanged();
@@ -423,19 +418,19 @@ public class ActivityTileHome extends AppCompatActivity {
 
     private void setUpRecyclerView() {
         Log.d("mylog", "Received Country ID: " + countryId + " And showIndia: " + showIndia);
-        tilesGAS = new ArrayList<>();
         if (showIndia) {
             tiles = new SQLDatabaseHelper(ActivityTileHome.this).getTiles("GIS");
             //tilesGAS = new ArrayList<>();
         } else if (tileType.equalsIgnoreCase("fep")) {
+            Log.d("mylog", "Should Get: " + tileType);
             tiles = new SQLDatabaseHelper(ActivityTileHome.this).getTiles("FEP");
             //tilesGAS = new ArrayList<>();
         } else {
             tiles = new SQLDatabaseHelper(ActivityTileHome.this).getTiles("GAS");
         }
-        setUpGasSections();
+        setUpAdapter();
         /*if (checkIfVerifiedAnswers() && !countryId.equalsIgnoreCase("in")) {
-            setUpGasSections();
+            setUpAdapter();
             return;
         } else {
             int afterFEP = tiles.size();
@@ -450,8 +445,8 @@ public class ActivityTileHome extends AppCompatActivity {
         }*/
     }
 
-    public void setUpGasSections() {
-        tileAdapter = new TileAdapter(tiles, tilesGAS.size(), tileIcons, ActivityTileHome.this, countryId);
+    public void setUpAdapter() {
+        tileAdapter = new TileAdapter(tiles, tileIcons, ActivityTileHome.this, countryId);
        /* for (int i = 0; i < tilesGAS.size(); i++) {
             tiles.add(i, tilesGAS.get(i));
         }

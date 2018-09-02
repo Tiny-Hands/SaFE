@@ -37,16 +37,12 @@ public class TileAdapter extends RecyclerView.Adapter<TileAdapter.TileViewHolder
     int[] ivTiles;
     SQLDatabaseHelper sqlDatabaseHelper;
     Context context;
-    int impContactsPlace;
     String cid;
-    int offset = 0;
-    boolean showNextStep = true;
 
-    public TileAdapter(ArrayList<TilesModel> list, int impContactsPlace, int[] tiles, Context cxt, String countryId) {
+    public TileAdapter(ArrayList<TilesModel> list, int[] tiles, Context cxt, String countryId) {
         tileList = list;
         ivTiles = tiles;
         context = cxt;
-        this.impContactsPlace = impContactsPlace;
         cid = countryId;
     }
 
@@ -59,104 +55,22 @@ public class TileAdapter extends RecyclerView.Adapter<TileAdapter.TileViewHolder
 
     @Override
     public void onBindViewHolder(TileViewHolder holder, final int position) {
-        //Show Important contacts tile at the bottom
-     /*   if ((position == impContactsPlace) || (position == tileList.size() && ActivityTileHome.showIndia)) {
-            holder.tvTile.setText(context.getResources().getString(R.string.important_contacts));
-            holder.ivTile.setImageResource(R.drawable.ic_phonebook);
-            //holder.tvPercent.setVisibility(View.GONE);
-            holder.progressPercent.setVisibility(View.GONE);
-            if (impContactsPlace == 1)
-                holder.viewDisabled.setVisibility(View.VISIBLE);
-            offset = 1;
-        } else if (showNextStep && position == impContactsPlace + 1) {
-            holder.tvTile.setText("Unlock Next Steps");
-            holder.gifImageView.setVisibility(View.VISIBLE);
-            holder.ivTile.setVisibility(View.INVISIBLE);
-            holder.tvTile.setTypeface(null, Typeface.BOLD_ITALIC);
-            holder.tvTile.setText(R.string.unlock_next);
-            //holder.tvPercent.setVisibility(View.GONE);
-            holder.progressPercent.setVisibility(View.GONE);
-            if (position != 2)
-                holder.itemView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        if (context instanceof ActivityTileHome)
-                            ((ActivityTileHome) context).goToNextSection();
-                    }
-                });
-            offset = 2;
-            //Meaning country not selected yet
-            if (position == 2)
-                holder.viewDisabled.setVisibility(View.VISIBLE);
-        } else if ((position - offset) <= tileList.size()) {
-            holder.tvTile.setText(tileList.get(position - offset).getTitle());
-            if (cid == null || cid.isEmpty()) {
-                if (position > 0)
-                    holder.viewDisabled.setVisibility(View.VISIBLE);
-            } else {
-                if (ActivityTileHome.finalSection) {
-                    if (tileList.get(position - offset).getType().equalsIgnoreCase("GAS")) {
-                        holder.viewDisabled.setVisibility(View.GONE);
-                    } else {
-                        holder.viewDisabled.setVisibility(View.VISIBLE);
-                    }
-                } else if (ActivityTileHome.showIndia) {
-                    holder.viewDisabled.setVisibility(View.GONE);
-                } else {
-                    if (tileList.get(position - offset).getType().equals("FEP")) {
-                        holder.viewDisabled.setVisibility(View.GONE);
-                    } else
-                        holder.viewDisabled.setVisibility(View.VISIBLE);
-                }
-            }
-            int errorCount = sqlDatabaseHelper.getTileErrorCount(ApplicationClass.getInstance().getMigrantId(),
-                    tileList.get(position - offset).getTileId());
-            Log.d("mylog", "Tile Errors: " + errorCount + " For tile ID: " + tileList.get(position - offset).getTileId());
-            if (errorCount > 0) {
-                for (int i = 0; i < errorCount; i++) {
-                    ImageView imgView = new ImageView(holder.llErrorLayout.getContext());
-                    LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams((int) context.getResources().getDimension(R.dimen.redflag_dimen),
-                            (int) context.getResources().getDimension(R.dimen.redflag_dimen));
-                    imgView.setLayoutParams(lp);
-                    imgView.setImageResource(R.drawable.ic_redflag);
-                    holder.llErrorLayout.addView(imgView);
-                }
-            }
-            //DecimalFormat decimalFormat = new DecimalFormat("##");
-            if (tileList.get(position - offset).getPercentComplete() > 99.9) {
-                holder.progressPercent.setVisibility(View.GONE);
-                holder.ivDone.setVisibility(View.VISIBLE);
-                //holder.tvPercent.setVisibility(View.GONE);
-            } else {
-                holder.progressPercent.setProgress((int) tileList.get(position - offset).getPercentComplete());
-                //holder.tvPercent.setText(decimalFormat.format(tileList.get(position - offset).getPercentComplete()));
-            }
-            setTileIcons(holder.ivTile, tileList.get(position - offset).getTileId());
-            //holder.ivTile.setBackgroundResource(ivTiles[position]);
-        }*/
-        holder.tvTile.setText(tileList.get(position - offset).getTitle());
-        if (cid == null || cid.isEmpty()) {
-            if (position > 0)
-                holder.viewDisabled.setVisibility(View.VISIBLE);
-        } else {
-            if (ActivityTileHome.finalSection) {
-                if (tileList.get(position - offset).getType().equalsIgnoreCase("GAS")) {
-                    holder.viewDisabled.setVisibility(View.GONE);
-                } else {
-                    holder.viewDisabled.setVisibility(View.VISIBLE);
-                }
-            } else if (ActivityTileHome.showIndia) {
+        int tileId = tileList.get(position).getTileId();
+        holder.tvTile.setText(tileList.get(position).getTitle());
+
+        if (ActivityTileHome.finalSection) {
+            if (tileList.get(position).getType().equalsIgnoreCase("GAS")) {
                 holder.viewDisabled.setVisibility(View.GONE);
             } else {
-                if (tileList.get(position - offset).getType().equals("FEP")) {
-                    holder.viewDisabled.setVisibility(View.GONE);
-                } else
-                    holder.viewDisabled.setVisibility(View.VISIBLE);
+                holder.viewDisabled.setVisibility(View.VISIBLE);
             }
+        } else if (ActivityTileHome.showIndia) {
+            holder.viewDisabled.setVisibility(View.GONE);
         }
+
         int errorCount = sqlDatabaseHelper.getTileErrorCount(ApplicationClass.getInstance().getMigrantId(),
-                tileList.get(position - offset).getTileId());
-        Log.d("mylog", "Tile Errors: " + errorCount + " For tile ID: " + tileList.get(position - offset).getTileId());
+                tileId);
+        Log.d("mylog", "Tile Errors: " + errorCount + " For tile ID: " + tileId);
         if (errorCount > 0) {
             for (int i = 0; i < errorCount; i++) {
                 ImageView imgView = new ImageView(holder.llErrorLayout.getContext());
@@ -168,15 +82,25 @@ public class TileAdapter extends RecyclerView.Adapter<TileAdapter.TileViewHolder
             }
         }
         //DecimalFormat decimalFormat = new DecimalFormat("##");
-        if (tileList.get(position - offset).getPercentComplete() > 99.9) {
-            holder.progressPercent.setVisibility(View.GONE);
+        if (tileList.get(position).getPercentComplete() > 99.9) {
             holder.ivDone.setVisibility(View.VISIBLE);
             //holder.tvPercent.setVisibility(View.GONE);
-        } else {
-            holder.progressPercent.setProgress((int) tileList.get(position - offset).getPercentComplete());
-            //holder.tvPercent.setText(decimalFormat.format(tileList.get(position - offset).getPercentComplete()));
         }
-        setTileIcons(holder.ivTile, tileList.get(position - offset).getTileId());
+
+        int total = sqlDatabaseHelper.getQuestions(tileId).size();
+        int answered = sqlDatabaseHelper.getTileResponse(ApplicationClass.getInstance().getMigrantId(), tileId);
+        String text = answered + " Answered /" + total + " Questions";
+        holder.tvCompletionStatus.setText(text);
+
+        int noRedflagQuestionCount = sqlDatabaseHelper.getNoRedFlagQuestionsCount(tileId);
+        //Setting bottom question/answer layout
+        if (errorCount > 0)
+            holder.tvCompletionStatus.setBackgroundResource(R.color.colorError);
+        else if (answered == noRedflagQuestionCount)
+            holder.tvCompletionStatus.setBackgroundResource(R.color.darkGreen);
+        else
+            holder.tvCompletionStatus.setBackgroundResource(R.color.grey);
+        setTileIcons(holder.ivTile, tileId);
     }
 
     private void setTileIcons(ImageView ivTile, int tileId) {
@@ -230,25 +154,13 @@ public class TileAdapter extends RecyclerView.Adapter<TileAdapter.TileViewHolder
 
     @Override
     public int getItemCount() {
-        //Cuz showing extra tile in the bottom of GAS
-        /*if (ActivityTileHome.finalSection || ActivityTileHome.showIndia) {
-            return tileList.size() + 1;
-        } else*/
-       /* if (ActivityTileHome.finalSection || ActivityTileHome.showIndia) {
-            showNextStep = false;
-            return tileList.size() + 1;
-        } else {
-            showNextStep = true;
-            return tileList.size() + 2;
-        }*/
         return tileList.size();
     }
 
     public class TileViewHolder extends RecyclerView.ViewHolder {
-        public TextView tvTile;
+        public TextView tvTile, tvCompletionStatus;
         public ImageView ivTile, ivDone;
         public View viewDisabled;
-        public ProgressBar progressPercent;
         public LinearLayout llErrorLayout;
         public GifImageView gifImageView;
 
@@ -257,41 +169,32 @@ public class TileAdapter extends RecyclerView.Adapter<TileAdapter.TileViewHolder
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (getAdapterPosition() == impContactsPlace && impContactsPlace > 1) {
-                        Intent impIntent = new Intent(context.getApplicationContext(), ActivityImportantContacts.class);
-                        impIntent.putExtra("countryId", cid);
-                        impIntent.putExtra("section", ActivityTileHome.finalSection);
-                        context.startActivity(impIntent);
-                    } else {
-                        if (ActivityTileHome.finalSection) {
-                            if (tileList.get(getAdapterPosition()).getType().equalsIgnoreCase("GAS")) {
-                                Intent intent = new Intent(v.getContext(), ActivityTileQuestions.class);
-                                intent.putExtra("tileId", tileList.get(getAdapterPosition()).getTileId());
-                                intent.putExtra("tileName", tileList.get(getAdapterPosition()).getTitle());
-                                intent.putExtra("iconId", tileList.get(getAdapterPosition()).getTileId());
-                                v.getContext().startActivity(intent);
-                            } else {
-                                Intent intent = new Intent(v.getContext(), ActivityTileQuestions.class);
-                                intent.putExtra("tileId", tileList.get(getAdapterPosition()).getTileId());
-                                intent.putExtra("tileName", tileList.get(getAdapterPosition()).getTitle());
-                                intent.putExtra("stateDisabled", true);
-                                intent.putExtra("iconId", tileList.get(getAdapterPosition()).getTileId());
-                                v.getContext().startActivity(intent);
-                            }
-                        } else {
-                            if (getAdapterPosition() >= impContactsPlace)
-                                return;
+                    if (ActivityTileHome.finalSection) {
+                        if (tileList.get(getAdapterPosition()).getType().equalsIgnoreCase("GAS")) {
                             Intent intent = new Intent(v.getContext(), ActivityTileQuestions.class);
                             intent.putExtra("tileId", tileList.get(getAdapterPosition()).getTileId());
                             intent.putExtra("tileName", tileList.get(getAdapterPosition()).getTitle());
                             intent.putExtra("iconId", tileList.get(getAdapterPosition()).getTileId());
                             v.getContext().startActivity(intent);
+                        } else {
+                            Intent intent = new Intent(v.getContext(), ActivityTileQuestions.class);
+                            intent.putExtra("tileId", tileList.get(getAdapterPosition()).getTileId());
+                            intent.putExtra("tileName", tileList.get(getAdapterPosition()).getTitle());
+                            intent.putExtra("stateDisabled", true);
+                            intent.putExtra("iconId", tileList.get(getAdapterPosition()).getTileId());
+                            v.getContext().startActivity(intent);
                         }
+                    } else {
+                        Intent intent = new Intent(v.getContext(), ActivityTileQuestions.class);
+                        intent.putExtra("tileId", tileList.get(getAdapterPosition()).getTileId());
+                        intent.putExtra("tileName", tileList.get(getAdapterPosition()).getTitle());
+                        intent.putExtra("iconId", tileList.get(getAdapterPosition()).getTileId());
+                        v.getContext().startActivity(intent);
                     }
                 }
             });
-            progressPercent = itemView.findViewById(R.id.progressPercent);
             //tvPercent = itemView.findViewById(R.id.tvPercent);
+            tvCompletionStatus = itemView.findViewById(R.id.tvCompletionStatus);
             tvTile = itemView.findViewById(R.id.tvTitle);
             ivTile = itemView.findViewById(R.id.ivTitle);
             ivDone = itemView.findViewById(R.id.ivDone);

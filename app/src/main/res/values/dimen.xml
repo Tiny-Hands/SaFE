@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- Component View -->
-    <dimen name="card_view_imageview_dimen">62dp</dimen>
+    <dimen name="card_view_imageview_dimen">42dp</dimen>
     <dimen name="card_view_tile_radius">2dp</dimen>
     <dimen name="card_view_question_radius">2dp</dimen>
     <dimen name="card_view_markers_dimen">24dp</dimen>

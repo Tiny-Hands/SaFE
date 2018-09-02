@@ -9,6 +9,8 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -62,6 +64,12 @@ public class ActivityTileChooser extends AppCompatActivity {
     ImageView tileType2;
     @BindView(R.id.btnNextSections)
     ImageButton btnNext;
+    @BindView(R.id.progressSection1)
+    ProgressBar progressBar1;
+    @BindView(R.id.progressSection2)
+    ProgressBar progressBar2;
+    @BindView(R.id.llTravel)
+    LinearLayout llTravel;
 
     String migName, migPhone, migrantGender, countryName, countryId, countryStatus, countryBlacklist;
     Intent intent;
@@ -120,7 +128,15 @@ public class ActivityTileChooser extends AppCompatActivity {
             }
         });
 
+        hideIfIndia();
         setPercentCompletion();
+    }
+
+    private void hideIfIndia() {
+        if (countryId.equalsIgnoreCase("in")) {
+            llTravel.setVisibility(View.GONE);
+            btnNext.setVisibility(View.GONE);
+        }
     }
 
     private void getRequiredData(Intent intent) {
@@ -137,10 +153,18 @@ public class ActivityTileChooser extends AppCompatActivity {
         String percentComp = PercentHelper.getPercentCompleteBySection(ActivityTileChooser.this,
                 ApplicationClass.getInstance().getMigrantId(), "FEP");
         tvPercentComp1.setText(percentComp + "% " + getResources().getString(R.string.complete));
+        if (Integer.parseInt(percentComp) > 0) {
+            progressBar1.setVisibility(View.VISIBLE);
+            progressBar1.setProgress(Integer.parseInt(percentComp));
+        }
         if (checkIfVerifiedAnswers()) {
             //Get percent Complete of GAS
             String percentComp2 = PercentHelper.getPercentCompleteBySection(ActivityTileChooser.this,
                     ApplicationClass.getInstance().getMigrantId(), "GAS");
+            if (Integer.parseInt(percentComp2) > 0) {
+                progressBar2.setVisibility(View.VISIBLE);
+                progressBar2.setProgress(Integer.parseInt(percentComp2));
+            }
             tvPercentComp2.setText(percentComp2 + "% " + getResources().getString(R.string.complete));
             tileType2.setImageResource(R.drawable.ic_traveltile);
         }
