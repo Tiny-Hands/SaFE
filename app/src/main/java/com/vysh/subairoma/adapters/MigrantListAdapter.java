@@ -155,11 +155,11 @@ public class MigrantListAdapter extends RecyclerView.Adapter<MigrantListAdapter.
             super(itemView);
             tvPhone = itemView.findViewById(R.id.tvPhone);
             tvPercentComp = itemView.findViewById(R.id.tvPercentComplete);
-            textViewName = (TextView) itemView.findViewById(R.id.tvMigrantName);
-            tvGoingCountry = (TextView) itemView.findViewById(R.id.tvCountryGoing);
-            ivAvatar = (ImageView) itemView.findViewById(R.id.ivUserLogo);
-            llErrorLayout = (LinearLayout) itemView.findViewById(R.id.llRedflags);
-            sex = (TextView) itemView.findViewById(R.id.tvMigrantAgeSex);
+            textViewName = itemView.findViewById(R.id.tvMigrantName);
+            tvGoingCountry = itemView.findViewById(R.id.tvCountryGoing);
+            ivAvatar = itemView.findViewById(R.id.ivUserLogo);
+            llErrorLayout = itemView.findViewById(R.id.llRedflags);
+            sex = itemView.findViewById(R.id.tvMigrantAgeSex);
             viewForeground = itemView.findViewById(R.id.viewForeground);
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -182,10 +182,9 @@ public class MigrantListAdapter extends RecyclerView.Adapter<MigrantListAdapter.
                         intent.putExtra("countryBlacklist", savedCountry.getCountryBlacklist());
                         itemView.getContext().startActivity(intent);
                     } else {
-                        /*showCountryChooser(migrants.get(getAdapterPosition()).getMigrantName(),
-                                ((AppCompatActivity) itemView.getContext()).getSupportFragmentManager())
-                        ;*/
-                        Intent intent = new Intent(itemView.getContext(), ActivityTileChooser.class);
+                        showCountryChooser(migrants.get(getAdapterPosition()).getMigrantName(),
+                                ((AppCompatActivity) itemView.getContext()).getSupportFragmentManager());
+                    /*    Intent intent = new Intent(itemView.getContext(), ActivityTileChooser.class);
                         intent.putExtra("countryId", "");
                         intent.putExtra("migrantName", migrants.get(getAdapterPosition()).getMigrantName());
                         intent.putExtra("countryName", "");
@@ -194,7 +193,7 @@ public class MigrantListAdapter extends RecyclerView.Adapter<MigrantListAdapter.
                         intent.putExtra("migrantPhone", migrants.get(getAdapterPosition()).getMigrantPhone());
                         intent.putExtra("migrantGender", migrants.get(getAdapterPosition()).getMigrantSex());
                         intent.putExtra("countryBlacklist", -1);
-                        itemView.getContext().startActivity(intent);
+                        itemView.getContext().startActivity(intent);*/
                     }
                 }
             });
