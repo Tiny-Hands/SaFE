@@ -114,7 +114,6 @@ public class DialogCountryChooser extends DialogFragment {
                 new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-
                         Calendar cal = Calendar.getInstance();
                         String time = cal.getTimeInMillis() + "";
                         new SQLDatabaseHelper(getContext()).insertResponseTableData(cid, SharedPrefKeys.questionCountryId, -1,

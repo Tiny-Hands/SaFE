@@ -202,6 +202,7 @@ public class MigrantListAdapter extends RecyclerView.Adapter<MigrantListAdapter.
 
     private void showCountryChooser(String name, android.support.v4.app.FragmentManager fragmentManager) {
         DialogCountryChooser dialog = DialogCountryChooser.newInstance();
+        dialog.setMigrantName(name);
         dialog.show(fragmentManager, "tag");
     }
 }
