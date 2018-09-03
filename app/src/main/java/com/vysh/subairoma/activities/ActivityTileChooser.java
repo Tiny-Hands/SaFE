@@ -1,11 +1,20 @@
 package com.vysh.subairoma.activities;
 
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.NavigationView;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v4.widget.NestedScrollView;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -24,8 +33,11 @@ import com.android.volley.toolbox.Volley;
 import com.vysh.subairoma.ApplicationClass;
 import com.vysh.subairoma.R;
 import com.vysh.subairoma.SQLHelpers.SQLDatabaseHelper;
+import com.vysh.subairoma.SharedPrefKeys;
 import com.vysh.subairoma.dialogs.DialogAnswersVerification;
 import com.vysh.subairoma.dialogs.DialogCountryChooser;
+import com.vysh.subairoma.imageHelpers.ImageEncoder;
+import com.vysh.subairoma.utils.CustomTextView;
 import com.vysh.subairoma.utils.PercentHelper;
 
 import java.util.ArrayList;
@@ -69,6 +81,14 @@ public class ActivityTileChooser extends AppCompatActivity {
     ProgressBar progressBar2;
     @BindView(R.id.llTravel)
     LinearLayout llTravel;
+    @BindView(R.id.ivHam)
+    ImageView ivHam;
+    @BindView(R.id.drawerLayout)
+    DrawerLayout drawerLayout;
+    NavigationView navView;
+
+    CustomTextView tvName, tvPhone, tvNavCounty;
+    ImageView ivUserAvatar;
 
     String migName, migPhone, migrantGender, countryName, countryId, countryStatus, countryBlacklist;
     Intent intent;
@@ -78,6 +98,7 @@ public class ActivityTileChooser extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.tile_chooser);
         ButterKnife.bind(this);
+        navView = findViewById(R.id.nav_view);
         intent = getIntent();
         getRequiredData(intent);
         tvMigName.setText(migName);
@@ -129,6 +150,7 @@ public class ActivityTileChooser extends AppCompatActivity {
 
         hideIfIndia();
         setPercentCompletion();
+        setUpNavigationButtons();
     }
 
     @Override
@@ -146,6 +168,109 @@ public class ActivityTileChooser extends AppCompatActivity {
             llTravel.setVisibility(View.GONE);
             btnNext.setVisibility(View.GONE);
         }
+    }
+
+    private void setUpNavigationButtons() {
+        ivHam.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                drawerLayout.openDrawer(GravityCompat.END);
+            }
+        });
+
+        SharedPreferences sp = getSharedPreferences(SharedPrefKeys.sharedPrefName, MODE_PRIVATE);
+        String uname = sp.getString(SharedPrefKeys.userName, "");
+        String uage = sp.getString(SharedPrefKeys.userAge, "");
+        String unumber = sp.getString(SharedPrefKeys.userPhone, "");
+        String uimg = sp.getString(SharedPrefKeys.userImg, "");
+
+        View view = navView.getHeaderView(0);
+        if (view == null)
+            Log.d("mylog", "Header view Null");
+        if (navView == null)
+            Log.d("mylog", "Nav View Null");
+        tvName = view.findViewById(R.id.tvMName);
+        tvNavCounty = view.findViewById(R.id.tvMCountry);
+        tvPhone = view.findViewById(R.id.tvMPhone);
+
+        ivUserAvatar = view.findViewById(R.id.ivUserAva);
+
+        tvName.setText(uname);
+        tvNavCounty.setText(unumber);
+        tvPhone.setText(uage);
+        if (uimg != null && uimg.length() > 10)
+            ivUserAvatar.setImageBitmap(ImageEncoder.decodeFromBase64(uimg));
+        else
+            ivUserAvatar.setImageResource(R.drawable.ic_male);
+
+        navView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                switch (item.getItemId()) {
+                    case R.id.nav_profile:
+                        Intent intent = new Intent(ActivityTileChooser.this, ActivityProfileEdit.class);
+                        intent.putExtra("userType", 1);
+                        startActivity(intent);
+                        break;
+                    case R.id.nav_addmigrants:
+                        Intent intentMig = new Intent(ActivityTileChooser.this, ActivityRegister.class);
+                        intentMig.putExtra("migrantmode", true);
+                        drawerLayout.closeDrawer(GravityCompat.END);
+                        startActivity(intentMig);
+                        break;
+                    case R.id.delete_migrant:
+                        deleteMigrant();
+                        break;
+                    case R.id.nav_about:
+                        Intent intentAbout = new Intent(ActivityTileChooser.this, ActivityAboutUs.class);
+                        drawerLayout.closeDrawer(GravityCompat.END);
+                        startActivity(intentAbout);
+                        break;
+                    case R.id.nav_contact:
+                        Intent intentContact = new Intent(ActivityTileChooser.this, ActivityAboutUs.class);
+                        intentContact.putExtra("contact", true);
+                        drawerLayout.closeDrawer(GravityCompat.END);
+                        startActivity(intentContact);
+                        break;
+                    case R.id.nav_faq:
+                        Intent intentFaq = new Intent(ActivityTileChooser.this, ActivityAboutUs.class);
+                        intentFaq.putExtra("faq", true);
+                        drawerLayout.closeDrawer(GravityCompat.END);
+                        startActivity(intentFaq);
+                        break;
+                }
+                return false;
+            }
+        });
+    }
+
+    private void deleteMigrant() {
+        new SQLDatabaseHelper(ActivityTileChooser.this).insertMigrantDeletion(ApplicationClass.getInstance().getMigrantId()
+                , ApplicationClass.getInstance().getUserId(), System.currentTimeMillis() + "");
+
+        // showing snack bar with Undo option
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.dismiss();
+                Intent deleteMig = new Intent(ActivityTileChooser.this, ActivityMigrantList.class);
+                deleteMig.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                drawerLayout.closeDrawer(GravityCompat.END);
+                startActivity(deleteMig);
+            }
+        });
+        builder.setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.dismiss();
+                new SQLDatabaseHelper(ActivityTileChooser.this).insertMigrantDeletion(ApplicationClass.getInstance().getMigrantId(),
+                        ApplicationClass.getInstance().getUserId(), "");
+            }
+        });
+        builder.setMessage(R.string.mig_delete_confirmation);
+        builder.show();
+        builder.setCancelable(false);
     }
 
     private void getRequiredData(Intent intent) {
