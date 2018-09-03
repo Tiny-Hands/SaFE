@@ -59,7 +59,7 @@ public class ActivityTileHome extends AppCompatActivity {
     private final String saveAPI = "/saveresponse.php";
     private final String saveFeedbackAPI = "/savefeedbackresponse.php";
     final String apiURLMigrantPercent = "/updatepercentcomplete.php";
-    ArrayList<TilesModel> tiles, tilesGAS;
+    ArrayList<TilesModel> tiles;
     public String migName, countryName, countryId, migGender = "", migPhone;
     public int blacklist, status;
     int[] tileIcons;
@@ -225,22 +225,13 @@ public class ActivityTileHome extends AppCompatActivity {
     private void getPercentComplete() {
         SQLDatabaseHelper dbHelper = new SQLDatabaseHelper(ActivityTileHome.this);
         float totalPercent = 0f;
-        int tilesCount;
-        if (finalSection)
-            tilesCount = tiles.size();
-        else
-            tilesCount = tiles.size() - tilesGAS.size();
+        int tilesCount = tiles.size();
         for (int i = 0; i < tilesCount; i++) {
             float perComplete = dbHelper.getPercentComplete(ApplicationClass.getInstance().getMigrantId(), tiles.get(i).getTileId());
             tiles.get(i).setPercentComplete(perComplete);
             Log.d("mylog", "Setting percent complete: " + perComplete);
             totalPercent += perComplete;
         }
-       /* for (int i = 0; i < tilesGAS.size(); i++) {
-            int tempCount = dbHelper.getNoRedFlagQuestionsCount(tilesGAS.get(i).getTileId());
-            count += tempCount;
-            Log.d("mylog", "Temp count GAS: " + tempCount);
-        }*/
         float percent = totalPercent / tilesCount;
         DecimalFormat decimalFormat = new DecimalFormat("##");
         tvPercent.setText(decimalFormat.format(percent) + "%");

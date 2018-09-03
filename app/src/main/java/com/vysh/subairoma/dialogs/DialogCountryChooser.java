@@ -23,6 +23,7 @@ import com.vysh.subairoma.ApplicationClass;
 import com.vysh.subairoma.R;
 import com.vysh.subairoma.SQLHelpers.SQLDatabaseHelper;
 import com.vysh.subairoma.SharedPrefKeys;
+import com.vysh.subairoma.activities.ActivityTileChooser;
 import com.vysh.subairoma.activities.ActivityTileHome;
 import com.vysh.subairoma.models.CountryModel;
 
@@ -119,7 +120,7 @@ public class DialogCountryChooser extends DialogFragment {
                         new SQLDatabaseHelper(getContext()).insertResponseTableData(cid, SharedPrefKeys.questionCountryId, -1,
                                 ApplicationClass.getInstance().getMigrantId(), "mg_destination", time);
 
-                        Intent intent = new Intent(getContext(), ActivityTileHome.class);
+                        Intent intent = new Intent(getContext(), ActivityTileChooser.class);
                         intent.putExtra("countryId", cid);
                         intent.putExtra("migrantName", migName);
                         intent.putExtra("countryName", cname);
@@ -127,7 +128,7 @@ public class DialogCountryChooser extends DialogFragment {
                         intent.putExtra("countryBlacklist", blacklist);
                         dismiss();
                         if (ApplicationClass.getInstance().getUserId() == -1)
-                            intent = intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                            intent = intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
                         getContext().startActivity(intent);
                     }
                 });

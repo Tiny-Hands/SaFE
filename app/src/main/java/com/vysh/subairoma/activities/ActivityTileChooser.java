@@ -42,7 +42,6 @@ import butterknife.ButterKnife;
 public class ActivityTileChooser extends AppCompatActivity {
     private final String saveAPI = "/saveresponse.php";
     private final String saveFeedbackAPI = "/savefeedbackresponse.php";
-    final String apiURLMigrantPercent = "/updatepercentcomplete.php";
 
     @BindView(R.id.tvMigNumber)
     TextView tvMigNumber;
@@ -132,6 +131,16 @@ public class ActivityTileChooser extends AppCompatActivity {
         setPercentCompletion();
     }
 
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        countryName = intent.getStringExtra("countryName");
+        countryStatus = intent.getStringExtra("countryStatus");
+        countryId = intent.getStringExtra("countryId");
+        countryBlacklist = intent.getStringExtra("countryBlacklist");
+        Log.d("mylog", "In new Intent");
+    }
+
     private void hideIfIndia() {
         if (countryId.equalsIgnoreCase("in")) {
             llTravel.setVisibility(View.GONE);
@@ -150,23 +159,34 @@ public class ActivityTileChooser extends AppCompatActivity {
     }
 
     private void setPercentCompletion() {
-        String percentComp = PercentHelper.getPercentCompleteBySection(ActivityTileChooser.this,
-                ApplicationClass.getInstance().getMigrantId(), "FEP");
-        tvPercentComp1.setText(percentComp + "% " + getResources().getString(R.string.complete));
-        if (Integer.parseInt(percentComp) > 0) {
-            progressBar1.setVisibility(View.VISIBLE);
-            progressBar1.setProgress(Integer.parseInt(percentComp));
-        }
-        if (checkIfVerifiedAnswers()) {
-            //Get percent Complete of GAS
-            String percentComp2 = PercentHelper.getPercentCompleteBySection(ActivityTileChooser.this,
-                    ApplicationClass.getInstance().getMigrantId(), "GAS");
-            if (Integer.parseInt(percentComp2) > 0) {
-                progressBar2.setVisibility(View.VISIBLE);
-                progressBar2.setProgress(Integer.parseInt(percentComp2));
+        if (countryId.equalsIgnoreCase("in")) {
+            Log.d("mylog", "Getting GIS Tiles");
+            String percentComp = PercentHelper.getPercentCompleteBySection(ActivityTileChooser.this,
+                    ApplicationClass.getInstance().getMigrantId(), "GIS");
+            tvPercentComp1.setText(percentComp + "% " + getResources().getString(R.string.complete));
+            if (Integer.parseInt(percentComp) > 0) {
+                progressBar1.setVisibility(View.VISIBLE);
+                progressBar1.setProgress(Integer.parseInt(percentComp));
             }
-            tvPercentComp2.setText(percentComp2 + "% " + getResources().getString(R.string.complete));
-            tileType2.setImageResource(R.drawable.ic_traveltile);
+        } else {
+            String percentComp = PercentHelper.getPercentCompleteBySection(ActivityTileChooser.this,
+                    ApplicationClass.getInstance().getMigrantId(), "FEP");
+            tvPercentComp1.setText(percentComp + "% " + getResources().getString(R.string.complete));
+            if (Integer.parseInt(percentComp) > 0) {
+                progressBar1.setVisibility(View.VISIBLE);
+                progressBar1.setProgress(Integer.parseInt(percentComp));
+            }
+            if (checkIfVerifiedAnswers()) {
+                //Get percent Complete of GAS
+                String percentComp2 = PercentHelper.getPercentCompleteBySection(ActivityTileChooser.this,
+                        ApplicationClass.getInstance().getMigrantId(), "GAS");
+                if (Integer.parseInt(percentComp2) > 0) {
+                    progressBar2.setVisibility(View.VISIBLE);
+                    progressBar2.setProgress(Integer.parseInt(percentComp2));
+                }
+                tvPercentComp2.setText(percentComp2 + "% " + getResources().getString(R.string.complete));
+                tileType2.setImageResource(R.drawable.ic_traveltile);
+            }
         }
     }
 
