@@ -12,90 +12,7 @@
         android:background="@color/bgFaded"
         android:orientation="vertical">
 
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingBottom="2dp">
-
-                <com.vysh.subairoma.utils.CustomTextView
-                    android:id="@+id/tvMigrantName"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/small_medium_margin"
-                    android:layout_toEndOf="@+id/ivUserAvatar"
-                    android:text="Test User"
-                    android:textSize="@dimen/tile_toolbar_migname" />
-
-                <de.hdodenhof.circleimageview.CircleImageView
-                    android:id="@+id/ivUserAvatar"
-                    android:layout_width="38dp"
-                    android:layout_height="38dp"
-                    android:layout_marginTop="@dimen/small_medium_margin"
-                    android:layout_marginEnd="@dimen/small_medium_margin"
-                    android:src="@drawable/ic_male" />
-                <!-- <com.vysh.subairoma.utils.CustomTextView
-                     android:id="@+id/tvGoingTo"
-                     android:layout_width="wrap_content"
-                     android:layout_height="wrap_content"
-                     android:layout_below="@+id/tvMigrantName"
-                     android:text="Going to: "
-                     android:textSize="18sp"
-                     app:font="gotham_light.ttf" />-->
-
-                <TextView
-                    android:id="@+id/tvCountry"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/tvMigrantName"
-                    android:layout_toEndOf="@+id/ivUserAvatar"
-                    android:text="Some Country"
-                    android:textColor="@color/colorPrimaryDark"
-                    android:textSize="14sp"
-                    android:textStyle="bold" />
-
-
-                <TextView
-                    android:id="@+id/tvPercent"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignBottom="@+id/progressPercent"
-                    android:layout_alignEnd="@+id/progressPercent"
-                    android:layout_alignStart="@+id/progressPercent"
-                    android:layout_alignTop="@+id/progressPercent"
-                    android:layout_toLeftOf="@+id/ivHam"
-                    android:gravity="center"
-                    android:text="55%"
-                    android:textSize="7sp" />
-
-                <ProgressBar
-                    android:id="@+id/progressPercent"
-                    style="?android:attr/progressBarStyleHorizontal"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignBottom="@+id/ivHam"
-                    android:layout_alignTop="@+id/ivHam"
-                    android:layout_toLeftOf="@+id/ivHam"
-                    android:indeterminate="false"
-                    android:max="100"
-                    android:progress="100"
-                    android:progressDrawable="@drawable/progressbarbg"
-                    android:secondaryProgress="100" />
-
-                <ImageView
-                    android:id="@+id/ivHam"
-                    android:layout_width="@dimen/ham_dimen"
-                    android:layout_height="@dimen/ham_dimen"
-                    android:layout_alignParentEnd="true"
-                    android:layout_margin="@dimen/avatar_margin"
-                    android:src="@drawable/ic_ham" />
-            </RelativeLayout>
-
-        </android.support.v7.widget.Toolbar>
+        <include layout="@layout/toolbar" />
 
         <android.support.v4.widget.NestedScrollView
             android:id="@+id/nsv"
@@ -160,10 +77,10 @@
                     android:layout_height="@dimen/default_button_height"
                     android:layout_gravity="bottom"
                     android:layout_margin="@dimen/default_margin"
-                    android:visibility="gone"
                     android:background="@drawable/default_rounded_button"
                     android:text="@string/unlock_next"
-                    android:textColor="#fff" />
+                    android:textColor="#fff"
+                    android:visibility="gone" />
             </LinearLayout>
         </android.support.v4.widget.NestedScrollView>
 

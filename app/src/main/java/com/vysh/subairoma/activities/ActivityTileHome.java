@@ -75,7 +75,7 @@ public class ActivityTileHome extends AppCompatActivity {
     RelativeLayout rootLayout;
     @BindView(R.id.tvMigrantName)
     TextView tvMigrantName;
-    @BindView(R.id.tvCountry)
+    @BindView(R.id.tvMigNumber)
     TextView tvCountry;
     @BindView(R.id.btnNext)
     Button btnNext;
@@ -234,8 +234,10 @@ public class ActivityTileHome extends AppCompatActivity {
         }
         float percent = totalPercent / tilesCount;
         DecimalFormat decimalFormat = new DecimalFormat("##");
+        tvPercent.setVisibility(View.VISIBLE);
         tvPercent.setText(decimalFormat.format(percent) + "%");
         dbHelper.insertPercentComp(ApplicationClass.getInstance().getMigrantId(), (int) percent);
+        progressPercent.setVisibility(View.VISIBLE);
         progressPercent.setProgress((int) percent);
         rvTiles.getAdapter().notifyDataSetChanged();
     }
