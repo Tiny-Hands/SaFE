@@ -123,7 +123,9 @@ public class ActivityTileChooser extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 if (!checkIfVerifiedAnswers()) {
-                    Toast.makeText(ActivityTileChooser.this, R.string.section_locked, Toast.LENGTH_SHORT).show();
+                   /* Toast.makeText(ActivityTileChooser.this, R.string.section_locked, Toast.LENGTH_SHORT).show();
+                    return;*/
+                    goToNextSection();
                     return;
                 }
                 Intent intent1 = new Intent(ActivityTileChooser.this, ActivityTileHome.class);

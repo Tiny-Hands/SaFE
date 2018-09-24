@@ -113,7 +113,8 @@
                         android:layout_gravity="center_vertical"
                         android:layout_marginTop="@dimen/large_margin"
                         android:background="@null"
-                        android:src="@drawable/ic_next" />
+                        android:src="@drawable/ic_next"
+                        android:visibility="invisible" />
 
                     <LinearLayout
                         android:id="@+id/llTravel"
