@@ -21,7 +21,8 @@
             <android.support.v7.widget.Toolbar
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
-                android:layout_height="?android:attr/actionBarSize">
+                android:layout_height="?android:attr/actionBarSize"
+                android:background="@color/colorPrimary">
 
                 <RelativeLayout
                     android:layout_width="match_parent"
@@ -34,6 +35,7 @@
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
                         android:text="@string/select_migrant"
+                        android:textColor="@android:color/white"
                         android:textStyle="bold" />
 
                     <ImageView
@@ -43,7 +45,7 @@
                         android:layout_alignParentEnd="true"
                         android:layout_centerVertical="true"
                         android:layout_margin="@dimen/avatar_margin"
-                        android:src="@drawable/ic_ham" />
+                        android:src="@drawable/ic_ham_new" />
                 </RelativeLayout>
             </android.support.v7.widget.Toolbar>
 
