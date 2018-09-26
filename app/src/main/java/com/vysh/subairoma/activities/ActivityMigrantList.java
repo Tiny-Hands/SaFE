@@ -87,6 +87,8 @@ public class ActivityMigrantList extends AppCompatActivity implements RecyclerIt
     ImageView ivHam;
     @BindView(R.id.drawerLayout)
     DrawerLayout drawerLayout;
+    @BindView(R.id.btnBack)
+    ImageView btnBack;
     NavigationView navView;
 
     CustomTextView tvName, tvPhone, tvNavCounty;
@@ -128,6 +130,12 @@ public class ActivityMigrantList extends AppCompatActivity implements RecyclerIt
     }
 
     private void setUpListeners() {
+        btnBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onBackPressed();
+            }
+        });
         ivHam.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

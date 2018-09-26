@@ -17,6 +17,14 @@
         android:layout_width="match_parent"
         android:layout_height="?android:attr/actionBarSize">
 
+        <ImageView
+            android:id="@+id/btnBack"
+            android:layout_width="@dimen/back_btn_size"
+            android:layout_height="@dimen/back_btn_size"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="@dimen/default_margin"
+            android:src="@drawable/ic_back_white" />
+
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -29,8 +37,8 @@
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
                 android:text="@string/register"
-                android:textStyle="bold"
-                android:textColor="#fff" />
+                android:textColor="#fff"
+                android:textStyle="bold" />
         </RelativeLayout>
     </android.support.v7.widget.Toolbar>
 
@@ -38,12 +46,12 @@
         android:id="@+id/ivRegister"
         android:layout_width="@dimen/backdrop_circle_image"
         android:layout_height="@dimen/backdrop_circle_image"
-        android:scaleType="centerCrop"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="84dp"
+        android:scaleType="centerCrop"
         android:src="@drawable/ic_upload_user"
-        app:civ_border_width="2dp"
-        app:civ_border_color="#fff"/>
+        app:civ_border_color="#fff"
+        app:civ_border_width="2dp" />
 
     <ScrollView
         android:layout_width="match_parent"
@@ -200,8 +208,8 @@
                 android:id="@+id/login_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:visibility="gone"
                 android:layout_marginBottom="@dimen/default_margin"
+                android:visibility="gone"
                 facebook:com_facebook_login_text="@string/facebook_login"
                 facebook:com_facebook_logout_text="@string/logout" />
 

@@ -90,6 +90,8 @@ public class ActivityProfileEdit extends AppCompatActivity implements View.OnCli
 
     @BindView(R.id.ivRegister)
     ImageView ivRegister;
+    @BindView(R.id.btnBack)
+    ImageView btnBack;
     @BindView(R.id.btnNext)
     Button btnNext;
     @BindView(R.id.tvTitle)
@@ -157,6 +159,12 @@ public class ActivityProfileEdit extends AppCompatActivity implements View.OnCli
                         requestPermissions(PERMISSIONS, PERMISSION_ALL);
                 } else
                     showPicTakerDialog();
+            }
+        });
+        btnBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onBackPressed();
             }
         });
     }

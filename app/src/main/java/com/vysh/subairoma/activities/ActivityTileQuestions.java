@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -32,6 +33,8 @@ public class ActivityTileQuestions extends AppCompatActivity {
     public TextView tvTitle;
     @BindView(R.id.ivImage)
     ImageView ivTile;
+    @BindView(R.id.btnBack)
+    ImageView btnBack;
 
     Boolean stateDisabled;
 
@@ -49,6 +52,12 @@ public class ActivityTileQuestions extends AppCompatActivity {
         tvTitle.setText(getIntent().getStringExtra("tileName").toUpperCase());
         getQuestions(getIntent().getIntExtra("tileId", -1));
         int icId = getIntent().getIntExtra("iconId", -1);
+        btnBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onBackPressed();
+            }
+        });
         setTileIcons(icId);
         setUpRecyclerView();
     }

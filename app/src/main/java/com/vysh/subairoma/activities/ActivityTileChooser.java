@@ -85,6 +85,8 @@ public class ActivityTileChooser extends AppCompatActivity {
     ImageView ivHam;
     @BindView(R.id.drawerLayout)
     DrawerLayout drawerLayout;
+    @BindView(R.id.btnBack)
+    ImageView btnBack;
     NavigationView navView;
 
     CustomTextView tvName, tvPhone, tvNavCounty;
@@ -132,6 +134,12 @@ public class ActivityTileChooser extends AppCompatActivity {
                 intent1.putExtras(intent.getExtras());
                 intent1.putExtra("tiletype", "gas");
                 startActivity(intent1);
+            }
+        });
+        btnBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onBackPressed();
             }
         });
         ivSelectCountry.setOnClickListener(new View.OnClickListener() {

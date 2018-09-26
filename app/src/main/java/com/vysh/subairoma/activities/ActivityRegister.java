@@ -101,6 +101,8 @@ public class ActivityRegister extends AppCompatActivity {
     ImageView ivRegister;
     @BindView(R.id.btnNext)
     Button btnNext;
+    @BindView(R.id.btnBack)
+    ImageView btnBack;
     @BindView(R.id.tvTitle)
     TextView tvTitle;
     @BindView(R.id.etName)
@@ -372,6 +374,12 @@ public class ActivityRegister extends AppCompatActivity {
     }
 
     private void setUpComponentListeners() {
+        btnBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onBackPressed();
+            }
+        });
         ivRegister.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

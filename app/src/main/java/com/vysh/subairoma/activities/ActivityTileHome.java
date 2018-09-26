@@ -93,6 +93,8 @@ public class ActivityTileHome extends AppCompatActivity {
     NestedScrollView nsv;
     @BindView(R.id.drawerLayout)
     DrawerLayout drawerLayout;
+    @BindView(R.id.btnBack)
+    ImageView btnBack;
     NavigationView navView;
 
     CustomTextView tvName, tvPhone, tvNavCounty;
@@ -115,6 +117,12 @@ public class ActivityTileHome extends AppCompatActivity {
         blacklist = getIntent().getIntExtra("countryBlacklist", -1);
         tileType = getIntent().getStringExtra("tiletype");
         Log.d("mylog", "Tile Type: " + tileType);
+        btnBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onBackPressed();
+            }
+        });
 
         navView = findViewById(R.id.nav_view);
         getUserDetails();
