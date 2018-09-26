@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
@@ -31,6 +32,7 @@ public class DialogLoginOptions extends DialogFragment {
     Context context;
     Button btnPhoneLogin;
     LoginButton loginButton;
+    EditText etPhone;
 
     ActivityRegister activityRegister;
     ProfileTracker mProfileTracker;
@@ -48,6 +50,7 @@ public class DialogLoginOptions extends DialogFragment {
         View view = inflater.inflate(R.layout.dialog_login_options, container, false);
         btnPhoneLogin = view.findViewById(R.id.btnPhoneLogin);
         loginButton = view.findViewById(R.id.login_button);
+        etPhone = view.findViewById(R.id.etInput);
         setUpListeners();
         return view;
     }
@@ -58,7 +61,7 @@ public class DialogLoginOptions extends DialogFragment {
         loginButton.registerCallback(activityRegister.callbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(LoginResult loginResult) {
-                if(Profile.getCurrentProfile() == null) {
+                if (Profile.getCurrentProfile() == null) {
                     mProfileTracker = new ProfileTracker() {
                         @Override
                         protected void onCurrentProfileChanged(Profile oldProfile, Profile currentProfile) {
@@ -70,8 +73,7 @@ public class DialogLoginOptions extends DialogFragment {
                     };
                     // no need to call startTracking() on mProfileTracker
                     // because it is called by its constructor, internally.
-                }
-                else {
+                } else {
                     Log.d("mylog", "Successful, User ID: " + Profile.getCurrentProfile().getId());
                     activityRegister.checkIfFBUserExists(Profile.getCurrentProfile().getId());
                 }
@@ -92,29 +94,12 @@ public class DialogLoginOptions extends DialogFragment {
         btnPhoneLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(context);
-                LayoutInflater inflater = activityRegister.getLayoutInflater();
-                final View dialogView = inflater.inflate(R.layout.dialog_edittext, null);
-                dialogBuilder.setView(dialogView);
-
-                final EditText etRNumber = dialogView.findViewById(R.id.etInput);
-                dialogBuilder.setPositiveButton(getResources().getString(R.string.done), new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int whichButton) {
-                        final String number = etRNumber.getText().toString();
-                        if (!number.isEmpty() && number.length() == 10) {
-                            activityRegister.checkUserRegistration(number);
-                        } else {
-                            etRNumber.setError("Please enter a valid number");
-                        }
-                    }
-                });
-                dialogBuilder.setNegativeButton(getResources().getString(R.string.cancel), new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int whichButton) {
-                        dialog.dismiss();
-                    }
-                });
-                AlertDialog b = dialogBuilder.create();
-                b.show();
+                String number = etPhone.getText().toString();
+                if (!number.isEmpty() && number.length() == 10) {
+                    activityRegister.checkUserRegistration(number);
+                } else {
+                    etPhone.setError("Please enter a valid number");
+                }
             }
         });
     }
