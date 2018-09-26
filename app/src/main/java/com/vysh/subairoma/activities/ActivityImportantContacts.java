@@ -8,6 +8,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -48,6 +49,8 @@ public class ActivityImportantContacts extends AppCompatActivity {
     boolean finalSec;
     @BindView(R.id.rvContacts)
     RecyclerView rvContacts;
+    @BindView(R.id.btnBack)
+    ImageView btnBack;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -56,6 +59,12 @@ public class ActivityImportantContacts extends AppCompatActivity {
         ButterKnife.bind(this);
         String countryId = getIntent().getStringExtra("countryId");
         finalSec = getIntent().getBooleanExtra("section", false);
+        btnBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onBackPressed();
+            }
+        });
         setUpInfo(countryId);
         getContacts(1);
         getContacts(2);

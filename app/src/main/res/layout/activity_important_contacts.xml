@@ -10,6 +10,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
+        <ImageView
+            android:id="@+id/btnBack"
+            android:layout_width="@dimen/back_btn_size"
+            android:layout_height="@dimen/back_btn_size"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="@dimen/default_margin"
+            android:src="@drawable/ic_back" />
+
         <com.vysh.subairoma.utils.CustomTextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -25,6 +33,7 @@
         android:id="@+id/rvContacts"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/medium_margin"
         android:layout_marginLeft="@dimen/small_medium_margin"
         android:layout_marginRight="@dimen/small_medium_margin"
         android:layout_marginVertical="@dimen/small_medium_margin" />
