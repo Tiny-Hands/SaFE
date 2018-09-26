@@ -884,12 +884,12 @@ public class ActivityRegister extends AppCompatActivity {
             public void onResponse(String response) {
                 Log.d("mylog", "Responses from migrants: " + response);
                 ++gotDetailCount;
+                parseAllResponses(response);
                 try {
                     pdialog.dismiss();
                 } catch (Exception ex) {
                     Log.d("mylog", "Dialog dismissing error or : " + ex.toString());
                 }
-                parseAllResponses(response);
                 startMigrantistActivity();
             }
         }, new Response.ErrorListener() {
