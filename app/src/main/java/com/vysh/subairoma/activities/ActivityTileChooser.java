@@ -92,7 +92,7 @@ public class ActivityTileChooser extends AppCompatActivity {
     CustomTextView tvName, tvPhone, tvNavCounty;
     ImageView ivUserAvatar;
 
-    String migName, migPhone, migrantGender, countryName, countryId, countryStatus, countryBlacklist;
+    public String migName, migPhone, migrantGender, countryName, countryId, countryStatus, countryBlacklist;
     Intent intent;
 
     @Override

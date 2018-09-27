@@ -18,6 +18,7 @@ import com.vysh.subairoma.R;
 import com.vysh.subairoma.SQLHelpers.SQLDatabaseHelper;
 import com.vysh.subairoma.SharedPrefKeys;
 import com.vysh.subairoma.activities.ActivityFeedback;
+import com.vysh.subairoma.activities.ActivityTileChooser;
 import com.vysh.subairoma.activities.ActivityTileHome;
 
 import java.util.Calendar;
@@ -73,13 +74,13 @@ public class DialogAnswersVerification extends DialogFragment implements View.On
     }
 
     private void goToGas() {
-        ActivityTileHome activity = (ActivityTileHome) getActivity();
+        ActivityTileChooser activity = (ActivityTileChooser) getActivity();
         Intent intent = new Intent(getContext(), ActivityFeedback.class);
         intent.putExtra("countryId", activity.countryId);
         intent.putExtra("migrantName", activity.migName);
         intent.putExtra("countryName", activity.countryName);
-        intent.putExtra("countryStatus", activity.status);
-        intent.putExtra("countryBlacklist", activity.blacklist);
+        intent.putExtra("countryStatus", activity.countryStatus);
+        intent.putExtra("countryBlacklist", activity.countryBlacklist);
         dismiss();
 
         Calendar cal = Calendar.getInstance();

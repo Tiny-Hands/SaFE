@@ -87,6 +87,7 @@ public class ActivityFeedback extends AppCompatActivity {
         intent.putExtra("countryName", countryName);
         intent.putExtra("countryStatus", status);
         intent.putExtra("countryBlacklist", blacklist);
+        intent.putExtra("tiletype", "gas");
 
         startActivity(intent);
     }
