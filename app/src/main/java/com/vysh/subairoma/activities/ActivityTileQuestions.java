@@ -8,6 +8,7 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -26,7 +27,6 @@ import butterknife.ButterKnife;
  */
 
 public class ActivityTileQuestions extends AppCompatActivity {
-
     @BindView(R.id.rvTileQuestions)
     public RecyclerView rvQuestions;
     @BindView(R.id.tvTitle)
@@ -35,6 +35,8 @@ public class ActivityTileQuestions extends AppCompatActivity {
     ImageView ivTile;
     @BindView(R.id.btnBack)
     ImageView btnBack;
+    @BindView(R.id.btnDone)
+    Button btnDone;
 
     Boolean stateDisabled;
 
@@ -52,6 +54,12 @@ public class ActivityTileQuestions extends AppCompatActivity {
         tvTitle.setText(getIntent().getStringExtra("tileName").toUpperCase());
         getQuestions(getIntent().getIntExtra("tileId", -1));
         int icId = getIntent().getIntExtra("iconId", -1);
+        btnBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onBackPressed();
+            }
+        });
         btnBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
