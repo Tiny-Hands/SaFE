@@ -51,7 +51,7 @@
     <string name="not_open">Not open</string>
     <string name="not_open_message">This country is not open</string>
     <string name="go_regardless">Go anyway</string>
-    <string name="select_country">Choose a country</string>
+    <string name="select_country">Choose a destination country</string>
     <string name="confirm_message">Are you sure your destination is</string>
     <string name="confirm">Confirm</string>
 
@@ -135,7 +135,7 @@
     <string name="contact_us">Contact Us</string>
     <string name="faqs">FAQs</string>
     <string name="not_being_helped">Not being helped</string>
-    <string name="country">COUNTRY</string>
+    <string name="country">DESTINATION COUNTRY</string>
     <string name="complete">Complete</string>
     <string name="preparation">PREPARATION</string>
     <string name="travel">TRAVEL</string>
