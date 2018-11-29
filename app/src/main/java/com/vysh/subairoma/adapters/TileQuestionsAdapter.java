@@ -704,13 +704,20 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
         RadioButton rb2;
 
         RelativeLayout rlResponse;
-        LinearLayout helpLayout;
+        LinearLayout helpLayout, titleLayout;
         RelativeLayout rootLayout;
         View disabledView;
 
         public QuestionHolder(final View itemView) {
             super(itemView);
 
+            titleLayout = itemView.findViewById(R.id.llTitle);
+            titleLayout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    toggleExpandView();
+                }
+            });
             rlResponse = itemView.findViewById(R.id.rlResponse);
             disabledView = itemView.findViewById(R.id.viewDisabled);
             rootLayout = itemView.findViewById(R.id.rlRoot);
@@ -749,12 +756,6 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
                 }
             });
             title = itemView.findViewById(R.id.tvStep);
-            title.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    toggleExpandView();
-                }
-            });
             listViewOptions = itemView.findViewById(R.id.listViewMultipleOptions);
             listViewOptions.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE);
             listViewOptions.setOnTouchListener(new ListView.OnTouchListener() {

@@ -18,29 +18,33 @@
         android:paddingRight="@dimen/medium_large_margin"
         android:paddingTop="@dimen/medium_large_margin">
 
-        <ImageView
-            android:id="@+id/pointerImg"
-            android:layout_width="18dp"
-            android:layout_height="@dimen/card_view_markers_dimen"
-            android:layout_alignBottom="@+id/tvStep"
-            android:layout_alignParentStart="true"
-            android:layout_alignTop="@+id/tvStep"
-            android:layout_marginEnd="4dp"
-            android:background="@null"
-            android:scaleType="centerInside"
-            android:src="@drawable/ic_pointerarrow" />
-
-        <TextView
-            android:id="@+id/tvStep"
+        <LinearLayout
+            android:id="@+id/llTitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="18dp"
-            android:padding="@dimen/small_margin"
-            android:layout_toEndOf="@id/pointerImg"
             android:layout_toStartOf="@+id/questionMarker"
-            android:text="काम छान्ने र आवेदन दिने"
-            android:textColor="@color/colorPrimary"
-            android:textSize="@dimen/tile_step_text" />
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:padding="@dimen/small_margin">
+
+            <ImageView
+                android:id="@+id/pointerImg"
+                android:layout_width="18dp"
+                android:layout_height="@dimen/card_view_markers_dimen"
+                android:background="@null"
+                android:scaleType="centerInside"
+                android:src="@drawable/ic_pointerarrow" />
+
+            <TextView
+                android:id="@+id/tvStep"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="18dp"
+                android:layout_marginStart="@dimen/small_margin"
+                android:text="काम छान्ने र आवेदन दिने"
+                android:textColor="@color/colorPrimary"
+                android:textSize="@dimen/tile_step_text" />
+        </LinearLayout>
 
         <ImageView
             android:id="@+id/questionMarker"
@@ -73,9 +77,9 @@
             android:id="@+id/rlResponse"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/tvStep"
+            android:layout_below="@+id/llTitle"
             android:layout_marginBottom="@dimen/medium_margin"
-            android:layout_marginTop="@dimen/medium_margin">
+            android:layout_marginTop="@dimen/small_margin">
 
             <com.wordpress.priyankvex.smarttextview.SmartTextView
                 android:id="@+id/tvDetail"
