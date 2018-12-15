@@ -322,6 +322,11 @@ public class ActivityOTPVerification extends AppCompatActivity implements View.O
                     ApplicationClass.getInstance().setUserId(user_id);
                     editor.putInt(SharedPrefKeys.userId, user_id);
                     editor.putInt(SharedPrefKeys.defMigID, mig_id);
+
+                    editor.putString(SharedPrefKeys.userPhone, phoneNumber);
+                    editor.putString(SharedPrefKeys.userSex, gender);
+                    editor.putString(SharedPrefKeys.userAge, age);
+                    editor.putString(SharedPrefKeys.userName, name);
                     editor.commit();
 
                     Calendar cal = Calendar.getInstance();
