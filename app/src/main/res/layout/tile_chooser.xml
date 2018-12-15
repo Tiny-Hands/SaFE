@@ -264,7 +264,7 @@
                                 android:layout_gravity="center_horizontal"
                                 android:layout_marginBottom="@dimen/medium_margin"
                                 android:layout_marginTop="@dimen/default_margin"
-                                android:text="@string/country"
+                                android:text="@string/j_country"
                                 android:textColor="@color/infoTextWhite"
                                 android:textSize="@dimen/tile_title_chooser"
                                 android:textStyle="bold" />
