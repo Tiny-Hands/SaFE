@@ -138,6 +138,10 @@ public class ActivityTileChooser extends AppCompatActivity {
         tileType1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if (countryName.length() < 2) {
+                    Toast.makeText(ActivityTileChooser.this, getResources().getString(R.string.select_country), Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 Intent intent1 = new Intent(ActivityTileChooser.this, ActivityTileHome.class);
                 intent1.putExtras(intent.getExtras());
                 intent1.putExtra("tiletype", "fep");
@@ -147,6 +151,10 @@ public class ActivityTileChooser extends AppCompatActivity {
         tileType2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if (countryName.length() < 2) {
+                    Toast.makeText(ActivityTileChooser.this, getResources().getString(R.string.select_country), Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 if (!checkIfVerifiedAnswers()) {
                    /* Toast.makeText(ActivityTileChooser.this, R.string.section_locked, Toast.LENGTH_SHORT).show();
                     return;*/
@@ -232,7 +240,7 @@ public class ActivityTileChooser extends AppCompatActivity {
 
     private boolean isInitialUse() {
         SharedPreferences sp = getSharedPreferences(SharedPrefKeys.sharedPrefName, MODE_PRIVATE);
-        boolean isInitial = sp.getBoolean(SharedPrefKeys.userName, true);
+        boolean isInitial = sp.getBoolean(SharedPrefKeys.initialuser, true);
         return isInitial;
     }
 
