@@ -125,7 +125,8 @@ public class ActivityTileChooser extends AppCompatActivity {
         getRequiredData(intent);
         if (isInitialUse()) {
             showInformationOverlay();
-        }
+        } else
+            rlInstruction.setVisibility(View.GONE);
         tvMigName.setText(migName);
         tvMigNumber.setText(migPhone);
         tvCountry.setText(countryName);
@@ -240,8 +241,7 @@ public class ActivityTileChooser extends AppCompatActivity {
 
     private boolean isInitialUse() {
         SharedPreferences sp = getSharedPreferences(SharedPrefKeys.sharedPrefName, MODE_PRIVATE);
-        boolean isInitial = sp.getBoolean(SharedPrefKeys.initialuser, true);
-        return isInitial;
+        return sp.getBoolean(SharedPrefKeys.initialuser, true);
     }
 
     @Override
