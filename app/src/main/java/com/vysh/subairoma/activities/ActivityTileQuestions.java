@@ -66,6 +66,12 @@ public class ActivityTileQuestions extends AppCompatActivity {
                 onBackPressed();
             }
         });
+        btnDone.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onBackPressed();
+            }
+        });
         setTileIcons(icId);
         setUpRecyclerView();
     }
