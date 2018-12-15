@@ -26,6 +26,7 @@ public final class SharedPrefKeys {
     public static String defMigID = "defmigid";
     public static String otpCode = "otpCode";
     public static String lang = "lang";
+    public static String initialuser = "isinitialuser";
 
     //Not for shared prefrences but for questions not in tiles
     public static int questionGender = -2;

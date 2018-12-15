@@ -140,4 +140,5 @@
     <string name="preparation">PREPARATION</string>
     <string name="travel">TRAVEL</string>
     <string name="section_locked">Section Locked</string>
+    <string name="welcome_info">Welcome to Subairoma</string>
 </resources>

@@ -20,6 +20,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -87,10 +88,29 @@ public class ActivityTileChooser extends AppCompatActivity {
     DrawerLayout drawerLayout;
     @BindView(R.id.btnBack)
     ImageView btnBack;
+    @BindView(R.id.rlInfoScreen)
+    RelativeLayout rlInstruction;
+    @BindView(R.id.rlInfo1)
+    RelativeLayout rlInfo1;
+    @BindView(R.id.tv2)
+    TextView tvinfo2;
+    @BindView(R.id.tv3)
+    TextView tvInfo3;
+    @BindView(R.id.tv2desc)
+    TextView tvDesc2;
+    @BindView(R.id.tv3desc)
+    TextView tvDesc3;
+    @BindView(R.id.llinfo2)
+    LinearLayout llinfo2;
+    @BindView(R.id.llinfo3)
+    LinearLayout llinfo3;
+    @BindView(R.id.btnFirst)
+    TextView btnFirstInfo;
     NavigationView navView;
 
     CustomTextView tvName, tvPhone, tvNavCounty;
     ImageView ivUserAvatar;
+    int infoCount = 0;
 
     public String migName, migPhone, migrantGender, countryName, countryId, countryStatus, countryBlacklist;
     Intent intent;
@@ -103,6 +123,9 @@ public class ActivityTileChooser extends AppCompatActivity {
         navView = findViewById(R.id.nav_view);
         intent = getIntent();
         getRequiredData(intent);
+        if (isInitialUse()) {
+            showInformationOverlay();
+        }
         tvMigName.setText(migName);
         tvMigNumber.setText(migPhone);
         tvCountry.setText(countryName);
@@ -161,6 +184,56 @@ public class ActivityTileChooser extends AppCompatActivity {
         hideIfIndia();
         setPercentCompletion();
         setUpNavigationButtons();
+    }
+
+    private void showInformationOverlay() {
+        rlInfo1.setVisibility(View.VISIBLE);
+        tvinfo2.setVisibility(View.INVISIBLE);
+        tvInfo3.setVisibility(View.INVISIBLE);
+        tvDesc2.setVisibility(View.INVISIBLE);
+        tvDesc3.setVisibility(View.INVISIBLE);
+        llinfo2.setVisibility(View.INVISIBLE);
+        llinfo3.setVisibility(View.INVISIBLE);
+        btnFirstInfo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                switch (infoCount) {
+                    case 0:
+                        infoCount++;
+                        rlInfo1.setVisibility(View.INVISIBLE);
+                        tvinfo2.setVisibility(View.VISIBLE);
+                        tvDesc2.setVisibility(View.VISIBLE);
+                        llinfo2.setVisibility(View.VISIBLE);
+                        break;
+                    case 1:
+                        infoCount++;
+                        tvinfo2.setVisibility(View.INVISIBLE);
+                        tvDesc2.setVisibility(View.INVISIBLE);
+                        llinfo2.setVisibility(View.INVISIBLE);
+
+                        tvInfo3.setVisibility(View.VISIBLE);
+                        tvDesc3.setVisibility(View.VISIBLE);
+                        llinfo3.setVisibility(View.VISIBLE);
+                        break;
+                    case 2:
+                        infoCount++;
+                        rlInstruction.setVisibility(View.GONE);
+
+                        SharedPreferences sp = getSharedPreferences(SharedPrefKeys.sharedPrefName, MODE_PRIVATE);
+                        SharedPreferences.Editor editor = sp.edit();
+                        editor.putBoolean(SharedPrefKeys.initialuser, false);
+                        editor.apply();
+                        Toast.makeText(ActivityTileChooser.this, getResources().getString(R.string.welcome_info), Toast.LENGTH_SHORT).show();
+                        break;
+                }
+            }
+        });
+    }
+
+    private boolean isInitialUse() {
+        SharedPreferences sp = getSharedPreferences(SharedPrefKeys.sharedPrefName, MODE_PRIVATE);
+        boolean isInitial = sp.getBoolean(SharedPrefKeys.userName, true);
+        return isInitial;
     }
 
     @Override

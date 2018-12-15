@@ -140,5 +140,6 @@
     <string name="preparation">तयारी</string>
     <string name="travel">यात्रा</string>
     <string name="section_locked">खण्ड लक छ</string>
+    <string name="welcome_info">सुवैरोमामा स्वागत छ</string>
 
 </resources>

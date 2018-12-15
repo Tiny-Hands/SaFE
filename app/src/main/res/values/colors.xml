@@ -20,4 +20,5 @@
     <color name="editTextBackground">#f5f5f5</color>
     <color name="white_tr">#c8ffffff</color>
     <color name="darkGreen">#558b2f</color>
+    <color name="infoTextWhite">#fff</color>
 </resources>
