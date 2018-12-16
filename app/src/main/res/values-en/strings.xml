@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">सुवैरोमा </string>
+    <string name="app_name">SaFE </string>
     <string name="user_name">विशाल श्रेष्ठ </string>
     <string name="code">CODE</string>
     <string name="important_contacts">Important Contacts</string>
@@ -141,5 +141,5 @@
     <string name="preparation">PREPARATION</string>
     <string name="travel">TRAVEL</string>
     <string name="section_locked">Section Locked</string>
-    <string name="welcome_info">Welcome to Subairoma</string>
+    <string name="welcome_info">Welcome to SaFE app</string>
 </resources>
