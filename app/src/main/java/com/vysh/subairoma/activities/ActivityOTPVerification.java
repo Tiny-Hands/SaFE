@@ -1,5 +1,6 @@
 package com.vysh.subairoma.activities;
 
+import android.app.Application;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -47,7 +48,7 @@ import butterknife.ButterKnife;
 
 public class ActivityOTPVerification extends AppCompatActivity implements View.OnClickListener {
     String trueOTP;
-    boolean hasExceededReceiveTime = true;
+    boolean hasExceededReceiveTime = true, isLogginIn = false;
     long lastTime;
 
     final String apiOTP = "/twiliosender.php";
@@ -80,6 +81,16 @@ public class ActivityOTPVerification extends AppCompatActivity implements View.O
         btnSendOtpAgain.setOnClickListener(this);
 
         Intent intent = getIntent();
+        if (intent.hasExtra("otpnumber")) {
+            isLogginIn = true;
+            phoneNumber = intent.getStringExtra("otpnumber");
+            if (InternetConnectionChecker.isNetworkConnected(ActivityOTPVerification.this)) {
+                //Sending the OTP To the mentioned number;
+                lastTime = System.currentTimeMillis();
+                sendOTP();
+            }
+            return;
+        }
         name = intent.getStringExtra("name");
         phoneNumber = intent.getStringExtra("phoneNumber");
         age = intent.getStringExtra("age");
@@ -144,10 +155,7 @@ public class ActivityOTPVerification extends AppCompatActivity implements View.O
 
 
             //Do Next Step Now
-            Intent intent = new Intent(ActivityOTPVerification.this, ActivityMigrantList.class);
-            //intent.putExtra("migrantmode", true);
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            startActivity(intent);
+            startMigrantActivity();
         }
     }
 
@@ -157,9 +165,17 @@ public class ActivityOTPVerification extends AppCompatActivity implements View.O
             case R.id.btnVerify:
                 //Validate the OTP Here
                 boolean isValid = isOtpValid();
-                if (isValid)
-                    registerUser(apiUserRegister);
-                else
+                if (isValid) {
+                    if (isLogginIn) {
+                        SharedPreferences sp = getSharedPreferences(SharedPrefKeys.sharedPrefName, MODE_PRIVATE);
+                        SharedPreferences.Editor editor = sp.edit();
+                        editor.putInt(SharedPrefKeys.userId, ApplicationClass.getInstance().getUserId());
+                        editor.commit();
+                        startMigrantActivity();
+
+                    } else
+                        registerUser(apiUserRegister);
+                } else
                     showSnackbar("The OTP is incorrect, please try registering Again");
                 /*
                 Intent intent = new Intent(ActivityOTPVerification.this, ActivityMigrantList.class);
@@ -334,11 +350,7 @@ public class ActivityOTPVerification extends AppCompatActivity implements View.O
                     new SQLDatabaseHelper(ActivityOTPVerification.this).insertResponseTableData(gender, SharedPrefKeys.questionGender, -1,
                             mig_id, "mg_sex", time);
                     new SQLDatabaseHelper(ActivityOTPVerification.this).insertMigrants(mig_id, name, Integer.parseInt(age), phoneNumber, gender, user_id, userImg, 0);
-                    //Do Next Step Now
-                    Intent intent = new Intent(ActivityOTPVerification.this, ActivityMigrantList.class);
-                    //intent.putExtra("migrantmode", true);
-                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                    startActivity(intent);
+                    startMigrantActivity();
 
                     return;
                 }
@@ -376,5 +388,13 @@ public class ActivityOTPVerification extends AppCompatActivity implements View.O
         } catch (JSONException e) {
             Log.d("mylog", "Error in parsing: " + e.getMessage());
         }
+    }
+
+    private void startMigrantActivity() {
+        //Do Next Step Now
+        Intent intent = new Intent(ActivityOTPVerification.this, ActivityMigrantList.class);
+        //intent.putExtra("migrantmode", true);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
     }
 }

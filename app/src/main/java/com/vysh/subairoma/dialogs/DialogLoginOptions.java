@@ -96,6 +96,7 @@ public class DialogLoginOptions extends DialogFragment {
             public void onClick(View v) {
                 String number = etPhone.getText().toString();
                 if (!number.isEmpty() && number.length() == 10) {
+                    activityRegister.entered_phone = number;
                     activityRegister.checkUserRegistration(number);
                 } else {
                     etPhone.setError("Please enter a valid number");

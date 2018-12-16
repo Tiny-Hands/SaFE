@@ -95,7 +95,9 @@ public class ActivityRegister extends AppCompatActivity {
     //Usertype = 0 for Helper and 1 for migrant. Order is reversed in Dialogs and Other Methods.
     public int userType;
     Boolean userRegistered = false;
+    boolean fromPhone = false;
     String sex = "male";
+    public String entered_phone = "";
 
     @BindView(R.id.ivRegister)
     ImageView ivRegister;
@@ -232,6 +234,7 @@ public class ActivityRegister extends AppCompatActivity {
                         showSnackbar(jsonRes.getString("message"));
                         return;
                     } else {
+                        fromPhone = true;
                         getLoggedInUserDetails(jsonRes);
                         //Gets Migrant Details and Saves in DB regardless of User Type
                         getMigrants();
@@ -280,6 +283,10 @@ public class ActivityRegister extends AppCompatActivity {
 
             SharedPreferences sharedPreferences = getSharedPreferences(SharedPrefKeys.sharedPrefName, MODE_PRIVATE);
             SharedPreferences.Editor editor = sharedPreferences.edit();
+            //Not saving here as OTP is still not entered, send to OTP Activity and save there
+            //editor.putInt(SharedPrefKeys.userId, id);
+            if (!fromPhone)
+                editor.putInt(SharedPrefKeys.userId, id);
             if (userType == 1) {
                 ApplicationClass.getInstance().setUserId(id);
 
@@ -291,14 +298,12 @@ public class ActivityRegister extends AppCompatActivity {
                 editor.putString(SharedPrefKeys.userAge, age);
                 editor.putString(SharedPrefKeys.userImg, userImg);
                 editor.putString(SharedPrefKeys.userType, "helper");
-                editor.putInt(SharedPrefKeys.userId, id);
                 editor.commit();
             } else if (userType == 0) {
                 ApplicationClass.getInstance().setMigrantId(id);
 
                 //Saving Migrant ID and Login Status
                 editor.putString(SharedPrefKeys.userType, "migrant");
-                editor.putInt(SharedPrefKeys.userId, id);
                 editor.putString(SharedPrefKeys.userName, userName);
                 editor.putString(SharedPrefKeys.userPhone, userPhone);
                 editor.putString(SharedPrefKeys.userSex, userSex);
@@ -562,10 +567,10 @@ public class ActivityRegister extends AppCompatActivity {
                         }
                         //Start Migrant List Activity
                     } else {
-                        startOTPActivity(userType);
+                        startOTPActivity(userType, 0);
                     }
                 } else if (userType == 0) {
-                    startOTPActivity(userType);
+                    startOTPActivity(userType, 0);
                 }
             }
         });
@@ -579,8 +584,20 @@ public class ActivityRegister extends AppCompatActivity {
         builder.show();
     }
 
-    private void startOTPActivity(int uType) {
+    private void startOTPActivity(int uType, int otpType) {
         //uType = 0 for Migrant, 1 for helper
+        //otpType = 1 if logging in
+        if (otpType == 1) {
+            if (!fromPhone) {
+                startMigrantistActivity();
+                return;
+            }
+            Intent intent = new Intent(ActivityRegister.this, ActivityOTPVerification.class);
+            intent.putExtra("otpnumber", entered_phone);
+            startActivity(intent);
+            return;
+
+        }
         Intent intent = new Intent(ActivityRegister.this, ActivityOTPVerification.class);
         intent.putExtra("name", etName.getText().toString());
         intent.putExtra("phoneNumber", etNumber.getText().toString());
@@ -763,7 +780,6 @@ public class ActivityRegister extends AppCompatActivity {
     private boolean checkUserExists() {
         SharedPreferences sharedPreferences = getSharedPreferences(SharedPrefKeys.sharedPrefName, MODE_PRIVATE);
         int userId = sharedPreferences.getInt(SharedPrefKeys.userId, -10);
-        int migId = sharedPreferences.getInt(SharedPrefKeys.defMigID, -10);
         String type = sharedPreferences.getString(SharedPrefKeys.userType, "");
         Log.d("mylog", "User id: " + userId + " Type: " + type);
         if (userId != -10) {
@@ -827,6 +843,7 @@ public class ActivityRegister extends AppCompatActivity {
                     if (error) {
                         showSnackbar(jsonRes.getString("message"));
                     } else {
+                        fromPhone = false;
                         getLoggedInUserDetails(jsonRes);
                         //Gets Migrant Details and Saves in DB regardless of User Type
                         //getMigrantDetails();
@@ -895,7 +912,8 @@ public class ActivityRegister extends AppCompatActivity {
                 } catch (Exception ex) {
                     Log.d("mylog", "Dialog dismissing error or : " + ex.toString());
                 }
-                startMigrantistActivity();
+                //startMigrantistActivity();
+                startOTPActivity(uType, 1);
             }
         }, new Response.ErrorListener() {
             @Override
