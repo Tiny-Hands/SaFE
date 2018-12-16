@@ -1026,15 +1026,15 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
         private void toggleExpandView() {
             previousClickedPos = currentClickedPos;
             currentClickedPos = getAdapterPosition();
-            if (previousClickedPos != currentClickedPos && previousClickedPos != -1) {
-                notifyItemChanged(previousClickedPos);
-            } else if (previousClickedPos == currentClickedPos) {
+            if (previousClickedPos != currentClickedPos) {
+                showExpandView();
+            } else {
                 if (helpLayout.getVisibility() == View.VISIBLE) {
-                    notifyItemChanged(currentClickedPos);
-                } else
+                    hideExpandView();
+                } else {
                     showExpandView();
+                }
             }
-            showExpandView();
         }
 
         private void showExpandView() {
@@ -1058,6 +1058,30 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
                 listViewOptions.setVisibility(View.VISIBLE);
             } else if (responseType == 4) {
                 rbGroup.setVisibility(View.VISIBLE);
+            }
+        }
+
+        private void hideExpandView() {
+            // Start Expanding
+            if (Build.VERSION.SDK_INT >= 19) {
+                TransitionManager.beginDelayedTransition((ViewGroup) details.getParent());
+            }
+            details.setVisibility(View.GONE);
+            helpLayout.setVisibility(View.GONE);
+            if (!question.getText().toString().equalsIgnoreCase("null"))
+                question.setVisibility(View.GONE);
+            ivPointer.setImageBitmap(BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_pointerarrow));
+            int responseType = questionsListDisplay.get(currentClickedPos).getResponseType();
+            if (responseType == 0) {
+                checkbox.setVisibility(View.GONE);
+            } else if (responseType == 1) {
+                etResponse.setVisibility(View.GONE);
+            } else if (responseType == 2 || responseType == 5) {
+                spinnerOptions.setVisibility(View.GONE);
+            } else if (responseType == 3) {
+                listViewOptions.setVisibility(View.GONE);
+            } else if (responseType == 4) {
+                rbGroup.setVisibility(View.GONE);
             }
         }
     }
