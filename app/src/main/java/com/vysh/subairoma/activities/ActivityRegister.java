@@ -272,16 +272,16 @@ public class ActivityRegister extends AppCompatActivity {
         try {
             userType = jsonRes.getInt("user_type");
             int id = jsonRes.getInt("user_id");
+            String userName = jsonRes.getString("user_name");
+            String userPhone = jsonRes.getString("user_phone");
+            String userSex = jsonRes.getString("user_sex");
+            String age = jsonRes.getString("user_age");
+            String userImg = jsonRes.getString("user_img");
 
             SharedPreferences sharedPreferences = getSharedPreferences(SharedPrefKeys.sharedPrefName, MODE_PRIVATE);
             SharedPreferences.Editor editor = sharedPreferences.edit();
             if (userType == 1) {
                 ApplicationClass.getInstance().setUserId(id);
-                String userName = jsonRes.getString("user_name");
-                String userPhone = jsonRes.getString("user_phone");
-                String userSex = jsonRes.getString("user_sex");
-                String age = jsonRes.getString("user_age");
-                String userImg = jsonRes.getString("user_img");
 
                 //Saving Helper Details and Login Status
                 Log.d("mylog", "Saving: " + userName + userPhone + userSex + age);
@@ -299,6 +299,11 @@ public class ActivityRegister extends AppCompatActivity {
                 //Saving Migrant ID and Login Status
                 editor.putString(SharedPrefKeys.userType, "migrant");
                 editor.putInt(SharedPrefKeys.userId, id);
+                editor.putString(SharedPrefKeys.userName, userName);
+                editor.putString(SharedPrefKeys.userPhone, userPhone);
+                editor.putString(SharedPrefKeys.userSex, userSex);
+                editor.putString(SharedPrefKeys.userAge, age);
+                editor.putString(SharedPrefKeys.userImg, userImg);
                 editor.commit();
             }
         } catch (JSONException e) {
