@@ -169,7 +169,11 @@ public class ActivityOTPVerification extends AppCompatActivity implements View.O
                     if (isLogginIn) {
                         SharedPreferences sp = getSharedPreferences(SharedPrefKeys.sharedPrefName, MODE_PRIVATE);
                         SharedPreferences.Editor editor = sp.edit();
-                        editor.putInt(SharedPrefKeys.userId, ApplicationClass.getInstance().getUserId());
+                        int id = ApplicationClass.getInstance().getUserId();
+                        if (id == -1)
+                            id = ApplicationClass.getInstance().getMigrantId();
+                        Log.d("mylog", "Saving: " + id);
+                        editor.putInt(SharedPrefKeys.userId, id);
                         editor.commit();
                         startMigrantActivity();
 

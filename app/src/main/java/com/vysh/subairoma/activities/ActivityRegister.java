@@ -134,6 +134,7 @@ public class ActivityRegister extends AppCompatActivity {
         setContentView(R.layout.activity_register);
         //Checking if already logged in on current device
         if (checkUserExists() && !getIntent().hasExtra("migrantmode")) {
+            Log.d("mylog", "Open Activity");
             Intent intent = new Intent(ActivityRegister.this, ActivityMigrantList.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);
@@ -287,6 +288,7 @@ public class ActivityRegister extends AppCompatActivity {
             //editor.putInt(SharedPrefKeys.userId, id);
             if (!fromPhone)
                 editor.putInt(SharedPrefKeys.userId, id);
+            ApplicationClass.getInstance().setUserId(id);
             if (userType == 1) {
                 ApplicationClass.getInstance().setUserId(id);
 
