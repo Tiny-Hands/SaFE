@@ -296,7 +296,7 @@ public class ActivityTileHome extends AppCompatActivity {
                 drawerLayout.openDrawer(GravityCompat.END);
             }
         });
-
+        navView.getMenu().findItem(R.id.nav_tutorial).setVisible(false);
         navView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
