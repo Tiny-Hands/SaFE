@@ -289,7 +289,7 @@ public class ActivityTileChooser extends AppCompatActivity {
         tvName.setText(uname);
         tvNavCounty.setText(unumber);
         tvPhone.setText(uage);
-        if (uimg != null && uimg.length() > 10)
+        if (uimg.length() > 10)
             ivUserAvatar.setImageBitmap(ImageEncoder.decodeFromBase64(uimg));
         else
             ivUserAvatar.setImageResource(R.drawable.ic_male);
@@ -328,6 +328,11 @@ public class ActivityTileChooser extends AppCompatActivity {
                         intentFaq.putExtra("faq", true);
                         drawerLayout.closeDrawer(GravityCompat.END);
                         startActivity(intentFaq);
+                        break;
+                    case R.id.nav_tutorial:
+                        drawerLayout.closeDrawer(GravityCompat.END);
+                        rlInstruction.setVisibility(View.VISIBLE);
+                        showInformationOverlay();
                         break;
                 }
                 return false;
