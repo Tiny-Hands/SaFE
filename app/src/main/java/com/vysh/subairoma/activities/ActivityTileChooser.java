@@ -191,8 +191,13 @@ public class ActivityTileChooser extends AppCompatActivity {
         });
 
         hideIfIndia();
-        setPercentCompletion();
         setUpNavigationButtons();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        setPercentCompletion();
     }
 
     private void showInformationOverlay() {
