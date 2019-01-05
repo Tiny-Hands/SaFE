@@ -2,8 +2,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:background="@color/bgFaded">
+    android:background="@color/bgFaded"
+    android:orientation="vertical">
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar2"
@@ -49,9 +49,10 @@
     <android.support.v7.widget.RecyclerView
         android:id="@+id/rvTileQuestions"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         android:layout_marginEnd="@dimen/small_medium_margin"
-        android:layout_marginStart="@dimen/small_medium_margin" />
+        android:layout_marginStart="@dimen/small_medium_margin"
+        android:layout_weight="1" />
 
     <Button
         android:id="@+id/btnDone"
