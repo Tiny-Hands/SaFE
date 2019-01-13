@@ -142,5 +142,6 @@
     <string name="travel">यात्रा</string>
     <string name="section_locked">खण्ड लक छ</string>
     <string name="welcome_info">सेफ एप्प मा स्वागत छ</string>
+    <string name="complete_message">This section is complete, would you like to move on to the next section?</string>
 
 </resources>

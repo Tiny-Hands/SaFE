@@ -412,6 +412,26 @@ public class ActivityTileChooser extends AppCompatActivity {
                 }
                 tvPercentComp2.setText(percentComp2 + "% " + getResources().getString(R.string.complete));
                 tileType2.setImageResource(R.drawable.ic_traveltile);
+            } else {
+                if (Integer.parseInt(percentComp) > 99) {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(ActivityTileChooser.this);
+                    builder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            goToNextSection();
+                        }
+                    });
+                    builder.setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            dialogInterface.dismiss();
+                        }
+                    });
+                    builder.setTitle(R.string.complete);
+                    builder.setMessage(R.string.complete_message);
+                    builder.show();
+                    builder.setCancelable(false);
+                }
             }
         }
     }
