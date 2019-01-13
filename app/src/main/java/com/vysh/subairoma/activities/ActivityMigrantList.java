@@ -143,6 +143,7 @@ public class ActivityMigrantList extends AppCompatActivity implements RecyclerIt
             }
         });
 
+        navView.getMenu().findItem(R.id.nav_tutorial).setVisible(false);
         navView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
