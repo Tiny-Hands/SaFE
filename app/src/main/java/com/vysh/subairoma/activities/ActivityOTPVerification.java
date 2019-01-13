@@ -343,10 +343,14 @@ public class ActivityOTPVerification extends AppCompatActivity implements View.O
                     editor.putInt(SharedPrefKeys.userId, user_id);
                     editor.putInt(SharedPrefKeys.defMigID, mig_id);
 
-                    editor.putString(SharedPrefKeys.userPhone, phoneNumber);
-                    editor.putString(SharedPrefKeys.userSex, gender);
-                    editor.putString(SharedPrefKeys.userAge, age);
-                    editor.putString(SharedPrefKeys.userName, name);
+                    //If migrant is already saved and has added a new migrant then don't save again
+                    if (sharedPreferences.getString(SharedPrefKeys.userName, "").length() >= 1) {
+                    } else {
+                        editor.putString(SharedPrefKeys.userPhone, phoneNumber);
+                        editor.putString(SharedPrefKeys.userSex, gender);
+                        editor.putString(SharedPrefKeys.userAge, age);
+                        editor.putString(SharedPrefKeys.userName, name);
+                    }
                     editor.commit();
 
                     Calendar cal = Calendar.getInstance();

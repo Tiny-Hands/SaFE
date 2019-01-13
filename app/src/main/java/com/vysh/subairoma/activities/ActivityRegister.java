@@ -304,6 +304,12 @@ public class ActivityRegister extends AppCompatActivity {
             } else if (userType == 0) {
                 ApplicationClass.getInstance().setMigrantId(id);
 
+                //If migrant is already saved and has added a new migrant then don't save again
+                if (sharedPreferences.getString(SharedPrefKeys.userName, "").length() >= 1) {
+                    return;
+                }
+
+                ApplicationClass.getInstance().setMigrantId(id);
                 //Saving Migrant ID and Login Status
                 editor.putString(SharedPrefKeys.userType, "migrant");
                 editor.putString(SharedPrefKeys.userName, userName);
