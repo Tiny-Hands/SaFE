@@ -314,7 +314,11 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
 
     @Override
     public int getItemCount() {
-        calculateAndSavePercentComplete();
+        try {
+            calculateAndSavePercentComplete();
+        } catch (Exception ex) {
+            Log.d("mylog", "Error in calculating & saving percent");
+        }
         return questionsListDisplay.size();
     }
 
