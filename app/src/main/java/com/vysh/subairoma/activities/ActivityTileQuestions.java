@@ -147,4 +147,11 @@ public class ActivityTileQuestions extends AppCompatActivity {
         questionsAdapter = new TileQuestionsAdapter(questionList, stateDisabled, ActivityTileQuestions.this);
         rvQuestions.setAdapter(questionsAdapter);
     }
+
+    public void showDoneButton(boolean i) {
+        if (i)
+            btnDone.setVisibility(View.VISIBLE);
+        else
+            btnDone.setVisibility(View.GONE);
+    }
 }

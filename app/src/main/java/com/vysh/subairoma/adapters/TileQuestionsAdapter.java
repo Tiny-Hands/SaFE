@@ -46,6 +46,7 @@ import com.vysh.subairoma.SQLHelpers.SQLDatabaseHelper;
 import com.vysh.subairoma.SharedPrefKeys;
 import com.vysh.subairoma.activities.ActivityMigrantList;
 import com.vysh.subairoma.activities.ActivityTileHome;
+import com.vysh.subairoma.activities.ActivityTileQuestions;
 import com.vysh.subairoma.dialogs.DialogNeedHelp;
 import com.vysh.subairoma.models.CountryModel;
 import com.vysh.subairoma.models.TileQuestionsModel;
@@ -800,7 +801,10 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
                 public void onFocusChange(View view, boolean b) {
                     if (!b) {
                         saveTextInput();
+                        ((ActivityTileQuestions) context).showDoneButton(true);
                         notifyItemChanged(getAdapterPosition());
+                    } else {
+                        ((ActivityTileQuestions) context).showDoneButton(false);
                     }
                 }
             });
@@ -809,6 +813,7 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
                 public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                     if (actionId == EditorInfo.IME_ACTION_DONE) {
                         saveTextInput();
+                        ((ActivityTileQuestions) context).showDoneButton(true);
                         InputMethodManager inputMethodManager = (InputMethodManager) context.
                                 getSystemService(Context.INPUT_METHOD_SERVICE);
                         inputMethodManager.hideSoftInputFromWindow(itemView.getWindowToken(), 0);
