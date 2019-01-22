@@ -10,6 +10,9 @@ import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.view.animation.BounceInterpolator;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -84,6 +87,9 @@ public class TileAdapter extends RecyclerView.Adapter<TileAdapter.TileViewHolder
         //DecimalFormat decimalFormat = new DecimalFormat("##");
         if (tileList.get(position).getPercentComplete() > 99.9) {
             holder.ivDone.setVisibility(View.VISIBLE);
+            Animation animZoomin = AnimationUtils.loadAnimation(context, R.anim.zoomin);
+            animZoomin.setInterpolator(new BounceInterpolator());
+            holder.ivDone.startAnimation(animZoomin);
             //holder.tvPercent.setVisibility(View.GONE);
         }
 
