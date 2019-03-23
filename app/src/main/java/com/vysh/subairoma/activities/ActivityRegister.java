@@ -79,10 +79,11 @@ public class ActivityRegister extends AppCompatActivity {
     //For Helper
     final String apiGetAllResponses = "/getallresponses.php";
     //For Migrant
-    final String apiGetResponses = "/getresponses.fphp";
+    final String apiGetResponses = "/getresponses.php";
     final String apiAlreadyRegistered = "/checkphonenumber.php";
     private final String APIGETMIG = "/getmigrants.php";
     private int gotDetailCount = 0;
+    final String MIGRANTUSER = "migrant", HELPERUSER = "helper";
 
     private final int REQUEST_SELECT_FILE = 1;
     private final int REQUEST_TAKE_PIC = 0;
@@ -93,7 +94,7 @@ public class ActivityRegister extends AppCompatActivity {
             Manifest.permission.CAMERA};
 
     //Usertype = 0 for Helper and 1 for migrant. Order is reversed in Dialogs and Other Methods.
-    public int userType;
+    public String userType;
     Boolean userRegistered = false;
     boolean fromPhone = false;
     String sex = "male";
@@ -547,7 +548,7 @@ public class ActivityRegister extends AppCompatActivity {
         builder.setPositiveButton(getResources().getString(R.string.disclaimer_button), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                if (userType == 1) {
+                if (userType.equalsIgnoreCase(HELPERUSER)) {
                     //If it's a helper user registering a migrant, then no need to redirect to OTPActivity,
                     //But Register and then redirect to migrant list.
                     if (userRegistered) {
@@ -577,14 +578,14 @@ public class ActivityRegister extends AppCompatActivity {
                     } else {
                         startOTPActivity(userType, 0);
                     }
-                } else if (userType == 0) {
+                } else if (userType == MIGRANTUSER) {
                     startOTPActivity(userType, 0);
                 }
             }
         });
 
         String text = "";
-        if (userType == 0)
+        if (userType == MIGRANTUSER)
             text = getString(R.string.disclaimerMigrant);
         else
             text = getString(R.string.disclaimerHelper);
@@ -592,7 +593,7 @@ public class ActivityRegister extends AppCompatActivity {
         builder.show();
     }
 
-    private void startOTPActivity(int uType, int otpType) {
+    private void startOTPActivity(String uType, int otpType) {
         //uType = 0 for Migrant, 1 for helper
         //otpType = 1 if logging in
         if (otpType == 1) {
@@ -800,13 +801,13 @@ public class ActivityRegister extends AppCompatActivity {
             } else {
                 if (type.equalsIgnoreCase("helper")) {
                     Log.d("mylog", "User already exists with ID: " + userId);
-                    userType = 1;
+                    userType = HELPERUSER;
                     ApplicationClass.getInstance().setUserId(userId);
                     ApplicationClass.getInstance().setUserType(1);
                 } else {
                     Log.d("mylog", "Migrant already exists, Setting user ID: ");
                     //ApplicationClass.getInstance().setMigrantId(userId);
-                    userType = 0;
+                    userType = MIGRANTUSER;
                     ApplicationClass.getInstance().setUserType(0);
                     ApplicationClass.getInstance().setUserId(userId);
                     ApplicationClass.getInstance().setMigrantId(sharedPreferences.getInt(SharedPrefKeys.defMigID, -1));
@@ -894,9 +895,9 @@ public class ActivityRegister extends AppCompatActivity {
         startActivity(intent);
     }
 
-    public void getAllResponses(final int uType) {
+    public void getAllResponses(final String uType) {
         String api;
-        if (uType == 0)
+        if (uType.equalsIgnoreCase(MIGRANTUSER))
             api = ApplicationClass.getInstance().getAPIROOT() + apiGetAllResponses;
         else
             api = ApplicationClass.getInstance().getAPIROOT() + apiGetResponses;
@@ -938,7 +939,7 @@ public class ActivityRegister extends AppCompatActivity {
             protected Map<String, String> getParams() throws AuthFailureError {
                 HashMap<String, String> params = new HashMap<>();
                 params.put("user_id", ApplicationClass.getInstance().getUserId() + "");
-                if (uType == 1)
+                if (uType.equalsIgnoreCase(MIGRANTUSER))
                     params.put("migrant_id", ApplicationClass.getInstance().getMigrantId() + "");
                 return params;
             }
