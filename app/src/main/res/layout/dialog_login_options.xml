@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:facebook="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="center"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:padding="@dimen/large_margin">
 
     <TextView
         android:layout_width="match_parent"
@@ -13,57 +14,54 @@
         android:gravity="center"
         android:text="@string/login"
         android:textAllCaps="true"
-        android:textSize="16sp"
-        android:textStyle="bold" />
+        android:textColor="@color/colorPrimary"
+        android:textSize="@dimen/outer_title_text_size" />
 
-    <com.vysh.subairoma.utils.CustomTextView
+    <TextView
         android:id="@+id/tvMsg"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:padding="@dimen/small_margin"
-        android:text="@string/enter_reg_number"
-        app:fonts="gotham_light.ttf" />
+        android:text="@string/enter_reg_number" />
 
     <EditText
         android:id="@+id/etInput"
-        android:layout_width="296dp"
+        android:layout_width="@dimen/dialog_edittext_width"
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/medium_margin"
         android:layout_marginRight="@dimen/medium_margin"
+        android:layout_marginTop="@dimen/xxl_margin"
         android:background="@drawable/bg_edittext"
         android:gravity="center"
         android:hint="@string/phone_number"
         android:imeOptions="actionDone"
         android:inputType="number"
         android:maxLength="10"
-        android:padding="@dimen/small_medium_margin"
-        android:textSize="16sp" />
+        android:padding="@dimen/small_medium_margin" />
 
     <Button
         android:id="@+id/btnPhoneLogin"
-        android:layout_width="wrap_content"
-        android:layout_height="34dp"
+        android:layout_width="@dimen/dialog_edittext_width"
+        android:layout_height="@dimen/dialog_button_height"
         android:layout_marginTop="@dimen/medium_margin"
         android:background="@drawable/default_rounded_button"
         android:paddingLeft="@dimen/large_margin"
         android:paddingRight="@dimen/large_margin"
         android:text="@string/login"
-        android:textAllCaps="false"
-        android:textColor="@android:color/white"
-        android:textSize="14sp" />
+        android:textAllCaps="true"
+        android:textColor="@android:color/white" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="2dp"
+        android:layout_marginTop="@dimen/xxl_margin"
         android:text="@string/or" />
 
-    <com.facebook.login.widget.LoginButton xmlns:facebook="http://schemas.android.com/apk/res-auto"
+    <com.facebook.login.widget.LoginButton
         android:id="@+id/login_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/default_margin"
+        style="@style/FacebookLoginButton"
+        android:layout_width="@dimen/dialog_edittext_width"
+        android:layout_height="@dimen/dialog_button_height"
         facebook:com_facebook_login_text="@string/login_with_fb"
         facebook:com_facebook_logout_text="@string/logout" />
 </LinearLayout>

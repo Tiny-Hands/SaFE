@@ -6,6 +6,7 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:fontFamily">@font/sans_regular</item>
     </style>
 
     <style name="TitleText" parent="TextAppearance.Widget.AppCompat.Toolbar.Title">
@@ -20,6 +21,13 @@
 
     <style name="editTextBackground" parent="Widget.AppCompat.EditText">
         <item name="android:background">@drawable/bg_edittext</item>
+    </style>
+
+    <style name="FacebookLoginButton">
+        <item name="android:background">@drawable/facebook_button_bg</item>
+        <item name="android:layout_marginTop">10dp</item>
+        <item name="android:layout_marginBottom">10dp</item>
+        <item name="android:layout_gravity">center_horizontal</item>
     </style>
 
 </resources>
