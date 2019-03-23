@@ -172,7 +172,6 @@ public class ActivityOTPVerification extends AppCompatActivity implements View.O
                         editor.putInt(SharedPrefKeys.userId, id);
                         editor.apply();
                         startMigrantActivity();
-
                     } else
                         registerUser(apiUserRegister);
                 } else
@@ -301,7 +300,8 @@ public class ActivityOTPVerification extends AppCompatActivity implements View.O
                 params.put("age", age);
                 params.put("user_img", userImg);
                 params.put("gender", gender);
-                params.put("user_id", ApplicationClass.getInstance().getUserId() + "");
+                params.put("user_type", uType);
+                //params.put("user_id", ApplicationClass.getInstance().getUserId() + "");
                 return params;
             }
         };
@@ -330,13 +330,13 @@ public class ActivityOTPVerification extends AppCompatActivity implements View.O
                 if (uType.equalsIgnoreCase(SharedPrefKeys.migrantUser)) {
                     //ApplicationClass.getInstance().setUserId(-1);
                     editor.putString(SharedPrefKeys.userType, SharedPrefKeys.migrantUser);
-                    int mig_id = jsonResponse.getInt("migrant_id");
+                    //int mig_id = jsonResponse.getInt("migrant_id");
                     int user_id = jsonResponse.getInt("user_id");
-                    Log.d("mylog", "Migrant ID: " + mig_id);
-                    ApplicationClass.getInstance().setMigrantId(mig_id);
+                    Log.d("mylog", "Migrant ID: " + user_id);
+                    ApplicationClass.getInstance().setMigrantId(user_id);
                     ApplicationClass.getInstance().setUserId(user_id);
                     editor.putInt(SharedPrefKeys.userId, user_id);
-                    editor.putInt(SharedPrefKeys.defMigID, mig_id);
+                    editor.putInt(SharedPrefKeys.defMigID, user_id);
 
                     //If migrant is already saved and has added a new migrant then don't save again
                     if (sharedPreferences.getString(SharedPrefKeys.userName, "").length() >= 1) {
@@ -351,8 +351,8 @@ public class ActivityOTPVerification extends AppCompatActivity implements View.O
                     Calendar cal = Calendar.getInstance();
                     String time = cal.getTimeInMillis() + "";
                     new SQLDatabaseHelper(ActivityOTPVerification.this).insertResponseTableData(gender, SharedPrefKeys.questionGender, -1,
-                            mig_id, "mg_sex", time);
-                    new SQLDatabaseHelper(ActivityOTPVerification.this).insertMigrants(mig_id, name, Integer.parseInt(age), phoneNumber, gender, user_id, userImg, 0);
+                            user_id, "mg_sex", time);
+                    new SQLDatabaseHelper(ActivityOTPVerification.this).insertMigrants(user_id, name, Integer.parseInt(age), phoneNumber, gender, user_id, userImg, 0);
                     startMigrantActivity();
 
                     return;
