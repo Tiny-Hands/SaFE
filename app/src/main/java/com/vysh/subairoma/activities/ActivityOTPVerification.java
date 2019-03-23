@@ -332,11 +332,13 @@ public class ActivityOTPVerification extends AppCompatActivity implements View.O
                     editor.putString(SharedPrefKeys.userType, SharedPrefKeys.migrantUser);
                     //int mig_id = jsonResponse.getInt("migrant_id");
                     int user_id = jsonResponse.getInt("user_id");
+                    String token = jsonResponse.getString("token");
                     Log.d("mylog", "Migrant ID: " + user_id);
                     ApplicationClass.getInstance().setMigrantId(user_id);
                     ApplicationClass.getInstance().setUserId(user_id);
                     editor.putInt(SharedPrefKeys.userId, user_id);
                     editor.putInt(SharedPrefKeys.defMigID, user_id);
+                    editor.putString(SharedPrefKeys.token, token);
 
                     //If migrant is already saved and has added a new migrant then don't save again
                     if (sharedPreferences.getString(SharedPrefKeys.userName, "").length() >= 1) {
