@@ -8,49 +8,44 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@color/colorPrimary"
         android:gravity="center"
         android:padding="@dimen/medium_margin"
         android:text="@string/choose_one"
         android:textAllCaps="true"
-        android:textSize="16sp"
-        android:textStyle="bold" />
+        android:textColor="@android:color/white"
+        android:textSize="@dimen/inner_dialog_title_text_size" />
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_marginBottom="@dimen/default_margin"
-        android:background="@color/colorPrimaryDark" />
 
     <RadioGroup
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="24dp"
-        android:layout_marginStart="24dp">
+        android:layout_marginTop="@dimen/default_margin">
 
         <RadioButton
             android:id="@+id/rbMigrant"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textStyle="bold"
             android:layout_marginBottom="@dimen/small_margin"
+            android:paddingLeft="@dimen/small_margin"
             android:text="@string/aspiringmigrant"
-            android:textSize="16sp" />
+            android:textStyle="bold" />
 
         <RadioButton
             android:id="@+id/rbHelper"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textStyle="bold"
+            android:paddingLeft="@dimen/small_margin"
             android:text="@string/helper"
-            android:textSize="16sp" />
+            android:textStyle="bold" />
     </RadioGroup>
 
     <Button
         android:id="@+id/btnChosen"
-        android:layout_width="match_parent"
+        android:layout_width="@dimen/dialog_edittext_width"
         android:layout_height="36dp"
-        android:layout_marginTop="@dimen/default_margin"
-        android:background="@drawable/default_button_accent"
+        android:layout_margin="@dimen/default_margin"
+        android:background="@drawable/default_rounded_button"
         android:text="@string/next"
         android:textColor="@android:color/white" />
 </LinearLayout>

@@ -2,7 +2,7 @@
 <resources>
     <dimen name="back_btn_size">20dp</dimen>
     <dimen name="info_desc_text">16sp</dimen>
-    <dimen name="outer_title_text_size">28sp</dimen>
+    <dimen name="outer_dialog_title_text_size">28sp</dimen>
     <!-- Component View -->
     <dimen name="card_view_imageview_dimen">42dp</dimen>
     <dimen name="card_view_tile_radius">6dp</dimen>
@@ -58,4 +58,5 @@
     <dimen name="default_edittext_corner_radius">16dp</dimen>
     <dimen name="dialog_edittext_width">296dp</dimen>
     <dimen name="dialog_button_height">34dp</dimen>
+    <dimen name="inner_dialog_title_text_size">20sp</dimen>
 </resources>
