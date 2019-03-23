@@ -20,6 +20,7 @@ import android.widget.Toast;
 
 import com.vysh.subairoma.ApplicationClass;
 import com.vysh.subairoma.R;
+import com.vysh.subairoma.SharedPrefKeys;
 import com.vysh.subairoma.activities.ActivityRegister;
 
 /**
@@ -41,25 +42,22 @@ public class DialogUsertypeChooser extends DialogFragment {
         btnChosen.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                int uType = -1;
                 if (rbHelper.isChecked()) {
-                    uType = 1;
-                    ApplicationClass.getInstance().setUserType(1);
+                    ApplicationClass.getInstance().setUserType(SharedPrefKeys.helperUser);
                     if (activityRegister == null)
                         activityRegister = (ActivityRegister) getActivity();
-                    activityRegister.userType = uType;
-                    activityRegister.showDisclaimerDialog();
+                    activityRegister.userType = SharedPrefKeys.helperUser;
+                    activityRegister.showDisclaimerAndContinue();
                 } else if (rbMigrant.isChecked()) {
-                    uType = 0;
-                    ApplicationClass.getInstance().setUserType(0);
-                    showHelperDialog(uType);
+                    ApplicationClass.getInstance().setUserType(SharedPrefKeys.migrantUser);
+                    showHelperDialog(SharedPrefKeys.migrantUser);
                 }
             }
         });
         return view;
     }
 
-    private void showHelperDialog(final int uType) {
+    private void showHelperDialog(final String uType) {
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getActivity());
         LayoutInflater inflater = activityRegister.getLayoutInflater();
         final View dialogView = inflater.inflate(R.layout.dialog_edittext, null);
@@ -82,7 +80,7 @@ public class DialogUsertypeChooser extends DialogFragment {
                     if (activityRegister == null)
                         activityRegister = (ActivityRegister) getActivity();
                     activityRegister.userType = uType;
-                    activityRegister.showDisclaimerDialog();
+                    activityRegister.showDisclaimerAndContinue();
                 } else {
                     etName.setError("Please enter a valid name");
                 }
@@ -94,7 +92,7 @@ public class DialogUsertypeChooser extends DialogFragment {
                 if (activityRegister == null)
                     activityRegister = (ActivityRegister) getActivity();
                 activityRegister.userType = uType;
-                activityRegister.showDisclaimerDialog();
+                activityRegister.showDisclaimerAndContinue();
             }
         });
         AlertDialog b = dialogBuilder.create();

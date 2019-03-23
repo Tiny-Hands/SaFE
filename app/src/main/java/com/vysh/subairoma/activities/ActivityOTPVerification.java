@@ -1,6 +1,5 @@
 package com.vysh.subairoma.activities;
 
-import android.app.Application;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -52,7 +51,7 @@ public class ActivityOTPVerification extends AppCompatActivity implements View.O
     long lastTime;
 
     final String apiOTP = "/twiliosender.php";
-    final String apiURLHelper = "/saveuser.php";
+    final String apiSaveUser = "/saveuser.php";
     final String apiURLMigrant = "/savemigrant.php";
 
     @BindView(R.id.btnVerify)
@@ -68,7 +67,7 @@ public class ActivityOTPVerification extends AppCompatActivity implements View.O
 
     String apiUserRegister;
     String name, phoneNumber, age, gender, userImg;
-    int uType;
+    String uType;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -96,11 +95,9 @@ public class ActivityOTPVerification extends AppCompatActivity implements View.O
         age = intent.getStringExtra("age");
         userImg = intent.getStringExtra("userImg");
         gender = intent.getStringExtra("gender");
-        uType = intent.getIntExtra("userType", -10);
-        if (uType == 0) {
-            apiUserRegister = ApplicationClass.getInstance().getAPIROOT() + apiURLMigrant;
-        } else
-            apiUserRegister = ApplicationClass.getInstance().getAPIROOT() + apiURLHelper;
+        uType = intent.getStringExtra("userType");
+
+        apiUserRegister = ApplicationClass.getInstance().getAPIROOT() + apiSaveUser;
         if (InternetConnectionChecker.isNetworkConnected(ActivityOTPVerification.this)) {
             //Sending the OTP To the mentioned number;
             lastTime = System.currentTimeMillis();
@@ -110,12 +107,12 @@ public class ActivityOTPVerification extends AppCompatActivity implements View.O
 
     }
 
-    private void saveUserLocally(int uType) {
+    private void saveUserLocally(String uType) {
         SharedPreferences sp = getSharedPreferences(SharedPrefKeys.sharedPrefName, MODE_PRIVATE);
         //Parse Other responses and save in SharedPref
         SharedPreferences.Editor editor = sp.edit();
         int user_id = -111;
-        if (uType == 1) {
+        if (uType.equalsIgnoreCase(SharedPrefKeys.helperUser)) {
             ApplicationClass.getInstance().setUserId(user_id);
             editor.putString(SharedPrefKeys.userName, name);
             editor.putInt(SharedPrefKeys.userId, user_id);
@@ -123,7 +120,7 @@ public class ActivityOTPVerification extends AppCompatActivity implements View.O
             editor.putString(SharedPrefKeys.userSex, gender);
             editor.putString(SharedPrefKeys.userAge, age);
             editor.putString(SharedPrefKeys.userImg, userImg);
-            editor.putString(SharedPrefKeys.userType, "helper");
+            editor.putString(SharedPrefKeys.userType, SharedPrefKeys.helperUser);
             editor.commit();
             Intent intent = new Intent(ActivityOTPVerification.this, ActivityRegister.class);
             intent.putExtra("migrantmode", true);
@@ -137,7 +134,7 @@ public class ActivityOTPVerification extends AppCompatActivity implements View.O
             //Getting id to save in corresponding real local DB
             int fabMigId = Integer.parseInt("-1" + mid);
 
-            editor.putString(SharedPrefKeys.userType, "migrant");
+            editor.putString(SharedPrefKeys.userType, SharedPrefKeys.migrantUser);
             Log.d("mylog", "Migrant ID: " + fabMigId);
             ApplicationClass.getInstance().setMigrantId(fabMigId);
             ApplicationClass.getInstance().setUserId(user_id);
@@ -152,7 +149,6 @@ public class ActivityOTPVerification extends AppCompatActivity implements View.O
                     Integer.parseInt(age), phoneNumber, gender, ApplicationClass.getInstance().getUserId(), userImg, 0);
 
             new SQLDatabaseHelper(ActivityOTPVerification.this).insertResponseTableData(gender, SharedPrefKeys.questionGender, -1, fabMigId, "mg_sex", time);
-
 
             //Do Next Step Now
             startMigrantActivity();
@@ -174,7 +170,7 @@ public class ActivityOTPVerification extends AppCompatActivity implements View.O
                             id = ApplicationClass.getInstance().getMigrantId();
                         Log.d("mylog", "Saving: " + id);
                         editor.putInt(SharedPrefKeys.userId, id);
-                        editor.commit();
+                        editor.apply();
                         startMigrantActivity();
 
                     } else
@@ -232,7 +228,6 @@ public class ActivityOTPVerification extends AppCompatActivity implements View.O
             public void onResponse(String response) {
                 progressDialog.dismiss();
                 Log.d("mylog", "response : " + response);
-                //parseResponse(response);
             }
         }, new Response.ErrorListener() {
             @Override
@@ -332,9 +327,9 @@ public class ActivityOTPVerification extends AppCompatActivity implements View.O
             if (!error) {
                 SharedPreferences sharedPreferences = getSharedPreferences(SharedPrefKeys.sharedPrefName, MODE_PRIVATE);
                 SharedPreferences.Editor editor = sharedPreferences.edit();
-                if (uType == 0) {
+                if (uType.equalsIgnoreCase(SharedPrefKeys.migrantUser)) {
                     //ApplicationClass.getInstance().setUserId(-1);
-                    editor.putString(SharedPrefKeys.userType, "migrant");
+                    editor.putString(SharedPrefKeys.userType, SharedPrefKeys.migrantUser);
                     int mig_id = jsonResponse.getInt("migrant_id");
                     int user_id = jsonResponse.getInt("user_id");
                     Log.d("mylog", "Migrant ID: " + mig_id);
@@ -364,8 +359,6 @@ public class ActivityOTPVerification extends AppCompatActivity implements View.O
                 }
                 //Means the registered person was Helper
                 else {
-                    //startOTPActivity();
-
                     int user_id = jsonResponse.getInt("user_id");
                     Log.d("mylog", "Saving user ID: " + user_id);
 
@@ -381,7 +374,7 @@ public class ActivityOTPVerification extends AppCompatActivity implements View.O
                     editor.putString(SharedPrefKeys.userPhone, phoneNumber);
                     editor.putString(SharedPrefKeys.userSex, gender);
                     editor.putString(SharedPrefKeys.userAge, age);
-                    editor.putString(SharedPrefKeys.userType, "helper");
+                    editor.putString(SharedPrefKeys.userType, SharedPrefKeys.helperUser);
                     editor.commit();
 
                     Intent intent = new Intent(ActivityOTPVerification.this, ActivityRegister.class);

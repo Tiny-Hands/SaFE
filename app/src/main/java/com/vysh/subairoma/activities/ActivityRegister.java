@@ -9,18 +9,15 @@ import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.design.widget.Snackbar;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.system.Os;
 import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -83,7 +80,6 @@ public class ActivityRegister extends AppCompatActivity {
     final String apiAlreadyRegistered = "/checkphonenumber.php";
     private final String APIGETMIG = "/getmigrants.php";
     private int gotDetailCount = 0;
-    final String MIGRANTUSER = "migrant", HELPERUSER = "helper";
 
     private final int REQUEST_SELECT_FILE = 1;
     private final int REQUEST_TAKE_PIC = 0;
@@ -96,7 +92,7 @@ public class ActivityRegister extends AppCompatActivity {
     //Usertype = 0 for Helper and 1 for migrant. Order is reversed in Dialogs and Other Methods.
     public String userType;
     Boolean userRegistered = false;
-    boolean fromPhone = false;
+    boolean loggedInFromPhone = false;
     String sex = "male";
     public String entered_phone = "";
 
@@ -132,7 +128,7 @@ public class ActivityRegister extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_register);
+
         //Checking if already logged in on current device
         if (checkUserExists() && !getIntent().hasExtra("migrantmode")) {
             Log.d("mylog", "Open Activity");
@@ -141,14 +137,18 @@ public class ActivityRegister extends AppCompatActivity {
             startActivity(intent);
             return;
         }
-        ButterKnife.bind(this);
-        setUpComponentListeners();
+        //Setting View
+        setContentView(R.layout.activity_register);
+
+        //Checking if user is registering a new migrant
         if (getIntent().hasExtra("migrantmode")) {
             userRegistered = true;
             Log.d("mylog", "Loading migrant view");
             loadMigrantView();
         }
 
+        ButterKnife.bind(this);
+        setUpComponentListeners();
         callbackManager = CallbackManager.Factory.create();
     }
 
@@ -233,10 +233,10 @@ public class ActivityRegister extends AppCompatActivity {
                     JSONObject jsonRes = new JSONObject(response);
                     boolean error = jsonRes.getBoolean("error");
                     if (error) {
-                        showSnackbar(jsonRes.getString("message"));
+                        Toast.makeText(ActivityRegister.this, jsonRes.getString("message"), Toast.LENGTH_SHORT).show();
                         return;
                     } else {
-                        fromPhone = true;
+                        loggedInFromPhone = true;
                         getLoggedInUserDetails(jsonRes);
                         //Gets Migrant Details and Saves in DB regardless of User Type
                         getMigrants();
@@ -253,9 +253,10 @@ public class ActivityRegister extends AppCompatActivity {
                 String err = error.toString();
                 Log.d("mylog", "error : " + err);
                 if (!err.isEmpty() && err.contains("TimeoutError"))
-                    showSnackbar(getResources().getString(R.string.server_noconnect));
+
+                    Toast.makeText(ActivityRegister.this, getString(R.string.server_noconnect), Toast.LENGTH_SHORT).show();
                 else
-                    showSnackbar(error.toString());
+                    Toast.makeText(ActivityRegister.this, error.toString(), Toast.LENGTH_SHORT).show();
             }
         })
 
@@ -287,7 +288,7 @@ public class ActivityRegister extends AppCompatActivity {
             SharedPreferences.Editor editor = sharedPreferences.edit();
             //Not saving here as OTP is still not entered, send to OTP Activity and save there
             //editor.putInt(SharedPrefKeys.userId, id);
-            if (!fromPhone)
+            if (!loggedInFromPhone)
                 editor.putInt(SharedPrefKeys.userId, id);
             ApplicationClass.getInstance().setUserId(id);
             if (userType == 1) {
@@ -370,7 +371,7 @@ public class ActivityRegister extends AppCompatActivity {
                     else if (!err.isEmpty() && err.contains("NoConnection")) {
                         Toast.makeText(ActivityRegister.this, getResources().getString(R.string.server_noconnect), Toast.LENGTH_SHORT).show();
                     } else
-                        showSnackbar(error.toString());
+                        Toast.makeText(ActivityRegister.this, error.toString(), Toast.LENGTH_SHORT).show();
                 } catch (Exception ex) {
                     Log.d("mylog", "Error exception: " + ex.toString());
                 }
@@ -540,7 +541,7 @@ public class ActivityRegister extends AppCompatActivity {
         });
     }
 
-    private void showDisclaimerAndContinue() {
+    public void showDisclaimerAndContinue() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         View view = LayoutInflater.from(this).inflate(R.layout.dialog_disclaimer, null);
         TextView msg = view.findViewById(R.id.tvDisclaimerContent);
@@ -548,7 +549,7 @@ public class ActivityRegister extends AppCompatActivity {
         builder.setPositiveButton(getResources().getString(R.string.disclaimer_button), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                if (userType.equalsIgnoreCase(HELPERUSER)) {
+                if (userType.equalsIgnoreCase(SharedPrefKeys.helperUser)) {
                     //If it's a helper user registering a migrant, then no need to redirect to OTPActivity,
                     //But Register and then redirect to migrant list.
                     if (userRegistered) {
@@ -578,14 +579,14 @@ public class ActivityRegister extends AppCompatActivity {
                     } else {
                         startOTPActivity(userType, 0);
                     }
-                } else if (userType == MIGRANTUSER) {
+                } else if (userType == SharedPrefKeys.initialuser) {
                     startOTPActivity(userType, 0);
                 }
             }
         });
 
         String text = "";
-        if (userType == MIGRANTUSER)
+        if (userType == SharedPrefKeys.migrantUser)
             text = getString(R.string.disclaimerMigrant);
         else
             text = getString(R.string.disclaimerHelper);
@@ -594,10 +595,9 @@ public class ActivityRegister extends AppCompatActivity {
     }
 
     private void startOTPActivity(String uType, int otpType) {
-        //uType = 0 for Migrant, 1 for helper
         //otpType = 1 if logging in
         if (otpType == 1) {
-            if (!fromPhone) {
+            if (!loggedInFromPhone) {
                 startMigrantistActivity();
                 return;
             }
@@ -618,9 +618,7 @@ public class ActivityRegister extends AppCompatActivity {
     }
 
     private void registerMigrant(String api) {
-        Log.d("mylog", "API called: " + api);
         final ProgressDialog progressDialog = new ProgressDialog(ActivityRegister.this);
-        //progressDialog.setTitle("Please wait");
         progressDialog.setMessage(getResources().getString(R.string.registering));
         progressDialog.setCancelable(false);
         progressDialog.show();
@@ -637,7 +635,7 @@ public class ActivityRegister extends AppCompatActivity {
                 progressDialog.dismiss();
                 String err = error.toString();
                 Log.d("mylog", "error : " + err);
-                showSnackbar(getString(R.string.server_noconnect));
+                Toast.makeText(ActivityRegister.this, getString(R.string.server_noconnect), Toast.LENGTH_SHORT).show();
             }
         }) {
             @Override
@@ -680,7 +678,7 @@ public class ActivityRegister extends AppCompatActivity {
                 startActivity(intent);
             } else {
                 String message = jsonObject.getString("message");
-                showSnackbar(message);
+                Toast.makeText(ActivityRegister.this, message, Toast.LENGTH_LONG).show();
             }
         } catch (JSONException e) {
             Log.d("mylog", "Error in parsing migrant result: " + e.toString());
@@ -693,7 +691,7 @@ public class ActivityRegister extends AppCompatActivity {
             JSONObject jsonObject = new JSONObject(response);
             Boolean error = jsonObject.getBoolean("error");
             if (error) {
-                showSnackbar(jsonObject.getString("message"));
+                Toast.makeText(ActivityRegister.this, jsonObject.getString("message"), Toast.LENGTH_SHORT).show();
             } else {
                 JSONArray migrantJSON = jsonObject.getJSONArray("migrants");
                 if (migrantJSON != null) {
@@ -733,23 +731,6 @@ public class ActivityRegister extends AppCompatActivity {
             Log.d("mylog", "Error in parsing: " + e.toString());
         }
         return migrantModelsTemp;
-    }
-
-    public void showSnackbar(String msg) {
-        Snackbar snack = Snackbar.make(rootLayout, msg, Snackbar.LENGTH_LONG);
-        View view = snack.getView();
-        TextView tv = view.findViewById(android.support.design.R.id.snackbar_text);
-        tv.setTextColor(Color.WHITE);
-        if (Build.VERSION.SDK_INT >= 17)
-            tv.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
-        snack.show();
-    }
-
-    public void showDisclaimerDialog() {
-      /*  if (userType == 0)
-            showErrorDialog();
-        else*/
-        showDisclaimerAndContinue();
     }
 
     private boolean validateData() {
@@ -799,16 +780,16 @@ public class ActivityRegister extends AppCompatActivity {
                 saveUserToServer();
                 return false;
             } else {
-                if (type.equalsIgnoreCase("helper")) {
+                if (type.equalsIgnoreCase(SharedPrefKeys.helperUser)) {
                     Log.d("mylog", "User already exists with ID: " + userId);
-                    userType = HELPERUSER;
+                    userType = SharedPrefKeys.helperUser;
                     ApplicationClass.getInstance().setUserId(userId);
-                    ApplicationClass.getInstance().setUserType(1);
+                    ApplicationClass.getInstance().setUserType(SharedPrefKeys.helperUser);
                 } else {
                     Log.d("mylog", "Migrant already exists, Setting user ID: ");
                     //ApplicationClass.getInstance().setMigrantId(userId);
-                    userType = MIGRANTUSER;
-                    ApplicationClass.getInstance().setUserType(0);
+                    userType = SharedPrefKeys.migrantUser;
+                    ApplicationClass.getInstance().setUserType(SharedPrefKeys.migrantUser);
                     ApplicationClass.getInstance().setUserId(userId);
                     ApplicationClass.getInstance().setMigrantId(sharedPreferences.getInt(SharedPrefKeys.defMigID, -1));
                 }
@@ -850,9 +831,9 @@ public class ActivityRegister extends AppCompatActivity {
                     JSONObject jsonRes = new JSONObject(response);
                     boolean error = jsonRes.getBoolean("error");
                     if (error) {
-                        showSnackbar(jsonRes.getString("message"));
+                        Toast.makeText(ActivityRegister.this, jsonRes.getString("message"), Toast.LENGTH_SHORT).show();
                     } else {
-                        fromPhone = false;
+                        loggedInFromPhone = false;
                         getLoggedInUserDetails(jsonRes);
                         //Gets Migrant Details and Saves in DB regardless of User Type
                         //getMigrantDetails();
@@ -870,9 +851,9 @@ public class ActivityRegister extends AppCompatActivity {
                 String err = error.toString();
                 Log.d("mylog", "error : " + err);
                 if (!err.isEmpty() && err.contains("TimeoutError"))
-                    showSnackbar(getResources().getString(R.string.server_noconnect));
+                    Toast.makeText(ActivityRegister.this, getString(R.string.server_noconnect), Toast.LENGTH_SHORT).show();
                 else
-                    showSnackbar(error.toString());
+                    Toast.makeText(ActivityRegister.this, error.toString(), Toast.LENGTH_SHORT).show();
             }
         }) {
             @Override
@@ -897,7 +878,7 @@ public class ActivityRegister extends AppCompatActivity {
 
     public void getAllResponses(final String uType) {
         String api;
-        if (uType.equalsIgnoreCase(MIGRANTUSER))
+        if (uType.equalsIgnoreCase(SharedPrefKeys.migrantUser))
             api = ApplicationClass.getInstance().getAPIROOT() + apiGetAllResponses;
         else
             api = ApplicationClass.getInstance().getAPIROOT() + apiGetResponses;
@@ -939,7 +920,7 @@ public class ActivityRegister extends AppCompatActivity {
             protected Map<String, String> getParams() throws AuthFailureError {
                 HashMap<String, String> params = new HashMap<>();
                 params.put("user_id", ApplicationClass.getInstance().getUserId() + "");
-                if (uType.equalsIgnoreCase(MIGRANTUSER))
+                if (uType.equalsIgnoreCase(SharedPrefKeys.migrantUser))
                     params.put("migrant_id", ApplicationClass.getInstance().getMigrantId() + "");
                 return params;
             }

@@ -107,7 +107,6 @@ public class ActivitySplash extends AppCompatActivity {
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);
             return;
-            //return;
         }
         if (sp.getString(SharedPrefKeys.lang, "").equalsIgnoreCase("en")) {
             setLocale("en");
@@ -282,6 +281,13 @@ public class ActivitySplash extends AppCompatActivity {
             protected Map<String, String> getParams() throws AuthFailureError {
                 return fParams;
             }
+
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                HashMap<String, String> headers = new HashMap<>();
+                headers.put("Authorization", ApplicationClass.getInstance().getAppToken());
+                return headers;
+            }
         };
         ;
         RequestQueue queue = Volley.newRequestQueue(ActivitySplash.this);
@@ -310,6 +316,13 @@ public class ActivitySplash extends AppCompatActivity {
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
                 return fParams;
+            }
+
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                HashMap<String, String> headers = new HashMap<>();
+                headers.put("Authorization", ApplicationClass.getInstance().getAppToken());
+                return headers;
             }
         };
         RequestQueue queue = Volley.newRequestQueue(ActivitySplash.this);
@@ -347,6 +360,13 @@ public class ActivitySplash extends AppCompatActivity {
             protected Map<String, String> getParams() throws AuthFailureError {
                 return fParams;
             }
+
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                HashMap<String, String> headers = new HashMap<>();
+                headers.put("Authorization", ApplicationClass.getInstance().getAppToken());
+                return headers;
+            }
         };
         RequestQueue queue = Volley.newRequestQueue(ActivitySplash.this);
         queue.add(getRequest);
@@ -374,6 +394,13 @@ public class ActivitySplash extends AppCompatActivity {
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
                 return fParams;
+            }
+
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                HashMap<String, String> headers = new HashMap<>();
+                headers.put("Authorization", ApplicationClass.getInstance().getAppToken());
+                return headers;
             }
         };
         RequestQueue queue = Volley.newRequestQueue(ActivitySplash.this);
@@ -403,6 +430,13 @@ public class ActivitySplash extends AppCompatActivity {
             protected Map<String, String> getParams() throws AuthFailureError {
                 return fParams;
             }
+
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                HashMap<String, String> headers = new HashMap<>();
+                headers.put("Authorization", ApplicationClass.getInstance().getAppToken());
+                return headers;
+            }
         };
         RequestQueue queue = Volley.newRequestQueue(ActivitySplash.this);
         queue.add(getRequest);
@@ -426,7 +460,14 @@ public class ActivitySplash extends AppCompatActivity {
                 Log.d("mylog", "Error getting manpowers: " + error.toString());
                 showErrorResponse();
             }
-        });
+        }) {
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                HashMap<String, String> headers = new HashMap<>();
+                headers.put("Authorization", ApplicationClass.getInstance().getAppToken());
+                return headers;
+            }
+        };
         RequestQueue queue = Volley.newRequestQueue(ActivitySplash.this);
         queue.add(getRequest);
     }
@@ -453,6 +494,13 @@ public class ActivitySplash extends AppCompatActivity {
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
                 return fParams;
+            }
+
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                HashMap<String, String> headers = new HashMap<>();
+                headers.put("Authorization", ApplicationClass.getInstance().getAppToken());
+                return headers;
             }
         };
         RequestQueue queue = Volley.newRequestQueue(ActivitySplash.this);

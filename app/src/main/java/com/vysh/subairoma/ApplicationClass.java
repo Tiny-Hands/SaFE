@@ -13,9 +13,10 @@ import io.fabric.sdk.android.Fabric;
 public class ApplicationClass extends Application {
 
     ///private final String APIROOT = "http://192.168.1.25";
+    private final String appTOKEN = "aswqssaadwz1234fs3sqwawf456v";
     private final String APIROOT = "http://subairoma-mysql.azurewebsites.net";
     private int userId = -1, migrantId = -1;
-    private int userType;
+    private String userType;
     private static ApplicationClass mInstance;
 
     public static ApplicationClass getInstance() {
@@ -26,11 +27,11 @@ public class ApplicationClass extends Application {
         return APIROOT;
     }
 
-    public int getUserType() {
+    public String getUserType() {
         return userType;
     }
 
-    public void setUserType(int userType) {
+    public void setUserType(String userType) {
         this.userType = userType;
     }
 
@@ -48,6 +49,10 @@ public class ApplicationClass extends Application {
 
     public void setMigrantId(int migrantId) {
         this.migrantId = migrantId;
+    }
+
+    public String getAppToken() {
+        return appTOKEN;
     }
 
     @Override

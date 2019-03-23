@@ -28,6 +28,11 @@ public final class SharedPrefKeys {
     public static String lang = "lang";
     public static String initialuser = "isinitialuser";
 
+
+    //For Shared Pref Values
+    public static String migrantUser = "migrant";
+    public static String helperUser = "helper";
+
     //Not for shared prefrences but for questions not in tiles
     public static int questionGender = -2;
     public static int questionCountryId = -1;
