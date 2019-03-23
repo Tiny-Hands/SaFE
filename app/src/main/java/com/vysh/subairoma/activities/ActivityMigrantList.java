@@ -76,6 +76,7 @@ public class ActivityMigrantList extends AppCompatActivity implements RecyclerIt
     final String apiURLMigrant = "/savemigrant.php";
     final String apiURLMigrantPercent = "/updatepercentcomplete.php";
     private final int REQUEST_LOCATION = 1;
+    private String userToken;
 
     @BindView(R.id.rvMigrants)
     RecyclerView recyclerView;
@@ -125,6 +126,7 @@ public class ActivityMigrantList extends AppCompatActivity implements RecyclerIt
         });
 
         navView = findViewById(R.id.nav_view);
+        userToken = getSharedPreferences(SharedPrefKeys.sharedPrefName, MODE_PRIVATE).getString(SharedPrefKeys.token, "");
         setUpNavigationButtons();
         setUpListeners();
     }
@@ -165,12 +167,14 @@ public class ActivityMigrantList extends AppCompatActivity implements RecyclerIt
                         drawerLayout.closeDrawer(GravityCompat.END);
                         startActivity(intentAbout);
                         break;
-                    case R.id.nav_contact: Intent intentContact = new Intent(ActivityMigrantList.this, ActivityAboutUs.class);
+                    case R.id.nav_contact:
+                        Intent intentContact = new Intent(ActivityMigrantList.this, ActivityAboutUs.class);
                         intentContact.putExtra("contact", true);
                         drawerLayout.closeDrawer(GravityCompat.END);
                         startActivity(intentContact);
                         break;
-                    case R.id.nav_faq: Intent intentFaq = new Intent(ActivityMigrantList.this, ActivityAboutUs.class);
+                    case R.id.nav_faq:
+                        Intent intentFaq = new Intent(ActivityMigrantList.this, ActivityAboutUs.class);
                         intentFaq.putExtra("faq", true);
                         drawerLayout.closeDrawer(GravityCompat.END);
                         startActivity(intentFaq);
@@ -216,6 +220,13 @@ public class ActivityMigrantList extends AppCompatActivity implements RecyclerIt
                         params.put("migrant_id", currModel.getMigrantId() + "");
                         params.put("percent_complete", currModel.getPercentComp() + "");
                         return params;
+                    }
+
+                    @Override
+                    public Map<String, String> getHeaders() throws AuthFailureError {
+                        HashMap<String, String> headers = new HashMap<>();
+                        headers.put("Authorization", userToken);
+                        return headers;
                     }
                 };
                 saveRequest.setRetryPolicy(new DefaultRetryPolicy(20 * 1000, 0, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
@@ -334,6 +345,12 @@ public class ActivityMigrantList extends AppCompatActivity implements RecyclerIt
                 params.put("user_id", user_id + "");
                 params.put("migrant_id", mig_id + "");
                 return params;
+            }
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                HashMap<String, String> headers = new HashMap<>();
+                headers.put("Authorization", userToken);
+                return headers;
             }
         };
         RequestQueue queue = Volley.newRequestQueue(ActivityMigrantList.this);
@@ -639,6 +656,12 @@ public class ActivityMigrantList extends AppCompatActivity implements RecyclerIt
                 params.put("migrant_id", migId + "");
                 params.put("inactive_date", deactivateTime);
                 return params;
+            }
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                HashMap<String, String> headers = new HashMap<>();
+                headers.put("Authorization", userToken);
+                return headers;
             }
         };
         queue.add(getRequest);
