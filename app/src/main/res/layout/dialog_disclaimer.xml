@@ -12,14 +12,18 @@
         android:gravity="center"
         android:padding="@dimen/small_margin"
         android:text="@string/disclaimer_title"
-        android:textSize="@dimen/error_dialog_title_text_size" />
+        android:textColor="@color/colorPrimary"
+        android:textSize="@dimen/inner_dialog_title_text_size"
+        android:textStyle="bold" />
 
     <TextView
         android:id="@+id/tvDisclaimerContent"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:lineSpacingExtra="1dp"
+        android:layout_marginTop="@dimen/small_margin"
+        android:lineSpacingExtra="@dimen/default_line_spacing"
         android:paddingLeft="@dimen/medium_margin"
         android:paddingRight="@dimen/medium_margin"
+        android:text="fdskhfksdjfsdkljdsl"
         android:textSize="16sp" />
 </LinearLayout>
