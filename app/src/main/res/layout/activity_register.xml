@@ -10,7 +10,7 @@
         android:id="@+id/backdrop"
         android:layout_width="match_parent"
         android:layout_height="148dp"
-        android:background="@color/colorPrimaryDark" />
+        android:background="@color/colorPrimary" />
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
@@ -36,8 +36,8 @@
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
                 android:text="@string/register"
-                android:textColor="#fff"
-                android:textStyle="bold" />
+                android:textAllCaps="true"
+                android:textColor="#fff" />
 
         </RelativeLayout>
     </android.support.v7.widget.Toolbar>
@@ -48,9 +48,8 @@
         android:layout_height="@dimen/backdrop_circle_image"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="84dp"
-        android:scaleType="centerCrop"
         android:src="@drawable/ic_upload_user"
-        app:civ_border_color="#fff"
+        app:civ_border_color="@android:color/white"
         app:civ_border_width="2dp" />
 
     <ScrollView
@@ -183,7 +182,7 @@
                 android:id="@+id/btnNext"
                 android:layout_width="@dimen/default_button_width"
                 android:layout_height="@dimen/default_button_height"
-                android:layout_marginTop="@dimen/medium_margin"
+                android:layout_marginTop="@dimen/default_margin"
                 android:background="@drawable/default_rounded_button"
                 android:text="@string/next"
                 android:textColor="#fff" />
