@@ -8,7 +8,7 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="166dp"
-        android:background="@color/colorPrimaryDark" />
+        android:background="@color/colorPrimary" />
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
@@ -19,15 +19,15 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <com.vysh.subairoma.utils.CustomTextView
+            <TextView
                 android:id="@+id/tvTitle"
                 style="@style/TitleText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
                 android:text="@string/verify_phone"
-                android:textColor="#fff"
-                app:fonts="gotham_bold.ttf" />
+                android:textAllCaps="true"
+                android:textColor="#fff" />
         </RelativeLayout>
     </android.support.v7.widget.Toolbar>
 
@@ -45,6 +45,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/ivOTP"
         android:gravity="center"
+        android:lineSpacingExtra="@dimen/default_line_spacing"
         android:padding="16dp"
         android:text="@string/opt_message"
         app:fonts="gotham_light.ttf" />
@@ -55,22 +56,23 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/tvOPtMessage"
         android:layout_centerHorizontal="true"
-        android:inputType="number"
-        android:imeOptions="actionDone"
         android:layout_marginEnd="@dimen/default_margin"
         android:layout_marginStart="@dimen/default_margin"
+        android:background="@drawable/bg_edittext"
         android:hint="@string/code"
+        android:imeOptions="actionDone"
+        android:inputType="number"
         android:padding="8dp" />
 
     <com.vysh.subairoma.utils.CustomTextView
-        android:layout_marginTop="@dimen/default_margin"
         android:id="@+id/noOtpMsg"
-        app:fonts="gotham_medium.ttf"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/etCode"
         android:layout_centerHorizontal="true"
-        android:text="@string/no_otp_receiption" />
+        android:layout_marginTop="@dimen/default_margin"
+        android:text="@string/no_otp_receiption"
+        app:fonts="gotham_medium.ttf" />
 
     <Button
         android:id="@+id/btnSendOTPAgain"

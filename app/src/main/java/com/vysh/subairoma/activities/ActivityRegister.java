@@ -549,6 +549,7 @@ public class ActivityRegister extends AppCompatActivity {
         builder.setPositiveButton(getResources().getString(R.string.disclaimer_button), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
+                Log.d("mylog", "User type: " + userType + " User Registered: " + userRegistered.toString());
                 if (userType.equalsIgnoreCase(SharedPrefKeys.helperUser)) {
                     //If it's a helper user registering a migrant, then no need to redirect to OTPActivity,
                     //But Register and then redirect to migrant list.
@@ -579,7 +580,7 @@ public class ActivityRegister extends AppCompatActivity {
                     } else {
                         startOTPActivity(userType, 0);
                     }
-                } else if (userType == SharedPrefKeys.initialuser) {
+                } else {
                     startOTPActivity(userType, 0);
                 }
             }
@@ -605,7 +606,6 @@ public class ActivityRegister extends AppCompatActivity {
             intent.putExtra("otpnumber", entered_phone);
             startActivity(intent);
             return;
-
         }
         Intent intent = new Intent(ActivityRegister.this, ActivityOTPVerification.class);
         intent.putExtra("name", etName.getText().toString());
