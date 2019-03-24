@@ -290,7 +290,7 @@ public class ActivityRegister extends AppCompatActivity {
             if (!loggedInFromPhone)
                 editor.putInt(SharedPrefKeys.userId, id);
             ApplicationClass.getInstance().setUserId(id);
-            if (userType == 1) {
+            if (userType.equalsIgnoreCase(SharedPrefKeys.helperUser)) {
                 ApplicationClass.getInstance().setUserId(id);
 
                 //Saving Helper Details and Login Status
@@ -302,7 +302,7 @@ public class ActivityRegister extends AppCompatActivity {
                 editor.putString(SharedPrefKeys.userImg, userImg);
                 editor.putString(SharedPrefKeys.userType, "helper");
                 editor.commit();
-            } else if (userType == 0) {
+            } else if (userType.equalsIgnoreCase(SharedPrefKeys.migrantUser)) {
                 ApplicationClass.getInstance().setMigrantId(id);
 
                 //If migrant is already saved and has added a new migrant then don't save again
