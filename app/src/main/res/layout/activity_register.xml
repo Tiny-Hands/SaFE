@@ -187,13 +187,12 @@
                 android:text="@string/next"
                 android:textColor="#fff" />
 
-            <com.vysh.subairoma.utils.CustomTextView
+            <TextView
                 android:id="@+id/tvOR"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/medium_large_margin"
-                android:text="@string/or"
-                app:fonts="gotham_light.ttf" />
+                android:text="@string/or" />
 
             <Button
                 android:id="@+id/btnAlreadyRegistered"

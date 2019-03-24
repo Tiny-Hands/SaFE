@@ -139,6 +139,7 @@ public class ActivityRegister extends AppCompatActivity {
         }
         //Setting View
         setContentView(R.layout.activity_register);
+        ButterKnife.bind(this);
 
         //Checking if user is registering a new migrant
         if (getIntent().hasExtra("migrantmode")) {
@@ -146,8 +147,6 @@ public class ActivityRegister extends AppCompatActivity {
             Log.d("mylog", "Loading migrant view");
             loadMigrantView();
         }
-
-        ButterKnife.bind(this);
         setUpComponentListeners();
         callbackManager = CallbackManager.Factory.create();
     }
