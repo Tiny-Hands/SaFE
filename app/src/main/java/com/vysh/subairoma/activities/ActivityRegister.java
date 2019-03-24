@@ -273,9 +273,9 @@ public class ActivityRegister extends AppCompatActivity {
     }
 
     private void getLoggedInUserDetails(JSONObject jsonRes) {
-        int userType;
+        String userType;
         try {
-            userType = jsonRes.getInt("user_type");
+            userType = jsonRes.getString("user_type");
             int id = jsonRes.getInt("user_id");
             String userName = jsonRes.getString("user_name");
             String userPhone = jsonRes.getString("user_phone");
