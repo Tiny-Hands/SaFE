@@ -884,11 +884,7 @@ public class ActivityRegister extends AppCompatActivity {
     }
 
     public void getAllResponses(final String uType) {
-        String api;
-        if (uType.equalsIgnoreCase(SharedPrefKeys.migrantUser))
-            api = ApplicationClass.getInstance().getAPIROOT() + apiGetAllResponses;
-        else
-            api = ApplicationClass.getInstance().getAPIROOT() + apiGetResponses;
+        String api = ApplicationClass.getInstance().getAPIROOT() + apiGetAllResponses;
         final ProgressDialog pdialog = new ProgressDialog(ActivityRegister.this);
         //pdialog.setTitle("Setting Up");
         pdialog.setMessage(getResources().getString(R.string.getting_mig_responses));
@@ -956,14 +952,14 @@ public class ActivityRegister extends AppCompatActivity {
                 SQLDatabaseHelper dbHelper = new SQLDatabaseHelper(ActivityRegister.this);
                 for (int i = 0; i < responsesJsonArray.length(); i++) {
                     tempResponse = responsesJsonArray.getJSONObject(i);
-                    int migrantId = tempResponse.getInt("migrant_id");
+                    int migrantId = tempResponse.getInt("user_id");
                     int questionId = tempResponse.getInt("question_id");
                     String responseVariable = tempResponse.getString("response_variable");
                     String response = tempResponse.getString("response");
                     String isError = tempResponse.getString("is_error");
                     String sTileId = tempResponse.getString("tile_id");
                     int tileId = -1;
-                    if (!sTileId.contains("null") && !sTileId.isEmpty() && sTileId != null) {
+                    if (!sTileId.contains("null") && !sTileId.isEmpty()) {
                         tileId = Integer.parseInt(sTileId);
                     }
                     Log.d("mylog", "Inserting Response with Tile ID: " + tileId);
