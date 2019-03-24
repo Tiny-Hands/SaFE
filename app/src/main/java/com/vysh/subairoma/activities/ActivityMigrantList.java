@@ -111,6 +111,7 @@ public class ActivityMigrantList extends AppCompatActivity implements RecyclerIt
         ButterKnife.bind(this);
         dbHelper = new SQLDatabaseHelper(ActivityMigrantList.this);
         userType = ApplicationClass.getInstance().getUserType();
+        userToken = getSharedPreferences(SharedPrefKeys.sharedPrefName, MODE_PRIVATE).getString(SharedPrefKeys.token, "");
         migrantModels = new ArrayList();
         if (isLocationAccessAllowed())
             getUpdatedMigrantCounties();
@@ -126,7 +127,6 @@ public class ActivityMigrantList extends AppCompatActivity implements RecyclerIt
         });
 
         navView = findViewById(R.id.nav_view);
-        userToken = getSharedPreferences(SharedPrefKeys.sharedPrefName, MODE_PRIVATE).getString(SharedPrefKeys.token, "");
         setUpNavigationButtons();
         setUpListeners();
     }
@@ -298,6 +298,13 @@ public class ActivityMigrantList extends AppCompatActivity implements RecyclerIt
                     params.put("user_id", currModel.getUserId() + "");
                     return params;
                 }
+
+                @Override
+                public Map<String, String> getHeaders() throws AuthFailureError {
+                    HashMap<String, String> headers = new HashMap<>();
+                    headers.put("Authorization", userToken);
+                    return headers;
+                }
             };
             saveRequest.setRetryPolicy(new DefaultRetryPolicy(20 * 1000, 0, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
             requestQueue.add(saveRequest);
@@ -346,6 +353,7 @@ public class ActivityMigrantList extends AppCompatActivity implements RecyclerIt
                 params.put("migrant_id", mig_id + "");
                 return params;
             }
+
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
                 HashMap<String, String> headers = new HashMap<>();
@@ -657,6 +665,7 @@ public class ActivityMigrantList extends AppCompatActivity implements RecyclerIt
                 params.put("inactive_date", deactivateTime);
                 return params;
             }
+
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
                 HashMap<String, String> headers = new HashMap<>();

@@ -504,6 +504,13 @@ public class ActivityTileChooser extends AppCompatActivity {
                 }
                 return fParams;
             }
+
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                HashMap<String, String> headers = new HashMap<>();
+                headers.put("Authorization", getSharedPreferences(SharedPrefKeys.sharedPrefName, MODE_PRIVATE).getString(SharedPrefKeys.token, ""));
+                return headers;
+            }
         };
         Log.d("mylog", "Calling: " + api);
         RequestQueue queue = Volley.newRequestQueue(ActivityTileChooser.this);
