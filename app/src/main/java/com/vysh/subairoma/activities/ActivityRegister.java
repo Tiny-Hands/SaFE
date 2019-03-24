@@ -273,7 +273,6 @@ public class ActivityRegister extends AppCompatActivity {
     }
 
     private void getLoggedInUserDetails(JSONObject jsonRes) {
-        String userType;
         try {
             userType = jsonRes.getString("user_type");
             int id = jsonRes.getInt("user_id");
@@ -282,6 +281,7 @@ public class ActivityRegister extends AppCompatActivity {
             String userSex = jsonRes.getString("user_sex");
             String age = jsonRes.getString("user_age");
             String userImg = jsonRes.getString("user_img");
+            String token = jsonRes.getString("token");
 
             SharedPreferences sharedPreferences = getSharedPreferences(SharedPrefKeys.sharedPrefName, MODE_PRIVATE);
             SharedPreferences.Editor editor = sharedPreferences.edit();
@@ -318,6 +318,8 @@ public class ActivityRegister extends AppCompatActivity {
                 editor.putString(SharedPrefKeys.userSex, userSex);
                 editor.putString(SharedPrefKeys.userAge, age);
                 editor.putString(SharedPrefKeys.userImg, userImg);
+                Log.d("mylog", "Saving Token: " + token);
+                editor.putString(SharedPrefKeys.token, token);
                 editor.commit();
             }
         } catch (JSONException e) {
@@ -339,9 +341,8 @@ public class ActivityRegister extends AppCompatActivity {
             @Override
             public void onResponse(String response) {
                 try {
-                    //boolean firstRun = false;
+                    Log.d("mylog", "REs: " + response);
                     parseMigDetailResponse(response);
-                    //Getting all the saved responses for the user
                     try {
                         progressDialog.dismiss();
                     } catch (Exception ex) {
@@ -386,6 +387,13 @@ public class ActivityRegister extends AppCompatActivity {
                 params.put("user_id", user_id + "");
                 params.put("migrant_id", mig_id + "");
                 return params;
+            }
+
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                HashMap<String, String> headers = new HashMap<>();
+                headers.put("Authorization", getSharedPreferences(SharedPrefKeys.sharedPrefName, MODE_PRIVATE).getString(SharedPrefKeys.token, ""));
+                return headers;
             }
         };
         RequestQueue queue = Volley.newRequestQueue(ActivityRegister.this);
@@ -711,8 +719,8 @@ public class ActivityRegister extends AppCompatActivity {
                             migrantModel.setMigrantSex(sex);
                             String phone = migrantObj.getString("migrant_phone");
                             migrantModel.setMigrantPhone(phone);
-                            String inactiveDate = migrantObj.getString("inactive_date");
-                            migrantModel.setInactiveDate(inactiveDate);
+                            //String inactiveDate = migrantObj.getString("inactive_date");
+                            //migrantModel.setInactiveDate(inactiveDate);
                             String migImg = migrantObj.getString("user_img");
                             migrantModel.setMigImg(migImg);
                             migrantModel.setUserId(uid);
@@ -922,6 +930,13 @@ public class ActivityRegister extends AppCompatActivity {
                 if (uType.equalsIgnoreCase(SharedPrefKeys.migrantUser))
                     params.put("migrant_id", ApplicationClass.getInstance().getMigrantId() + "");
                 return params;
+            }
+
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                HashMap<String, String> headers = new HashMap<>();
+                headers.put("Authorization", getSharedPreferences(SharedPrefKeys.sharedPrefName, MODE_PRIVATE).getString(SharedPrefKeys.token, ""));
+                return headers;
             }
         };
 
