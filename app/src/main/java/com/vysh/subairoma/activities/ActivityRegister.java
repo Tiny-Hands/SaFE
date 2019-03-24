@@ -521,7 +521,6 @@ public class ActivityRegister extends AppCompatActivity {
             //showDisclaimerDialog();
             new DialogUsertypeChooser().show(getFragmentManager(), "utypechooser");
         } else {
-            //Parameter 1 is for registering migrant after reading disclaimer
             if (Integer.parseInt(etAge.getText().toString()) < 18) {
                 showErrorDialog();
             } else showDisclaimerAndContinue();
@@ -588,7 +587,11 @@ public class ActivityRegister extends AppCompatActivity {
                         startOTPActivity(userType, 0);
                     }
                 } else {
-                    startOTPActivity(userType, 0);
+                    if (userRegistered) {
+                        String api = ApplicationClass.getInstance().getAPIROOT() + apiURLMigrant;
+                        registerMigrant(api);
+                    } else
+                        startOTPActivity(userType, 0);
                 }
             }
         });
