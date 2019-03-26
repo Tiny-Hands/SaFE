@@ -664,6 +664,12 @@ public class ActivityRegister extends AppCompatActivity {
                 }
                 return params;
             }
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                HashMap<String, String> headers = new HashMap<>();
+                headers.put("Authorization", getSharedPreferences(SharedPrefKeys.sharedPrefName, MODE_PRIVATE).getString(SharedPrefKeys.token, ""));
+                return headers;
+            }
         };
         RequestQueue queue = Volley.newRequestQueue(ActivityRegister.this);
         //saveRequest.setShouldCache(false);
