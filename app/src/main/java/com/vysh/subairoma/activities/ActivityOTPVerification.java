@@ -371,6 +371,8 @@ public class ActivityOTPVerification extends AppCompatActivity implements View.O
 
                     ApplicationClass.getInstance().setUserId(user_id);
                     //Parse Other responses and save in SharedPref
+                    String token = jsonResponse.getString("token");
+                    editor.putString(SharedPrefKeys.token, token);
                     editor.putString(SharedPrefKeys.userName, name);
                     editor.putInt(SharedPrefKeys.userId, user_id);
                     editor.putString(SharedPrefKeys.userPhone, phoneNumber);
