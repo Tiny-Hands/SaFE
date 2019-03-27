@@ -277,6 +277,7 @@ public class ActivityTileHome extends AppCompatActivity {
         if (migId > 0) {
             ArrayList<HashMap> responses = sqlDatabaseHelper.getAllFeedbackResponses(migId);
             for (int i = 0; i < responses.size(); i++) {
+                responses.get(i).put("user_id", ApplicationClass.getInstance().getUserId());
                 saveResponseToServer(responses.get(i), 2);
             }
         } else Log.d("mylog", "MigID: " + migId + " Not saving to server");
@@ -468,6 +469,7 @@ public class ActivityTileHome extends AppCompatActivity {
                     .getAllResponse(migId);
             for (int i = 0; i < allParams.size(); i++) {
                 //Log.d("mylog", "Saving to server: " + i);
+                allParams.get(i).put("user_id", ApplicationClass.getInstance().getUserId() + "");
                 saveResponseToServer(allParams.get(i), 1);
             }
         } else
@@ -503,6 +505,13 @@ public class ActivityTileHome extends AppCompatActivity {
                     Log.d("mylog", "Key Values: " + key + ": " + fParams.get(key));
                 }
                 return fParams;
+            }
+
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                HashMap<String, String> headers = new HashMap<>();
+                headers.put("Authorization", getSharedPreferences(SharedPrefKeys.sharedPrefName, MODE_PRIVATE).getString(SharedPrefKeys.token, ""));
+                return headers;
             }
         };
         Log.d("mylog", "Calling: " + api);
