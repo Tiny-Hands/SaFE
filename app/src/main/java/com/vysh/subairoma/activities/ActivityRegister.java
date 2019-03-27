@@ -301,6 +301,8 @@ public class ActivityRegister extends AppCompatActivity {
                 editor.putString(SharedPrefKeys.userAge, age);
                 editor.putString(SharedPrefKeys.userImg, userImg);
                 editor.putString(SharedPrefKeys.userType, "helper");
+                Log.d("mylog", "Saving Token: " + token);
+                editor.putString(SharedPrefKeys.token, token);
                 editor.commit();
             } else if (userType.equalsIgnoreCase(SharedPrefKeys.migrantUser)) {
                 ApplicationClass.getInstance().setMigrantId(id);
