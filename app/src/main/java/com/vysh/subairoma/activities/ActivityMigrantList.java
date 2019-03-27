@@ -218,6 +218,7 @@ public class ActivityMigrantList extends AppCompatActivity implements RecyclerIt
                     protected Map<String, String> getParams() throws AuthFailureError {
                         HashMap<String, String> params = new HashMap<>();
                         params.put("migrant_id", currModel.getMigrantId() + "");
+                        params.put("user_id", ApplicationClass.getInstance().getUserId() + "");
                         params.put("percent_complete", currModel.getPercentComp() + "");
                         return params;
                     }
@@ -228,6 +229,7 @@ public class ActivityMigrantList extends AppCompatActivity implements RecyclerIt
                         headers.put("Authorization", userToken);
                         return headers;
                     }
+
                 };
                 saveRequest.setRetryPolicy(new DefaultRetryPolicy(20 * 1000, 0, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
                 requestQueue.add(saveRequest);
@@ -302,6 +304,7 @@ public class ActivityMigrantList extends AppCompatActivity implements RecyclerIt
                 @Override
                 public Map<String, String> getHeaders() throws AuthFailureError {
                     HashMap<String, String> headers = new HashMap<>();
+                    Log.d("mylog", "putting authheader update percent" + userToken);
                     headers.put("Authorization", userToken);
                     return headers;
                 }
@@ -659,7 +662,6 @@ public class ActivityMigrantList extends AppCompatActivity implements RecyclerIt
             protected Map<String, String> getParams() throws AuthFailureError {
                 HashMap<String, String> params = new HashMap<>();
                 int user_id = ApplicationClass.getInstance().getUserId();
-                int mig_id = ApplicationClass.getInstance().getMigrantId();
                 params.put("user_id", uid + "");
                 params.put("migrant_id", migId + "");
                 params.put("inactive_date", deactivateTime);
