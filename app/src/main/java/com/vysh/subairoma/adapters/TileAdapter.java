@@ -83,14 +83,18 @@ public class TileAdapter extends RecyclerView.Adapter<TileAdapter.TileViewHolder
                 imgView.setImageResource(R.drawable.ic_redflag);
                 holder.llErrorLayout.addView(imgView);
             }
+            holder.tvCompletionStatus.setBackgroundResource(R.color.colorError);
         }
         //DecimalFormat decimalFormat = new DecimalFormat("##");
-        if (tileList.get(position).getPercentComplete() > 99.9) {
+        else if (tileList.get(position).getPercentComplete() > 99.9) {
             holder.ivDone.setVisibility(View.VISIBLE);
             Animation animZoomin = AnimationUtils.loadAnimation(context, R.anim.zoomin);
             animZoomin.setInterpolator(new BounceInterpolator());
             holder.ivDone.startAnimation(animZoomin);
+            holder.tvCompletionStatus.setBackgroundResource(R.color.darkGreen);
             //holder.tvPercent.setVisibility(View.GONE);
+        } else {
+            holder.tvCompletionStatus.setBackgroundResource(R.color.grey);
         }
 
         int total = sqlDatabaseHelper.getQuestions(tileId).size();
@@ -98,14 +102,8 @@ public class TileAdapter extends RecyclerView.Adapter<TileAdapter.TileViewHolder
         String text = answered + " Answered /" + total + " Questions";
         holder.tvCompletionStatus.setText(text);
 
-        int noRedflagQuestionCount = sqlDatabaseHelper.getNoRedFlagQuestionsCount(tileId);
-        //Setting bottom question/answer layout
-        if (errorCount > 0)
-            holder.tvCompletionStatus.setBackgroundResource(R.color.colorError);
-        else if (answered >= noRedflagQuestionCount)
-            holder.tvCompletionStatus.setBackgroundResource(R.color.darkGreen);
-        else
-            holder.tvCompletionStatus.setBackgroundResource(R.color.grey);
+        //int noRedflagQuestionCount = sqlDatabaseHelper.getNoRedFlagQuestionsCount(tileId);
+
         setTileIcons(holder.ivTile, tileId);
     }
 
