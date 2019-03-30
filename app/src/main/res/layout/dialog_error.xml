@@ -29,5 +29,5 @@
         android:background="?android:attr/selectableItemBackground"
         android:text="@string/understand"
         android:textColor="@color/colorError"
-        android:textSize="18sp" />
+        android:textSize="@dimen/inner_support_dialog_action_btn_text_size" />
 </LinearLayout>

@@ -5,15 +5,14 @@
     android:layout_height="wrap_content"
     android:padding="@dimen/default_margin">
 
-    <com.vysh.subairoma.utils.CustomTextView
+    <TextView
         android:id="@+id/tvHelpTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="@dimen/default_margin"
         android:text="@string/need_help"
-        android:textSize="@dimen/need_help_dialog_text_size"
-        app:fonts="gotham_bold.ttf" />
+        android:textSize="@dimen/need_help_dialog_text_size" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -23,7 +22,7 @@
         android:orientation="horizontal">
 
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="88dp"
             android:layout_height="wrap_content"
             android:gravity="center"
             android:orientation="vertical">
@@ -43,7 +42,7 @@
         </LinearLayout>
 
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="88dp"
             android:layout_height="wrap_content"
             android:gravity="center"
             android:orientation="vertical">
