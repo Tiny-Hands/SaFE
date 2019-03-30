@@ -56,7 +56,7 @@
     <dimen name="question_row_help_bottom_margin">24dp</dimen>
     <dimen name="question_row_help_top_margin">24dp</dimen>
     <dimen name="default_edittext_corner_radius">18dp</dimen>
-    <dimen name="dialog_edittext_width">296dp</dimen>
+    <dimen name="dialog_edittext_width">236dp</dimen>
     <dimen name="dialog_button_height">34dp</dimen>
     <dimen name="inner_dialog_title_text_size">20sp</dimen>
     <dimen name="default_line_spacing">2dp</dimen>
