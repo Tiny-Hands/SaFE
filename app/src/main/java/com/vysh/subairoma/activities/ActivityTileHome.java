@@ -58,7 +58,6 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class ActivityTileHome extends AppCompatActivity {
     private final String saveAPI = "/saveresponse.php";
     private final String saveFeedbackAPI = "/savefeedbackresponse.php";
-    final String apiURLMigrantPercent = "/updatepercentcomplete.php";
     ArrayList<TilesModel> tiles;
     public String migName, countryName, countryId, migGender = "", migPhone;
     public int blacklist, status;

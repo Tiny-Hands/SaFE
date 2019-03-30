@@ -320,54 +320,6 @@ public class ActivityMigrantList extends AppCompatActivity implements RecyclerIt
 
     }
 
-    private ArrayList<MigrantModel> parseMigDetailResponse(String response) {
-        ArrayList<MigrantModel> migrantModelsTemp = new ArrayList<>();
-        try {
-            JSONObject jsonObject = new JSONObject(response);
-            Boolean error = jsonObject.getBoolean("error");
-            if (error) {
-                showSnackbar(jsonObject.getString("message"));
-            } else {
-                JSONArray migrantJSON = jsonObject.getJSONArray("migrants");
-                if (migrantJSON != null) {
-                    JSONObject migrantObj;
-                    SQLDatabaseHelper dbHelper = new SQLDatabaseHelper(ActivityMigrantList.this);
-                    int uid = ApplicationClass.getInstance().getUserId();
-                    for (int i = 0; i < migrantJSON.length(); i++) {
-                        migrantObj = migrantJSON.getJSONObject(i);
-                        MigrantModel migrantModel = new MigrantModel();
-                        if (migrantObj.has("migrant_id")) {
-                            int id = migrantObj.getInt("migrant_id");
-                            migrantModel.setMigrantId(id);
-                            String name = migrantObj.getString("migrant_name");
-                            migrantModel.setMigrantName(name);
-                            int age = migrantObj.getInt("migrant_age");
-                            migrantModel.setMigrantAge(age);
-                            String sex = migrantObj.getString("migrant_sex");
-                            migrantModel.setMigrantSex(sex);
-                            String phone = migrantObj.getString("migrant_phone");
-                            migrantModel.setMigrantPhone(phone);
-                            String inactiveDate = migrantObj.getString("inactive_date");
-                            migrantModel.setInactiveDate(inactiveDate);
-                            String migImg = migrantObj.getString("user_img");
-                            migrantModel.setMigImg(migImg);
-                            migrantModel.setUserId(uid);
-                            int percentComp = migrantObj.getInt("percent_comp");
-                            migrantModel.setPercentComp(percentComp);
-
-                            migrantModelsTemp.add(migrantModel);
-                            //Saving in Database
-                            dbHelper.insertMigrants(id, name, age, phone, sex, uid, migImg, percentComp);
-                        }
-                    }
-                }
-            }
-        } catch (JSONException e) {
-            Log.d("mylog", "Error in parsing: " + e.toString());
-        }
-        return migrantModelsTemp;
-    }
-
     private void makeChangesInLocalDB(int migrantIdOld, int migrantIdNew) {
         dbHelper.makeMigIdChanges(migrantIdOld, migrantIdNew);
     }
