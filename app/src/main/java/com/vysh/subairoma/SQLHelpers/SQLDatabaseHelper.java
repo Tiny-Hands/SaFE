@@ -801,8 +801,8 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
         int count = 0;
         Cursor cursor = db.rawQuery(statement, null);
         while (cursor.moveToNext()) {
-            String error = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseTables.QuestionsTable.question_condition));
-            if (error.length() < 5)
+            String condition = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseTables.QuestionsTable.question_condition));
+            if (!condition.contains("error"))
                 count++;
         }
         return count;
