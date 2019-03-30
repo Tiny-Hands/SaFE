@@ -133,7 +133,7 @@ public class ActivityTileChooser extends AppCompatActivity {
         btnNext.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                goToNextSection();
+                goToNextSectionProcess();
             }
         });
         tileType1.setOnClickListener(new View.OnClickListener() {
@@ -159,7 +159,7 @@ public class ActivityTileChooser extends AppCompatActivity {
                 if (!checkIfVerifiedAnswers()) {
                    /* Toast.makeText(ActivityTileChooser.this, R.string.section_locked, Toast.LENGTH_SHORT).show();
                     return;*/
-                    goToNextSection();
+                    goToNextSectionProcess();
                     return;
                 }
                 Intent intent1 = new Intent(ActivityTileChooser.this, ActivityTileHome.class);
@@ -418,7 +418,7 @@ public class ActivityTileChooser extends AppCompatActivity {
                     builder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
-                            goToNextSection();
+                            goToNextSectionProcess();
                         }
                     });
                     builder.setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
@@ -452,7 +452,7 @@ public class ActivityTileChooser extends AppCompatActivity {
         return false;
     }
 
-    public void goToNextSection() {
+    public void goToNextSectionProcess() {
         if (!checkIfVerifiedAnswers())
             new DialogAnswersVerification().show(getSupportFragmentManager(), "dialog");
         else {
