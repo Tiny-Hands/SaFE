@@ -276,7 +276,7 @@ public class ActivityTileHome extends AppCompatActivity {
         if (migId > 0) {
             ArrayList<HashMap> responses = sqlDatabaseHelper.getAllFeedbackResponses(migId);
             for (int i = 0; i < responses.size(); i++) {
-                responses.get(i).put("user_id", ApplicationClass.getInstance().getUserId());
+                responses.get(i).put("user_id", ApplicationClass.getInstance().getMigrantId());
                 saveResponseToServer(responses.get(i), 2);
             }
         } else Log.d("mylog", "MigID: " + migId + " Not saving to server");
@@ -336,24 +336,6 @@ public class ActivityTileHome extends AppCompatActivity {
                 return false;
             }
         });
-
-        /*ivAvatar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(ActivityTileHome.this, ActivityProfileEdit.class);
-                intent.putExtra("userType", 1);
-                startActivity(intent);
-            }
-        });*/
-
-        /*btnImportantContacts.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent impIntent = new Intent(ActivityTileHome.this, ActivityImportantContacts.class);
-                impIntent.putExtra("countryId", countryId);
-                startActivity(impIntent);
-            }
-        });*/
     }
 
     public void goToNextSection() {
@@ -430,20 +412,6 @@ public class ActivityTileHome extends AppCompatActivity {
             tiles = new SQLDatabaseHelper(ActivityTileHome.this).getTiles("GAS");
         }
         setUpAdapter();
-        /*if (checkIfVerifiedAnswers() && !countryId.equalsIgnoreCase("in")) {
-            setUpAdapter();
-            return;
-        } else {
-            int afterFEP = tiles.size();
-            if (countryId == null || countryId.isEmpty()) {
-                afterFEP = 1;
-                initialStep = true;
-            }
-            rvTiles.setLayoutManager(new GridLayoutManager(this, 2));
-            tiles.addAll(tilesGAS);
-            tileAdapter = new TileAdapter(tiles, afterFEP, tileIcons, ActivityTileHome.this, countryId);
-            rvTiles.setAdapter(tileAdapter);
-        }*/
     }
 
     public void setUpAdapter() {
@@ -468,7 +436,7 @@ public class ActivityTileHome extends AppCompatActivity {
                     .getAllResponse(migId);
             for (int i = 0; i < allParams.size(); i++) {
                 //Log.d("mylog", "Saving to server: " + i);
-                allParams.get(i).put("user_id", ApplicationClass.getInstance().getUserId() + "");
+                allParams.get(i).put("user_id", ApplicationClass.getInstance().getMigrantId() + "");
                 saveResponseToServer(allParams.get(i), 1);
             }
         } else
