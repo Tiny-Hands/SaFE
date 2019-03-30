@@ -64,7 +64,7 @@ public class ActivityTileHome extends AppCompatActivity {
     int[] tileIcons;
     TileAdapter tileAdapter;
     public static Boolean finalSection, showIndia, initialStep = false;
-    String uname, unumber, uage, uimg, uavatar, tileType;
+    String uname, unumber, uage, uimg, uavatar, tileType, userToken;
 
     @BindView(R.id.ivUserAvatar)
     CircleImageView ivMigrantImage;
@@ -107,7 +107,7 @@ public class ActivityTileHome extends AppCompatActivity {
         //getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
         ButterKnife.bind(this);
-
+        userToken = getSharedPreferences(SharedPrefKeys.sharedPrefName, MODE_PRIVATE).getString(SharedPrefKeys.token, "");
         queue = Volley.newRequestQueue(ActivityTileHome.this);
         countryId = getIntent().getStringExtra("countryId");
         migName = getIntent().getStringExtra("migrantName");
@@ -278,7 +278,8 @@ public class ActivityTileHome extends AppCompatActivity {
         if (migId > 0) {
             ArrayList<HashMap> responses = sqlDatabaseHelper.getAllFeedbackResponses(migId);
             for (int i = 0; i < responses.size(); i++) {
-                responses.get(i).put("user_id", ApplicationClass.getInstance().getMigrantId());
+                responses.get(i).put("user_id", ApplicationClass.getInstance().getUserId() + "");
+                responses.get(i).put("migrant_id", ApplicationClass.getInstance().getMigrantId() + "");
                 saveResponseToServer(responses.get(i), 2);
             }
         } else Log.d("mylog", "MigID: " + migId + " Not saving to server");
@@ -438,7 +439,8 @@ public class ActivityTileHome extends AppCompatActivity {
                     .getAllResponse(migId);
             for (int i = 0; i < allParams.size(); i++) {
                 //Log.d("mylog", "Saving to server: " + i);
-                allParams.get(i).put("user_id", ApplicationClass.getInstance().getMigrantId() + "");
+                allParams.get(i).put("user_id", ApplicationClass.getInstance().getUserId() + "");
+                allParams.get(i).put("migrant_id", ApplicationClass.getInstance().getMigrantId() + "");
                 saveResponseToServer(allParams.get(i), 1);
             }
         } else
@@ -479,12 +481,13 @@ public class ActivityTileHome extends AppCompatActivity {
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
                 HashMap<String, String> headers = new HashMap<>();
-                headers.put("Authorization", getSharedPreferences(SharedPrefKeys.sharedPrefName, MODE_PRIVATE).getString(SharedPrefKeys.token, ""));
+                headers.put("Authorization", userToken);
                 return headers;
             }
         };
         Log.d("mylog", "Calling: " + api);
         queue.add(stringRequest);
+        //Log.d("mylog", "Token: " + getSharedPreferences(SharedPrefKeys.sharedPrefName, MODE_PRIVATE).getString(SharedPrefKeys.token, ""));
     }
 
 }
