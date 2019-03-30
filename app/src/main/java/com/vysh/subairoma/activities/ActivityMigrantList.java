@@ -189,7 +189,8 @@ public class ActivityMigrantList extends AppCompatActivity implements RecyclerIt
     protected void onResume() {
         super.onResume();
         if (InternetConnectionChecker.isNetworkConnected(ActivityMigrantList.this)) {
-            //Migrant Info not Responses
+            //Migrant that's not registered is being registered
+            //This will save to server then display migrant list
             saveLocalDataToServer();
             //Mig Percent
             saveMigPercent();
@@ -248,8 +249,10 @@ public class ActivityMigrantList extends AppCompatActivity implements RecyclerIt
             }
         }
         if (migsLocal.size() > 0)
+            //This will save to server then display migrant list
             saveMigToServer(migsLocal);
         else
+            //Displaying migrant list
             getSavedMigrants();
     }
 
