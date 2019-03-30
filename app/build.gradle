@@ -49,6 +49,7 @@ dependencies {
     compile 'com.google.android.gms:play-services-location:11.8.0'
     compile 'com.android.support:design:27.0.1'
     compile 'com.facebook.android:facebook-android-sdk:[4,5)'
+    compile 'com.flurry.android:analytics:11.6.0@aar'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.6.0'
     testCompile 'junit:junit:4.12'
     compile('com.crashlytics.sdk.android:crashlytics:2.7.1@aar') {

@@ -3,6 +3,7 @@ package com.vysh.subairoma;
 import android.app.Application;
 
 import com.crashlytics.android.Crashlytics;
+import com.flurry.android.FlurryAgent;
 
 import io.fabric.sdk.android.Fabric;
 
@@ -60,5 +61,8 @@ public class ApplicationClass extends Application {
         super.onCreate();
         Fabric.with(this, new Crashlytics());
         mInstance = this;
+        new FlurryAgent.Builder()
+                .withLogEnabled(true)
+                .build(this, "2W5WGBPYKS7ZXN2Y684D");
     }
 }
