@@ -102,7 +102,7 @@ public class TileAdapter extends RecyclerView.Adapter<TileAdapter.TileViewHolder
         //Setting bottom question/answer layout
         if (errorCount > 0)
             holder.tvCompletionStatus.setBackgroundResource(R.color.colorError);
-        else if (answered == noRedflagQuestionCount)
+        else if (answered >= noRedflagQuestionCount)
             holder.tvCompletionStatus.setBackgroundResource(R.color.darkGreen);
         else
             holder.tvCompletionStatus.setBackgroundResource(R.color.grey);

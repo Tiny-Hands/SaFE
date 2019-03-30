@@ -474,10 +474,7 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
             String response = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseTables.ResponseTable.response));
             String responseVar = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseTables.ResponseTable.response_variable));
             Log.d("mylog", "Response Variable: " + responseVar + " Response: " + response);
-            /*if (error == null)
-                error = "-";
-            if (error.length() < 3)*/
-            if (!responseVar.equalsIgnoreCase("percent_complete"))
+            if (!responseVar.equalsIgnoreCase("percent_complete") && !response.contains("false"))
                 count++;
         }
         return count;
