@@ -98,6 +98,7 @@ public class ActivityTileHome extends AppCompatActivity {
 
     CustomTextView tvName, tvPhone, tvNavCounty;
     ImageView ivUserAvatar;
+    RequestQueue queue;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -107,6 +108,7 @@ public class ActivityTileHome extends AppCompatActivity {
 
         ButterKnife.bind(this);
 
+        queue = Volley.newRequestQueue(ActivityTileHome.this);
         countryId = getIntent().getStringExtra("countryId");
         migName = getIntent().getStringExtra("migrantName");
         migGender = getIntent().getStringExtra("migrantGender");
@@ -482,7 +484,6 @@ public class ActivityTileHome extends AppCompatActivity {
             }
         };
         Log.d("mylog", "Calling: " + api);
-        RequestQueue queue = Volley.newRequestQueue(ActivityTileHome.this);
         queue.add(stringRequest);
     }
 
