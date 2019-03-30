@@ -20,8 +20,7 @@
         android:background="@drawable/edittext_feedback_bg"
         android:lineSpacingExtra="@dimen/default_line_spacing"
         android:padding="@dimen/default_margin"
-        android:textColor="@color/colorError"
-        android:textSize="18sp" />
+        android:textColor="@color/colorError" />
 
     <Button
         android:id="@+id/btnUnderstood"
@@ -29,5 +28,6 @@
         android:layout_height="@dimen/error_dialog_title_bg"
         android:background="?android:attr/selectableItemBackground"
         android:text="@string/understand"
-        android:textColor="@color/colorError" />
+        android:textColor="@color/colorError"
+        android:textSize="18sp" />
 </LinearLayout>
