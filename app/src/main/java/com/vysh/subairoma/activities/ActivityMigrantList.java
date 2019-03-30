@@ -189,7 +189,9 @@ public class ActivityMigrantList extends AppCompatActivity implements RecyclerIt
     protected void onResume() {
         super.onResume();
         if (InternetConnectionChecker.isNetworkConnected(ActivityMigrantList.this)) {
+            //Migrant Info not Responses
             saveLocalDataToServer();
+            //Mig Percent
             saveMigPercent();
         } else {
             getSavedMigrants();
@@ -313,59 +315,6 @@ public class ActivityMigrantList extends AppCompatActivity implements RecyclerIt
             requestQueue.add(saveRequest);
         }
 
-    }
-
-    private void getMigrants() {
-        String api = ApplicationClass.getInstance().getAPIROOT() + APIGetMig;
-        StringRequest getRequest = new StringRequest(Request.Method.POST, api, new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-                try {
-                    //boolean firstRun = false;
-                    parseMigDetailResponse(response);
-                    Log.d("mylog", "mig response : " + response);
-                } catch (Exception ex) {
-                    Log.d("mylog", "response exception: " + ex.toString());
-                }
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                try {
-                    String err = error.toString();
-                    Log.d("mylog", "error : " + err);
-                    if (!err.isEmpty() && err.contains("TimeoutError"))
-                        Toast.makeText(ActivityMigrantList.this, getResources().getString(R.string.server_noconnect), Toast.LENGTH_SHORT).show();
-                    else if (!err.isEmpty() && err.contains("NoConnection")) {
-                        Toast.makeText(ActivityMigrantList.this, getResources().getString(R.string.server_noconnect), Toast.LENGTH_SHORT).show();
-                    } else
-                        showSnackbar(error.toString());
-                } catch (Exception ex) {
-                    Log.d("mylog", "Error exception: " + ex.toString());
-                }
-            }
-        }) {
-            @Override
-            protected Map<String, String> getParams() throws AuthFailureError {
-                HashMap<String, String> params = new HashMap<>();
-                int user_id = ApplicationClass.getInstance().getUserId();
-                int mig_id = ApplicationClass.getInstance().getMigrantId();
-                Log.d("mylog", "User ID: " + user_id);
-                Log.d("mylog", "Mig ID: " + mig_id);
-                params.put("user_id", user_id + "");
-                params.put("migrant_id", mig_id + "");
-                return params;
-            }
-
-            @Override
-            public Map<String, String> getHeaders() throws AuthFailureError {
-                HashMap<String, String> headers = new HashMap<>();
-                headers.put("Authorization", userToken);
-                return headers;
-            }
-        };
-        RequestQueue queue = Volley.newRequestQueue(ActivityMigrantList.this);
-        queue.add(getRequest);
     }
 
     private ArrayList<MigrantModel> parseMigDetailResponse(String response) {
@@ -524,12 +473,6 @@ public class ActivityMigrantList extends AppCompatActivity implements RecyclerIt
                 intent.putExtra("countryBlacklist", -1);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(intent);
-                    /*DialogCountryChooser dialog = DialogCountryChooser.newInstance();
-                    dialog.setMigrantName(migrantModels.get(0).getMigrantName());
-                    dialog.setCancelable(false);
-                    Log.d("mylog", "Migrant name: " + migrantModels.get(0).getMigrantName() + " : " + migrantModels.get(0).getMigrantId());
-                    dialog.show(getSupportFragmentManager(), "countrychooser");
-                    recyclerView.setVisibility(View.INVISIBLE);*/
             }
         } else if (migrantModels.size() < 1 && ApplicationClass.getInstance().getMigrantId() == -1) {
             Intent intent = new Intent(ActivityMigrantList.this, ActivityRegister.class);
