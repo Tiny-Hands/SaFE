@@ -288,8 +288,7 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
         holder.question.setVisibility(GONE);
         holder.details.setVisibility(GONE);
 
-        setValue(holder.title, holder.checkbox, holder.etResponse, holder.spinnerOptions,
-                holder.question, holder.ivError, holder.ivDone, holder.btnShowMore, holder.listViewOptions, holder.rootLayout, holder.rb1, holder.rb2, position);
+        setValue(holder, position);
 
         if (disabled) {
             holder.disabledView.setVisibility(View.VISIBLE);
@@ -349,8 +348,10 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
                 migrantId, "percent_complete", Calendar.getInstance().getTimeInMillis() + "");
     }
 
-    private void setValue(TextView tvTitle, CheckBox checkBox, EditText etResponse, Spinner spinner, TextView question,
-                          ImageView ivError, ImageView ivDone, ImageButton btnShowMore, ListView lvOptions, RelativeLayout rootLayout, RadioButton rb1, RadioButton rb2, int position) {
+    private void setValue(QuestionHolder holder, int position) {
+        //holder.title, holder.checkbox, holder.etResponse, holder.spinnerOptions,
+        //holder.question, holder.ivError, holder.ivDone, holder.btnShowMore, holder.listViewOptions, holder.rootLayout, holder.rb1, holder.rb2
+
         //For showing/hiding error on condition variable change
         Log.d("mylog", "Setting value now");
         String isError = sqlDatabaseHelper.getIsError(migrantId, questionsListDisplay.get(position).getVariable());
@@ -361,29 +362,29 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
         String response = sqlDatabaseHelper.getResponse(migrantId, variable);
         Log.d("mylog", "Response is: " + response);
         if (isError.equalsIgnoreCase("true")) {
-            ivError.setVisibility(View.VISIBLE);
-            rootLayout.setBackgroundColor(context.getResources().getColor(R.color.colorErrorFaded));
-            tvTitle.setTextColor(Color.DKGRAY);
-            tvTitle.setTypeface(null, BOLD);
-            ivDone.setVisibility(GONE);
-            btnShowMore.setVisibility(GONE);
+            holder.ivError.setVisibility(View.VISIBLE);
+            holder.rootLayout.setBackgroundColor(context.getResources().getColor(R.color.colorErrorFaded));
+            holder.title.setTextColor(Color.DKGRAY);
+            holder.title.setTypeface(null, BOLD);
+            holder.ivDone.setVisibility(GONE);
+            holder.btnShowMore.setVisibility(GONE);
         } else {
             //Show green checkmark only if checkbox is checked and no error
             if (response.equalsIgnoreCase("true")) {
-                ivDone.setVisibility(View.VISIBLE);
-                tvTitle.setTextColor(context.getResources().getColor(R.color.colorPrimary));
-                btnShowMore.setVisibility(GONE);
+                holder.ivDone.setVisibility(View.VISIBLE);
+                holder.title.setTextColor(context.getResources().getColor(R.color.colorPrimary));
+                holder.btnShowMore.setVisibility(GONE);
             } else if (!response.isEmpty() && !response.equalsIgnoreCase("false") && !response.contains("---")) {
-                ivDone.setVisibility(View.VISIBLE);
-                tvTitle.setTextColor(context.getResources().getColor(R.color.colorPrimary));
-                btnShowMore.setVisibility(GONE);
+                holder.ivDone.setVisibility(View.VISIBLE);
+                holder.title.setTextColor(context.getResources().getColor(R.color.colorPrimary));
+                holder.btnShowMore.setVisibility(GONE);
             } else {
-                ivDone.setVisibility(View.GONE);
-                tvTitle.setTextColor(Color.GRAY);
-                btnShowMore.setVisibility(VISIBLE);
+                holder.ivDone.setVisibility(View.GONE);
+                holder.title.setTextColor(Color.GRAY);
+                holder.btnShowMore.setVisibility(VISIBLE);
             }
-            ivError.setVisibility(View.INVISIBLE);
-            rootLayout.setBackgroundColor(Color.TRANSPARENT);
+            holder.ivError.setVisibility(View.INVISIBLE);
+            holder.rootLayout.setBackgroundColor(Color.TRANSPARENT);
         }
 
         if (responseType == 0) {
@@ -391,28 +392,28 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
                 Log.d("mylog", "0 Response: " + response);
             } else if (response.equalsIgnoreCase("true")) {
                 fromSetView = true;
-                checkBox.setChecked(true);
+                holder.checkbox.setChecked(true);
             } else if (response.equalsIgnoreCase("false")) {
                 fromSetView = true;
-                checkBox.setChecked(false);
+                holder.checkbox.setChecked(false);
             }
             //Hiding visibility No Matter what as If checked showing Checkmark
-            question.setVisibility(View.GONE);
-            checkBox.setVisibility(View.GONE);
+            holder.question.setVisibility(View.GONE);
+            holder.checkbox.setVisibility(View.GONE);
         } else if (responseType == 1) {
             if (response == null || response.isEmpty()) {
                 Log.d("mylog", "1 Response: " + response);
-                question.setVisibility(GONE);
-                etResponse.setVisibility(GONE);
+                holder.question.setVisibility(GONE);
+                holder.etResponse.setVisibility(GONE);
             } else {
                 fromSetView = true;
-                etResponse.setText(response);
+                holder.etResponse.setText(response);
             }
         } else if (responseType == 2 || responseType == 5) {
             Log.d("mylog", "2/5 Response: " + response);
             if (response == null || response.isEmpty()) {
-                question.setVisibility(GONE);
-                spinner.setVisibility(GONE);
+                holder.question.setVisibility(GONE);
+                holder.spinnerOptions.setVisibility(GONE);
                 if (responseType == 5)
                     initialStep = true;
             } else {
@@ -423,10 +424,10 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
                     Log.d("mylog", "cname: " + response + " cid: " + orgCountryId);
                 }
                 fromSetView = true;
-                for (int i = 0; i < spinner.getCount(); i++) {
-                    if (response.equalsIgnoreCase(spinner.getItemAtPosition(i).toString())) {
+                for (int i = 0; i < holder.spinnerOptions.getCount(); i++) {
+                    if (response.equalsIgnoreCase(holder.spinnerOptions.getItemAtPosition(i).toString())) {
                         fromSetViewSpinner = true;
-                        spinner.setSelection(i);
+                        holder.spinnerOptions.setSelection(i);
                         break;
                     }
                 }
@@ -434,16 +435,16 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
         } else if (responseType == 3) {
             multiResponse = response;
             OptionsListViewAdapter adapter = new OptionsListViewAdapter(context, multiOptions, position);
-            lvOptions.setAdapter(adapter);
+            holder.listViewOptions.setAdapter(adapter);
         } else if (responseType == 4) {
             if (response == null || response.isEmpty()) {
                 Log.d("mylog", "4 Response: " + response);
             } else if (response.equalsIgnoreCase("true")) {
                 fromSetView = true;
-                rb1.setChecked(true);
+                holder.rb1.setChecked(true);
             } else if (response.equalsIgnoreCase("false")) {
                 fromSetView = true;
-                rb2.setChecked(true);
+                holder.rb2.setChecked(true);
             }
         }
         fromSetView = false;
