@@ -143,5 +143,6 @@
     <string name="section_locked">Section Locked</string>
     <string name="welcome_info">Welcome to SaFE app</string>
     <string name="complete_message">This section is complete, would you like to move on to the next section?</string>
+    <string name="saving_query">Saving Query</string>
 
 </resources>
