@@ -111,10 +111,6 @@ public class MigrantListAdapter extends RecyclerView.Adapter<MigrantListAdapter.
             }
         } else if (errorCount <= 0)
             holder.llErrorLayout.setVisibility(View.GONE);
-        if (migrants.size() == 1) {
-            //showCountryChooser(migrants.get(0).getMigrantName(), ((AppCompatActivity) mContext).getSupportFragmentManager());
-        }
-
         if (migrantModel.getMigrantId() < 0)
             holder.viewForeground.setBackgroundColor(mContext.getResources().getColor(R.color.colorOffline));
         else holder.viewForeground.setBackgroundColor(Color.WHITE);
@@ -184,16 +180,6 @@ public class MigrantListAdapter extends RecyclerView.Adapter<MigrantListAdapter.
                     } else {
                         showCountryChooser(migrants.get(getAdapterPosition()).getMigrantName(),
                                 ((AppCompatActivity) itemView.getContext()).getSupportFragmentManager());
-                    /*    Intent intent = new Intent(itemView.getContext(), ActivityTileChooser.class);
-                        intent.putExtra("countryId", "");
-                        intent.putExtra("migrantName", migrants.get(getAdapterPosition()).getMigrantName());
-                        intent.putExtra("countryName", "");
-                        intent.putExtra("countryStatus", -1);
-                        intent.putExtra("migrantName", migrants.get(getAdapterPosition()).getMigrantName());
-                        intent.putExtra("migrantPhone", migrants.get(getAdapterPosition()).getMigrantPhone());
-                        intent.putExtra("migrantGender", migrants.get(getAdapterPosition()).getMigrantSex());
-                        intent.putExtra("countryBlacklist", -1);
-                        itemView.getContext().startActivity(intent);*/
                     }
                 }
             });
