@@ -63,6 +63,9 @@ public class FeedbackQuestionAdapter extends RecyclerView.Adapter<FeedbackQuesti
     @Override
     public void onBindViewHolder(final FeedbackHolder holder, int position) {
         holder.tvMainText.setText(feedbackQuestionModels.get(position).getQuestionTitle());
+        if (position == feedbackQuestionModels.size() - 1) {
+            holder.bottomLine.setVisibility(View.GONE);
+        }
     }
 
     @Override
@@ -76,11 +79,13 @@ public class FeedbackQuestionAdapter extends RecyclerView.Adapter<FeedbackQuesti
         TextView tvMainText;
         //EditText editText;
         ListView listView;
+        View bottomLine;
 
         public FeedbackHolder(final View itemView) {
             super(itemView);
             main = itemView.findViewById(R.id.cbQ);
             tvMainText = itemView.findViewById(R.id.tvQtitle);
+            bottomLine = itemView.findViewById(R.id.row_bottom_line);
             //editText = itemView.findViewById(R.id.etFeedback);
             listView = itemView.findViewById(R.id.lvOptions);
             main.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
