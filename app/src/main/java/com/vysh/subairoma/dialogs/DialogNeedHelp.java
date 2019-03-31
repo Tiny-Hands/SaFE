@@ -167,6 +167,7 @@ public class DialogNeedHelp extends DialogFragment implements View.OnClickListen
                 params.put("migrant_id", ApplicationClass.getInstance().getMigrantId() + "");
                 params.put("query", query);
                 params.put("tile_id", tileId + "");
+                params.put("question_id", qid + "");
                 return params;
             }
 
