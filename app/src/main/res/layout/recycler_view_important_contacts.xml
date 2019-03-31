@@ -9,7 +9,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#65c74d"
+        android:background="#459719"
         android:orientation="vertical"
         android:padding="@dimen/medium_margin">
 
@@ -18,8 +18,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/medium_margin"
-            android:text="Title"
             android:padding="2dp"
+            android:text="Title"
             android:textColor="@android:color/white"
             android:textSize="18sp"
             app:fonts="gotham_bold.ttf" />
