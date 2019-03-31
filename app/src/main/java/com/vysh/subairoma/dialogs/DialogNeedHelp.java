@@ -90,6 +90,7 @@ public class DialogNeedHelp extends DialogFragment implements View.OnClickListen
                 break;
             case R.id.btnHelp:
                 FlurryAgent.logEvent("help_support_action_chosen");
+                dismiss();
                 showSupportDialog(qid, tileId);
                 break;
             case R.id.btnVideo:
