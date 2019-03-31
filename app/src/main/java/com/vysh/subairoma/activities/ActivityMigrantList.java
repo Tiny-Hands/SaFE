@@ -40,6 +40,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.flurry.android.FlurryAgent;
 import com.vysh.subairoma.ApplicationClass;
 import com.vysh.subairoma.R;
 import com.vysh.subairoma.SQLHelpers.SQLDatabaseHelper;
@@ -435,6 +436,7 @@ public class ActivityMigrantList extends AppCompatActivity implements RecyclerIt
             intent.putExtra("migrantmode", true);
             startActivity(intent);
         } else {
+            FlurryAgent.logEvent("migrant_listing");
             setUpRecyclerView(migrantModels);
         }
 

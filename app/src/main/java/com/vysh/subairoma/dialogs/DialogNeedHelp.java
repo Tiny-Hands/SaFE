@@ -24,6 +24,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.flurry.android.FlurryAgent;
 import com.vysh.subairoma.ApplicationClass;
 import com.vysh.subairoma.R;
 import com.vysh.subairoma.SQLHelpers.SQLDatabaseHelper;
@@ -84,12 +85,15 @@ public class DialogNeedHelp extends DialogFragment implements View.OnClickListen
             case R.id.btnCall:
                 Intent intent = new Intent(Intent.ACTION_DIAL);
                 intent.setData(Uri.parse("tel:" + number));
+                FlurryAgent.logEvent("help_call_action_chosen");
                 startActivity(intent);
                 break;
             case R.id.btnHelp:
+                FlurryAgent.logEvent("help_support_action_chosen");
                 showSupportDialog(qid, tileId);
                 break;
             case R.id.btnVideo:
+                FlurryAgent.logEvent("help_video_action_chosen");
                 if (!link.startsWith("http://") && !link.startsWith("http://"))
                     link = "http://" + link;
                 Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(link));
@@ -112,6 +116,7 @@ public class DialogNeedHelp extends DialogFragment implements View.OnClickListen
         btnSaveQuery.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                FlurryAgent.logEvent("help_query_saved");
                 String queryText = queryEt.getText().toString();
                 if (queryText.isEmpty() || queryText.length() < 10) {
                     queryEt.setError("Please explain your query");

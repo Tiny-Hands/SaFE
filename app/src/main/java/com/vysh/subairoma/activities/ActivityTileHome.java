@@ -32,6 +32,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.flurry.android.FlurryAgent;
 import com.vysh.subairoma.ApplicationClass;
 import com.vysh.subairoma.SharedPrefKeys;
 import com.vysh.subairoma.dialogs.DialogAnswersVerification;
@@ -129,6 +130,7 @@ public class ActivityTileHome extends AppCompatActivity {
         getUserDetails();
         setMigDetails();
         setUpNavigationButtons();
+        FlurryAgent.logEvent("tiles_listing_created");
     }
 
     @Override
@@ -140,6 +142,7 @@ public class ActivityTileHome extends AppCompatActivity {
         getAllResponses();
         getAllFeedbackResponses();
         getPercentComplete();
+        FlurryAgent.logEvent("tiles_listing_resumed");
     }
 
     @Override
@@ -196,7 +199,7 @@ public class ActivityTileHome extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(ActivityTileHome.this, ActivityProfileEdit.class);
-                intent.putExtra("userType", 0);
+                intent.putExtra("userType", SharedPrefKeys.migrantUser);
                 startActivity(intent);
             }
         });
@@ -306,7 +309,7 @@ public class ActivityTileHome extends AppCompatActivity {
                 switch (item.getItemId()) {
                     case R.id.nav_profile:
                         Intent intent = new Intent(ActivityTileHome.this, ActivityProfileEdit.class);
-                        intent.putExtra("userType", 1);
+                        intent.putExtra("userType", SharedPrefKeys.helperUser);
                         startActivity(intent);
                         break;
                     case R.id.nav_addmigrants:

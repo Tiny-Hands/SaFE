@@ -44,6 +44,7 @@ import com.facebook.Profile;
 import com.facebook.ProfileTracker;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
+import com.flurry.android.FlurryAgent;
 import com.vysh.subairoma.ApplicationClass;
 import com.vysh.subairoma.R;
 import com.vysh.subairoma.SQLHelpers.SQLDatabaseHelper;
@@ -121,7 +122,7 @@ public class ActivityProfileEdit extends AppCompatActivity implements View.OnCli
 
     CallbackManager callbackManager;
 
-    int userType = -1;
+    String userType = "";
     ProfileTracker mProfileTracker;
 
     @Override
@@ -129,14 +130,15 @@ public class ActivityProfileEdit extends AppCompatActivity implements View.OnCli
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
         ButterKnife.bind(this);
-        userType = getIntent().getIntExtra("userType", -1);
+        userType = getIntent().getStringExtra("userType");
 
         //tvHint.setText("Edit Details");
         btnAlreadyRegistered.setVisibility(GONE);
         btnNext.setText(R.string.save);
         btnNext.setOnClickListener(this);
-        if (userType == 0) {
+        if (userType.equalsIgnoreCase(SharedPrefKeys.migrantUser)) {
             tvTitle.setText(getResources().getString(R.string.edit_migrant));
+            FlurryAgent.logEvent("migrant_edit_mode");
             if (ApplicationClass.getInstance().getUserId() != -1) {
                 loginButton.setVisibility(GONE);
                 loginButtonToHide.setVisibility(GONE);
@@ -144,7 +146,8 @@ public class ActivityProfileEdit extends AppCompatActivity implements View.OnCli
             } else
                 setUpFBLogin();
             getData();
-        } else if (userType == 1) {
+        } else if (userType.equalsIgnoreCase(SharedPrefKeys.helperUser)) {
+            FlurryAgent.logEvent("helper_edit_mode");
             tvTitle.setText(getResources().getString(R.string.edit_profile));
             setUpUserData();
             setUpFBLogin();
@@ -333,11 +336,10 @@ public class ActivityProfileEdit extends AppCompatActivity implements View.OnCli
             protected Map<String, String> getParams() throws AuthFailureError {
                 HashMap<String, String> params = new HashMap<>();
                 params.put("fb_id", fbId);
-                if (userType == 0) {
+                if (userType.equalsIgnoreCase(SharedPrefKeys.migrantUser)) {
                     params.put("user_type", userType + "");
                     params.put("uid", ApplicationClass.getInstance().getMigrantId() + "");
                 } else {
-                    int userType = 1;
                     params.put("user_type", userType + "");
                     params.put("uid", ApplicationClass.getInstance().getUserId() + "");
                 }
@@ -345,6 +347,13 @@ public class ActivityProfileEdit extends AppCompatActivity implements View.OnCli
                     Log.d("mylog", "KEY: " + obj + " VALUE: " + params.get(obj));
                 }
                 return params;
+            }
+
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                HashMap<String, String> headers = new HashMap<>();
+                headers.put("Authorization", getSharedPreferences(SharedPrefKeys.sharedPrefName, MODE_PRIVATE).getString(SharedPrefKeys.token, ""));
+                return headers;
             }
         };
         RequestQueue queue = Volley.newRequestQueue(ActivityProfileEdit.this);
@@ -424,10 +433,10 @@ public class ActivityProfileEdit extends AppCompatActivity implements View.OnCli
     private void updateUser() {
         String API = "";
         int id = -2;
-        if (userType == 1) {
+        if (userType.equalsIgnoreCase(SharedPrefKeys.helperUser)) {
             API = ApplicationClass.getInstance().getAPIROOT() + apiUpdateUser;
             id = ApplicationClass.getInstance().getUserId();
-        } else if (userType == 0) {
+        } else if (userType.equalsIgnoreCase(SharedPrefKeys.migrantUser)) {
             API = ApplicationClass.getInstance().getAPIROOT() + apiUpdateMigrant;
             id = ApplicationClass.getInstance().getMigrantId();
         }
@@ -440,7 +449,7 @@ public class ActivityProfileEdit extends AppCompatActivity implements View.OnCli
         if (InternetConnectionChecker.isNetworkConnected(ActivityProfileEdit.this))
             sendToServer(API, id, name, age, number, sex);
         else {
-            if (userType == 1) {
+            if (userType.equalsIgnoreCase(SharedPrefKeys.helperUser)) {
                 //Save the new user info in SharedPrefs
                 SharedPreferences sharedPreferences = getSharedPreferences(SharedPrefKeys.sharedPrefName, MODE_PRIVATE);
                 SharedPreferences.Editor editor = sharedPreferences.edit();
@@ -473,7 +482,7 @@ public class ActivityProfileEdit extends AppCompatActivity implements View.OnCli
                     JSONObject jsonObject = new JSONObject(response);
                     Boolean error = jsonObject.getBoolean("error");
                     if (!error) {
-                        if (userType == 1) {
+                        if (userType.equalsIgnoreCase(SharedPrefKeys.helperUser)) {
                             //Save the new user info in SharedPrefs
                             SharedPreferences sharedPreferences = getSharedPreferences(SharedPrefKeys.sharedPrefName, MODE_PRIVATE);
                             SharedPreferences.Editor editor = sharedPreferences.edit();
@@ -519,9 +528,9 @@ public class ActivityProfileEdit extends AppCompatActivity implements View.OnCli
                 params.put("age", age);
                 params.put("gender", sex);
                 params.put("user_img", encodedImage);
-                if (userType == 1) {
+                if (userType.equalsIgnoreCase(SharedPrefKeys.helperUser)) {
                     params.put("user_id", id + "");
-                } else if (userType == 0) {
+                } else if (userType.equalsIgnoreCase(SharedPrefKeys.migrantUser)) {
                     params.put("migrant_id", id + "");
                     params.put("user_id", ApplicationClass.getInstance().getUserId() + "");
                 }
@@ -529,6 +538,12 @@ public class ActivityProfileEdit extends AppCompatActivity implements View.OnCli
                     Log.d("mylog", "Key: " + obj + " Val: " + params.get(obj));
                 }
                 return params;
+            }
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                HashMap<String, String> headers = new HashMap<>();
+                headers.put("Authorization", getSharedPreferences(SharedPrefKeys.sharedPrefName, MODE_PRIVATE).getString(SharedPrefKeys.token, ""));
+                return headers;
             }
         };
         RequestQueue queue = Volley.newRequestQueue(ActivityProfileEdit.this);

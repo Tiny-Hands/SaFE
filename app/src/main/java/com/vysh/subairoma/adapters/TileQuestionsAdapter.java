@@ -40,6 +40,7 @@ import android.widget.Spinner;
 import android.widget.SpinnerAdapter;
 import android.widget.TextView;
 
+import com.flurry.android.FlurryAgent;
 import com.vysh.subairoma.ApplicationClass;
 import com.vysh.subairoma.R;
 import com.vysh.subairoma.SQLHelpers.SQLDatabaseHelper;
@@ -749,6 +750,7 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
             btnHelp.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+                    FlurryAgent.logEvent("question_help_chosen");
                     int qid = questionsListDisplay.get(getAdapterPosition()).getQuestionId();
                     Log.d("mylog", "Getting for QID: " + qid);
                     int tileId = questionsListDisplay.get(getAdapterPosition()).getTileId();
@@ -792,6 +794,7 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
                 public boolean onKey(View view, int i, KeyEvent keyEvent) {
                     switch (i) {
                         case KeyEvent.KEYCODE_BACK:
+                            FlurryAgent.logEvent("responded_to_question");
                             saveTextInput();
                     }
                     return false;
@@ -836,6 +839,7 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
             spinnerOptions.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                 @Override
                 public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                    FlurryAgent.logEvent("responded_to_question");
                     String variable = questionsListDisplay.get(getAdapterPosition()).getVariable();
                     String response = spinnerOptions.getSelectedItem().toString();
                     Log.d("mylog", "Inserting spinner response for question: " +
@@ -906,6 +910,7 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
                 @Override
                 public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                     if (!fromSetView) {
+                        FlurryAgent.logEvent("responded_to_question");
                         if (b) {
                             Calendar cal = Calendar.getInstance();
                             String time = cal.getTimeInMillis() + "";
@@ -924,6 +929,7 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
                 @Override
                 public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                     if (!fromSetView) {
+                        FlurryAgent.logEvent("responded_to_question");
                         if (b) {
                             String message = questionsListDisplay.get(getAdapterPosition()).getConflictDescription();
                             showErrorDialog(-1, message);
@@ -946,6 +952,7 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
                     String variable = questionsListDisplay.get(getAdapterPosition()).getVariable();
                     if (isChecked) {
                         if (!fromSetView) {
+                            FlurryAgent.logEvent("responded_to_question");
                             //This condition is just to check If conflicting
                             boolean shouldAllowMarking = true;
                             String condition = questionsList.get(getAdapterPosition()).getCondition();
@@ -1040,9 +1047,12 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
                 notifyItemChanged(previousClickedPos);
             } else if (previousClickedPos == currentClickedPos) {
                 if (helpLayout.getVisibility() == View.VISIBLE) {
+                    FlurryAgent.logEvent("question_minimized");
                     notifyItemChanged(currentClickedPos);
-                } else
+                } else {
+                    FlurryAgent.logEvent("question_expanded");
                     showExpandView();
+                }
             }
             showExpandView();
         }

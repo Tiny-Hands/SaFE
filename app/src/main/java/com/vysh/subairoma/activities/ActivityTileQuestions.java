@@ -60,12 +60,6 @@ public class ActivityTileQuestions extends AppCompatActivity {
                 onBackPressed();
             }
         });
-        btnBack.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                onBackPressed();
-            }
-        });
         btnDone.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

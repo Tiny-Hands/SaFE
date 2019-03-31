@@ -31,6 +31,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.flurry.android.FlurryAgent;
 import com.vysh.subairoma.ApplicationClass;
 import com.vysh.subairoma.R;
 import com.vysh.subairoma.SQLHelpers.SQLDatabaseHelper;
@@ -122,6 +123,7 @@ public class ActivityTileChooser extends AppCompatActivity {
         ButterKnife.bind(this);
         navView = findViewById(R.id.nav_view);
         intent = getIntent();
+        FlurryAgent.logEvent("tile_type_listing");
         getRequiredData(intent);
         if (isInitialUse()) {
             showInformationOverlay();
@@ -140,6 +142,7 @@ public class ActivityTileChooser extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 if (countryName.length() < 2) {
+                    FlurryAgent.logEvent("fep_without_country_selection");
                     Toast.makeText(ActivityTileChooser.this, getResources().getString(R.string.select_country), Toast.LENGTH_SHORT).show();
                     return;
                 }
@@ -305,7 +308,7 @@ public class ActivityTileChooser extends AppCompatActivity {
                 switch (item.getItemId()) {
                     case R.id.nav_profile:
                         Intent intent = new Intent(ActivityTileChooser.this, ActivityProfileEdit.class);
-                        intent.putExtra("userType", 1);
+                        intent.putExtra("userType", SharedPrefKeys.helperUser);
                         startActivity(intent);
                         break;
                     case R.id.nav_addmigrants:
@@ -335,6 +338,7 @@ public class ActivityTileChooser extends AppCompatActivity {
                         startActivity(intentFaq);
                         break;
                     case R.id.nav_tutorial:
+                        FlurryAgent.logEvent("rewatch_tutorial_selection");
                         drawerLayout.closeDrawer(GravityCompat.END);
                         rlInstruction.setVisibility(View.VISIBLE);
                         showInformationOverlay();
@@ -453,6 +457,7 @@ public class ActivityTileChooser extends AppCompatActivity {
     }
 
     public void goToNextSectionProcess() {
+        FlurryAgent.logEvent("next_section_click");
         if (!checkIfVerifiedAnswers())
             new DialogAnswersVerification().show(getSupportFragmentManager(), "dialog");
         else {
