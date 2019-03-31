@@ -29,6 +29,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.crashlytics.android.Crashlytics;
+import com.flurry.android.FlurryAgent;
 import com.vysh.subairoma.ApplicationClass;
 import com.vysh.subairoma.R;
 import com.vysh.subairoma.SQLHelpers.SQLDatabaseHelper;
@@ -110,8 +111,10 @@ public class ActivitySplash extends AppCompatActivity {
         }
         if (sp.getString(SharedPrefKeys.lang, "").equalsIgnoreCase("en")) {
             setLocale("en");
+            FlurryAgent.logEvent("locale_english_selection");
         } else {
             setLocale("np");
+            FlurryAgent.logEvent("locale_nepal_selection");
         }
         if (sp.getInt(SharedPrefKeys.savedTableCount, 0) == apiCount) {
             startRegisterActivity();

@@ -24,6 +24,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.flurry.android.FlurryAgent;
 import com.vysh.subairoma.ApplicationClass;
 import com.vysh.subairoma.R;
 import com.vysh.subairoma.SQLHelpers.SQLDatabaseHelper;
@@ -161,7 +162,9 @@ public class ActivityOTPVerification extends AppCompatActivity implements View.O
             case R.id.btnVerify:
                 //Validate the OTP Here
                 boolean isValid = isOtpValid();
+
                 if (isValid) {
+                    FlurryAgent.logEvent("otp_verified");
                     if (isLogginIn) {
                         SharedPreferences sp = getSharedPreferences(SharedPrefKeys.sharedPrefName, MODE_PRIVATE);
                         SharedPreferences.Editor editor = sp.edit();
@@ -174,8 +177,11 @@ public class ActivityOTPVerification extends AppCompatActivity implements View.O
                         startMigrantActivity();
                     } else
                         registerUser(apiUserRegister);
-                } else
+                } else {
+
+                    FlurryAgent.logEvent("otp_verification_failed");
                     showSnackbar("The OTP is incorrect, please try registering Again");
+                }
                 /*
                 Intent intent = new Intent(ActivityOTPVerification.this, ActivityMigrantList.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -183,6 +189,8 @@ public class ActivityOTPVerification extends AppCompatActivity implements View.O
                 */
                 break;
             case R.id.btnChangeNumber:
+
+                FlurryAgent.logEvent("number_change_initiated");
                 Intent intent1 = new Intent(ActivityOTPVerification.this, ActivityRegister.class);
                 intent1.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(intent1);

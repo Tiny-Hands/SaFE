@@ -39,6 +39,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.facebook.CallbackManager;
+import com.flurry.android.FlurryAgent;
 import com.vysh.subairoma.ApplicationClass;
 import com.vysh.subairoma.R;
 import com.vysh.subairoma.SQLHelpers.SQLDatabaseHelper;
@@ -440,6 +441,8 @@ public class ActivityRegister extends AppCompatActivity {
             public void onClick(View v) {
                 if (validateData()) {
                     Log.d("mylog", "Saving User");
+
+                    FlurryAgent.logEvent("user_registration_initiated");
                     saveUser();
                 }
             }
