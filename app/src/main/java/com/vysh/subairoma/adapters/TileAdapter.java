@@ -74,6 +74,11 @@ public class TileAdapter extends RecyclerView.Adapter<TileAdapter.TileViewHolder
         int errorCount = sqlDatabaseHelper.getTileErrorCount(ApplicationClass.getInstance().getMigrantId(),
                 tileId);
         Log.d("mylog", "Tile Errors: " + errorCount + " For tile ID: " + tileId);
+
+
+        int total = sqlDatabaseHelper.getQuestions(tileId).size();
+        int answered = sqlDatabaseHelper.getTileResponse(ApplicationClass.getInstance().getMigrantId(), tileId);
+        String completeText = answered + " Answered /" + total + " Questions";
         if (errorCount > 0) {
             for (int i = 0; i < errorCount; i++) {
                 ImageView imgView = new ImageView(holder.llErrorLayout.getContext());
@@ -87,6 +92,7 @@ public class TileAdapter extends RecyclerView.Adapter<TileAdapter.TileViewHolder
         }
         //DecimalFormat decimalFormat = new DecimalFormat("##");
         else if (tileList.get(position).getPercentComplete() > 99.9) {
+            completeText = "COMPLETED";
             holder.ivDone.setVisibility(View.VISIBLE);
             Animation animZoomin = AnimationUtils.loadAnimation(context, R.anim.zoomin);
             animZoomin.setInterpolator(new BounceInterpolator());
@@ -97,10 +103,7 @@ public class TileAdapter extends RecyclerView.Adapter<TileAdapter.TileViewHolder
             holder.tvCompletionStatus.setBackgroundResource(R.color.grey);
         }
 
-        int total = sqlDatabaseHelper.getQuestions(tileId).size();
-        int answered = sqlDatabaseHelper.getTileResponse(ApplicationClass.getInstance().getMigrantId(), tileId);
-        String text = answered + " Answered /" + total + " Questions";
-        holder.tvCompletionStatus.setText(text);
+        holder.tvCompletionStatus.setText(completeText);
 
         //int noRedflagQuestionCount = sqlDatabaseHelper.getNoRedFlagQuestionsCount(tileId);
 

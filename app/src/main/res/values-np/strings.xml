@@ -14,6 +14,7 @@
     <string name="opt_message">तपाईँले दिनुभएको फोनमा हामीले OTP कोड SMS गरेर पठाँउदैछौँ । कृपया त्यो OTP कोड तल राख्नुहोस् । यो कोड प्राप्त हुन १ मिनेट जस्तो लाग्नसक्छ ।</string>
 
     <!-- Generic -->
+    <string name="saving_query">Saving Query</string>
     <string name="next">अगाडि बढ्नु</string>
     <string name="proceed">अगाडि बढ्नु</string>
     <string name="back">फिर्ता</string>
