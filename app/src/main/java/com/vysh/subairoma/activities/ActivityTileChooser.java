@@ -48,6 +48,7 @@ import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import de.hdodenhof.circleimageview.CircleImageView;
 
 /**
  * Created by Vishal on 8/25/2018.
@@ -57,6 +58,8 @@ public class ActivityTileChooser extends AppCompatActivity {
     private final String saveAPI = "/saveresponse.php";
     private final String saveFeedbackAPI = "/savefeedbackresponse.php";
 
+    @BindView(R.id.ivUserAvatar)
+    CircleImageView ivMigrantImage;
     @BindView(R.id.tvMigNumber)
     TextView tvMigNumber;
     @BindView(R.id.tvMigrantName)
@@ -193,6 +196,19 @@ public class ActivityTileChooser extends AppCompatActivity {
             }
         });
 
+        String img = new SQLDatabaseHelper(ActivityTileChooser.this).getMigrantImg(ApplicationClass.getInstance().getMigrantId());
+        if (img != null && img.length() > 5)
+            ivMigrantImage.setImageBitmap(ImageEncoder.decodeFromBase64(img));
+        else if (migrantGender != null && migrantGender.equalsIgnoreCase("female"))
+            ivMigrantImage.setImageResource(R.drawable.ic_female);
+        ivMigrantImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(ActivityTileChooser.this, ActivityProfileEdit.class);
+                intent.putExtra("userType", SharedPrefKeys.migrantUser);
+                startActivity(intent);
+            }
+        });
         hideIfIndia();
         setUpNavigationButtons();
     }
