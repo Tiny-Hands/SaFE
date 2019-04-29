@@ -9,6 +9,8 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.Matrix;
+import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -396,7 +398,7 @@ public class ActivityProfileEdit extends AppCompatActivity implements View.OnCli
             if (requestCode == REQUEST_TAKE_PIC) {
                 Log.d("mylog", "request was camera");
                 Bitmap picTaken = getPic();
-                picTaken = ImageRotator.getBitmapRotatedByDegree(picTaken, 90);
+                //picTaken = ImageRotator.getBitmapRotatedByDegree(picTaken, 90);
                 encodeImage(picTaken);
                 getPic();
                 ivRegister.setImageBitmap(picTaken);
@@ -426,8 +428,44 @@ public class ActivityProfileEdit extends AppCompatActivity implements View.OnCli
     }
 
     private Bitmap getPic() {
+        ExifInterface ei = null;
+        Bitmap rotatedBitmap = null;
         Bitmap bitmap = BitmapFactory.decodeFile(pathToImage);
-        return ImageResizer.calculateInSampleSize(bitmap);
+        try {
+            ei = new ExifInterface(pathToImage);
+            int orientation = ei.getAttributeInt(ExifInterface.TAG_ORIENTATION,
+                    ExifInterface.ORIENTATION_UNDEFINED);
+            switch (orientation) {
+
+                case ExifInterface.ORIENTATION_ROTATE_90:
+                    rotatedBitmap = rotateImage(bitmap, 90);
+                    break;
+
+                case ExifInterface.ORIENTATION_ROTATE_180:
+                    rotatedBitmap = rotateImage(bitmap, 180);
+                    break;
+
+                case ExifInterface.ORIENTATION_ROTATE_270:
+                    rotatedBitmap = rotateImage(bitmap, 270);
+                    break;
+
+                case ExifInterface.ORIENTATION_NORMAL:
+                default:
+                    rotatedBitmap = bitmap;
+            }
+        } catch (IOException e) {
+            Log.d("mylog", "Error in exif");
+        }
+        if (rotatedBitmap == null)
+            rotatedBitmap = bitmap;
+        return ImageResizer.calculateInSampleSize(rotatedBitmap);
+    }
+
+    public static Bitmap rotateImage(Bitmap source, float angle) {
+        Matrix matrix = new Matrix();
+        matrix.postRotate(angle);
+        return Bitmap.createBitmap(source, 0, 0, source.getWidth(), source.getHeight(),
+                matrix, true);
     }
 
     private void updateUser() {
@@ -539,6 +577,7 @@ public class ActivityProfileEdit extends AppCompatActivity implements View.OnCli
                 }
                 return params;
             }
+
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
                 HashMap<String, String> headers = new HashMap<>();
