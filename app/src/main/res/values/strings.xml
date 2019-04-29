@@ -145,5 +145,8 @@
     <string name="welcome_info">Welcome to SaFE app</string>
     <string name="complete_message">This section is complete, would you like to move on to the next section?</string>
     <string name="saving_query">Saving Query</string>
+    <string name="infostep1" >तपाईंले जाने योजना बनाउनु भएको देश चयन गर्नुहोस्</string>
+    <string name="infostep2">Check if you are fully prepared</string>
+    <string name="infostep3">Check if you are ready to travel</string>
 
 </resources>

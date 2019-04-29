@@ -95,7 +95,7 @@
                             android:layout_marginRight="@dimen/large_margin"
                             android:layout_marginTop="@dimen/default_margin"
                             android:progressDrawable="@drawable/progress_drawable"
-                            android:visibility="gone" />
+                            android:visibility="visible" />
 
                         <TextView
                             android:id="@+id/tvPercentComplete1"
@@ -114,7 +114,7 @@
                         android:layout_marginTop="@dimen/large_margin"
                         android:background="@null"
                         android:src="@drawable/ic_next"
-                        android:visibility="invisible" />
+                        android:visibility="visible" />
 
                     <LinearLayout
                         android:id="@+id/llTravel"
@@ -148,7 +148,7 @@
                             android:layout_marginRight="@dimen/large_margin"
                             android:layout_marginTop="@dimen/default_margin"
                             android:progressDrawable="@drawable/progress_drawable"
-                            android:visibility="gone" />
+                            android:visibility="visible" />
 
                         <TextView
                             android:id="@+id/tvPercentComplete2"
@@ -225,7 +225,7 @@
                         android:id="@+id/rlInfo1"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:visibility="invisible">
+                        android:visibility="visible">
 
                         <com.vysh.subairoma.utils.CustomTextView
                             android:id="@+id/tv1"
@@ -247,10 +247,10 @@
                             android:layout_centerVertical="true"
                             android:layout_toRightOf="@+id/tv1"
                             android:lineSpacingExtra="2dp"
-                            android:textSize="@dimen/info_desc_text"
                             android:paddingBottom="@dimen/default_margin"
-                            android:text="Select the country to which you plan on going"
+                            android:text="@string/infostep1"
                             android:textColor="@color/infoTextWhite"
+                            android:textSize="@dimen/info_desc_text"
                             app:fonts="gotham_bold.ttf" />
 
                         <LinearLayout
@@ -311,7 +311,7 @@
                             android:text="2."
                             android:textColor="@color/infoTextWhite"
                             android:textSize="24sp"
-                            android:visibility="invisible"
+                            android:visibility="visible"
                             app:fonts="gotham_light.ttf" />
 
                         <com.vysh.subairoma.utils.CustomTextView
@@ -323,18 +323,18 @@
                             android:layout_toRightOf="@+id/tv2"
                             android:lineSpacingExtra="2dp"
                             android:paddingTop="@dimen/default_margin"
-                            android:textSize="@dimen/info_desc_text"
-                            android:text="Check if you are fully prepared"
+                            android:text="@string/infostep2"
                             android:textColor="@color/infoTextWhite"
-                            android:visibility="invisible"
+                            android:textSize="@dimen/info_desc_text"
+                            android:visibility="visible"
                             app:fonts="gotham_bold.ttf" />
 
                         <com.vysh.subairoma.utils.CustomTextView
                             android:id="@+id/tv3"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_centerVertical="true"
                             android:layout_centerHorizontal="true"
+                            android:layout_centerVertical="true"
                             android:paddingRight="152dp"
                             android:paddingTop="@dimen/default_margin"
                             android:text="3."
@@ -350,12 +350,12 @@
                             android:layout_centerHorizontal="true"
                             android:layout_centerVertical="true"
                             android:lineSpacingExtra="2dp"
-                            android:visibility="visible"
                             android:paddingLeft="@dimen/default_margin"
                             android:paddingTop="@dimen/default_margin"
-                            android:textSize="@dimen/info_desc_text"
-                            android:text="Check if you are ready to travel"
+                            android:text="@string/infostep3"
                             android:textColor="@color/infoTextWhite"
+                            android:textSize="@dimen/info_desc_text"
+                            android:visibility="visible"
                             app:fonts="gotham_bold.ttf" />
 
                         <LinearLayout
@@ -371,7 +371,7 @@
                                 android:layout_weight="1"
                                 android:gravity="center"
                                 android:orientation="vertical"
-                                android:visibility="invisible">
+                                android:visibility="visible">
 
                                 <TextView
                                     android:layout_width="wrap_content"
@@ -398,7 +398,7 @@
                                     android:layout_marginRight="@dimen/large_margin"
                                     android:layout_marginTop="@dimen/default_margin"
                                     android:progressDrawable="@drawable/progress_drawable"
-                                    android:visibility="gone" />
+                                    android:visibility="visible" />
 
                                 <TextView
                                     android:id="@+id/firsttvPercentComplete1"
@@ -416,7 +416,7 @@
                                 android:layout_marginTop="@dimen/large_margin"
                                 android:background="@null"
                                 android:src="@drawable/ic_next"
-                                android:visibility="invisible" />
+                                android:visibility="gone" />
 
                             <LinearLayout
                                 android:id="@+id/llinfo3"
@@ -452,7 +452,7 @@
                                     android:layout_marginRight="@dimen/large_margin"
                                     android:layout_marginTop="@dimen/default_margin"
                                     android:progressDrawable="@drawable/progress_drawable"
-                                    android:visibility="gone" />
+                                    android:visibility="visible" />
 
                                 <TextView
                                     android:id="@+id/firsttvPercentComplete2"
@@ -481,7 +481,7 @@
                         android:layout_marginTop="@dimen/large_margin"
                         android:gravity="center|bottom"
                         android:orientation="vertical"
-                        android:visibility="invisible">
+                        android:visibility="gone">
 
                         <ImageView
                             android:id="@+id/firstivImpContacts"
@@ -506,7 +506,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
-            android:layout_marginBottom="176dp"
+            android:layout_marginBottom="@dimen/default_margin"
             android:background="@drawable/default_button_accent"
             android:foreground="?attr/selectableItemBackgroundBorderless"
             android:text="@string/next"

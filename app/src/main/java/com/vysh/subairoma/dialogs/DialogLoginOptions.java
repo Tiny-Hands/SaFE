@@ -56,7 +56,7 @@ public class DialogLoginOptions extends DialogFragment {
     }
 
     private void setUpListeners() {
-        loginButton.setReadPermissions("email");
+       /* loginButton.setReadPermissions("email");
         // Callback registration
         loginButton.registerCallback(activityRegister.callbackManager, new FacebookCallback<LoginResult>() {
             @Override
@@ -90,14 +90,14 @@ public class DialogLoginOptions extends DialogFragment {
                 Log.d("mylog", "Error: " + exception.toString());
             }
         });
-
+*/
         btnPhoneLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String number = etPhone.getText().toString();
                 if (!number.isEmpty() && number.length() == 10) {
-                    activityRegister.entered_phone = number;
-                    activityRegister.checkUserRegistration(number);
+                    ((ActivityRegister) getActivity()).entered_phone = number;
+                    ((ActivityRegister) getActivity()).checkUserRegistration(number);
                 } else {
                     etPhone.setError("Please enter a valid number");
                 }

@@ -144,5 +144,8 @@
     <string name="section_locked">खण्ड लक छ</string>
     <string name="welcome_info">सेफ एप्प मा स्वागत छ</string>
     <string name="complete_message">This section is complete, would you like to move on to the next section?</string>
+    <string name="infostep1">तपाईंले जाने योजना बनाउनु भएको देश चयन गर्नुहोस्</string>
+    <string name="infostep2">यदि तपाइँ पूर्णतया तयार हुनुहुन्छ भने जाँच्नुहोस्</string>
+    <string name="infostep3">यदि तपाईं यात्रा गर्न तयार हुनुहुन्छ भने जाँच्नुहोस्</string>
 
 </resources>
