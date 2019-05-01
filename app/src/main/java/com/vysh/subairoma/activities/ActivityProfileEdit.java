@@ -33,6 +33,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.android.volley.AuthFailureError;
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -587,6 +588,7 @@ public class ActivityProfileEdit extends AppCompatActivity implements View.OnCli
         };
         RequestQueue queue = Volley.newRequestQueue(ActivityProfileEdit.this);
         saveRequest.setShouldCache(false);
+        saveRequest.setRetryPolicy(new DefaultRetryPolicy(60 * 1000, 0, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         queue.add(saveRequest);
     }
 
