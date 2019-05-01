@@ -9,7 +9,6 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#459719"
         android:orientation="vertical"
         android:padding="@dimen/medium_margin">
 
@@ -20,7 +19,6 @@
             android:layout_marginBottom="@dimen/medium_margin"
             android:padding="2dp"
             android:text="Title"
-            android:textColor="@android:color/white"
             android:textSize="18sp"
             app:fonts="gotham_bold.ttf" />
 
@@ -30,7 +28,6 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/medium_margin"
             android:text="Some long description"
-            android:textColor="@android:color/white"
             android:textSize="16sp" />
 
         <LinearLayout
@@ -51,7 +48,7 @@
                 android:layout_marginBottom="@dimen/medium_margin"
                 android:layout_marginLeft="@dimen/medium_margin"
                 android:text="Address:fjlkljklj"
-                android:textColor="#fff"
+                
                 android:textSize="16sp" />
         </LinearLayout>
 
@@ -74,7 +71,7 @@
                 android:layout_marginBottom="@dimen/medium_margin"
                 android:layout_marginLeft="@dimen/medium_margin"
                 android:text="Phone: 12345456"
-                android:textColor="@android:color/white"
+                
                 android:textSize="16sp" />
         </LinearLayout>
 
@@ -97,7 +94,7 @@
                 android:layout_marginBottom="@dimen/medium_margin"
                 android:layout_marginLeft="@dimen/medium_margin"
                 android:text="Website: www.www.www"
-                android:textColor="@android:color/white"
+                
                 android:textSize="16sp" />
         </LinearLayout>
 
@@ -118,7 +115,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/medium_margin"
                 android:text="Email: www@www.www"
-                android:textColor="@android:color/white"
+                
                 android:textSize="16sp" />
         </LinearLayout>
     </LinearLayout>
