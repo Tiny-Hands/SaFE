@@ -144,7 +144,24 @@
     <string name="section_locked">Section Locked</string>
     <string name="welcome_info">Welcome to SaFE app</string>
     <string name="complete_message">This section is complete, would you like to move on to the next section?</string>
-    <string name="infostep1">तपाईंले जाने योजना बनाउनु भएको देश चयन गर्नुहोस्</string>
+    <string name="infostep1">Choose the country you are planning to go to</string>
     <string name="infostep2">Check if you are fully prepared</string>
     <string name="infostep3">Check if you are ready to travel</string>
+    <string name="about_us_content">SaFE was developed by Tiny Hands Nepal, an NGO dedicated to fighting Nepal\'s greatest injustices. THN has been working in Nepal since 2005 and has helped prevent over 15,000 Nepali citizens from being trafficked into modern day slavery. This app was designed in light of our extensive experience and with your well-being in mind</string>
+    <string name="fq1">Why do I need to use this app?</string>
+    <string name="fq2">How do I find a good manpower agency?</string>
+    <string name="fq3">Can I use an agent? (Is it safe to use an agent?)</string>
+    <string name="fq4">Why do you need my contact information?</string>
+    <string name="fq5">What are the red flags I\'m seeing?</string>
+    <string name="fq6">What does the help button do?</string>
+    <string name="fq7">How do I advance from the Preparation section to the Travel section?</string>
+    <string name="fq8">If I don\'t reach 100% completion for the Preparation section, what happens?</string>
+    <string name="fqa1">This app will help you protect yourself from becoming a victim of fraud, human trafficking, and/or human smuggling while you pursue foreign employment.</string>
+    <string name="fqa2">You can find a manpower agency in newspapers, navigating to the DOFE website (www.bit.ly/dofenepal) and on job listing websites such as www.baideshikrojgari.com.  If the the agency has an active registration and status then you should feel free to use them. You can determine the status by visiting the DoFE website specifically. If the manpower agency provides you with a demand letter, a LOT NUMBER (LT NO) and sense workers overseas then you can generally trust they are reliable.</string>
+    <string name="fqa3">No, It is not safe to use an agent for foreign employment unless he/she has a valid license from DOFE. If you use an agent your cost will be and chance of exploitation high.</string>
+    <string name="fqa4">Your contact information allows us to contact you if we notice any potential problems or red flags with your migration plans. If there is a chance your safety is at risk we want to let you know</string>
+    <string name="fqa5">The red flags represent potential problems or areas of risk with your migration plan. Those might be problems based on our vast experience with human trafficking and exploitation, or government regulations and requirements.</string>
+    <string name="fqa6">By clicking the help button you will be connected to one of our Nepali staff immediately. It will then be their priority to make sure you receive the help you need</string>
+    <string name="fqa7">Once you complete the Preparation section with all of the information you have available and are ready to purchase your tickets for travel, then click on the Travel icon on the main app screen. You will be asked if you are sure you want to advance. By clicking yes, you agree to not go back and edit your responses. You will then be able to complete the Travel section.</string>
+    <string name="fqa8">Reaching 100% completion is important, but not required to advance to the Travel section. Reaching 100% will ensure we have the most accurate and complete information to assist you with your plans.</string>
 </resources>

@@ -66,7 +66,7 @@
                 android:textSize="@dimen/about_us_section_title"
                 app:fonts="gotham_bold.ttf" />
 
-            <com.vysh.subairoma.utils.CustomTextView
+            <com.wordpress.priyankvex.smarttextview.SmartTextView
                 android:id="@+id/tvDetail1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -75,10 +75,12 @@
                 app:fonts="gotham_light.ttf" />
 
             <View
+                android:id="@+id/viewseperator1"
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:layout_marginBottom="@dimen/default_margin"
                 android:layout_marginTop="@dimen/default_margin"
+                android:visibility="invisible"
                 android:background="#333" />
 
             <com.vysh.subairoma.utils.CustomTextView
@@ -89,7 +91,7 @@
                 android:textSize="@dimen/about_us_section_title"
                 app:fonts="gotham_bold.ttf" />
 
-            <com.vysh.subairoma.utils.CustomTextView
+            <com.wordpress.priyankvex.smarttextview.SmartTextView
                 android:id="@+id/tvDetail2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -101,10 +103,10 @@
                 android:id="@+id/viewseperator2"
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
+                android:visibility="invisible"
                 android:layout_marginBottom="@dimen/default_margin"
                 android:layout_marginTop="@dimen/default_margin"
-                android:background="#333"
-                android:visibility="gone" />
+                android:background="#333" />
 
             <com.vysh.subairoma.utils.CustomTextView
                 android:id="@+id/tvfaq3"
@@ -112,16 +114,139 @@
                 android:layout_height="wrap_content"
                 android:text="Address"
                 android:textSize="@dimen/about_us_section_title"
-                android:visibility="gone"
                 app:fonts="gotham_bold.ttf" />
 
-            <com.vysh.subairoma.utils.CustomTextView
+            <com.wordpress.priyankvex.smarttextview.SmartTextView
                 android:id="@+id/tvDetail3"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:lineSpacingExtra="5dp"
                 android:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla tempor nunc non justo fermentum porttitor. Etiam a est non enim accumsan efficitur. In mollis sollicitudin enim sed interdum. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices."
-                android:visibility="gone"
+                app:fonts="gotham_light.ttf" />
+
+            <View
+                android:id="@+id/viewseperator3"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:visibility="invisible"
+                android:layout_marginBottom="@dimen/default_margin"
+                android:layout_marginTop="@dimen/default_margin"
+                android:background="#333" />
+
+            <com.vysh.subairoma.utils.CustomTextView
+                android:id="@+id/tvfaq4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Address"
+                android:textSize="@dimen/about_us_section_title"
+                app:fonts="gotham_bold.ttf" />
+
+            <com.wordpress.priyankvex.smarttextview.SmartTextView
+                android:id="@+id/tvDetail4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:lineSpacingExtra="5dp"
+                android:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla tempor nunc non justo fermentum porttitor. Etiam a est non enim accumsan efficitur. In mollis sollicitudin enim sed interdum. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices."
+                app:fonts="gotham_light.ttf" />
+
+            <View
+                android:id="@+id/viewseperator4"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:visibility="invisible"
+                android:layout_marginBottom="@dimen/default_margin"
+                android:layout_marginTop="@dimen/default_margin"
+                android:background="#333" />
+
+            <com.vysh.subairoma.utils.CustomTextView
+                android:id="@+id/tvfaq5"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Address"
+                android:textSize="@dimen/about_us_section_title"
+                app:fonts="gotham_bold.ttf" />
+
+            <com.wordpress.priyankvex.smarttextview.SmartTextView
+                android:id="@+id/tvDetail5"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:lineSpacingExtra="5dp"
+                android:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla tempor nunc non justo fermentum porttitor. Etiam a est non enim accumsan efficitur. In mollis sollicitudin enim sed interdum. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices."
+                app:fonts="gotham_light.ttf" />
+
+            <View
+                android:id="@+id/viewseperator5"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:visibility="invisible"
+                android:layout_marginBottom="@dimen/default_margin"
+                android:layout_marginTop="@dimen/default_margin"
+                android:background="#333" />
+
+            <com.vysh.subairoma.utils.CustomTextView
+                android:id="@+id/tvfaq6"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Address"
+                android:textSize="@dimen/about_us_section_title"
+                app:fonts="gotham_bold.ttf" />
+
+            <com.wordpress.priyankvex.smarttextview.SmartTextView
+                android:id="@+id/tvDetail6"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:lineSpacingExtra="5dp"
+                android:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla tempor nunc non justo fermentum porttitor. Etiam a est non enim accumsan efficitur. In mollis sollicitudin enim sed interdum. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices."
+                app:fonts="gotham_light.ttf" />
+
+            <View
+                android:id="@+id/viewseperator6"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:visibility="invisible"
+                android:layout_marginBottom="@dimen/default_margin"
+                android:layout_marginTop="@dimen/default_margin"
+                android:background="#333" />
+
+            <com.vysh.subairoma.utils.CustomTextView
+                android:id="@+id/tvfaq7"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Address"
+                android:textSize="@dimen/about_us_section_title"
+                app:fonts="gotham_bold.ttf" />
+
+            <com.wordpress.priyankvex.smarttextview.SmartTextView
+                android:id="@+id/tvDetail7"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:lineSpacingExtra="5dp"
+                android:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla tempor nunc non justo fermentum porttitor. Etiam a est non enim accumsan efficitur. In mollis sollicitudin enim sed interdum. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices."
+                app:fonts="gotham_light.ttf" />
+
+            <View
+                android:visibility="invisible"
+                android:id="@+id/viewseperator7"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginBottom="@dimen/default_margin"
+                android:layout_marginTop="@dimen/default_margin"
+                android:background="#333" />
+
+            <com.vysh.subairoma.utils.CustomTextView
+                android:id="@+id/tvfaq8"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Address"
+                android:textSize="@dimen/about_us_section_title"
+                app:fonts="gotham_bold.ttf" />
+
+            <com.wordpress.priyankvex.smarttextview.SmartTextView
+                android:id="@+id/tvDetail8"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:lineSpacingExtra="5dp"
+                android:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla tempor nunc non justo fermentum porttitor. Etiam a est non enim accumsan efficitur. In mollis sollicitudin enim sed interdum. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices."
                 app:fonts="gotham_light.ttf" />
 
         </LinearLayout>

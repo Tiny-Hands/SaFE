@@ -114,7 +114,7 @@
                         android:layout_marginTop="@dimen/large_margin"
                         android:background="@null"
                         android:src="@drawable/ic_next"
-                        android:visibility="visible" />
+                        android:visibility="gone" />
 
                     <LinearLayout
                         android:id="@+id/llTravel"
@@ -398,7 +398,7 @@
                                     android:layout_marginRight="@dimen/large_margin"
                                     android:layout_marginTop="@dimen/default_margin"
                                     android:progressDrawable="@drawable/progress_drawable"
-                                    android:visibility="visible" />
+                                    android:visibility="invisible" />
 
                                 <TextView
                                     android:id="@+id/firsttvPercentComplete1"
@@ -452,7 +452,7 @@
                                     android:layout_marginRight="@dimen/large_margin"
                                     android:layout_marginTop="@dimen/default_margin"
                                     android:progressDrawable="@drawable/progress_drawable"
-                                    android:visibility="visible" />
+                                    android:visibility="invisible" />
 
                                 <TextView
                                     android:id="@+id/firsttvPercentComplete2"
