@@ -241,7 +241,7 @@
                             app:fonts="gotham_light.ttf" />
 
                         <com.vysh.subairoma.utils.CustomTextView
-                            android:layout_width="116dp"
+                            android:layout_width="106dp"
                             android:layout_height="wrap_content"
                             android:layout_alignTop="@+id/tv1"
                             android:layout_centerVertical="true"
@@ -316,7 +316,7 @@
 
                         <com.vysh.subairoma.utils.CustomTextView
                             android:id="@+id/tv2desc"
-                            android:layout_width="146dp"
+                            android:layout_width="126dp"
                             android:layout_height="wrap_content"
                             android:layout_alignTop="@+id/tv2"
                             android:layout_centerVertical="true"
@@ -345,7 +345,7 @@
 
                         <com.vysh.subairoma.utils.CustomTextView
                             android:id="@+id/tv3desc"
-                            android:layout_width="146dp"
+                            android:layout_width="126dp"
                             android:layout_height="wrap_content"
                             android:layout_centerHorizontal="true"
                             android:layout_centerVertical="true"
