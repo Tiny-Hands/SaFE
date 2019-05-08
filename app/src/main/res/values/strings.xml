@@ -145,7 +145,7 @@
     <string name="welcome_info">Welcome to SaFE app</string>
     <string name="complete_message">This section is complete, would you like to move on to the next section?</string>
     <string name="saving_query">Saving Query</string>
-    <string name="infostep1" >तपाईंले जाने योजना बनाउनु भएको देश चयन गर्नुहोस्</string>
+    <string name="infostep1">तपाईंले जाने योजना बनाउनु भएको देश चयन गर्नुहोस्</string>
     <string name="infostep2">Check if you are fully prepared</string>
     <string name="infostep3">Check if you are ready to travel</string>
     <string name="about_us_content">SaFE was developed by Tiny Hands Nepal, an NGO dedicated to fighting Nepal\'s greatest injustices. THN has been working in Nepal since 2005 and has helped prevent over 15,000 Nepali citizens from being trafficked into modern day slavery. This app was designed in light of our extensive experience and with your well-being in mind</string>
@@ -165,5 +165,7 @@
     <string name="fqa6">By clicking the help button you will be connected to one of our Nepali staff immediately. It will then be their priority to make sure you receive the help you need</string>
     <string name="fqa7">Once you complete the Preparation section with all of the information you have available and are ready to purchase your tickets for travel, then click on the Travel icon on the main app screen. You will be asked if you are sure you want to advance. By clicking yes, you agree to not go back and edit your responses. You will then be able to complete the Travel section.</string>
     <string name="fqa8">Reaching 100% completion is important, but not required to advance to the Travel section. Reaching 100% will ensure we have the most accurate and complete information to assist you with your plans.</string>
+    <string name="delete_migrant">Delete This Migrant</string>
+    <string name="watch_tutorial">Watch Tutorial</string>
 
 </resources>

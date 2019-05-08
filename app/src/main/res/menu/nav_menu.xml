@@ -4,34 +4,34 @@
         <item
             android:id="@+id/nav_profile"
             android:icon="@drawable/ic_avatar"
-            android:title="Edit Profile" />
+            android:title="@string/edit_profile" />
         <item
             android:id="@+id/nav_addmigrants"
             android:icon="@drawable/ic_add"
-            android:title="Add Migrant" />
+            android:title="@string/add_migrant" />
         <item
             android:id="@+id/delete_migrant"
             android:icon="@drawable/ic_delete_nav"
-            android:title="Delete This Migrant" />
+            android:title="@string/delete_migrant" />
 
     </group>
     <group android:id="@+id/secondaryNavOpt">
         <item
             android:id="@+id/nav_about"
             android:icon="@drawable/ic_about"
-            android:title="About Us" />
+            android:title="@string/about_us" />
         <item
             android:id="@+id/nav_faq"
             android:icon="@drawable/ic_faq"
-            android:title="Frequntly Asked Questions" />
+            android:title="@string/faqs" />
         <item
             android:id="@+id/nav_contact"
             android:icon="@drawable/ic_contact"
-            android:title="Contact" />
+            android:title="@string/contact_us" />
         <item
             android:id="@+id/nav_tutorial"
             android:icon="@drawable/ic_tutorial"
-            android:title="Watch Tutorial" />
+            android:title="@string/watch_tutorial" />
     </group>
 
 </menu>
