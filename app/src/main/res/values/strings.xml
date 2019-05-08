@@ -167,5 +167,7 @@
     <string name="fqa8">Reaching 100% completion is important, but not required to advance to the Travel section. Reaching 100% will ensure we have the most accurate and complete information to assist you with your plans.</string>
     <string name="delete_migrant">Delete This Migrant</string>
     <string name="watch_tutorial">Watch Tutorial</string>
+    <string name="answered">Answered</string>
+    <string name="questions">Questions</string>
 
 </resources>

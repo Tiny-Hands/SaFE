@@ -166,5 +166,7 @@
     <string name="fqa8">१००% पुरा गर्नु भएको राम्रो हो तर सत प्रतिसत सकिने पर्छ भन्ने छैन। सत प्रतिसत पुर्याउनु भयो भने हामी बुझ्छौ कि तपाईको योजना मा हामी धेरै सहायता गर्न सक्छौं ।</string>
     <string name="delete_migrant">यो प्रवासीलाई मेटाउनुहोस्</string>
     <string name="watch_tutorial">ट्यूटोरियल हेर्नुहोस्</string>
+    <string name="answered">उत्तर दिए</string>
+    <string name="questions">प्रश्नहरू</string>
 
 </resources>
