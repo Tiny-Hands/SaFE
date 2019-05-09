@@ -127,10 +127,14 @@ public class ActivityRegister extends AppCompatActivity {
     TextView tvOr;
 
     public CallbackManager callbackManager;
+    RequestQueue queue;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+
+        queue = Volley.newRequestQueue(ActivityRegister.this);
 
         //Checking if already logged in on current device
         if (checkUserExists() && !getIntent().hasExtra("migrantmode")) {
@@ -383,13 +387,13 @@ public class ActivityRegister extends AppCompatActivity {
             public void onResponse(String response) {
                 try {
                     Log.d("mylog", "REs: " + response);
+                    getAllResponses(userType, ApplicationClass.getInstance().getUserId());
                     parseMigDetailResponse(response);
                     try {
                         progressDialog.dismiss();
                     } catch (Exception ex) {
                         Log.d("mylog", "Exception in progress dis: " + ex.getMessage());
                     }
-                    getAllResponses(userType);
 
                     Log.d("mylog", "response : " + response);
                 } catch (Exception ex) {
@@ -783,6 +787,8 @@ public class ActivityRegister extends AppCompatActivity {
                             migrantModelsTemp.add(migrantModel);
                             //Saving in Database
                             dbHelper.insertMigrants(id, name, age, phone, sex, uid, migImg, percentComp);
+                            //Getting responses
+                            getAllResponses(userType, id);
                         }
                     }
                 }
@@ -936,7 +942,7 @@ public class ActivityRegister extends AppCompatActivity {
         startActivity(intent);
     }
 
-    public void getAllResponses(final String uType) {
+    public void getAllResponses(final String uType, final int id) {
         String api = ApplicationClass.getInstance().getAPIROOT() + apiGetAllResponses;
         final ProgressDialog pdialog = new ProgressDialog(ActivityRegister.this);
         //pdialog.setTitle("Setting Up");
@@ -975,9 +981,9 @@ public class ActivityRegister extends AppCompatActivity {
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
                 HashMap<String, String> params = new HashMap<>();
-                params.put("user_id", ApplicationClass.getInstance().getUserId() + "");
+                params.put("user_id", id + "");
                 if (uType.equalsIgnoreCase(SharedPrefKeys.migrantUser))
-                    params.put("migrant_id", ApplicationClass.getInstance().getMigrantId() + "");
+                    params.put("user_id", id + "");
                 return params;
             }
 
@@ -989,7 +995,6 @@ public class ActivityRegister extends AppCompatActivity {
             }
         };
 
-        RequestQueue queue = Volley.newRequestQueue(ActivityRegister.this);
         queue.add(stringRequest);
     }
 
