@@ -78,7 +78,7 @@ public class TileAdapter extends RecyclerView.Adapter<TileAdapter.TileViewHolder
 
         int total = sqlDatabaseHelper.getQuestions(tileId).size();
         int answered = sqlDatabaseHelper.getTileResponse(ApplicationClass.getInstance().getMigrantId(), tileId);
-        String completeText = answered + context.getResources().getString(R.string.answered) + " /" + total + " " + context.getResources().getString(R.string.questions);
+        String completeText = answered + " " + context.getResources().getString(R.string.answered) + " /" + total + " " + context.getResources().getString(R.string.questions);
         if (errorCount > 0) {
             for (int i = 0; i < errorCount; i++) {
                 ImageView imgView = new ImageView(holder.llErrorLayout.getContext());
