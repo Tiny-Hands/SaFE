@@ -137,22 +137,22 @@ public class DialogNeedHelp extends DialogFragment implements View.OnClickListen
         String api = ApplicationClass.getInstance().getAPIROOT() + queryAPI;
         final String fapi = api;
 
-        final ProgressDialog progressDialog = new ProgressDialog(context);
+        /*final ProgressDialog progressDialog = new ProgressDialog(getActivity().getApplicationContext());
         //progressDialog.setTitle("Please wait");
         progressDialog.setMessage(getResources().getString(R.string.saving_query));
         progressDialog.show();
-        progressDialog.setCancelable(false);
-
+        progressDialog.setCancelable(false);*/
+        dismiss();
         StringRequest stringRequest = new StringRequest(Request.Method.POST, api, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
-                progressDialog.dismiss();
+                //progressDialog.dismiss();
                 Log.d("mylog", "Response: " + response);
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                progressDialog.dismiss();
+                //progressDialog.dismiss();
                 String err = error.toString();
                 if (!err.isEmpty() && err.contains("NoConnection")) {
                     //showSnackbar("Response cannot be saved at the moment, please check your Intenet connection.");
