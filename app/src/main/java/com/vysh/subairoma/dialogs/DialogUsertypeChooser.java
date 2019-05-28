@@ -64,7 +64,7 @@ public class DialogUsertypeChooser extends DialogFragment {
         TextView tvTitle = dialogView.findViewById(R.id.tvTitle);
         tvTitle.setText("Helper Details");
         TextView tvMsg = dialogView.findViewById(R.id.tvMsg);
-        tvMsg.setText("If you are being helped by someone, enter the helpers' name below.");
+        tvMsg.setText(getResources().getString(R.string.enterhelpersdetail));
         dialogBuilder.setView(dialogView);
 
         final EditText etName = dialogView.findViewById(R.id.etInput);

@@ -168,5 +168,6 @@
     <string name="watch_tutorial">ट्यूटोरियल हेर्नुहोस्</string>
     <string name="answered">उत्तर दिए</string>
     <string name="questions">प्रश्नहरू</string>
+    <string name="enterhelpersdetail">यदि तपाईँलाई कसैले सहयोग गर्दै हुनुहुन्छ भने उहाँको नाम तलको बाकसमा लेख्‍ नुहोस्</string>
 
 </resources>

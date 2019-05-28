@@ -168,4 +168,5 @@
     <string name="watch_tutorial">Watch Tutorial</string>
     <string name="answered">Answered</string>
     <string name="questions">Questions</string>
+    <string name="enterhelpersdetail">If you are being helped by someone, enter the helpers\' name below.</string>
 </resources>
