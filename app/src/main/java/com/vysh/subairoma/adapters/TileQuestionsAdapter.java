@@ -806,7 +806,11 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
                     if (!b) {
                         saveTextInput();
                         ((ActivityTileQuestions) context).showDoneButton(true);
-                        notifyItemChanged(getAdapterPosition());
+                        try {
+                            notifyItemChanged(getAdapterPosition());
+                        } catch (Exception ex) {
+                            Log.d("mylog", "Notify adapter error: " + ex.toString());
+                        }
                     } else {
                         ((ActivityTileQuestions) context).showDoneButton(false);
                     }
