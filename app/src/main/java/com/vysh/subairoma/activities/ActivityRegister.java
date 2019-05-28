@@ -387,6 +387,8 @@ public class ActivityRegister extends AppCompatActivity {
             public void onResponse(String response) {
                 try {
                     Log.d("mylog", "REs: " + response);
+
+                    startOTPActivity(userType, 1);
                     getAllResponses(userType, ApplicationClass.getInstance().getUserId());
                     parseMigDetailResponse(response);
                     try {
@@ -965,7 +967,6 @@ public class ActivityRegister extends AppCompatActivity {
                     Log.d("mylog", "Dialog dismissing error or : " + ex.toString());
                 }
                 //startMigrantistActivity();
-                startOTPActivity(uType, 1);
             }
         }, new Response.ErrorListener() {
             @Override
