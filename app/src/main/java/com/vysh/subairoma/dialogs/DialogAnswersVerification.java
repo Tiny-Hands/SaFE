@@ -56,7 +56,7 @@ public class DialogAnswersVerification extends DialogFragment implements View.On
             case R.id.btnProceed:
                 if (checkbox.isChecked()) {
                     int migId = ApplicationClass.getInstance().getMigrantId();
-                    int percent = new SQLDatabaseHelper(getContext()).getPercentComp(migId);
+                    int percent = SQLDatabaseHelper.getInstance(getContext()).getPercentComp(migId);
                     if (percent < 100) {
                         showPercentLessDialog(percent);
                         return;
@@ -86,7 +86,7 @@ public class DialogAnswersVerification extends DialogFragment implements View.On
 
         Calendar cal = Calendar.getInstance();
         String time = cal.getTimeInMillis() + "";
-        new SQLDatabaseHelper(getContext()).insertResponseTableData("true", SharedPrefKeys.questionVerifiedAns, -1,
+        SQLDatabaseHelper.getInstance(getContext()).insertResponseTableData("true", SharedPrefKeys.questionVerifiedAns, -1,
                 ApplicationClass.getInstance().getMigrantId(), "mg_verified_answers", time);
         startActivity(intent);
     }

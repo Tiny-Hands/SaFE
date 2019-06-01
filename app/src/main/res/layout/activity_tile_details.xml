@@ -5,7 +5,7 @@
     android:background="@color/bgFaded"
     android:orientation="vertical">
 
-    <android.support.v7.widget.Toolbar
+    <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar2"
         android:layout_width="match_parent"
         android:layout_height="?android:attr/actionBarSize">
@@ -44,9 +44,9 @@
                 android:textSize="@dimen/tile_title_size"
                 android:textStyle="bold" />
         </LinearLayout>
-    </android.support.v7.widget.Toolbar>
+    </androidx.appcompat.widget.Toolbar>
 
-    <android.support.v7.widget.RecyclerView
+    <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvTileQuestions"
         android:layout_width="match_parent"
         android:layout_height="0dp"

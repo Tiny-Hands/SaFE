@@ -192,7 +192,7 @@ public class ActivityTileHome extends AppCompatActivity {
         if (blacklist == 1) {
             tvCountry.setTextColor(getResources().getColor(R.color.colorError));
         }
-        String img = new SQLDatabaseHelper(ActivityTileHome.this).getMigrantImg(ApplicationClass.getInstance().getMigrantId());
+        String img = SQLDatabaseHelper.getInstance(ActivityTileHome.this).getMigrantImg(ApplicationClass.getInstance().getMigrantId());
         if (img != null && img.length() > 5)
             ivMigrantImage.setImageBitmap(ImageEncoder.decodeFromBase64(img));
         else if (migGender != null && migGender.equalsIgnoreCase("female"))
@@ -237,7 +237,7 @@ public class ActivityTileHome extends AppCompatActivity {
     }
 
     private void getPercentComplete() {
-        SQLDatabaseHelper dbHelper = new SQLDatabaseHelper(ActivityTileHome.this);
+        SQLDatabaseHelper dbHelper = SQLDatabaseHelper.getInstance(ActivityTileHome.this);
         float totalPercent = 0f;
         int tilesCount = tiles.size();
         for (int i = 0; i < tilesCount; i++) {
@@ -257,9 +257,9 @@ public class ActivityTileHome extends AppCompatActivity {
     }
 
     private boolean checkIfVerifiedAnswers() {
-        String verified = new SQLDatabaseHelper(ActivityTileHome.this).getResponse(ApplicationClass.getInstance().getMigrantId(),
+        String verified = SQLDatabaseHelper.getInstance(ActivityTileHome.this).getResponse(ApplicationClass.getInstance().getMigrantId(),
                 "mg_verified_answers");
-        String isFeedbackSaved = new SQLDatabaseHelper(ActivityTileHome.this).getResponse(ApplicationClass.getInstance().getMigrantId(),
+        String isFeedbackSaved = SQLDatabaseHelper.getInstance(ActivityTileHome.this).getResponse(ApplicationClass.getInstance().getMigrantId(),
                 "mg_feedback_saved");
         Log.d("mylog", "VERIFIED ans: " + verified + " SAVED Feedback: " + isFeedbackSaved);
         if (verified.equalsIgnoreCase("true") && isFeedbackSaved.equalsIgnoreCase("true")) {
@@ -279,7 +279,7 @@ public class ActivityTileHome extends AppCompatActivity {
 
     private void getAllFeedbackResponses() {
         int migId = ApplicationClass.getInstance().getMigrantId();
-        SQLDatabaseHelper sqlDatabaseHelper = new SQLDatabaseHelper(ActivityTileHome.this);
+        SQLDatabaseHelper sqlDatabaseHelper = SQLDatabaseHelper.getInstance(ActivityTileHome.this);
         if (migId > 0) {
             ArrayList<HashMap> responses = sqlDatabaseHelper.getAllFeedbackResponses(migId);
             for (int i = 0; i < responses.size(); i++) {
@@ -357,7 +357,7 @@ public class ActivityTileHome extends AppCompatActivity {
     }
 
     private void deleteMigrant() {
-        new SQLDatabaseHelper(ActivityTileHome.this).insertMigrantDeletion(ApplicationClass.getInstance().getMigrantId()
+        SQLDatabaseHelper.getInstance(ActivityTileHome.this).insertMigrantDeletion(ApplicationClass.getInstance().getMigrantId()
                 , ApplicationClass.getInstance().getUserId(), System.currentTimeMillis() + "");
 
         // showing snack bar with Undo option
@@ -376,7 +376,7 @@ public class ActivityTileHome extends AppCompatActivity {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 dialogInterface.dismiss();
-                new SQLDatabaseHelper(ActivityTileHome.this).insertMigrantDeletion(ApplicationClass.getInstance().getMigrantId(),
+                SQLDatabaseHelper.getInstance(ActivityTileHome.this).insertMigrantDeletion(ApplicationClass.getInstance().getMigrantId(),
                         ApplicationClass.getInstance().getUserId(), "");
             }
         });
@@ -412,14 +412,14 @@ public class ActivityTileHome extends AppCompatActivity {
     private void setUpRecyclerView() {
         Log.d("mylog", "Received Country ID: " + countryId + " And showIndia: " + showIndia);
         if (showIndia) {
-            tiles = new SQLDatabaseHelper(ActivityTileHome.this).getTiles("GIS");
+            tiles = SQLDatabaseHelper.getInstance(ActivityTileHome.this).getTiles("GIS");
             //tilesGAS = new ArrayList<>();
         } else if (tileType.equalsIgnoreCase("fep")) {
             Log.d("mylog", "Should Get: " + tileType);
-            tiles = new SQLDatabaseHelper(ActivityTileHome.this).getTiles("FEP");
+            tiles = SQLDatabaseHelper.getInstance(ActivityTileHome.this).getTiles("FEP");
             //tilesGAS = new ArrayList<>();
         } else {
-            tiles = new SQLDatabaseHelper(ActivityTileHome.this).getTiles("GAS");
+            tiles = SQLDatabaseHelper.getInstance(ActivityTileHome.this).getTiles("GAS");
         }
         setUpAdapter();
     }
@@ -442,7 +442,7 @@ public class ActivityTileHome extends AppCompatActivity {
     private void getAllResponses() {
         int migId = ApplicationClass.getInstance().getMigrantId();
         if (migId > 0) {
-            ArrayList<HashMap> allParams = new SQLDatabaseHelper(ActivityTileHome.this)
+            ArrayList<HashMap> allParams = SQLDatabaseHelper.getInstance(ActivityTileHome.this)
                     .getAllResponse(migId);
             for (int i = 0; i < allParams.size(); i++) {
                 //Log.d("mylog", "Saving to server: " + i);

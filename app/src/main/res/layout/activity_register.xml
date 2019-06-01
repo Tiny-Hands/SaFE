@@ -12,7 +12,7 @@
         android:layout_height="148dp"
         android:background="@color/colorPrimary" />
 
-    <android.support.v7.widget.Toolbar
+    <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="?android:attr/actionBarSize">
@@ -40,7 +40,7 @@
                 android:textColor="#fff" />
 
         </RelativeLayout>
-    </android.support.v7.widget.Toolbar>
+    </androidx.appcompat.widget.Toolbar>
 
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/ivRegister"
@@ -77,7 +77,7 @@
                 android:textSize="16sp"
                 app:font="gotham_light.ttf" />-->
 
-            <android.support.v7.widget.CardView
+            <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -176,7 +176,7 @@
                             android:text="@string/female" />
                     </RadioGroup>
                 </LinearLayout>
-            </android.support.v7.widget.CardView>
+            </androidx.cardview.widget.CardView>
 
             <Button
                 android:id="@+id/btnNext"

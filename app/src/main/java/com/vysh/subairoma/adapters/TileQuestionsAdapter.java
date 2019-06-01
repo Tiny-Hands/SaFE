@@ -96,7 +96,7 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
 
     public TileQuestionsAdapter(ArrayList<TileQuestionsModel> questions,
                                 boolean disabled, Context context) {
-        sqlDatabaseHelper = new SQLDatabaseHelper(context);
+        sqlDatabaseHelper = SQLDatabaseHelper.getInstance(context);
         this.context = context;
         this.disabled = disabled;
         questionsList = questions;
@@ -266,7 +266,7 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
             }
         } else if (question.getResponseType() == 5) {
             int importantCount = 0;
-            final ArrayList<CountryModel> countries = new SQLDatabaseHelper(context).getCountries();
+            final ArrayList<CountryModel> countries = SQLDatabaseHelper.getInstance(context).getCountries();
             ArrayList<String> countryNameList = new ArrayList<>();
             countryNameList.add("-------");
             for (CountryModel country : countries) {
@@ -420,7 +420,7 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
                     initialStep = true;
             } else {
                 if (responseType == 5) {
-                    CountryModel cm = new SQLDatabaseHelper(context).getCountry(response);
+                    CountryModel cm = SQLDatabaseHelper.getInstance(context).getCountry(response);
                     response = cm.getCountryName();
                     orgCountryId = cm.getCountryId();
                     Log.d("mylog", "cname: " + response + " cid: " + orgCountryId);
@@ -859,7 +859,7 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
                         if (questionsListDisplay.get(getAdapterPosition()).getResponseType() == 5) {
                             Log.d("mylog", "Country position: " + position);
                             if (position != 0) {
-                                final ArrayList<CountryModel> countries = new SQLDatabaseHelper(context).getCountries();
+                                final ArrayList<CountryModel> countries = SQLDatabaseHelper.getInstance(context).getCountries();
                                 //ArrayList<String> countryNameList = new ArrayList<>();
                                 //Subtracted one because countryNameList has 1 extra default item but countries array doesn't
                                 CountryModel country = countries.get(position - 1);
@@ -1022,7 +1022,7 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
         Log.d("mylog", "Label: " + labelNames[2]);
         Log.d("mylog", "Labels: " + labels[2]);
         Log.d("mylog", "Label size: " + labelNames.length);*/
-            ArrayList<String> manpowerNames = new SQLDatabaseHelper(context).getManpowers();
+            ArrayList<String> manpowerNames = SQLDatabaseHelper.getInstance(context).getManpowers();
             ArrayAdapter<String> adapter = new ArrayAdapter<String>(context, android.R.layout.simple_list_item_1, manpowerNames);
             etResponse.setAdapter(adapter);
         }
@@ -1129,7 +1129,7 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
 
                         Calendar cal = Calendar.getInstance();
                         String time = cal.getTimeInMillis() + "";
-                        new SQLDatabaseHelper(context).insertCountryResponse(cid, questionID,
+                        SQLDatabaseHelper.getInstance(context).insertCountryResponse(cid, questionID,
                                 ApplicationClass.getInstance().getMigrantId(), "mg_destination", time);
                         if (!orgCountryId.equalsIgnoreCase(cid)) {
                             Intent intent = new Intent(context, ActivityTileHome.class);

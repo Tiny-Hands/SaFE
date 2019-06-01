@@ -129,7 +129,7 @@ public class ActivityOTPVerification extends AppCompatActivity implements View.O
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);
         } else {
-            int mid = new SQLDatabaseHelper(ActivityOTPVerification.this).insertTempMigrants(name,
+            int mid = SQLDatabaseHelper.getInstance(ActivityOTPVerification.this).insertTempMigrants(name,
                     Integer.parseInt(age), phoneNumber, gender, ApplicationClass.getInstance().getUserId(), userImg);
             //new SQLDatabaseHelper(ActivityRegister.this).insertTempResponseTableData(sex, SharedPrefKeys.questionGender, -1, mid, "mg_sex", time);
 
@@ -147,10 +147,10 @@ public class ActivityOTPVerification extends AppCompatActivity implements View.O
             Calendar cal = Calendar.getInstance();
             String time = cal.getTimeInMillis() + "";
 
-            new SQLDatabaseHelper(ActivityOTPVerification.this).insertMigrants(fabMigId, name,
+            SQLDatabaseHelper.getInstance(ActivityOTPVerification.this).insertMigrants(fabMigId, name,
                     Integer.parseInt(age), phoneNumber, gender, ApplicationClass.getInstance().getUserId(), userImg, 0);
 
-            new SQLDatabaseHelper(ActivityOTPVerification.this).insertResponseTableData(gender, SharedPrefKeys.questionGender, -1, fabMigId, "mg_sex", time);
+            SQLDatabaseHelper.getInstance(ActivityOTPVerification.this).insertResponseTableData(gender, SharedPrefKeys.questionGender, -1, fabMigId, "mg_sex", time);
 
             //Do Next Step Now
             startMigrantActivity();
@@ -363,9 +363,9 @@ public class ActivityOTPVerification extends AppCompatActivity implements View.O
 
                     Calendar cal = Calendar.getInstance();
                     String time = cal.getTimeInMillis() + "";
-                    new SQLDatabaseHelper(ActivityOTPVerification.this).insertResponseTableData(gender, SharedPrefKeys.questionGender, -1,
+                    SQLDatabaseHelper.getInstance(ActivityOTPVerification.this).insertResponseTableData(gender, SharedPrefKeys.questionGender, -1,
                             user_id, "mg_sex", time);
-                    new SQLDatabaseHelper(ActivityOTPVerification.this).insertMigrants(user_id, name, Integer.parseInt(age), phoneNumber, gender, user_id, userImg, 0);
+                    SQLDatabaseHelper.getInstance(ActivityOTPVerification.this).insertMigrants(user_id, name, Integer.parseInt(age), phoneNumber, gender, user_id, userImg, 0);
                     startMigrantActivity();
 
                     return;
@@ -377,7 +377,7 @@ public class ActivityOTPVerification extends AppCompatActivity implements View.O
 
                     int oldUid = ApplicationClass.getInstance().getUserId();
                     if (oldUid == -111) {
-                        new SQLDatabaseHelper(ActivityOTPVerification.this).makeUserIdChanges(-111, user_id);
+                        SQLDatabaseHelper.getInstance(ActivityOTPVerification.this).makeUserIdChanges(-111, user_id);
                     }
 
                     ApplicationClass.getInstance().setUserId(user_id);

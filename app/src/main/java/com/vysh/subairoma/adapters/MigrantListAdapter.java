@@ -73,14 +73,14 @@ public class MigrantListAdapter extends RecyclerView.Adapter<MigrantListAdapter.
         }
 
         //Showing going to country
-        String cid = new SQLDatabaseHelper(mContext).getResponse(migrants.get(position).getMigrantId(), "mg_destination");
+        String cid = SQLDatabaseHelper.getInstance(mContext).getResponse(migrants.get(position).getMigrantId(), "mg_destination");
         Log.d("mylog", "Going To CID Received: " + cid);
 
         if (cid == null || cid.isEmpty()) {
             holder.tvGoingCountry.setText(mContext.getResources().getString(R.string.not_started));
             holder.tvGoingCountry.setTextColor(Color.GRAY);
         } else {
-            CountryModel goingTo = new SQLDatabaseHelper(mContext).getCountry(cid);
+            CountryModel goingTo = SQLDatabaseHelper.getInstance(mContext).getCountry(cid);
             Log.d("mylog", "Going To Received: " + goingTo);
             if (goingTo == null)
                 holder.tvGoingCountry.setText(cid);
@@ -96,7 +96,7 @@ public class MigrantListAdapter extends RecyclerView.Adapter<MigrantListAdapter.
             }
         }
         //Showing error count
-        int errorCount = new SQLDatabaseHelper(mContext).getMigrantErrorCount(migrantModel.getMigrantId());
+        int errorCount = SQLDatabaseHelper.getInstance(mContext).getMigrantErrorCount(migrantModel.getMigrantId());
 
         if (errorCount > 0) {
             holder.llErrorLayout.setVisibility(View.VISIBLE);
@@ -162,13 +162,13 @@ public class MigrantListAdapter extends RecyclerView.Adapter<MigrantListAdapter.
                 public void onClick(View v) {
                     int migId = migrants.get(getAdapterPosition()).getMigrantId();
                     ApplicationClass.getInstance().setMigrantId(migId);
-                    String cid = new SQLDatabaseHelper(itemView.getContext()).getResponse(migId, "mg_destination");
+                    String cid = SQLDatabaseHelper.getInstance(itemView.getContext()).getResponse(migId, "mg_destination");
                     Log.d("mylog", "Country ID: " + cid);
                     if (cid != null && !cid.isEmpty()) {
                         Intent intent = new Intent(itemView.getContext(), ActivityTileChooser.class);
                         intent.putExtra("countryId", cid);
                         intent.putExtra("migrantName", migrants.get(getAdapterPosition()).getMigrantName());
-                        CountryModel savedCountry = new SQLDatabaseHelper(itemView.getContext()).getCountry(cid);
+                        CountryModel savedCountry = SQLDatabaseHelper.getInstance(itemView.getContext()).getCountry(cid);
                         Log.d("mylog", "Country name: " + savedCountry.getCountryName());
                         intent.putExtra("countryName", savedCountry.getCountryName().toUpperCase());
                         intent.putExtra("countryStatus", savedCountry.getCountrySatus());

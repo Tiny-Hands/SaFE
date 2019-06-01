@@ -365,7 +365,7 @@ public class ActivityProfileEdit extends AppCompatActivity implements View.OnCli
 
     private void getData() {
         //Get Data
-        MigrantModel migrantModel = new SQLDatabaseHelper(ActivityProfileEdit.this).getMigrantDetails();
+        MigrantModel migrantModel = SQLDatabaseHelper.getInstance(ActivityProfileEdit.this).getMigrantDetails();
         etName.setText(migrantModel.getMigrantName());
         etNumber.setText(migrantModel.getMigrantPhone());
         if (migrantModel.getMigImg() != null && migrantModel.getMigImg().length() > 10) {
@@ -532,7 +532,7 @@ public class ActivityProfileEdit extends AppCompatActivity implements View.OnCli
                             editor.putString(SharedPrefKeys.userType, "helper");
                             editor.commit();
                         } else {
-                            new SQLDatabaseHelper(ActivityProfileEdit.this).
+                            SQLDatabaseHelper.getInstance(ActivityProfileEdit.this).
                                     insertMigrants(id, name, Integer.parseInt(age), number, sex, ApplicationClass.getInstance().getUserId(),
                                             encodedImage, -1);
                         }

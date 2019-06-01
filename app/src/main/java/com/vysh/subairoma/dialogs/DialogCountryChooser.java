@@ -56,7 +56,7 @@ public class DialogCountryChooser extends DialogFragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         //String[] countries = getResources().getStringArray(R.array.countries_array);
-        final ArrayList<CountryModel> countries = new SQLDatabaseHelper(view.getContext()).getCountries();
+        final ArrayList<CountryModel> countries = SQLDatabaseHelper.getInstance(view.getContext()).getCountries();
         ArrayList<String> countryNameList = new ArrayList<>();
         //To show in the beginning, nothing selected index 0 called by default
         countryNameList.add("-------");
@@ -115,7 +115,7 @@ public class DialogCountryChooser extends DialogFragment {
                     public void onClick(DialogInterface dialog, int which) {
                         Calendar cal = Calendar.getInstance();
                         String time = cal.getTimeInMillis() + "";
-                        new SQLDatabaseHelper(getContext()).insertResponseTableData(cid, SharedPrefKeys.questionCountryId, -1,
+                        SQLDatabaseHelper.getInstance(getContext()).insertResponseTableData(cid, SharedPrefKeys.questionCountryId, -1,
                                 ApplicationClass.getInstance().getMigrantId(), "mg_destination", time);
 
                         Intent intent = new Intent(getContext(), ActivityTileChooser.class);

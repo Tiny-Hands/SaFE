@@ -617,16 +617,16 @@ public class ActivityRegister extends AppCompatActivity {
                             Calendar cal = Calendar.getInstance();
                             String time = cal.getTimeInMillis() + "";
 
-                            int mid = new SQLDatabaseHelper(ActivityRegister.this).insertTempMigrants(etName.getText().toString(),
+                            int mid = SQLDatabaseHelper.getInstance(ActivityRegister.this).insertTempMigrants(etName.getText().toString(),
                                     Integer.parseInt(etAge.getText().toString()), etNumber.getText().toString(), sex, ApplicationClass.getInstance().getUserId(), encodedImage);
-                            //new SQLDatabaseHelper(ActivityRegister.this).insertTempResponseTableData(sex, SharedPrefKeys.questionGender, -1, mid, "mg_sex", time);
+                            //SQLDatabaseHelper.getInstance(ActivityRegister.this).insertTempResponseTableData(sex, SharedPrefKeys.questionGender, -1, mid, "mg_sex", time);
 
                             //Saving in corresponding real local DB
                             int fabMigId = Integer.parseInt("-1" + mid);
-                            new SQLDatabaseHelper(ActivityRegister.this).insertMigrants(fabMigId, etName.getText().toString(),
+                            SQLDatabaseHelper.getInstance(ActivityRegister.this).insertMigrants(fabMigId, etName.getText().toString(),
                                     Integer.parseInt(etAge.getText().toString()), etNumber.getText().toString(), sex, ApplicationClass.getInstance().getUserId(), encodedImage, 0);
 
-                            new SQLDatabaseHelper(ActivityRegister.this).insertResponseTableData(sex, SharedPrefKeys.questionGender, -1, fabMigId, "mg_sex", time);
+                            SQLDatabaseHelper.getInstance(ActivityRegister.this).insertResponseTableData(sex, SharedPrefKeys.questionGender, -1, fabMigId, "mg_sex", time);
                             Intent intent = new Intent(ActivityRegister.this, ActivityMigrantList.class);
                             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                             startActivity(intent);
@@ -736,8 +736,8 @@ public class ActivityRegister extends AppCompatActivity {
                 int user_id = jsonObject.getInt("user_id");
                 Calendar cal = Calendar.getInstance();
                 String time = cal.getTimeInMillis() + "";
-                new SQLDatabaseHelper(ActivityRegister.this).insertResponseTableData(sex, SharedPrefKeys.questionGender, -1, mig_id, "mg_sex", time);
-                new SQLDatabaseHelper(ActivityRegister.this).insertMigrants(mig_id, etName.getText().toString(),
+                SQLDatabaseHelper.getInstance(ActivityRegister.this).insertResponseTableData(sex, SharedPrefKeys.questionGender, -1, mig_id, "mg_sex", time);
+                SQLDatabaseHelper.getInstance(ActivityRegister.this).insertMigrants(mig_id, etName.getText().toString(),
                         Integer.parseInt(etAge.getText().toString()), etNumber.getText().toString(), sex, ApplicationClass.getInstance().getUserId(), encodedImage, 0);
                 Intent intent = new Intent(ActivityRegister.this, ActivityMigrantList.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -762,7 +762,7 @@ public class ActivityRegister extends AppCompatActivity {
                 JSONArray migrantJSON = jsonObject.getJSONArray("migrants");
                 if (migrantJSON != null) {
                     JSONObject migrantObj;
-                    SQLDatabaseHelper dbHelper = new SQLDatabaseHelper(ActivityRegister.this);
+                    SQLDatabaseHelper dbHelper = SQLDatabaseHelper.getInstance(ActivityRegister.this);
                     int uid = ApplicationClass.getInstance().getUserId();
                     for (int i = 0; i < migrantJSON.length(); i++) {
                         migrantObj = migrantJSON.getJSONObject(i);
@@ -1008,7 +1008,7 @@ public class ActivityRegister extends AppCompatActivity {
                 Log.d("mylog", "NO error sorting responses");
                 JSONArray responsesJsonArray = jsonResponse.getJSONArray("responses");
                 JSONObject tempResponse;
-                SQLDatabaseHelper dbHelper = new SQLDatabaseHelper(ActivityRegister.this);
+                SQLDatabaseHelper dbHelper = SQLDatabaseHelper.getInstance(ActivityRegister.this);
                 for (int i = 0; i < responsesJsonArray.length(); i++) {
                     tempResponse = responsesJsonArray.getJSONObject(i);
                     int migrantId = tempResponse.getInt("user_id");

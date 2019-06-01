@@ -158,7 +158,19 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
                     " UNIQUE (" + DatabaseTables.FeedbackQuestionsResponseTable.question_id + ", " +
                     DatabaseTables.FeedbackQuestionsResponseTable.migrant_id + "));";
 
-    public SQLDatabaseHelper(Context context) {
+    private static SQLDatabaseHelper sDbHelperInstance;
+
+    public static synchronized SQLDatabaseHelper getInstance(Context context) {
+        // Use the application context, which will ensure that you
+        // don't accidentally leak an Activity's context.
+        // See this article for more information: http://bit.ly/6LRzfx
+        if (sDbHelperInstance == null) {
+            sDbHelperInstance = new SQLDatabaseHelper(context.getApplicationContext());
+        }
+        return sDbHelperInstance;
+    }
+
+    private SQLDatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
         SharedPreferences sp = context.getSharedPreferences(SharedPrefKeys.sharedPrefName, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sp.edit();
@@ -477,6 +489,8 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
             if (response != null && !responseVar.equalsIgnoreCase("percent_complete") && !response.contains("false"))
                 count++;
         }
+        cursor.close();
+        db.close();
         return count;
         //Log.d("mylog", "Query: " + query);
 
@@ -577,6 +591,8 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
 
         long newRowId = db.insert(DatabaseTables.TilesTable.TABLE_NAME, null, values);
         Log.d("mylog", "Inserted row ID; " + newRowId);
+
+        db.close();
     }
 
     public void insertImportantContacts(int contactId, String cid, String title, String description, String address, String phone, String email, String website) {
@@ -853,6 +869,7 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
         Log.d("mylog", "Setting inactive date: " + time + " For: " + migrantId);
         long updateCount = db.update(DatabaseTables.MigrantsTable.TABLE_NAME, values, whereClause, null);
         Log.d("mylog", "Migrant Deleted row count: " + updateCount);
+        db.close();
     }
 
     public void insertMigrants(int id, String name, int age, String phone, String sex, int userId, String migImg, int percentComp) {
@@ -918,6 +935,8 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
             migrantModel.setMigrantSex(sex);
             migrantModels.add(migrantModel);
         }
+        cursor.close();
+        db.close();
         return migrantModels;
     }
 
@@ -1159,6 +1178,7 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
             long newRowId = db.insert(DatabaseTables.TempResponseTable.TABLE_NAME, null, values);
             Log.d("mylog", "Inserted row ID: " + newRowId);
         }
+        db.close();
     }
 
     public void makeMigIdChanges(int migrantIdOld, int migrantIdNew) {

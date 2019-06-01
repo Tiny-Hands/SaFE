@@ -51,7 +51,7 @@ public class FeedbackQuestionAdapter extends RecyclerView.Adapter<FeedbackQuesti
             mContext = context;
             activityFeedback = (ActivityFeedback) context;
         }
-        sqlDatabaseHelper = new SQLDatabaseHelper(mContext);
+        sqlDatabaseHelper = SQLDatabaseHelper.getInstance(mContext);
     }
 
     @Override

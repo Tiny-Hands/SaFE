@@ -51,7 +51,7 @@ public class TileAdapter extends RecyclerView.Adapter<TileAdapter.TileViewHolder
     @Override
     public TileViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.recycler_view_tile_row, parent, false);
-        sqlDatabaseHelper = new SQLDatabaseHelper(parent.getContext());
+        sqlDatabaseHelper = SQLDatabaseHelper.getInstance(parent.getContext());
         return new TileViewHolder(view);
     }
 

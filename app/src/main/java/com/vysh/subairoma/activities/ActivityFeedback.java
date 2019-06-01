@@ -61,7 +61,7 @@ public class ActivityFeedback extends AppCompatActivity {
                 if (count > 0) {
                     Calendar cal = Calendar.getInstance();
                     String time = cal.getTimeInMillis() + "";
-                    new SQLDatabaseHelper(ActivityFeedback.this).insertResponseTableData("true", SharedPrefKeys.questionFeedbackSaved, -1,
+                    SQLDatabaseHelper.getInstance(ActivityFeedback.this).insertResponseTableData("true", SharedPrefKeys.questionFeedbackSaved, -1,
                             ApplicationClass.getInstance().getMigrantId(), "mg_feedback_saved", time);
                     openTileHomeActivity();
                 } else {
@@ -94,7 +94,7 @@ public class ActivityFeedback extends AppCompatActivity {
     }
 
     private void setUpRecyclerView() {
-        SQLDatabaseHelper helper = new SQLDatabaseHelper(this);
+        SQLDatabaseHelper helper = SQLDatabaseHelper.getInstance(this);
         ArrayList<FeedbackQuestionModel> questionModels = helper.getFeedbackQuestions();
         rvFeedback.setLayoutManager(new LinearLayoutManager(this));
         rvFeedback.setAdapter(new FeedbackQuestionAdapter(this, questionModels));
@@ -110,7 +110,7 @@ public class ActivityFeedback extends AppCompatActivity {
 
     private void getAllFeedbackResponses() {
         int migId = ApplicationClass.getInstance().getMigrantId();
-        SQLDatabaseHelper sqlDatabaseHelper = new SQLDatabaseHelper(ActivityFeedback.this);
+        SQLDatabaseHelper sqlDatabaseHelper = SQLDatabaseHelper.getInstance(ActivityFeedback.this);
         ArrayList<HashMap> responses = sqlDatabaseHelper.getAllFeedbackResponses(migId);
 
         RequestQueue queue = Volley.newRequestQueue(ActivityFeedback.this);

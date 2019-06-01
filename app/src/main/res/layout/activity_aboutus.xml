@@ -12,7 +12,7 @@
         android:layout_height="148dp"
         android:background="@color/colorPrimaryDark" />
 
-    <android.support.v7.widget.Toolbar
+    <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="?android:attr/actionBarSize">
@@ -32,7 +32,7 @@
                 android:textColor="#fff"
                 android:textStyle="bold" />
         </RelativeLayout>
-    </android.support.v7.widget.Toolbar>
+    </androidx.appcompat.widget.Toolbar>
 
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/ivRegister"

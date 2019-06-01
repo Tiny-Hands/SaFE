@@ -107,7 +107,7 @@ public class ActivityMigrantList extends AppCompatActivity implements RecyclerIt
         requestQueue = Volley.newRequestQueue(ActivityMigrantList.this);
         //getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         ButterKnife.bind(this);
-        dbHelper = new SQLDatabaseHelper(ActivityMigrantList.this);
+        dbHelper = SQLDatabaseHelper.getInstance(this);
         userType = ApplicationClass.getInstance().getUserType();
         userToken = getSharedPreferences(SharedPrefKeys.sharedPrefName, MODE_PRIVATE).getString(SharedPrefKeys.token, "");
         migrantModels = new ArrayList();

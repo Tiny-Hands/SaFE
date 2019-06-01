@@ -122,8 +122,8 @@ public class ActivityTileQuestions extends AppCompatActivity {
 
     private void getQuestions(int tileId) {
         //Get Questions if not already in Local Database
-        questionList = new SQLDatabaseHelper(ActivityTileQuestions.this).getQuestions(tileId);
-        SQLDatabaseHelper sqlDatabaseHelper = new SQLDatabaseHelper(ActivityTileQuestions.this);
+        questionList = SQLDatabaseHelper.getInstance(ActivityTileQuestions.this).getQuestions(tileId);
+        SQLDatabaseHelper sqlDatabaseHelper = SQLDatabaseHelper.getInstance(ActivityTileQuestions.this);
         for (TileQuestionsModel question : questionList) {
             int resType = question.getResponseType();
             if (resType == 2 || resType == 3 || resType == 4) {

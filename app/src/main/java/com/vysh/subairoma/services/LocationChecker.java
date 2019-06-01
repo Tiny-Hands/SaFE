@@ -95,7 +95,7 @@ public class LocationChecker extends Service {
         Log.d("mylog", "Saving to server country Name: " + countryName);
         String api = ApplicationClass.getInstance().getAPIROOT() + saveAPI;
 
-        SQLDatabaseHelper dbHelper = new SQLDatabaseHelper(getApplicationContext());
+        SQLDatabaseHelper dbHelper = SQLDatabaseHelper.getInstance(getApplicationContext());
         ArrayList<MigrantModel> migrantModels = dbHelper.getMigrants();
 
         RequestQueue queue = Volley.newRequestQueue(getApplicationContext());

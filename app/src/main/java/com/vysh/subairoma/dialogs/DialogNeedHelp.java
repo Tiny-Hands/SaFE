@@ -125,7 +125,7 @@ public class DialogNeedHelp extends DialogFragment implements View.OnClickListen
                 } else {
                     //Save and Send Query
                     Log.d("mylog", "Saving: " + queryText);
-                    SQLDatabaseHelper sqlDatabaseHelper = new SQLDatabaseHelper(context);
+                    SQLDatabaseHelper sqlDatabaseHelper = SQLDatabaseHelper.getInstance(context);
                     sqlDatabaseHelper.insertQuestionQuery(qid, tileId, migrantId, queryText);
                     saveQuery(queryText);
                     dialog.dismiss();

@@ -94,7 +94,7 @@ public class ActivitySplash extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         sp = getSharedPreferences(SharedPrefKeys.sharedPrefName, MODE_PRIVATE);
         int currVersion = sp.getInt(SharedPrefKeys.dbVersion, -1);
-        dbHelper = new SQLDatabaseHelper(ActivitySplash.this);
+        dbHelper = SQLDatabaseHelper.getInstance(ActivitySplash.this);
         if (dbHelper.getVersion() > currVersion && currVersion != -1) {
             Log.d("mylog", "Greater Version dropping");
             dbHelper.dropDB();
@@ -202,7 +202,7 @@ public class ActivitySplash extends AppCompatActivity {
         if (sp.getInt(SharedPrefKeys.savedTableCount, 0) != apiCount) {
             showLoading();
             Log.d("mylog", "Starting save");
-            dbHelper = new SQLDatabaseHelper(ActivitySplash.this);
+            dbHelper = SQLDatabaseHelper.getInstance(ActivitySplash.this);
             dbHelper.getWritableDatabase();
             savedCount = 0;
             getTiles();

@@ -10,7 +10,7 @@
         android:layout_height="166dp"
         android:background="@color/colorPrimary" />
 
-    <android.support.v7.widget.Toolbar
+    <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="?android:attr/actionBarSize">
@@ -29,7 +29,7 @@
                 android:textAllCaps="true"
                 android:textColor="#fff" />
         </RelativeLayout>
-    </android.support.v7.widget.Toolbar>
+    </androidx.appcompat.widget.Toolbar>
 
     <ImageView
         android:id="@+id/ivOTP"

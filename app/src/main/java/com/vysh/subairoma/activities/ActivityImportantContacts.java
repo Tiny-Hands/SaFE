@@ -73,8 +73,8 @@ public class ActivityImportantContacts extends AppCompatActivity {
 
     public void setUpInfo(String cid) {
         Log.d("mylog", "Received Country Id: " + cid);
-        ArrayList<ImportantContactsModel> contactsModels = new SQLDatabaseHelper(this).getImportantContacts(cid);
-        ArrayList<ImportantContactsModel> defaultContactsModels = new SQLDatabaseHelper(this).getDefaultImportantContacts();
+        ArrayList<ImportantContactsModel> contactsModels = SQLDatabaseHelper.getInstance(this).getImportantContacts(cid);
+        ArrayList<ImportantContactsModel> defaultContactsModels = SQLDatabaseHelper.getInstance(this).getDefaultImportantContacts();
         rvContacts.setLayoutManager(new LinearLayoutManager(this));
         if (finalSec) {
             contactsModels.addAll(defaultContactsModels);
@@ -125,7 +125,7 @@ public class ActivityImportantContacts extends AppCompatActivity {
             if (error) {
                 Log.d("mylog", "Error getting contacts: " + response);
             } else {
-                SQLDatabaseHelper dbHelper = new SQLDatabaseHelper(ActivityImportantContacts.this);
+                SQLDatabaseHelper dbHelper = SQLDatabaseHelper.getInstance(ActivityImportantContacts.this);
                 JSONArray contactsArray = jsonContacts.getJSONArray("contacts");
                 for (int i = 0; i < contactsArray.length(); i++) {
                     JSONObject contactsObject = contactsArray.getJSONObject(i);

@@ -195,7 +195,7 @@ public class ActivityTileChooser extends AppCompatActivity {
             }
         });
 
-        String img = new SQLDatabaseHelper(ActivityTileChooser.this).getMigrantImg(ApplicationClass.getInstance().getMigrantId());
+        String img = SQLDatabaseHelper.getInstance(ActivityTileChooser.this).getMigrantImg(ApplicationClass.getInstance().getMigrantId());
         if (img != null && img.length() > 5)
             ivMigrantImage.setImageBitmap(ImageEncoder.decodeFromBase64(img));
         else if (migrantGender != null && migrantGender.equalsIgnoreCase("female"))
@@ -365,7 +365,7 @@ public class ActivityTileChooser extends AppCompatActivity {
     }
 
     private void deleteMigrant() {
-        new SQLDatabaseHelper(ActivityTileChooser.this).insertMigrantDeletion(ApplicationClass.getInstance().getMigrantId()
+        SQLDatabaseHelper.getInstance(ActivityTileChooser.this).insertMigrantDeletion(ApplicationClass.getInstance().getMigrantId()
                 , ApplicationClass.getInstance().getUserId(), System.currentTimeMillis() + "");
 
         // showing snack bar with Undo option
@@ -384,7 +384,7 @@ public class ActivityTileChooser extends AppCompatActivity {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 dialogInterface.dismiss();
-                new SQLDatabaseHelper(ActivityTileChooser.this).insertMigrantDeletion(ApplicationClass.getInstance().getMigrantId(),
+                SQLDatabaseHelper.getInstance(ActivityTileChooser.this).insertMigrantDeletion(ApplicationClass.getInstance().getMigrantId(),
                         ApplicationClass.getInstance().getUserId(), "");
             }
         });
@@ -462,9 +462,9 @@ public class ActivityTileChooser extends AppCompatActivity {
     }
 
     private boolean checkIfVerifiedAnswers() {
-        String verified = new SQLDatabaseHelper(ActivityTileChooser.this).getResponse(ApplicationClass.getInstance().getMigrantId(),
+        String verified = SQLDatabaseHelper.getInstance(ActivityTileChooser.this).getResponse(ApplicationClass.getInstance().getMigrantId(),
                 "mg_verified_answers");
-//        String isFeedbackSaved = new SQLDatabaseHelper(ActivityTileChooser.this).getResponse(ApplicationClass.getInstance().getMigrantId(),
+//        String isFeedbackSaved = SQLDatabaseHelper.getInstance(ActivityTileChooser.this).getResponse(ApplicationClass.getInstance().getMigrantId(),
 //                "mg_feedback_saved");
         if (verified.equalsIgnoreCase("true"))
             return true;
@@ -484,7 +484,7 @@ public class ActivityTileChooser extends AppCompatActivity {
     private void getAllResponses() {
         int migId = ApplicationClass.getInstance().getMigrantId();
         if (migId > 0) {
-            ArrayList<HashMap> allParams = new SQLDatabaseHelper(ActivityTileChooser.this)
+            ArrayList<HashMap> allParams = SQLDatabaseHelper.getInstance(ActivityTileChooser.this)
                     .getAllResponse(migId);
             for (int i = 0; i < allParams.size(); i++) {
                 //Log.d("mylog", "Saving to server: " + i);

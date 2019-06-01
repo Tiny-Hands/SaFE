@@ -15,11 +15,11 @@ import java.util.ArrayList;
 
 public class PercentHelper {
     public static String getPercentCompleteBySection(Context context, int migId, String section) {
-        SQLDatabaseHelper dbHelper = new SQLDatabaseHelper(context);
+        SQLDatabaseHelper dbHelper = SQLDatabaseHelper.getInstance(context);
         float totalPercent = 0f;
         int tilesCount;
 
-        ArrayList<TilesModel> tiles = new SQLDatabaseHelper(context).getTiles(section.toUpperCase());
+        ArrayList<TilesModel> tiles = SQLDatabaseHelper.getInstance(context).getTiles(section.toUpperCase());
         tilesCount = tiles.size();
         for (int i = 0; i < tilesCount; i++) {
             float perComplete = dbHelper.getPercentComplete(migId, tiles.get(i).getTileId());
