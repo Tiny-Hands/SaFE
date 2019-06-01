@@ -378,6 +378,7 @@
                                     android:layout_height="wrap_content"
                                     android:layout_marginBottom="@dimen/medium_margin"
                                     android:text="@string/preparation"
+                                    android:layout_marginEnd="@dimen/default_margin"
                                     android:textColor="@color/infoTextWhite"
                                     android:textSize="@dimen/tile_title_chooser"
                                     android:textStyle="bold" />
@@ -387,6 +388,7 @@
                                     android:id="@+id/firsttiletype1"
                                     android:layout_width="@dimen/tile_selection_size"
                                     android:layout_height="@dimen/tile_selection_size"
+                                    android:layout_marginEnd="@dimen/default_margin"
                                     android:src="@drawable/ic_prep" />
 
                                 <ProgressBar
@@ -397,6 +399,7 @@
                                     android:layout_marginLeft="@dimen/large_margin"
                                     android:layout_marginRight="@dimen/large_margin"
                                     android:layout_marginTop="@dimen/default_margin"
+                                    android:layout_marginEnd="@dimen/default_margin"
                                     android:progressDrawable="@drawable/progress_drawable"
                                     android:visibility="invisible" />
 
@@ -404,6 +407,7 @@
                                     android:id="@+id/firsttvPercentComplete1"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
+                                    android:layout_marginEnd="@dimen/default_margin"
                                     android:layout_marginTop="@dimen/small_margin" />
 
                             </LinearLayout>
@@ -433,6 +437,7 @@
                                     android:layout_height="wrap_content"
                                     android:layout_marginBottom="@dimen/medium_margin"
                                     android:text="@string/travel"
+                                    android:layout_marginStart="@dimen/default_margin"
                                     android:textColor="@color/infoTextWhite"
                                     android:textSize="@dimen/tile_title_chooser"
                                     android:textStyle="bold" />
@@ -441,6 +446,7 @@
                                     android:id="@+id/firsttiletype2"
                                     android:layout_width="@dimen/tile_selection_size"
                                     android:layout_height="@dimen/tile_selection_size"
+                                    android:layout_marginStart="@dimen/default_margin"
                                     android:src="@drawable/ic_traveltile" />
 
                                 <ProgressBar
@@ -450,6 +456,7 @@
                                     android:layout_height="8dp"
                                     android:layout_marginLeft="@dimen/large_margin"
                                     android:layout_marginRight="@dimen/large_margin"
+                                    android:layout_marginStart="@dimen/default_margin"
                                     android:layout_marginTop="@dimen/default_margin"
                                     android:progressDrawable="@drawable/progress_drawable"
                                     android:visibility="invisible" />
@@ -458,6 +465,7 @@
                                     android:id="@+id/firsttvPercentComplete2"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
+                                    android:layout_marginStart="@dimen/default_margin"
                                     android:layout_marginTop="@dimen/small_margin"
                                     android:text="@string/section_locked" />
                             </LinearLayout>
