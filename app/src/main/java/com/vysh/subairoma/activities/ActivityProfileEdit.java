@@ -15,11 +15,11 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.support.annotation.Nullable;
-import android.support.design.widget.Snackbar;
-import android.support.v4.content.FileProvider;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
+
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.FileProvider;
 import android.util.Base64;
 import android.util.Log;
 import android.util.TypedValue;
@@ -31,6 +31,7 @@ import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.DefaultRetryPolicy;
@@ -54,10 +55,8 @@ import com.vysh.subairoma.SQLHelpers.SQLDatabaseHelper;
 import com.vysh.subairoma.SharedPrefKeys;
 import com.vysh.subairoma.imageHelpers.ImageEncoder;
 import com.vysh.subairoma.imageHelpers.ImageResizer;
-import com.vysh.subairoma.imageHelpers.ImageRotator;
 import com.vysh.subairoma.imageHelpers.ImageSaveHelper;
 import com.vysh.subairoma.models.MigrantModel;
-import com.vysh.subairoma.utils.CustomTextView;
 import com.vysh.subairoma.utils.InternetConnectionChecker;
 
 import org.json.JSONException;
@@ -613,13 +612,15 @@ public class ActivityProfileEdit extends AppCompatActivity implements View.OnCli
     }
 
     private void showSnackbar(String msg) {
-        Snackbar snack = Snackbar.make(rootLayout, msg, Snackbar.LENGTH_LONG);
+      /*  Snackbar snack = Snackbar.make(rootLayout, msg, Snackbar.LENGTH_LONG);
         View view = snack.getView();
         TextView tv = (TextView) view.findViewById(android.support.design.R.id.snackbar_text);
         tv.setTextColor(Color.WHITE);
         if (Build.VERSION.SDK_INT >= 17)
             tv.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
-        snack.show();
+        snack.show();*/
+
+        Toast.makeText(ActivityProfileEdit.this, msg, Toast.LENGTH_SHORT).show();
     }
 
 }

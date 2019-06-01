@@ -5,11 +5,12 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.support.annotation.LayoutRes;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.app.DialogFragment;
-import android.support.v7.app.AlertDialog;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
+import androidx.fragment.app.DialogFragment;
+
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,12 +25,10 @@ import com.vysh.subairoma.R;
 import com.vysh.subairoma.SQLHelpers.SQLDatabaseHelper;
 import com.vysh.subairoma.SharedPrefKeys;
 import com.vysh.subairoma.activities.ActivityTileChooser;
-import com.vysh.subairoma.activities.ActivityTileHome;
 import com.vysh.subairoma.models.CountryModel;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.List;
 
 /**
  * Created by Vishal on 7/12/2017.

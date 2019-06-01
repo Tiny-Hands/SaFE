@@ -1,13 +1,9 @@
 package com.vysh.subairoma.adapters;
 
-import android.app.FragmentManager;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.CardView;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,6 +12,10 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.vysh.subairoma.activities.ActivityTileChooser;
 import com.vysh.subairoma.ApplicationClass;
@@ -186,7 +186,7 @@ public class MigrantListAdapter extends RecyclerView.Adapter<MigrantListAdapter.
         }
     }
 
-    private void showCountryChooser(String name, android.support.v4.app.FragmentManager fragmentManager) {
+    private void showCountryChooser(String name, FragmentManager fragmentManager) {
         DialogCountryChooser dialog = DialogCountryChooser.newInstance();
         dialog.setMigrantName(name);
         dialog.show(fragmentManager, "tag");

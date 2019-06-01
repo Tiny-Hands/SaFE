@@ -6,15 +6,16 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.design.widget.Snackbar;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.DefaultRetryPolicy;
@@ -319,13 +320,15 @@ public class ActivityOTPVerification extends AppCompatActivity implements View.O
     }
 
     public void showSnackbar(String msg) {
-        Snackbar snack = Snackbar.make(rootLayout, msg, Snackbar.LENGTH_LONG);
+       /* Snackbar snack = Snackbar.make(rootLayout, msg, Snackbar.LENGTH_LONG);
         View view = snack.getView();
         TextView tv = (TextView) view.findViewById(android.support.design.R.id.snackbar_text);
         tv.setTextColor(Color.WHITE);
         if (Build.VERSION.SDK_INT >= 17)
             tv.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
-        snack.show();
+        snack.show();*/
+
+        Toast.makeText(ActivityOTPVerification.this, msg, Toast.LENGTH_SHORT).show();
     }
 
     private void parseResponse(String response) {

@@ -5,17 +5,17 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.design.widget.NavigationView;
-import android.support.design.widget.Snackbar;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v4.widget.NestedScrollView;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.RecyclerView;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.view.GravityCompat;
+import androidx.core.widget.NestedScrollView;
+import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -24,6 +24,7 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
@@ -33,6 +34,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.flurry.android.FlurryAgent;
+import com.google.android.material.navigation.NavigationView;
 import com.vysh.subairoma.ApplicationClass;
 import com.vysh.subairoma.SharedPrefKeys;
 import com.vysh.subairoma.dialogs.DialogAnswersVerification;
@@ -397,12 +399,14 @@ public class ActivityTileHome extends AppCompatActivity {
     }
 
     private void showSnackbar(String msg) {
-        Snackbar snack = Snackbar.make(rootLayout, msg, Snackbar.LENGTH_LONG);
+       /* Snackbar snack = Snackbar.make(rootLayout, msg, Snackbar.LENGTH_LONG);
         View view = snack.getView();
         TextView tv = (TextView) view.findViewById(android.support.design.R.id.snackbar_text);
         tv.setTextColor(Color.WHITE);
         tv.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
-        snack.show();
+        snack.show();*/
+
+        Toast.makeText(ActivityTileHome.this, msg, Toast.LENGTH_SHORT).show();
     }
 
     private void setUpRecyclerView() {

@@ -1,11 +1,11 @@
 package com.vysh.subairoma.adapters;
 
 import android.graphics.Canvas;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.View;
 
-import static android.support.v7.widget.helper.ItemTouchHelper.Callback.getDefaultUIUtil;
+import androidx.recyclerview.widget.ItemTouchHelper;
+import androidx.recyclerview.widget.RecyclerView;
+
 
 /**
  * Created by Vishal on 4/6/2018.

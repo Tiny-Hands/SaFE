@@ -45,7 +45,7 @@
         app:civ_border_color="#fff"
         app:civ_border_width="2dp" />
 
-    <android.support.v4.widget.NestedScrollView
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_alignParentStart="true"
@@ -250,6 +250,6 @@
                 app:fonts="gotham_light.ttf" />
 
         </LinearLayout>
-    </android.support.v4.widget.NestedScrollView>
+    </androidx.core.widget.NestedScrollView>
 
 </RelativeLayout>
