@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:gravity="center_horizontal"
+    android:layout_height="wrap_content"
+    android:gravity="center"
     android:orientation="vertical"
     android:paddingLeft="@dimen/default_margin"
-    android:paddingRight="@dimen/default_margin"
-    android:paddingTop="@dimen/default_margin">
+    android:paddingRight="@dimen/default_margin">
 
     <TextView
         android:id="@+id/tvTermHeader"
@@ -29,8 +28,8 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="2dp"
-        android:layout_marginBottom="32dp"
         android:layout_marginTop="32dp"
+        android:layout_marginBottom="32dp"
         android:background="@color/darkGrey" />
 
     <LinearLayout
@@ -42,8 +41,8 @@
             android:id="@+id/tvCheckTerm"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:gravity="center"
             android:layout_weight="1"
+            android:gravity="center"
             android:padding="4dp"
             android:text="@string/finalAnswerButton"
             android:textColor="@color/colorAccent"
