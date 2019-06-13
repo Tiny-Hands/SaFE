@@ -169,5 +169,7 @@
     <string name="answered">उत्तर दिए</string>
     <string name="questions">प्रश्नहरू</string>
     <string name="enterhelpersdetail">यदि तपाईँलाई कसैले सहयोग गर्दै हुनुहुन्छ भने उहाँको नाम तलको बाकसमा लेख्‍ नुहोस्</string>
+    <string name="initAnswerConfirmation">तपाईंले मात्र</string>
+    <string name="finalAnswerConfirmation">पूरा गर्नुभयो, के तपाईं पक्का गर्न चाहानुहुन्छ?</string>
 
 </resources>

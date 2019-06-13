@@ -93,7 +93,7 @@ public class DialogAnswersVerification extends DialogFragment implements View.On
 
     private void showPercentLessDialog(int percent) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-        builder.setMessage("You've only complete " + percent + " % of the questions, are you sure you want to proceed?");
+        builder.setMessage(getString(R.string.initAnswerConfirmation) + " " + percent + " % " + getString(R.string.finalAnswerConfirmation));
         builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
