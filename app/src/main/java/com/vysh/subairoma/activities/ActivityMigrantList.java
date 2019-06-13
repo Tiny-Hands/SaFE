@@ -6,7 +6,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 
@@ -27,7 +26,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
@@ -40,7 +38,6 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.flurry.android.FlurryAgent;
 import com.google.android.material.navigation.NavigationView;
-import com.google.android.material.snackbar.Snackbar;
 import com.vysh.subairoma.ApplicationClass;
 import com.vysh.subairoma.R;
 import com.vysh.subairoma.SQLHelpers.SQLDatabaseHelper;
@@ -219,7 +216,7 @@ public class ActivityMigrantList extends AppCompatActivity implements RecyclerIt
                     protected Map<String, String> getParams() throws AuthFailureError {
                         HashMap<String, String> params = new HashMap<>();
                         params.put("migrant_id", currModel.getMigrantId() + "");
-                        params.put("user_id", ApplicationClass.getInstance().getUserId() + "");
+                        params.put("user_id", ApplicationClass.getInstance().getSafeUserId() + "");
                         params.put("percent_complete", currModel.getPercentComp() + "");
                         return params;
                     }
@@ -395,7 +392,7 @@ public class ActivityMigrantList extends AppCompatActivity implements RecyclerIt
             Log.d("mylog", "Usertype: " + userType);
             setUpRecyclerView(migrantModels);
         } else {*/
-        Log.d("mylog", "User ID: " + ApplicationClass.getInstance().getUserId() + " Migrant ID: " + ApplicationClass.getInstance().getMigrantId()
+        Log.d("mylog", "User ID: " + ApplicationClass.getInstance().getSafeUserId() + " Migrant ID: " + ApplicationClass.getInstance().getMigrantId()
                 + " UserType: " + userType);
         if (migrantModels.size() == 1 && userType.equalsIgnoreCase(SharedPrefKeys.migrantUser)) {
             int migId = migrantModels.get(0).getMigrantId();
@@ -486,7 +483,7 @@ public class ActivityMigrantList extends AppCompatActivity implements RecyclerIt
 
             // remove the item from recycler view
 
-            final int uid = ApplicationClass.getInstance().getUserId();
+            final int uid = ApplicationClass.getInstance().getSafeUserId();
             final int mid = migrantModels.get(viewHolder.getAdapterPosition()).getMigrantId();
             long time = System.currentTimeMillis();
             dbHelper.insertMigrantDeletion(mid, uid, time + "");
@@ -532,7 +529,7 @@ public class ActivityMigrantList extends AppCompatActivity implements RecyclerIt
     }
 
     public void sendDeactivationStatus(ArrayList<MigrantModel> disableMigs) {
-        int uid = ApplicationClass.getInstance().getUserId();
+        int uid = ApplicationClass.getInstance().getSafeUserId();
         RequestQueue queue = Volley.newRequestQueue(ActivityMigrantList.this);
         for (int i = 0; i < disableMigs.size(); i++) {
             int migId = disableMigs.get(i).getMigrantId();
@@ -559,7 +556,7 @@ public class ActivityMigrantList extends AppCompatActivity implements RecyclerIt
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
                 HashMap<String, String> params = new HashMap<>();
-                int user_id = ApplicationClass.getInstance().getUserId();
+                int user_id = ApplicationClass.getInstance().getSafeUserId();
                 params.put("user_id", uid + "");
                 params.put("migrant_id", migId + "");
                 params.put("inactive_date", deactivateTime);

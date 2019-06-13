@@ -8,7 +8,6 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Color;
 import android.graphics.Matrix;
 import android.media.ExifInterface;
 import android.net.Uri;
@@ -141,7 +140,7 @@ public class ActivityProfileEdit extends AppCompatActivity implements View.OnCli
         if (userType.equalsIgnoreCase(SharedPrefKeys.migrantUser)) {
             tvTitle.setText(getResources().getString(R.string.edit_migrant));
             FlurryAgent.logEvent("migrant_edit_mode");
-            if (ApplicationClass.getInstance().getUserId() != -1) {
+            if (ApplicationClass.getInstance().getSafeUserId() != -1) {
                 loginButton.setVisibility(GONE);
                 loginButtonToHide.setVisibility(GONE);
                 tvOr.setVisibility(GONE);
@@ -343,7 +342,7 @@ public class ActivityProfileEdit extends AppCompatActivity implements View.OnCli
                     params.put("uid", ApplicationClass.getInstance().getMigrantId() + "");
                 } else {
                     params.put("user_type", userType + "");
-                    params.put("uid", ApplicationClass.getInstance().getUserId() + "");
+                    params.put("uid", ApplicationClass.getInstance().getSafeUserId() + "");
                 }
                 for (Object obj : params.keySet()) {
                     Log.d("mylog", "KEY: " + obj + " VALUE: " + params.get(obj));
@@ -473,7 +472,7 @@ public class ActivityProfileEdit extends AppCompatActivity implements View.OnCli
         int id = -2;
         if (userType.equalsIgnoreCase(SharedPrefKeys.helperUser)) {
             API = ApplicationClass.getInstance().getAPIROOT() + apiUpdateUser;
-            id = ApplicationClass.getInstance().getUserId();
+            id = ApplicationClass.getInstance().getSafeUserId();
         } else if (userType.equalsIgnoreCase(SharedPrefKeys.migrantUser)) {
             API = ApplicationClass.getInstance().getAPIROOT() + apiUpdateMigrant;
             id = ApplicationClass.getInstance().getMigrantId();
@@ -533,7 +532,7 @@ public class ActivityProfileEdit extends AppCompatActivity implements View.OnCli
                             editor.commit();
                         } else {
                             SQLDatabaseHelper.getInstance(ActivityProfileEdit.this).
-                                    insertMigrants(id, name, Integer.parseInt(age), number, sex, ApplicationClass.getInstance().getUserId(),
+                                    insertMigrants(id, name, Integer.parseInt(age), number, sex, ApplicationClass.getInstance().getSafeUserId(),
                                             encodedImage, -1);
                         }
                         Intent intent = new Intent(ActivityProfileEdit.this, ActivityMigrantList.class);
@@ -570,7 +569,7 @@ public class ActivityProfileEdit extends AppCompatActivity implements View.OnCli
                     params.put("user_id", id + "");
                 } else if (userType.equalsIgnoreCase(SharedPrefKeys.migrantUser)) {
                     params.put("migrant_id", id + "");
-                    params.put("user_id", ApplicationClass.getInstance().getUserId() + "");
+                    params.put("user_id", ApplicationClass.getInstance().getSafeUserId() + "");
                 }
                 for (Object obj : params.keySet()) {
                     Log.d("mylog", "Key: " + obj + " Val: " + params.get(obj));

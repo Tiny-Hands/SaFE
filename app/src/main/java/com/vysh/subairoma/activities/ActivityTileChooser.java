@@ -366,7 +366,7 @@ public class ActivityTileChooser extends AppCompatActivity {
 
     private void deleteMigrant() {
         SQLDatabaseHelper.getInstance(ActivityTileChooser.this).insertMigrantDeletion(ApplicationClass.getInstance().getMigrantId()
-                , ApplicationClass.getInstance().getUserId(), System.currentTimeMillis() + "");
+                , ApplicationClass.getInstance().getSafeUserId(), System.currentTimeMillis() + "");
 
         // showing snack bar with Undo option
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -385,7 +385,7 @@ public class ActivityTileChooser extends AppCompatActivity {
             public void onClick(DialogInterface dialogInterface, int i) {
                 dialogInterface.dismiss();
                 SQLDatabaseHelper.getInstance(ActivityTileChooser.this).insertMigrantDeletion(ApplicationClass.getInstance().getMigrantId(),
-                        ApplicationClass.getInstance().getUserId(), "");
+                        ApplicationClass.getInstance().getSafeUserId(), "");
             }
         });
         builder.setMessage(R.string.mig_delete_confirmation);

@@ -1,7 +1,6 @@
 package com.vysh.subairoma.dialogs;
 
 import android.app.DialogFragment;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -13,7 +12,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
@@ -30,8 +28,6 @@ import com.vysh.subairoma.ApplicationClass;
 import com.vysh.subairoma.R;
 import com.vysh.subairoma.SQLHelpers.SQLDatabaseHelper;
 import com.vysh.subairoma.SharedPrefKeys;
-import com.vysh.subairoma.activities.ActivityRegister;
-import com.vysh.subairoma.activities.ActivityTileHome;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -165,7 +161,7 @@ public class DialogNeedHelp extends DialogFragment implements View.OnClickListen
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
                 HashMap<String, String> params = new HashMap<>();
-                params.put("user_id", ApplicationClass.getInstance().getUserId() + "");
+                params.put("user_id", ApplicationClass.getInstance().getSafeUserId() + "");
                 params.put("migrant_id", ApplicationClass.getInstance().getMigrantId() + "");
                 params.put("query", query);
                 params.put("tile_id", tileId + "");

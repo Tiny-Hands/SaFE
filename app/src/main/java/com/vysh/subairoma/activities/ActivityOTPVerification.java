@@ -3,15 +3,12 @@ package com.vysh.subairoma.activities;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Color;
-import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
@@ -115,7 +112,7 @@ public class ActivityOTPVerification extends AppCompatActivity implements View.O
         SharedPreferences.Editor editor = sp.edit();
         int user_id = -111;
         if (uType.equalsIgnoreCase(SharedPrefKeys.helperUser)) {
-            ApplicationClass.getInstance().setUserId(user_id);
+            ApplicationClass.getInstance().setSafeUserId(user_id);
             editor.putString(SharedPrefKeys.userName, name);
             editor.putInt(SharedPrefKeys.userId, user_id);
             editor.putString(SharedPrefKeys.userPhone, phoneNumber);
@@ -130,7 +127,7 @@ public class ActivityOTPVerification extends AppCompatActivity implements View.O
             startActivity(intent);
         } else {
             int mid = SQLDatabaseHelper.getInstance(ActivityOTPVerification.this).insertTempMigrants(name,
-                    Integer.parseInt(age), phoneNumber, gender, ApplicationClass.getInstance().getUserId(), userImg);
+                    Integer.parseInt(age), phoneNumber, gender, ApplicationClass.getInstance().getSafeUserId(), userImg);
             //new SQLDatabaseHelper(ActivityRegister.this).insertTempResponseTableData(sex, SharedPrefKeys.questionGender, -1, mid, "mg_sex", time);
 
             //Getting id to save in corresponding real local DB
@@ -139,7 +136,7 @@ public class ActivityOTPVerification extends AppCompatActivity implements View.O
             editor.putString(SharedPrefKeys.userType, SharedPrefKeys.migrantUser);
             Log.d("mylog", "Migrant ID: " + fabMigId);
             ApplicationClass.getInstance().setMigrantId(fabMigId);
-            ApplicationClass.getInstance().setUserId(user_id);
+            ApplicationClass.getInstance().setSafeUserId(user_id);
             editor.putInt(SharedPrefKeys.userId, user_id);
             editor.putInt(SharedPrefKeys.defMigID, fabMigId);
             editor.commit();
@@ -148,7 +145,7 @@ public class ActivityOTPVerification extends AppCompatActivity implements View.O
             String time = cal.getTimeInMillis() + "";
 
             SQLDatabaseHelper.getInstance(ActivityOTPVerification.this).insertMigrants(fabMigId, name,
-                    Integer.parseInt(age), phoneNumber, gender, ApplicationClass.getInstance().getUserId(), userImg, 0);
+                    Integer.parseInt(age), phoneNumber, gender, ApplicationClass.getInstance().getSafeUserId(), userImg, 0);
 
             SQLDatabaseHelper.getInstance(ActivityOTPVerification.this).insertResponseTableData(gender, SharedPrefKeys.questionGender, -1, fabMigId, "mg_sex", time);
 
@@ -169,7 +166,7 @@ public class ActivityOTPVerification extends AppCompatActivity implements View.O
                     if (isLogginIn) {
                         SharedPreferences sp = getSharedPreferences(SharedPrefKeys.sharedPrefName, MODE_PRIVATE);
                         SharedPreferences.Editor editor = sp.edit();
-                        int id = ApplicationClass.getInstance().getUserId();
+                        int id = ApplicationClass.getInstance().getSafeUserId();
                         if (id == -1)
                             id = ApplicationClass.getInstance().getMigrantId();
                         Log.d("mylog", "Saving: " + id);
@@ -310,7 +307,7 @@ public class ActivityOTPVerification extends AppCompatActivity implements View.O
                 params.put("user_img", userImg);
                 params.put("gender", gender);
                 params.put("user_type", uType);
-                //params.put("user_id", ApplicationClass.getInstance().getUserId() + "");
+                //params.put("user_id", ApplicationClass.getInstance().getSafeUserId() + "");
                 return params;
             }
         };
@@ -339,14 +336,14 @@ public class ActivityOTPVerification extends AppCompatActivity implements View.O
                 SharedPreferences sharedPreferences = getSharedPreferences(SharedPrefKeys.sharedPrefName, MODE_PRIVATE);
                 SharedPreferences.Editor editor = sharedPreferences.edit();
                 if (uType.equalsIgnoreCase(SharedPrefKeys.migrantUser)) {
-                    //ApplicationClass.getInstance().setUserId(-1);
+                    //ApplicationClass.getInstance().setSafeUserId(-1);
                     editor.putString(SharedPrefKeys.userType, SharedPrefKeys.migrantUser);
                     //int mig_id = jsonResponse.getInt("migrant_id");
                     int user_id = jsonResponse.getInt("user_id");
                     String token = jsonResponse.getString("token");
                     Log.d("mylog", "Migrant ID: " + user_id);
                     ApplicationClass.getInstance().setMigrantId(user_id);
-                    ApplicationClass.getInstance().setUserId(user_id);
+                    ApplicationClass.getInstance().setSafeUserId(user_id);
                     editor.putInt(SharedPrefKeys.userId, user_id);
                     editor.putInt(SharedPrefKeys.defMigID, user_id);
                     editor.putString(SharedPrefKeys.token, token);
@@ -375,12 +372,12 @@ public class ActivityOTPVerification extends AppCompatActivity implements View.O
                     int user_id = jsonResponse.getInt("user_id");
                     Log.d("mylog", "Saving user ID: " + user_id);
 
-                    int oldUid = ApplicationClass.getInstance().getUserId();
+                    int oldUid = ApplicationClass.getInstance().getSafeUserId();
                     if (oldUid == -111) {
                         SQLDatabaseHelper.getInstance(ActivityOTPVerification.this).makeUserIdChanges(-111, user_id);
                     }
 
-                    ApplicationClass.getInstance().setUserId(user_id);
+                    ApplicationClass.getInstance().setSafeUserId(user_id);
                     //Parse Other responses and save in SharedPref
                     String token = jsonResponse.getString("token");
                     editor.putString(SharedPrefKeys.token, token);

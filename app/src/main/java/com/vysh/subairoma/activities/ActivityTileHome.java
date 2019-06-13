@@ -3,7 +3,6 @@ package com.vysh.subairoma.activities;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Color;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -283,7 +282,7 @@ public class ActivityTileHome extends AppCompatActivity {
         if (migId > 0) {
             ArrayList<HashMap> responses = sqlDatabaseHelper.getAllFeedbackResponses(migId);
             for (int i = 0; i < responses.size(); i++) {
-                responses.get(i).put("user_id", ApplicationClass.getInstance().getUserId() + "");
+                responses.get(i).put("user_id", ApplicationClass.getInstance().getSafeUserId() + "");
                 responses.get(i).put("migrant_id", ApplicationClass.getInstance().getMigrantId() + "");
                 saveResponseToServer(responses.get(i), 2);
             }
@@ -358,7 +357,7 @@ public class ActivityTileHome extends AppCompatActivity {
 
     private void deleteMigrant() {
         SQLDatabaseHelper.getInstance(ActivityTileHome.this).insertMigrantDeletion(ApplicationClass.getInstance().getMigrantId()
-                , ApplicationClass.getInstance().getUserId(), System.currentTimeMillis() + "");
+                , ApplicationClass.getInstance().getSafeUserId(), System.currentTimeMillis() + "");
 
         // showing snack bar with Undo option
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -377,7 +376,7 @@ public class ActivityTileHome extends AppCompatActivity {
             public void onClick(DialogInterface dialogInterface, int i) {
                 dialogInterface.dismiss();
                 SQLDatabaseHelper.getInstance(ActivityTileHome.this).insertMigrantDeletion(ApplicationClass.getInstance().getMigrantId(),
-                        ApplicationClass.getInstance().getUserId(), "");
+                        ApplicationClass.getInstance().getSafeUserId(), "");
             }
         });
         builder.setMessage(R.string.mig_delete_confirmation);
@@ -389,7 +388,7 @@ public class ActivityTileHome extends AppCompatActivity {
     public void onBackPressed() {
         //super.onBackPressed();
         finalSection = false;
-        //if (ApplicationClass.getInstance().getUserId() == -1)
+        //if (ApplicationClass.getInstance().getSafeUserId() == -1)
         super.onBackPressed();
        /* else {
             Intent intent = new Intent(ActivityTileHome.this, ActivityMigrantList.class);
@@ -446,7 +445,7 @@ public class ActivityTileHome extends AppCompatActivity {
                     .getAllResponse(migId);
             for (int i = 0; i < allParams.size(); i++) {
                 //Log.d("mylog", "Saving to server: " + i);
-                allParams.get(i).put("user_id", ApplicationClass.getInstance().getUserId() + "");
+                allParams.get(i).put("user_id", ApplicationClass.getInstance().getSafeUserId() + "");
                 allParams.get(i).put("migrant_id", ApplicationClass.getInstance().getMigrantId() + "");
                 saveResponseToServer(allParams.get(i), 1);
             }

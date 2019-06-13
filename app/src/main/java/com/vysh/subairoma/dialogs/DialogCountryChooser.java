@@ -125,7 +125,7 @@ public class DialogCountryChooser extends DialogFragment {
                         intent.putExtra("countryStatus", status);
                         intent.putExtra("countryBlacklist", blacklist);
                         dismiss();
-                        if (ApplicationClass.getInstance().getUserId() == -1)
+                        if (ApplicationClass.getInstance().getSafeUserId() == -1)
                             intent = intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
                         getContext().startActivity(intent);
                     }

@@ -392,7 +392,7 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
         Cursor cursor = db.rawQuery(query, null);
         String response = "", responseQuery = "";
         Log.d("mylog", "Response for Migrant ID: " + migId);
-        int userId = ApplicationClass.getInstance().getUserId();
+        int userId = ApplicationClass.getInstance().getSafeUserId();
         while (cursor.moveToNext()) {
             String qvar = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseTables.ResponseTable.response_variable));
             response = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseTables.ResponseTable.response));
@@ -978,7 +978,7 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getReadableDatabase();
         ArrayList<MigrantModel> migrantModels = new ArrayList<>();
         Cursor cursor = db.rawQuery("SELECT * FROM " + DatabaseTables.MigrantsTable.TABLE_NAME + " WHERE "
-                + DatabaseTables.MigrantsTable.user_id + "=" + "'" + ApplicationClass.getInstance().getUserId() + "'", null);
+                + DatabaseTables.MigrantsTable.user_id + "=" + "'" + ApplicationClass.getInstance().getSafeUserId() + "'", null);
         while (cursor.moveToNext()) {
             int id = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseTables.MigrantsTable.migrant_id));
             int uid = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseTables.MigrantsTable.user_id));
@@ -1083,7 +1083,7 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getReadableDatabase();
         ArrayList<MigrantModel> migrantModels = new ArrayList<>();
         Cursor cursor = db.rawQuery("SELECT * FROM " + DatabaseTables.MigrantsTable.TABLE_NAME + " WHERE "
-                + DatabaseTables.MigrantsTable.user_id + "=" + "'" + ApplicationClass.getInstance().getUserId() + "'" + " AND " +
+                + DatabaseTables.MigrantsTable.user_id + "=" + "'" + ApplicationClass.getInstance().getSafeUserId() + "'" + " AND " +
                 DatabaseTables.MigrantsTable.migrant_id + "=" + "'" + ApplicationClass.getInstance().getMigrantId() + "'", null);
         cursor.moveToNext();
         int id = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseTables.MigrantsTable.migrant_id));

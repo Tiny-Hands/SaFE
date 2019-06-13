@@ -1145,7 +1145,7 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
                         intent.putExtra("countryStatus", status);
                         intent.putExtra("countryBlacklist", blacklist);
                         dismiss();
-                        if (ApplicationClass.getInstance().getUserId() == -1)
+                        if (ApplicationClass.getInstance().getSafeUserId() == -1)
                             intent = intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                         getContext().startActivity(intent);*/
                     }

@@ -332,9 +332,9 @@ public class ActivityRegister extends AppCompatActivity {
             //editor.putInt(SharedPrefKeys.userId, id);
             if (!loggedInFromPhone)
                 editor.putInt(SharedPrefKeys.userId, id);
-            ApplicationClass.getInstance().setUserId(id);
+            ApplicationClass.getInstance().setSafeUserId(id);
             if (userType.equalsIgnoreCase(SharedPrefKeys.helperUser)) {
-                ApplicationClass.getInstance().setUserId(id);
+                ApplicationClass.getInstance().setSafeUserId(id);
 
                 //Saving Helper Details and Login Status
                 Log.d("mylog", "Saving: " + userName + userPhone + userSex + age);
@@ -389,7 +389,7 @@ public class ActivityRegister extends AppCompatActivity {
                     Log.d("mylog", "REs: " + response);
 
                     startOTPActivity(userType, 1);
-                    getAllResponses(userType, ApplicationClass.getInstance().getUserId());
+                    getAllResponses(userType, ApplicationClass.getInstance().getSafeUserId());
                     parseMigDetailResponse(response);
                     try {
                         progressDialog.dismiss();
@@ -427,7 +427,7 @@ public class ActivityRegister extends AppCompatActivity {
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
                 HashMap<String, String> params = new HashMap<>();
-                int user_id = ApplicationClass.getInstance().getUserId();
+                int user_id = ApplicationClass.getInstance().getSafeUserId();
                 int mig_id = ApplicationClass.getInstance().getMigrantId();
                 Log.d("mylog", "User ID: " + user_id);
                 Log.d("mylog", "Mig ID: " + mig_id);
@@ -618,13 +618,13 @@ public class ActivityRegister extends AppCompatActivity {
                             String time = cal.getTimeInMillis() + "";
 
                             int mid = SQLDatabaseHelper.getInstance(ActivityRegister.this).insertTempMigrants(etName.getText().toString(),
-                                    Integer.parseInt(etAge.getText().toString()), etNumber.getText().toString(), sex, ApplicationClass.getInstance().getUserId(), encodedImage);
+                                    Integer.parseInt(etAge.getText().toString()), etNumber.getText().toString(), sex, ApplicationClass.getInstance().getSafeUserId(), encodedImage);
                             //SQLDatabaseHelper.getInstance(ActivityRegister.this).insertTempResponseTableData(sex, SharedPrefKeys.questionGender, -1, mid, "mg_sex", time);
 
                             //Saving in corresponding real local DB
                             int fabMigId = Integer.parseInt("-1" + mid);
                             SQLDatabaseHelper.getInstance(ActivityRegister.this).insertMigrants(fabMigId, etName.getText().toString(),
-                                    Integer.parseInt(etAge.getText().toString()), etNumber.getText().toString(), sex, ApplicationClass.getInstance().getUserId(), encodedImage, 0);
+                                    Integer.parseInt(etAge.getText().toString()), etNumber.getText().toString(), sex, ApplicationClass.getInstance().getSafeUserId(), encodedImage, 0);
 
                             SQLDatabaseHelper.getInstance(ActivityRegister.this).insertResponseTableData(sex, SharedPrefKeys.questionGender, -1, fabMigId, "mg_sex", time);
                             Intent intent = new Intent(ActivityRegister.this, ActivityMigrantList.class);
@@ -708,8 +708,8 @@ public class ActivityRegister extends AppCompatActivity {
 
                 //Flow will not enter these two unless a migrant is being registered
                 if (userRegistered) {
-                    Log.d("mylog", "User ID setting: " + ApplicationClass.getInstance().getUserId());
-                    params.put("user_id", ApplicationClass.getInstance().getUserId() + "");
+                    Log.d("mylog", "User ID setting: " + ApplicationClass.getInstance().getSafeUserId());
+                    params.put("user_id", ApplicationClass.getInstance().getSafeUserId() + "");
                 }
                 return params;
             }
@@ -738,7 +738,7 @@ public class ActivityRegister extends AppCompatActivity {
                 String time = cal.getTimeInMillis() + "";
                 SQLDatabaseHelper.getInstance(ActivityRegister.this).insertResponseTableData(sex, SharedPrefKeys.questionGender, -1, mig_id, "mg_sex", time);
                 SQLDatabaseHelper.getInstance(ActivityRegister.this).insertMigrants(mig_id, etName.getText().toString(),
-                        Integer.parseInt(etAge.getText().toString()), etNumber.getText().toString(), sex, ApplicationClass.getInstance().getUserId(), encodedImage, 0);
+                        Integer.parseInt(etAge.getText().toString()), etNumber.getText().toString(), sex, ApplicationClass.getInstance().getSafeUserId(), encodedImage, 0);
                 Intent intent = new Intent(ActivityRegister.this, ActivityMigrantList.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(intent);
@@ -763,7 +763,7 @@ public class ActivityRegister extends AppCompatActivity {
                 if (migrantJSON != null) {
                     JSONObject migrantObj;
                     SQLDatabaseHelper dbHelper = SQLDatabaseHelper.getInstance(ActivityRegister.this);
-                    int uid = ApplicationClass.getInstance().getUserId();
+                    int uid = ApplicationClass.getInstance().getSafeUserId();
                     for (int i = 0; i < migrantJSON.length(); i++) {
                         migrantObj = migrantJSON.getJSONObject(i);
                         MigrantModel migrantModel = new MigrantModel();
@@ -851,14 +851,14 @@ public class ActivityRegister extends AppCompatActivity {
                 if (type.equalsIgnoreCase(SharedPrefKeys.helperUser)) {
                     Log.d("mylog", "User already exists with ID: " + userId);
                     userType = SharedPrefKeys.helperUser;
-                    ApplicationClass.getInstance().setUserId(userId);
+                    ApplicationClass.getInstance().setSafeUserId(userId);
                     ApplicationClass.getInstance().setUserType(SharedPrefKeys.helperUser);
                 } else {
                     Log.d("mylog", "Migrant already exists, Setting user ID: ");
                     //ApplicationClass.getInstance().setMigrantId(userId);
                     userType = SharedPrefKeys.migrantUser;
                     ApplicationClass.getInstance().setUserType(SharedPrefKeys.migrantUser);
-                    ApplicationClass.getInstance().setUserId(userId);
+                    ApplicationClass.getInstance().setSafeUserId(userId);
                     ApplicationClass.getInstance().setMigrantId(sharedPreferences.getInt(SharedPrefKeys.defMigID, -1));
                 }
             }

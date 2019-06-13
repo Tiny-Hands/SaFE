@@ -36,11 +36,11 @@ public class ApplicationClass extends Application {
         this.userType = userType;
     }
 
-    public int getUserId() {
+    public int getSafeUserId() {
         return userId;
     }
 
-    public void setUserId(int userId) {
+    public void setSafeUserId(int userId) {
         this.userId = userId;
     }
 

@@ -21,8 +21,8 @@ android {
         applicationId "com.vysh.subairoma"
         minSdkVersion 18
         targetSdkVersion 28
-        versionCode 41
-        versionName "0.33"
+        versionCode 42
+        versionName "0.34"
         multiDexEnabled true
     }
     buildTypes {
