@@ -32,6 +32,8 @@ import java.util.HashMap;
 
 public class SQLDatabaseHelper extends SQLiteOpenHelper {
     // If you change the database schema, you must increment the database version.
+    private static SQLiteDatabase db;
+    private static SQLDatabaseHelper sDbHelperInstance;
     Context mContext;
     public static final int DATABASE_VERSION = 17;
     public static final String DATABASE_NAME = "SubairomaLocal.db";
@@ -158,8 +160,6 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
                     " UNIQUE (" + DatabaseTables.FeedbackQuestionsResponseTable.question_id + ", " +
                     DatabaseTables.FeedbackQuestionsResponseTable.migrant_id + "));";
 
-    private static SQLDatabaseHelper sDbHelperInstance;
-
     public static synchronized SQLDatabaseHelper getInstance(Context context) {
         // Use the application context, which will ensure that you
         // don't accidentally leak an Activity's context.
@@ -172,6 +172,7 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
 
     private SQLDatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
+        db = this.getWritableDatabase();
         SharedPreferences sp = context.getSharedPreferences(SharedPrefKeys.sharedPrefName, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sp.edit();
         editor.putInt(SharedPrefKeys.dbVersion, DATABASE_VERSION);
@@ -248,7 +249,7 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
 
     public void insertResponseTableData(String response, int question_id, int tileId, int migrant_id, String variable, String timestamp) {
         // Gets the data repository in write mode
-        SQLiteDatabase db = this.getWritableDatabase();
+
         // Create a new map of values, where column names are the keys
         ContentValues values = new ContentValues();
         values.put(DatabaseTables.ResponseTable.response, response);
@@ -271,21 +272,21 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
             long newRowId = db.insert(DatabaseTables.ResponseTable.TABLE_NAME, null, values);
             Log.d("mylog", "Inserted row ID: " + newRowId);
         }
-        db.close();
+        
     }
 
     public void insertPercentComp(int migId, int percentComp) {
-        SQLiteDatabase db = this.getWritableDatabase();
+
         ContentValues values = new ContentValues();
         values.put(DatabaseTables.MigrantsTable.percent_comp, percentComp);
         String whereClause = DatabaseTables.MigrantsTable.migrant_id + " = " + migId;
         long updateCount = db.update(DatabaseTables.MigrantsTable.TABLE_NAME, values, whereClause, null);
         Log.d("mylog", "Percent Complete for MIG: " + migId + " Percent: " + percentComp + " Updated: " + updateCount);
-        db.close();
+        
     }
 
     public int getPercentComp(int migId) {
-        SQLiteDatabase db = this.getWritableDatabase();
+
         Cursor cursor = db.rawQuery("SELECT * FROM " + DatabaseTables.MigrantsTable.TABLE_NAME + " WHERE "
                 + DatabaseTables.MigrantsTable.migrant_id + "=" + "'" + migId + "'", null);
         int percent = 0;
@@ -295,13 +296,13 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
         else
             Log.d("mylog", "Cursor size: " + 0);
         cursor.close();
-        db.close();
+        
         return percent;
     }
 
     public void insertCountryResponse(String response, int qid, int migrant_id, String variable, String timestamp) {
         // Gets the data repository in write mode
-        SQLiteDatabase db = this.getWritableDatabase();
+
         // Create a new map of values, where column names are the keys
         ContentValues values = new ContentValues();
         values.put(DatabaseTables.ResponseTable.response, response);
@@ -321,12 +322,12 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
             long newRowId = db.insert(DatabaseTables.ResponseTable.TABLE_NAME, null, values);
             Log.d("mylog", "Inserted row ID: " + newRowId);
         }
-        db.close();
+        
     }
 
     public void insertQuestionQuery(int qid, int tileId, int migrantId, String query) {
         // Gets the data repository in write mode
-        SQLiteDatabase db = this.getWritableDatabase();
+
         // Create a new map of values, where column names are the keys
         ContentValues values = new ContentValues();
         values.put(DatabaseTables.ResponseTable.question_query, query);
@@ -345,13 +346,12 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
             long newRowId = db.insert(DatabaseTables.ResponseTable.TABLE_NAME, null, values);
             Log.d("mylog", "Inserted query row ID: " + newRowId);
         }
-        db.close();
+        
     }
 
     //This is used when we have isError, when response is fetched from server
     public void insertAllResponses(String response, int question_id, int migrant_id, String variable, String isError, int tileId) {
         // Gets the data repository in write mode
-        SQLiteDatabase db = this.getWritableDatabase();
         // Create a new map of values, where column names are the keys
         ContentValues values = new ContentValues();
         values.put(DatabaseTables.ResponseTable.response, response);
@@ -362,11 +362,10 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
         values.put(DatabaseTables.ResponseTable.tile_id, tileId);
         long newRowId = db.insert(DatabaseTables.ResponseTable.TABLE_NAME, null, values);
         Log.d("mylog", "Inserted row ID: " + newRowId);
-        db.close();
+        
     }
 
     public void insertIsError(int migId, String variable, String isError) {
-        SQLiteDatabase db = this.getWritableDatabase();
         Log.d("mylog", "Inserting isError: " + isError);
         ContentValues newValue = new ContentValues();
         if (isError.equalsIgnoreCase("false"))
@@ -379,11 +378,10 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
                 DatabaseTables.ResponseTable.response_variable + " = " + "'" + variable + "'";
         int updateCount = db.update(DatabaseTables.ResponseTable.TABLE_NAME, newValue, selection, null);
         Log.d("mylog", "Updated iserror rows: " + updateCount);
-        db.close();
+        
     }
 
     public ArrayList<HashMap> getAllResponse(int migId) {
-        SQLiteDatabase db = this.getReadableDatabase();
         String query;
         ArrayList<HashMap> allResponses = new ArrayList<>();
         query = "SELECT * FROM " + DatabaseTables.ResponseTable.TABLE_NAME + " WHERE " +
@@ -422,13 +420,12 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
             allResponses.add(params);
         }
         cursor.close();
-        db.close();
+        
         return allResponses;
     }
 
     public int getAllResponseCount(int migId) {
         int count = 0;
-        SQLiteDatabase db = this.getReadableDatabase();
         String query;
         query = "SELECT * FROM " + DatabaseTables.ResponseTable.TABLE_NAME + " WHERE " +
                 DatabaseTables.ResponseTable.migrant_id + "=" + "'" + migId + "'";
@@ -443,12 +440,11 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
                     count++;
         }
         cursor.close();
-        db.close();
+        
         return count;
     }
 
     public String getResponse(int migId, String variable) {
-        SQLiteDatabase db = this.getReadableDatabase();
         String query;
         if (variable == null) {
             query = "SELECT * FROM " + DatabaseTables.ResponseTable.TABLE_NAME
@@ -469,12 +465,12 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
             //Log.d("mylog", "Mid: " + mid + " Qid: " + qid + " rvar: " + response);
         }
         cursor.close();
-        db.close();
+        
         return response;
     }
 
     public int getTileResponse(int migId, int tileId) {
-        SQLiteDatabase db = this.getReadableDatabase();
+        
         String query = "SELECT * FROM " + DatabaseTables.ResponseTable.TABLE_NAME +
                 " WHERE " + DatabaseTables.ResponseTable.migrant_id + " = " + "'" + migId + "'"
                 + " AND " + DatabaseTables.ResponseTable.tile_id + " = " + "'" + tileId + "'";
@@ -490,14 +486,14 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
                 count++;
         }
         cursor.close();
-        db.close();
+        
         return count;
         //Log.d("mylog", "Query: " + query);
 
     }
 
     public String getIsError(int migId, String variable) {
-        SQLiteDatabase db = this.getReadableDatabase();
+        
         String query;
         if (variable == null) {
             query = "SELECT * FROM " + DatabaseTables.ResponseTable.TABLE_NAME
@@ -517,12 +513,12 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
         if (isError == null)
             isError = "-";
         cursor.close();
-        db.close();
+        
         return isError;
     }
 
     public void insertCountry(String id, String name, int status, int blacklist, String order) {
-        SQLiteDatabase db = this.getWritableDatabase();
+
         ContentValues values = new ContentValues();
         values.put(DatabaseTables.CountriesTable.country_id, id);
         values.put(DatabaseTables.CountriesTable.country_name, name);
@@ -532,11 +528,11 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
 
         long newRowId = db.insert(DatabaseTables.CountriesTable.TABLE_NAME, null, values);
         Log.d("mylog", "Inserted row ID; " + newRowId);
-        db.close();
+        
     }
 
     public ArrayList<CountryModel> getCountries() {
-        SQLiteDatabase db = this.getReadableDatabase();
+        
         ArrayList<CountryModel> countryList = new ArrayList<>();
         Cursor cursor = db.rawQuery("SELECT * FROM " + DatabaseTables.CountriesTable.TABLE_NAME + " ORDER BY " + DatabaseTables.CountriesTable.country_order, null);
         while (cursor.moveToNext()) {
@@ -554,14 +550,14 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
             countryList.add(countryModel);
         }
         cursor.close();
-        db.close();
+        
         return countryList;
     }
 
     public CountryModel getCountry(String cid) {
         String statement = "SELECT * FROM " + DatabaseTables.CountriesTable.TABLE_NAME + " WHERE "
                 + DatabaseTables.CountriesTable.country_id + "=" + "'" + cid + "'";
-        SQLiteDatabase db = this.getReadableDatabase();
+        
         Cursor cursor = db.rawQuery(statement, null);
         while (cursor.moveToNext()) {
             String name = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseTables.CountriesTable.country_name));
@@ -576,12 +572,12 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
             return countryModel;
         }
         cursor.close();
-        db.close();
+        
         return null;
     }
 
     public void insertTile(int id, String title, String description, String type, int order) {
-        SQLiteDatabase db = this.getWritableDatabase();
+
         ContentValues values = new ContentValues();
         values.put(DatabaseTables.TilesTable.tile_id, id);
         values.put(DatabaseTables.TilesTable.tile_order, order);
@@ -592,11 +588,11 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
         long newRowId = db.insert(DatabaseTables.TilesTable.TABLE_NAME, null, values);
         Log.d("mylog", "Inserted row ID; " + newRowId);
 
-        db.close();
+        
     }
 
     public void insertImportantContacts(int contactId, String cid, String title, String description, String address, String phone, String email, String website) {
-        SQLiteDatabase db = this.getWritableDatabase();
+
         ContentValues values = new ContentValues();
         values.put(DatabaseTables.ImportantContacts.contact_id, contactId);
         values.put(DatabaseTables.ImportantContacts.country_id, cid);
@@ -609,11 +605,11 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
 
         long newRowId = db.insert(DatabaseTables.ImportantContacts.TABLE_NAME, null, values);
         Log.d("mylog", "Inserted row ID; " + newRowId);
-        db.close();
+        
     }
 
     public void insertImportantContactsDefault(int contactId, String title, String description, String address, String phone, String email, String website) {
-        SQLiteDatabase db = this.getWritableDatabase();
+
         ContentValues values = new ContentValues();
         values.put(DatabaseTables.ImportantContactsDefault.contact_id, contactId);
         values.put(DatabaseTables.ImportantContactsDefault.title, title);
@@ -625,11 +621,11 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
 
         long newRowId = db.insert(DatabaseTables.ImportantContactsDefault.TABLE_NAME, null, values);
         Log.d("mylog", "Inserted Default row ID; " + newRowId);
-        db.close();
+        
     }
 
     public ArrayList<TilesModel> getTiles(String type) {
-        SQLiteDatabase db = this.getReadableDatabase();
+        
         ArrayList<TilesModel> tileList = new ArrayList<>();
         Cursor cursor = db.rawQuery("SELECT * FROM " + DatabaseTables.TilesTable.TABLE_NAME + " WHERE "
                 + DatabaseTables.TilesTable.tile_type + "=" + "'" + type + "'" + " ORDER BY " + DatabaseTables.TilesTable.tile_order, null);
@@ -648,13 +644,13 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
             tileList.add(tilesModel);
         }
         cursor.close();
-        db.close();
+        
         return tileList;
     }
 
     public void insertQuestion(int qid, int tid, String order, String step, String title
             , String description, String condition, String responseType, String variable, String conflictDesc, String number, String link) {
-        SQLiteDatabase db = this.getWritableDatabase();
+
         ContentValues values = new ContentValues();
         values.put(DatabaseTables.QuestionsTable.question_id, qid);
         values.put(DatabaseTables.QuestionsTable.tile_id, tid);
@@ -673,11 +669,11 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
 
         long newRowId = db.insert(DatabaseTables.QuestionsTable.TABLE_NAME, null, values);
         Log.d("mylog", "Inserted row ID; " + newRowId);
-        db.close();
+        
     }
 
     public void insertFeedbackQuestions(int qid, String qTitle, String qOption) {
-        SQLiteDatabase db = this.getWritableDatabase();
+
         ContentValues values = new ContentValues();
         values.put(DatabaseTables.FeedbackQuestionsTable.question_id, qid);
         values.put(DatabaseTables.FeedbackQuestionsTable.question_title, qTitle);
@@ -685,12 +681,12 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
 
         long newRowId = db.insert(DatabaseTables.FeedbackQuestionsTable.TABLE_NAME, null, values);
         Log.d("mylog", "Inserted Feedback row ID; " + newRowId);
-        db.close();
+        
     }
 
     public void insertFeedbackResponse(int migrantId, int questionId, String response, String optResponse, String responseFeedback) {
         // Gets the data repository in write mode
-        SQLiteDatabase db = this.getWritableDatabase();
+
         // Create a new map of values, where column names are the keys
         ContentValues values = new ContentValues();
         values.put(DatabaseTables.FeedbackQuestionsResponseTable.response, response);
@@ -709,12 +705,12 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
             long newRowId = db.insert(DatabaseTables.FeedbackQuestionsResponseTable.TABLE_NAME, null, values);
             Log.d("mylog", "Inserted feedback row ID: " + newRowId);
         }
-        db.close();
+        
 
     }
 
     public ArrayList<HashMap> getAllFeedbackResponses(int migId) {
-        SQLiteDatabase db = this.getReadableDatabase();
+        
         String query;
         ArrayList<HashMap> allResponses = new ArrayList<>();
         query = "SELECT * FROM " + DatabaseTables.FeedbackQuestionsResponseTable.TABLE_NAME + " WHERE " +
@@ -739,12 +735,12 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
             allResponses.add(params);
         }
         cursor.close();
-        db.close();
+        
         return allResponses;
     }
 
     public ArrayList<FeedbackQuestionModel> getFeedbackQuestions() {
-        SQLiteDatabase db = this.getReadableDatabase();
+        
         ArrayList<FeedbackQuestionModel> feedbackQuestions = new ArrayList<>();
         //SELECT * FROM `feedback_questions_table` ORDER BY question_group, question_type DESC
         String statement = "SELECT * FROM " + DatabaseTables.FeedbackQuestionsTable.TABLE_NAME;
@@ -760,13 +756,13 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
             feedbackQuestions.add(tempModel);
         }
         cursor.close();
-        db.close();
+        
         return feedbackQuestions;
     }
 
     public ArrayList<TileQuestionsModel> getQuestions(int tileId) {
         //Log.d("mylog", "Geting questions for tileId: " + tileId);
-        SQLiteDatabase db = this.getReadableDatabase();
+        
         ArrayList<TileQuestionsModel> questionList = new ArrayList<>();
         String statement = "SELECT * FROM " + DatabaseTables.QuestionsTable.TABLE_NAME + " WHERE "
                 + DatabaseTables.QuestionsTable.tile_id + "=" + "'" + tileId + "'" + " ORDER BY " + DatabaseTables.QuestionsTable.question_order;
@@ -805,12 +801,12 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
             questionList.add(questionModel);
         }
         cursor.close();
-        db.close();
+        
         return questionList;
     }
 
     public int getNoRedFlagQuestionsCount(int tileId) {
-        SQLiteDatabase db = this.getReadableDatabase();
+        
         String statement = "SELECT * FROM " + DatabaseTables.QuestionsTable.TABLE_NAME +
                 " WHERE " + DatabaseTables.QuestionsTable.tile_id + "=" + "'" + tileId + "'";
         //Log.d("mylog", "Query: " + statement);
@@ -825,7 +821,7 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
     }
 
     public void insertOption(int qid, int oid, String option) {
-        SQLiteDatabase db = this.getWritableDatabase();
+
         ContentValues values = new ContentValues();
         values.put(DatabaseTables.OptionsTable.option_id, oid);
         values.put(DatabaseTables.OptionsTable.question_id, qid);
@@ -833,11 +829,11 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
 
         long newRowId = db.insert(DatabaseTables.OptionsTable.TABLE_NAME, null, values);
         Log.d("mylog", "Inserted row ID; " + newRowId);
-        db.close();
+        
     }
 
     public String[] getOptions(int qid) {
-        SQLiteDatabase db = this.getReadableDatabase();
+        
         Cursor cursor = db.rawQuery("SELECT * FROM " + DatabaseTables.OptionsTable.TABLE_NAME + " WHERE "
                 + DatabaseTables.OptionsTable.question_id + "=" + "'" + qid + "'", null);
         int i = 0;
@@ -849,18 +845,18 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
             i++;
         }
         cursor.close();
-        db.close();
+        
         return options;
     }
 
     public void deleteAll(String tableName) {
-        SQLiteDatabase db = this.getWritableDatabase();
+
         db.execSQL("delete from " + tableName);
-        db.close();
+        
     }
 
     public void insertMigrantDeletion(int migrantId, int userId, String time) {
-        SQLiteDatabase db = this.getWritableDatabase();
+
         ContentValues values = new ContentValues();
         values.put(DatabaseTables.MigrantsTable.inactivate_date, time);
         //If already exist the Update
@@ -869,11 +865,11 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
         Log.d("mylog", "Setting inactive date: " + time + " For: " + migrantId);
         long updateCount = db.update(DatabaseTables.MigrantsTable.TABLE_NAME, values, whereClause, null);
         Log.d("mylog", "Migrant Deleted row count: " + updateCount);
-        db.close();
+        
     }
 
     public void insertMigrants(int id, String name, int age, String phone, String sex, int userId, String migImg, int percentComp) {
-        SQLiteDatabase db = this.getWritableDatabase();
+
         ContentValues values = new ContentValues();
         values.put(DatabaseTables.MigrantsTable.name, name);
         values.put(DatabaseTables.MigrantsTable.age, age);
@@ -897,11 +893,11 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
             long newRowId = db.insert(DatabaseTables.MigrantsTable.TABLE_NAME, null, values);
             Log.d("mylog", "Inserted row ID: " + newRowId);
         }
-        db.close();
+        
     }
 
     public int insertTempMigrants(String name, int age, String phone, String sex, int userId, String migImg) {
-        SQLiteDatabase db = this.getWritableDatabase();
+
         ContentValues values = new ContentValues();
         values.put(DatabaseTables.MigrantsTempTable.name, name);
         values.put(DatabaseTables.MigrantsTempTable.age, age);
@@ -912,12 +908,12 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
         values.put(DatabaseTables.MigrantsTempTable.user_id, userId);
         long newRowId = db.insert(DatabaseTables.MigrantsTempTable.TABLE_NAME, null, values);
         Log.d("mylog", "Inserted row ID: " + newRowId);
-        db.close();
+        
         return (int) newRowId;
     }
 
     public ArrayList<MigrantModel> getAllTempMigrants() {
-        SQLiteDatabase db = this.getReadableDatabase();
+        
         ArrayList<MigrantModel> migrantModels = new ArrayList<>();
         Cursor cursor = db.rawQuery("SELECT * FROM " + DatabaseTables.MigrantsTempTable.TABLE_NAME, null);
         while (cursor.moveToNext()) {
@@ -936,12 +932,12 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
             migrantModels.add(migrantModel);
         }
         cursor.close();
-        db.close();
+        
         return migrantModels;
     }
 
     public int getMigrantErrorCount(int migId) {
-        SQLiteDatabase db = this.getReadableDatabase();
+        
         String query = "SELECT * FROM " + DatabaseTables.ResponseTable.TABLE_NAME + " WHERE "
                 + DatabaseTables.ResponseTable.migrant_id + "=" + "'" + migId + "'" +
                 " AND " + DatabaseTables.ResponseTable.is_error + "='true'";
@@ -952,12 +948,12 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
             Log.d("mylog", "Got error: " + isError + " FOR: " + variable);
         }
         cursor.close();
-        db.close();
+        
         return cursor.getCount();
     }
 
     public int getTileErrorCount(int migId, int tileId) {
-        SQLiteDatabase db = this.getReadableDatabase();
+        
         String query = "SELECT * FROM " + DatabaseTables.ResponseTable.TABLE_NAME + " WHERE "
                 + DatabaseTables.ResponseTable.migrant_id + "=" + "'" + migId + "'" +
                 " AND " + DatabaseTables.ResponseTable.tile_id + "=" + "'" + tileId + "'" +
@@ -970,12 +966,12 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
         }
         int count = cursor.getCount();
         cursor.close();
-        db.close();
+        
         return count;
     }
 
     public ArrayList<MigrantModel> getMigrants() {
-        SQLiteDatabase db = this.getReadableDatabase();
+        
         ArrayList<MigrantModel> migrantModels = new ArrayList<>();
         Cursor cursor = db.rawQuery("SELECT * FROM " + DatabaseTables.MigrantsTable.TABLE_NAME + " WHERE "
                 + DatabaseTables.MigrantsTable.user_id + "=" + "'" + ApplicationClass.getInstance().getSafeUserId() + "'", null);
@@ -1004,12 +1000,12 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
             migrantModels.add(migrantModel);
         }
         cursor.close();
-        db.close();
+        
         return migrantModels;
     }
 
     public String getMigrantImg(int migId) {
-        SQLiteDatabase db = this.getReadableDatabase();
+        
         ArrayList<MigrantModel> migrantModels = new ArrayList<>();
         Cursor cursor = db.rawQuery("SELECT " + DatabaseTables.MigrantsTable.migrant_img + " FROM " +
                 DatabaseTables.MigrantsTable.TABLE_NAME + " WHERE " +
@@ -1019,12 +1015,12 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
         cursor.moveToFirst();
         String img = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseTables.MigrantsTable.migrant_img));
         cursor.close();
-        db.close();
+        
         return img;
     }
 
     public ArrayList<ImportantContactsModel> getImportantContacts(String countryId) {
-        SQLiteDatabase db = this.getReadableDatabase();
+        
         Cursor cursor = db.rawQuery("SELECT * FROM " + DatabaseTables.ImportantContacts.TABLE_NAME
                 + " WHERE " + DatabaseTables.ImportantContacts.country_id + "=" + "'" + countryId + "'", null);
         Log.d("mylog", "Raw Data: " + cursor.toString());
@@ -1047,12 +1043,12 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
             contactsModels.add(tempModel);
         }
         cursor.close();
-        db.close();
+        
         return contactsModels;
     }
 
     public ArrayList<ImportantContactsModel> getDefaultImportantContacts() {
-        SQLiteDatabase db = this.getReadableDatabase();
+        
         Cursor cursor = db.rawQuery("SELECT * FROM " + DatabaseTables.ImportantContactsDefault.TABLE_NAME, null);
         ArrayList<ImportantContactsModel> contactsModels = new ArrayList<>();
         //cursor.moveToFirst();
@@ -1075,12 +1071,12 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
             Log.d("mylog", "Default Contact title: " + title);
         }
         cursor.close();
-        db.close();
+        
         return contactsModels;
     }
 
     public MigrantModel getMigrantDetails() {
-        SQLiteDatabase db = this.getReadableDatabase();
+        
         ArrayList<MigrantModel> migrantModels = new ArrayList<>();
         Cursor cursor = db.rawQuery("SELECT * FROM " + DatabaseTables.MigrantsTable.TABLE_NAME + " WHERE "
                 + DatabaseTables.MigrantsTable.user_id + "=" + "'" + ApplicationClass.getInstance().getSafeUserId() + "'" + " AND " +
@@ -1103,12 +1099,12 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
         migrantModel.setMigrantSex(sex);
         migrantModels.add(migrantModel);
         cursor.close();
-        db.close();
+        
         return migrantModel;
     }
 
     public float getPercentComplete(int migrantId, int tileId) {
-        SQLiteDatabase db = this.getReadableDatabase();
+        
         String query;
         query = "SELECT * FROM " + DatabaseTables.ResponseTable.TABLE_NAME +
                 " WHERE " + DatabaseTables.ResponseTable.migrant_id + " = " + "'" + migrantId + "'" +
@@ -1124,13 +1120,13 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
             //Log.d("mylog", "Mid: " + mid + " Qid: " + qid + " rvar: " + response);
         }
         cursor.close();
-        db.close();
+        
         return response;
     }
 
     public int getQuestionResponse(int migrantId, ArrayList<Integer> questionIdsToGetAnswers) {
         int totalCount = 0;
-        SQLiteDatabase db = this.getReadableDatabase();
+        
         for (int i = 0; i < questionIdsToGetAnswers.size(); i++) {
             Log.d("mylog", "Curr question ID: " + questionIdsToGetAnswers.get(i));
             String query = "SELECT * FROM " + DatabaseTables.ResponseTable.TABLE_NAME +
@@ -1149,13 +1145,13 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
                 cursor.close();
             }
         }
-        db.close();
+        
         return totalCount;
     }
 
     public void insertTempResponseTableData(String response, int question_id, int tileId, int migrant_id, String variable, String timestamp) {
         // Gets the data repository in write mode
-        SQLiteDatabase db = this.getWritableDatabase();
+
         // Create a new map of values, where column names are the keys
         ContentValues values = new ContentValues();
         values.put(DatabaseTables.TempResponseTable.response, response);
@@ -1178,12 +1174,12 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
             long newRowId = db.insert(DatabaseTables.TempResponseTable.TABLE_NAME, null, values);
             Log.d("mylog", "Inserted row ID: " + newRowId);
         }
-        db.close();
+        
     }
 
     public void makeMigIdChanges(int migrantIdOld, int migrantIdNew) {
         // Gets the data repository in write mode
-        SQLiteDatabase db = this.getWritableDatabase();
+
         // Create a new map of values, where column names are the keys
         ContentValues values = new ContentValues();
         values.put(DatabaseTables.MigrantsTable.migrant_id, migrantIdNew);
@@ -1207,12 +1203,12 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
         //Delete Mig From Temp Table
         db.execSQL("DELETE FROM " + DatabaseTables.MigrantsTempTable.TABLE_NAME + " WHERE " +
                 DatabaseTables.MigrantsTempTable.migrant_id + "=" + migrantIdOld);
-        db.close();
+        
     }
 
     public void makeUserIdChanges(int userIdOld, int userIdNew) {
         // Gets the data repository in write mode
-        SQLiteDatabase db = this.getWritableDatabase();
+
         // Create a new map of values, where column names are the keys
         ContentValues values = new ContentValues();
         values.put(DatabaseTables.MigrantsTable.user_id, userIdNew);
@@ -1224,22 +1220,22 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
         if (updateCount < 1) {
             Log.d("mylog", "Not Updated User ID");
         }
-        db.close();
+        
     }
 
     public void insertManpower(int id, String name) {
-        SQLiteDatabase db = this.getWritableDatabase();
+
         ContentValues values = new ContentValues();
         values.put(DatabaseTables.ManpowersTable.manpower_id, id);
         values.put(DatabaseTables.ManpowersTable.manpower_name, name);
 
         long newRowId = db.insert(DatabaseTables.ManpowersTable.TABLE_NAME, null, values);
-        db.close();
+        
         Log.d("mylog", "Inserted manpower row ID; " + newRowId);
     }
 
     public ArrayList<String> getManpowers() {
-        SQLiteDatabase db = this.getReadableDatabase();
+        
         ArrayList<String> names = new ArrayList<>();
         String statement = "SELECT * FROM " + DatabaseTables.ManpowersTable.TABLE_NAME;
         //Log.d("mylog", "Query: " + statement);
@@ -1250,13 +1246,13 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
             names.add(name);
         }
         cursor.close();
-        db.close();
+        
         return names;
     }
 
     public int getRedflagsQuestionCount(int migrantId, ArrayList<Integer> questionIdsWithPossibleRedflags) {
         int totalCount = 0;
-        SQLiteDatabase db = this.getReadableDatabase();
+        
         for (int i = 0; i < questionIdsWithPossibleRedflags.size(); i++) {
             Log.d("mylog", "Curr question ID: " + questionIdsWithPossibleRedflags.get(i));
             String query = "SELECT * FROM " + DatabaseTables.ResponseTable.TABLE_NAME +
@@ -1275,7 +1271,7 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
             }
         }
 
-        db.close();
+        
         return totalCount;
     }
 }
