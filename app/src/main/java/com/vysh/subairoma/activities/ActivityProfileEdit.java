@@ -470,19 +470,23 @@ public class ActivityProfileEdit extends AppCompatActivity implements View.OnCli
     private void updateUser() {
         String API = "";
         int id = -2;
+
+
+        String sex = "";
+        if (rbFemale.isChecked()) sex = "female";
+        else if (rbMale.isChecked()) sex = "male";
+
         if (userType.equalsIgnoreCase(SharedPrefKeys.helperUser)) {
             API = ApplicationClass.getInstance().getAPIROOT() + apiUpdateUser;
             id = ApplicationClass.getInstance().getSafeUserId();
         } else if (userType.equalsIgnoreCase(SharedPrefKeys.migrantUser)) {
             API = ApplicationClass.getInstance().getAPIROOT() + apiUpdateMigrant;
             id = ApplicationClass.getInstance().getMigrantId();
+            SQLDatabaseHelper.getInstance(ActivityProfileEdit.this).insertResponseTableData(sex, SharedPrefKeys.questionGender, -1, id, "mg_sex", "");
         }
         String name = etName.getText().toString();
         String age = etAge.getText().toString();
         String number = etNumber.getText().toString();
-        String sex = "";
-        if (rbFemale.isChecked()) sex = "female";
-        else if (rbMale.isChecked()) sex = "male";
         if (InternetConnectionChecker.isNetworkConnected(ActivityProfileEdit.this))
             sendToServer(API, id, name, age, number, sex);
         else {
