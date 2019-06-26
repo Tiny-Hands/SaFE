@@ -35,6 +35,7 @@ import android.widget.Spinner;
 import android.widget.SpinnerAdapter;
 import android.widget.TextView;
 
+import androidx.annotation.LongDef;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
@@ -64,7 +65,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
-import static android.graphics.Typeface.BOLD;
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
 
@@ -367,7 +367,6 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
             holder.ivError.setVisibility(View.VISIBLE);
             holder.rootLayout.setBackgroundColor(context.getResources().getColor(R.color.colorErrorFaded));
             holder.title.setTextColor(Color.DKGRAY);
-            holder.title.setTypeface(null, BOLD);
             holder.ivDone.setVisibility(GONE);
             holder.btnShowMore.setVisibility(GONE);
         } else {
@@ -392,6 +391,7 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
         if (responseType == 0) {
             if (response == null || response.isEmpty()) {
                 Log.d("mylog", "0 Response: " + response);
+                holder.checkbox.setChecked(false);
             } else if (response.equalsIgnoreCase("true")) {
                 fromSetView = true;
                 holder.checkbox.setChecked(true);
@@ -1009,8 +1009,14 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
                             notifyConditionVariableChange(questionIds);
                         }
                     }
-                    if (!fromSetView)
-                        notifyItemChanged(getAdapterPosition());
+                    if (!fromSetView) {
+                        try {
+                            notifyItemChanged(getAdapterPosition());
+                        }
+                        catch (Exception ex){
+                            Log.d("mylog", "Couldn't notify item change");
+                        }
+                    }
 
                 }
             });

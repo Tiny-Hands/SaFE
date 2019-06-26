@@ -41,9 +41,9 @@
     <string name="error">होसियार</string>
 
     <!-- OTP Activity -->
-    <string name="no_otp_receiption">Didn\'t receive OTP?</string>
-    <string name="no_otp_try_again">Send Code Again</string>
-    <string name="no_otp_patient">Please be patient, You should receive the code in about 1 minute.</string>
+    <string name="no_otp_receiption">OTP प्राप्त भएन?</string>
+    <string name="no_otp_try_again">कोड फेरि पठाउनुहोस्</string>
+    <string name="no_otp_patient">कृपया धैर्य हुनुहोस्, तपाईले कोड 1 मिनेटमा प्राप्त गर्नु पर्छ.</string>
 
     <!-- Country Chooser -->
     <string name="choose_another_country">अर्को देश छनौट गर्नुहोस्</string>

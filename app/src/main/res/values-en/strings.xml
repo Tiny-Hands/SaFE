@@ -11,7 +11,7 @@
     <string name="finalAnswerVerificationTitle">Before moving on</string>
     <string name="finalAnswerVerification">If you have completed the Preparation section, please agree to not change the previous answers. If you have to change your answers please go back and do it now, otherwise please check "I agree to not change my answers".</string>
     <string name="finalAnswerButton">You won\'t be able to change your answers</string>
-    <string name="opt_message">We are sending an SMS with a code to your phone number. Please enter it below. It may take upto 1 minute</string>
+    <string name="opt_message">We are sending an SMS with a code to your phone number. Please enter it below. It may take up to 1 minute</string>
 
     <!-- Generic -->
     <string name="saving_query">Saving Query</string>
