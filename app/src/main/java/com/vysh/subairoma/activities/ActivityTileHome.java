@@ -140,8 +140,8 @@ public class ActivityTileHome extends AppCompatActivity {
         finalSection = checkIfVerifiedAnswers();
         setUpListeners();
         setUpRecyclerView();
-        getAllResponses();
-        getAllFeedbackResponses();
+        //getAllResponses();
+        //getAllFeedbackResponses();
         getPercentComplete();
         FlurryAgent.logEvent("tiles_listing_resumed");
     }
@@ -352,7 +352,7 @@ public class ActivityTileHome extends AppCompatActivity {
             //Toast.makeText(ActivityTileHome.this, "Completed", Toast.LENGTH_SHORT).show();
             showSnackbar("The steps are Completed");
         }
-        getAllResponses();
+        //getAllResponses();
     }
 
     private void deleteMigrant() {
