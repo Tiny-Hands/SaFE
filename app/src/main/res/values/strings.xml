@@ -172,5 +172,6 @@
     <string name="enterhelpersdetail">If you are being helped by someone, enter the helpers\' name below.</string>
     <string name="initAnswerConfirmation">You\'ve only completed</string>
     <string name="finalAnswerConfirmation">of the questions, are you sure you want to proceed?</string>
+    <string name="restart_app">Please restart the app</string>
 
 </resources>

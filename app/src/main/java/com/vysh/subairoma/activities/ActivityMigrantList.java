@@ -394,6 +394,9 @@ public class ActivityMigrantList extends AppCompatActivity implements RecyclerIt
         } else {*/
         Log.d("mylog", "User ID: " + ApplicationClass.getInstance().getSafeUserId() + " Migrant ID: " + ApplicationClass.getInstance().getMigrantId()
                 + " UserType: " + userType);
+        if (userType == null) {
+            Toast.makeText(ActivityMigrantList.this, getString(R.string.restart_app), Toast.LENGTH_SHORT).show();
+        }
         if (migrantModels.size() == 1 && userType.equalsIgnoreCase(SharedPrefKeys.migrantUser)) {
             int migId = migrantModels.get(0).getMigrantId();
             ApplicationClass.getInstance().setMigrantId(migId);
