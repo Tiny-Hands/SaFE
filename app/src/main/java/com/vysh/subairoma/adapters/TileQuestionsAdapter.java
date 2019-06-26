@@ -576,7 +576,11 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
                                 Log.d("mylog", "Inserting no error for: " + migrantId + " and " +
                                         " Question: " + questionsListDisplay.get(changedId).getVariable());
                                 sqlDatabaseHelper.insertIsError(migrantId, questionsListDisplay.get(changedId).getVariable(), "false");
-                                notifyItemChanged(changedId);
+                                try {
+                                    notifyItemChanged(changedId);
+                                } catch (Exception ex) {
+                                    Log.d("mylog", "Cannot notify on condition");
+                                }
                             }
                             break;
                         }
@@ -1009,13 +1013,12 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
                             notifyConditionVariableChange(questionIds);
                         }
                     }
-                    if (!fromSetView) {
-                        try {
+                    try {
+                        if (!fromSetView) {
                             notifyItemChanged(getAdapterPosition());
                         }
-                        catch (Exception ex){
-                            Log.d("mylog", "Couldn't notify item change");
-                        }
+                    } catch (Exception ex) {
+                        Log.d("mylog", "Couldn't notify item change");
                     }
 
                 }
