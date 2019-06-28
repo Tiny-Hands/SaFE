@@ -12,6 +12,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.crashlytics.android.Crashlytics;
 import com.vysh.subairoma.ApplicationClass;
 import com.vysh.subairoma.SharedPrefKeys;
 import com.vysh.subairoma.activities.ActivitySplash;
@@ -436,15 +437,20 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
                     + " AND " + DatabaseTables.ResponseTable.response_variable + " = " + "'" + variable + "'";
         }
         //Log.d("mylog", "Query: " + query);
-        Cursor cursor = db.rawQuery(query, null);
         String response = "";
-        while (cursor.moveToNext()) {
-            response = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseTables.ResponseTable.response));
-            //Log.d("mylog", "Mid: " + mid + " Qid: " + qid + " rvar: " + response);
+        try {
+            Cursor cursor = db.rawQuery(query, null);
+            while (cursor.moveToNext()) {
+                response = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseTables.ResponseTable.response));
+                //Log.d("mylog", "Mid: " + mid + " Qid: " + qid + " rvar: " + response);
+            }
+            cursor.close();
+        } catch (Exception ex) {
+            Crashlytics.log(Log.ERROR, "DB-ERROR", "Same Shit Again: " + ex.toString());
+        } finally {
+            return response;
         }
-        cursor.close();
 
-        return response;
     }
 
     public int getTileResponse(int migId, int tileId) {

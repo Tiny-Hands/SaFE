@@ -412,16 +412,6 @@
 
                             </LinearLayout>
 
-                            <ImageButton
-                                android:id="@+id/firstbtnNextSections"
-                                android:layout_width="68dp"
-                                android:layout_height="68dp"
-                                android:layout_gravity="center_vertical"
-                                android:layout_marginTop="@dimen/large_margin"
-                                android:background="@null"
-                                android:src="@drawable/ic_next"
-                                android:visibility="gone" />
-
                             <LinearLayout
                                 android:id="@+id/llinfo3"
                                 android:layout_width="wrap_content"

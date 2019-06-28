@@ -134,6 +134,7 @@ public class ActivityTileHome extends AppCompatActivity {
         FlurryAgent.logEvent("tiles_listing_created");
     }
 
+
     @Override
     protected void onResume() {
         super.onResume();
@@ -142,8 +143,37 @@ public class ActivityTileHome extends AppCompatActivity {
         setUpRecyclerView();
         //getAllResponses();
         //getAllFeedbackResponses();
-        getPercentComplete();
+        float percentComp = getPercentComplete();
+        if (percentComp > 99.0) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(ActivityTileHome.this);
+            builder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    goToNextSectionProcess();
+                }
+            });
+            builder.setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    dialogInterface.dismiss();
+                }
+            });
+            builder.setTitle(R.string.complete);
+            builder.setMessage(R.string.complete_message);
+            builder.show();
+            builder.setCancelable(false);
+        }
         FlurryAgent.logEvent("tiles_listing_resumed");
+    }
+
+    public void goToNextSectionProcess() {
+        FlurryAgent.logEvent("next_section_click");
+        if (!checkIfVerifiedAnswers())
+            new DialogAnswersVerification().show(getSupportFragmentManager(), "dialog");
+        else {
+            Toast.makeText(ActivityTileHome.this, "Completed", Toast.LENGTH_SHORT).show();
+        }
+        //getAllResponses();
     }
 
     @Override
@@ -151,6 +181,15 @@ public class ActivityTileHome extends AppCompatActivity {
         super.onNewIntent(intent);
         countryId = intent.getStringExtra("countryId");
         countryName = intent.getStringExtra("countryName");
+        if (intent.hasExtra("status"))
+            status = intent.getIntExtra("status", 0);
+        if (intent.hasExtra("blacklist"))
+            blacklist = intent.getIntExtra("blacklist", 0);
+        if (intent.hasExtra("tiletype")) {
+            tileType = intent.getStringExtra("tiletype");
+            setUpRecyclerView();
+        }
+
         tvCountry.setText(countryName);
         if (countryId.equalsIgnoreCase("in")) {
             //GET GIS TILES
@@ -235,7 +274,7 @@ public class ActivityTileHome extends AppCompatActivity {
             ivUserAvatar.setImageResource(R.drawable.ic_male);
     }
 
-    private void getPercentComplete() {
+    private float getPercentComplete() {
         SQLDatabaseHelper dbHelper = SQLDatabaseHelper.getInstance(ActivityTileHome.this);
         float totalPercent = 0f;
         int tilesCount = tiles.size();
@@ -253,6 +292,7 @@ public class ActivityTileHome extends AppCompatActivity {
         progressPercent.setVisibility(View.VISIBLE);
         progressPercent.setProgress((int) percent);
         rvTiles.getAdapter().notifyDataSetChanged();
+        return percent;
     }
 
     private boolean checkIfVerifiedAnswers() {

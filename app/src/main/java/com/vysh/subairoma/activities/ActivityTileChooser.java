@@ -11,6 +11,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
+
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -77,8 +78,6 @@ public class ActivityTileChooser extends AppCompatActivity {
     ImageView tileType1;
     @BindView(R.id.tiletype2)
     ImageView tileType2;
-    @BindView(R.id.btnNextSections)
-    ImageButton btnNext;
     @BindView(R.id.progressSection1)
     ProgressBar progressBar1;
     @BindView(R.id.progressSection2)
@@ -134,12 +133,6 @@ public class ActivityTileChooser extends AppCompatActivity {
         tvMigName.setText(migName);
         tvMigNumber.setText(migPhone);
         tvCountry.setText(countryName);
-        btnNext.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                goToNextSectionProcess();
-            }
-        });
         tileType1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -280,7 +273,6 @@ public class ActivityTileChooser extends AppCompatActivity {
     private void hideIfIndia() {
         if (countryId.equalsIgnoreCase("in")) {
             llTravel.setVisibility(View.GONE);
-            btnNext.setVisibility(View.GONE);
         }
     }
 
@@ -431,26 +423,6 @@ public class ActivityTileChooser extends AppCompatActivity {
                 }
                 tvPercentComp2.setText(percentComp2 + "% " + getResources().getString(R.string.complete));
                 tileType2.setImageResource(R.drawable.ic_traveltile);
-            } else {
-                if (Integer.parseInt(percentComp) > 99) {
-                    AlertDialog.Builder builder = new AlertDialog.Builder(ActivityTileChooser.this);
-                    builder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
-                            goToNextSectionProcess();
-                        }
-                    });
-                    builder.setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
-                            dialogInterface.dismiss();
-                        }
-                    });
-                    builder.setTitle(R.string.complete);
-                    builder.setMessage(R.string.complete_message);
-                    builder.show();
-                    builder.setCancelable(false);
-                }
             }
         }
     }
@@ -478,7 +450,7 @@ public class ActivityTileChooser extends AppCompatActivity {
         else {
             Toast.makeText(ActivityTileChooser.this, "Completed", Toast.LENGTH_SHORT).show();
         }
-        getAllResponses();
+        //getAllResponses();
     }
 
     private void getAllResponses() {
