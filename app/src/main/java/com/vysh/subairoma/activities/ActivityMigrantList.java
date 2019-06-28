@@ -69,7 +69,6 @@ public class ActivityMigrantList extends AppCompatActivity implements RecyclerIt
     private final String APIGetMig = "/getmigrants.php";
     private final String ApiDISABLE = "/deactivatemigrant.php";
     final String apiURLMigrant = "/savemigrant.php";
-    final String apiURLMigrantPercent = "/updatepercentcomplete.php";
     private final int REQUEST_LOCATION = 1;
     private String userToken;
 
@@ -188,50 +187,10 @@ public class ActivityMigrantList extends AppCompatActivity implements RecyclerIt
             //This will save to server then display migrant list
             saveLocalDataToServer();
             //Mig Percent
-            saveMigPercent();
         } else {
             getSavedMigrants();
         }
         //getMigrants();
-    }
-
-    private void saveMigPercent() {
-        String api = ApplicationClass.getInstance().getAPIROOT() + apiURLMigrantPercent;
-        if (migrantModels != null)
-            for (int i = 0; i < migrantModels.size(); i++) {
-                final MigrantModel currModel = migrantModels.get(i);
-                StringRequest saveRequest = new StringRequest(Request.Method.POST, api, new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        Log.d("mylog", "response : " + response);
-                    }
-                }, new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        String err = error.toString();
-                        Log.d("mylog", "error : " + err);
-                    }
-                }) {
-                    @Override
-                    protected Map<String, String> getParams() throws AuthFailureError {
-                        HashMap<String, String> params = new HashMap<>();
-                        params.put("migrant_id", currModel.getMigrantId() + "");
-                        params.put("user_id", ApplicationClass.getInstance().getSafeUserId() + "");
-                        params.put("percent_complete", currModel.getPercentComp() + "");
-                        return params;
-                    }
-
-                    @Override
-                    public Map<String, String> getHeaders() throws AuthFailureError {
-                        HashMap<String, String> headers = new HashMap<>();
-                        headers.put("Authorization", userToken);
-                        return headers;
-                    }
-
-                };
-                saveRequest.setRetryPolicy(new DefaultRetryPolicy(20 * 1000, 0, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
-                requestQueue.add(saveRequest);
-            }
     }
 
     private void saveLocalDataToServer() {

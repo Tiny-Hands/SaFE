@@ -447,10 +447,8 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
             cursor.close();
         } catch (Exception ex) {
             Crashlytics.log(Log.ERROR, "DB-ERROR", "Same Shit Again: " + ex.toString());
-        } finally {
-            return response;
         }
-
+        return response;
     }
 
     public int getTileResponse(int migId, int tileId) {

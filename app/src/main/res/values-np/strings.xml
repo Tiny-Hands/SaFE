@@ -172,5 +172,7 @@
     <string name="initAnswerConfirmation">तपाईंले मात्र</string>
     <string name="finalAnswerConfirmation">पूरा गर्नुभयो, के तपाईं पक्का गर्न चाहानुहुन्छ?</string>
     <string name="restart_app">कृपया एप पुनः सुरु गर्नुहोस्</string>
+    <string name="saving_response">Saving Response</string>
+    <string name="updatingToServer">Updating Migrant</string>
 
 </resources>

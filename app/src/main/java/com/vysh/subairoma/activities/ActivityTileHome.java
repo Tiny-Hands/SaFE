@@ -1,5 +1,6 @@
 package com.vysh.subairoma.activities;
 
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -26,6 +27,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -41,6 +43,7 @@ import com.vysh.subairoma.R;
 import com.vysh.subairoma.SQLHelpers.SQLDatabaseHelper;
 import com.vysh.subairoma.adapters.TileAdapter;
 import com.vysh.subairoma.imageHelpers.ImageEncoder;
+import com.vysh.subairoma.models.MigrantModel;
 import com.vysh.subairoma.models.TilesModel;
 import com.vysh.subairoma.utils.CustomTextView;
 
@@ -58,14 +61,15 @@ import de.hdodenhof.circleimageview.CircleImageView;
  */
 
 public class ActivityTileHome extends AppCompatActivity {
+    final String apiURLMigrantPercent = "/updatepercentcomplete.php";
     private final String saveAPI = "/saveresponse.php";
     private final String saveFeedbackAPI = "/savefeedbackresponse.php";
     ArrayList<TilesModel> tiles;
     public String migName, countryName, countryId, migGender = "", migPhone;
-    public int blacklist, status;
+    public int blacklist, status, totalResponseCount = 0, currentSavedCount = 0;
     int[] tileIcons;
     TileAdapter tileAdapter;
-    public static Boolean finalSection, showIndia, initialStep = false;
+    public static Boolean finalSection, showIndia;
     String uname, unumber, uage, uimg, uavatar, tileType, userToken;
 
     @BindView(R.id.ivUserAvatar)
@@ -134,6 +138,12 @@ public class ActivityTileHome extends AppCompatActivity {
         FlurryAgent.logEvent("tiles_listing_created");
     }
 
+    @Override
+    protected void onStop() {
+        totalResponseCount = 0;
+        currentSavedCount = 0;
+        super.onStop();
+    }
 
     @Override
     protected void onResume() {
@@ -144,7 +154,7 @@ public class ActivityTileHome extends AppCompatActivity {
         //getAllResponses();
         //getAllFeedbackResponses();
         float percentComp = getPercentComplete();
-        if (percentComp > 99.0) {
+        if (!finalSection && percentComp > 99.0) {
             AlertDialog.Builder builder = new AlertDialog.Builder(ActivityTileHome.this);
             builder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
                 @Override
@@ -163,7 +173,51 @@ public class ActivityTileHome extends AppCompatActivity {
             builder.show();
             builder.setCancelable(false);
         }
+        saveMigPercent(percentComp);
         FlurryAgent.logEvent("tiles_listing_resumed");
+    }
+
+    private void saveMigPercent(float percentComp) {
+        RequestQueue queue = Volley.newRequestQueue(ActivityTileHome.this);
+        String api = ApplicationClass.getInstance().getAPIROOT() + apiURLMigrantPercent;
+        final ProgressDialog progressDialog = new ProgressDialog(ActivityTileHome.this);
+        //progressDialog.setTitle("Please wait");
+        progressDialog.setMessage(getResources().getString(R.string.updatingToServer));
+        progressDialog.setCancelable(false);
+        progressDialog.show();
+
+        StringRequest saveRequest = new StringRequest(Request.Method.POST, api, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                progressDialog.dismiss();
+                Log.d("mylog", "response : " + response);
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                String err = error.toString();
+                Log.d("mylog", "error : " + err);
+            }
+        }) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                HashMap<String, String> params = new HashMap<>();
+                params.put("migrant_id", ApplicationClass.getInstance().getMigrantId() + "");
+                params.put("user_id", ApplicationClass.getInstance().getSafeUserId() + "");
+                params.put("percent_complete", percentComp + "");
+                return params;
+            }
+
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                HashMap<String, String> headers = new HashMap<>();
+                headers.put("Authorization", userToken);
+                return headers;
+            }
+
+        };
+        saveRequest.setRetryPolicy(new DefaultRetryPolicy(20 * 1000, 0, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        queue.add(saveRequest);
     }
 
     public void goToNextSectionProcess() {
@@ -324,7 +378,7 @@ public class ActivityTileHome extends AppCompatActivity {
             for (int i = 0; i < responses.size(); i++) {
                 responses.get(i).put("user_id", ApplicationClass.getInstance().getSafeUserId() + "");
                 responses.get(i).put("migrant_id", ApplicationClass.getInstance().getMigrantId() + "");
-                saveResponseToServer(responses.get(i), 2);
+                saveResponseToServer(responses.get(i), 2, null);
             }
         } else Log.d("mylog", "MigID: " + migId + " Not saving to server");
     }
@@ -483,31 +537,43 @@ public class ActivityTileHome extends AppCompatActivity {
         if (migId > 0) {
             ArrayList<HashMap> allParams = SQLDatabaseHelper.getInstance(ActivityTileHome.this)
                     .getAllResponse(migId);
+            totalResponseCount = allParams.size();
+            ProgressDialog progressDialog = new ProgressDialog(ActivityTileHome.this);
+            progressDialog.setMessage(getResources().getString(R.string.saving_response));
+            progressDialog.setCancelable(false);
+            progressDialog.show();
             for (int i = 0; i < allParams.size(); i++) {
-                //Log.d("mylog", "Saving to server: " + i);
                 allParams.get(i).put("user_id", ApplicationClass.getInstance().getSafeUserId() + "");
                 allParams.get(i).put("migrant_id", ApplicationClass.getInstance().getMigrantId() + "");
-                saveResponseToServer(allParams.get(i), 1);
+                saveResponseToServer(allParams.get(i), 1, progressDialog);
             }
         } else
             Log.d("mylog", "MigID: " + migId + " Not saving to server");
     }
 
-    private void saveResponseToServer(final HashMap<String, String> fParams, int responseType) {
+    private void saveResponseToServer(final HashMap<String, String> fParams, int responseType, ProgressDialog progressDialog) {
         String api;
         if (responseType == 1)
             api = ApplicationClass.getInstance().getAPIROOT() + saveAPI;
         else
             api = ApplicationClass.getInstance().getAPIROOT() + saveFeedbackAPI;
         final String fapi = api;
+
         StringRequest stringRequest = new StringRequest(Request.Method.POST, api, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
-                Log.d("mylog", "Response: " + response);
+                ++currentSavedCount;
+                if (progressDialog != null && (currentSavedCount == totalResponseCount))
+                    progressDialog.dismiss();
+                Log.d("mylog", "Response: " + response + " Count: " + currentSavedCount + " Total: " + totalResponseCount);
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
+                ++currentSavedCount;
+                if (progressDialog != null && (currentSavedCount == totalResponseCount))
+                    progressDialog.dismiss();
+                Log.d("mylog", "Error response Count: " + currentSavedCount + " Total: " + totalResponseCount);
                 String err = error.toString();
                 if (!err.isEmpty() && err.contains("NoConnection")) {
                     //showSnackbar("Response cannot be saved at the moment, please check your Intenet connection.");
@@ -518,9 +584,6 @@ public class ActivityTileHome extends AppCompatActivity {
         }) {
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
-                for (Object key : fParams.keySet()) {
-                    Log.d("mylog", "Key Values: " + key + ": " + fParams.get(key));
-                }
                 return fParams;
             }
 
