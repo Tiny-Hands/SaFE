@@ -57,7 +57,7 @@ public class ActivityFeedback extends AppCompatActivity {
         btnNext.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //getAllFeedbackResponses();
+                getAllFeedbackResponses();
                 if (count > 0) {
                     Calendar cal = Calendar.getInstance();
                     String time = cal.getTimeInMillis() + "";

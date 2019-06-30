@@ -14,8 +14,8 @@
             android:id="@+id/tvTitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="@dimen/medium_large_margin"
             android:layout_marginTop="@dimen/default_margin"
+            android:layout_marginEnd="@dimen/medium_large_margin"
             android:gravity="center_horizontal"
             android:text="@string/feedback_trial"
             android:textSize="@dimen/tile_title_size"
@@ -23,57 +23,65 @@
             app:fonts="gotham_medium.ttf" />
     </androidx.appcompat.widget.Toolbar>
 
-    <androidx.cardview.widget.CardView
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_above="@id/btnNext"
         android:layout_below="@id/toolbar2"
-        android:layout_margin="@dimen/default_margin"
-        android:background="#fff"
-        app:cardCornerRadius="8dp">
+        android:gravity="center">
 
-        <LinearLayout
+        <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:layout_height="wrap_content"
+            android:layout_below="@id/toolbar2"
+            android:layout_margin="@dimen/default_margin"
+            android:background="#fff"
+            app:cardCornerRadius="8dp">
 
-            <TextView
-                android:id="@+id/tvDescription"
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@color/colorPrimary"
-                android:gravity="center"
-                android:padding="@dimen/default_margin"
-                android:text="@string/feedback_msg_new"
-                android:textAllCaps="true"
-                android:textColor="#fff"
-                android:textSize="@dimen/feedback_list_heading"
-                android:textStyle="bold" />
+                android:layout_height="match_parent"
+                android:orientation="vertical">
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/rvFeedbackQuestions"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/default_margin"
-                android:paddingLeft="@dimen/small_medium_margin"
-                android:paddingRight="@dimen/small_medium_margin" />
+                <TextView
+                    android:id="@+id/tvDescription"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/colorPrimary"
+                    android:gravity="center"
+                    android:padding="@dimen/default_margin"
+                    android:text="@string/feedback_msg_new"
+                    android:textAllCaps="true"
+                    android:textColor="#fff"
+                    android:textSize="@dimen/feedback_list_heading"
+                    android:textStyle="bold" />
 
-            <EditText
-                android:id="@+id/etOverallFeedback"
-                android:layout_width="match_parent"
-                android:layout_height="96dp"
-                android:layout_marginBottom="@dimen/medium_margin"
-                android:layout_marginLeft="@dimen/small_medium_margin"
-                android:layout_marginRight="@dimen/small_medium_margin"
-                android:layout_marginTop="@dimen/medium_margin"
-                android:background="@drawable/bg_edittext"
-                android:gravity="center"
-                android:hint="Additional Comments"
-                android:imeOptions="actionDone"
-                android:inputType="text"
-                android:padding="@dimen/small_medium_margin"
-                android:visibility="gone" />
-        </LinearLayout>
-    </androidx.cardview.widget.CardView>
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rvFeedbackQuestions"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/default_margin"
+                    android:paddingLeft="@dimen/small_medium_margin"
+                    android:paddingRight="@dimen/small_medium_margin" />
+
+                <EditText
+                    android:id="@+id/etOverallFeedback"
+                    android:layout_width="match_parent"
+                    android:layout_height="96dp"
+                    android:layout_marginLeft="@dimen/small_medium_margin"
+                    android:layout_marginTop="@dimen/medium_margin"
+                    android:layout_marginRight="@dimen/small_medium_margin"
+                    android:layout_marginBottom="@dimen/medium_margin"
+                    android:background="@drawable/bg_edittext"
+                    android:gravity="center"
+                    android:hint="Additional Comments"
+                    android:imeOptions="actionDone"
+                    android:inputType="text"
+                    android:padding="@dimen/small_medium_margin"
+                    android:visibility="gone" />
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+    </LinearLayout>
 
     <Button
         android:id="@+id/btnNext"
