@@ -2,6 +2,7 @@ package com.vysh.subairoma.SQLHelpers;
 
 import android.app.AlarmManager;
 import android.app.PendingIntent;
+import android.app.ProgressDialog;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
@@ -12,10 +13,18 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.crashlytics.android.Crashlytics;
 import com.vysh.subairoma.ApplicationClass;
 import com.vysh.subairoma.SharedPrefKeys;
 import com.vysh.subairoma.activities.ActivitySplash;
+import com.vysh.subairoma.activities.ActivityTileHome;
 import com.vysh.subairoma.models.CountryModel;
 import com.vysh.subairoma.models.FeedbackQuestionModel;
 import com.vysh.subairoma.models.ImportantContactsModel;
@@ -25,6 +34,9 @@ import com.vysh.subairoma.models.TilesModel;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
+
+import static android.content.Context.MODE_PRIVATE;
 
 
 /**
@@ -32,10 +44,13 @@ import java.util.HashMap;
  */
 
 public class SQLDatabaseHelper extends SQLiteOpenHelper {
+    private final String saveAPI = "/saveresponse.php";
     // If you change the database schema, you must increment the database version.
     private static SQLiteDatabase db;
     private static SQLDatabaseHelper sDbHelperInstance;
     Context mContext;
+    private static RequestQueue queue;
+    private static String userToken;
     public static final int DATABASE_VERSION = 17;
     public static final String DATABASE_NAME = "SubairomaLocal.db";
     final String SQL_CREATE_ResponseTable =
@@ -168,6 +183,10 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
         if (sDbHelperInstance == null) {
             sDbHelperInstance = new SQLDatabaseHelper(context.getApplicationContext());
         }
+        if (userToken == null)
+            userToken = context.getSharedPreferences(SharedPrefKeys.sharedPrefName, MODE_PRIVATE).getString(SharedPrefKeys.token, "");
+        if (queue == null)
+            queue = Volley.newRequestQueue(context);
         return sDbHelperInstance;
     }
 
@@ -175,12 +194,14 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
         if (db == null)
             db = this.getWritableDatabase();
-        SharedPreferences sp = context.getSharedPreferences(SharedPrefKeys.sharedPrefName, Context.MODE_PRIVATE);
+        SharedPreferences sp = context.getSharedPreferences(SharedPrefKeys.sharedPrefName, MODE_PRIVATE);
         SharedPreferences.Editor editor = sp.edit();
         editor.putInt(SharedPrefKeys.dbVersion, DATABASE_VERSION);
         editor.apply();
         editor.commit();
         mContext = context;
+        userToken = context.getSharedPreferences(SharedPrefKeys.sharedPrefName, MODE_PRIVATE).getString(SharedPrefKeys.token, "");
+        queue = Volley.newRequestQueue(context);
         Log.d("mylog", "Database created");
     }
 
@@ -244,7 +265,7 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
     }
 
     public void allowReloadData() {
-        SharedPreferences sp = mContext.getSharedPreferences(SharedPrefKeys.sharedPrefName, Context.MODE_PRIVATE);
+        SharedPreferences sp = mContext.getSharedPreferences(SharedPrefKeys.sharedPrefName, MODE_PRIVATE);
         SharedPreferences.Editor editor = sp.edit();
         editor.putInt("savedcount", 0);
         editor.commit();
@@ -369,6 +390,7 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
     }
 
     public void insertIsError(int migId, String variable, String isError) {
+        HashMap responseSet = this.getAllResponseForVarialbe(migId, variable);
         Log.d("mylog", "Inserting isError: " + isError);
         ContentValues newValue = new ContentValues();
         if (isError.equalsIgnoreCase("false"))
@@ -381,6 +403,7 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
                 DatabaseTables.ResponseTable.response_variable + " = " + "'" + variable + "'";
         int updateCount = db.update(DatabaseTables.ResponseTable.TABLE_NAME, newValue, selection, null);
         Log.d("mylog", "Updated iserror rows: " + updateCount);
+
 
     }
 
@@ -424,6 +447,46 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
         }
         cursor.close();
         return allResponses;
+    }
+
+    public HashMap getAllResponseForVarialbe(int migId, String var) {
+        String query;
+        query = "SELECT * FROM " + DatabaseTables.ResponseTable.TABLE_NAME +
+                " WHERE " + DatabaseTables.ResponseTable.migrant_id + " = " + "'" + migId + "'"
+                + " AND " + DatabaseTables.ResponseTable.response_variable + " = " + "'" + var + "'";
+        //Log.d("mylog", "Query: " + query);
+        Cursor cursor = db.rawQuery(query, null);
+        String response = "", responseQuery = "";
+        Log.d("mylog", "Response for Migrant ID: " + migId);
+        int userId = ApplicationClass.getInstance().getSafeUserId();
+        cursor.moveToFirst();
+        String qvar = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseTables.ResponseTable.response_variable));
+        response = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseTables.ResponseTable.response));
+        String time = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseTables.ResponseTable.response_time));
+        responseQuery = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseTables.ResponseTable.question_query));
+        int mid = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseTables.ResponseTable.migrant_id));
+        int qid = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseTables.ResponseTable.question_id));
+        int tileid = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseTables.ResponseTable.tile_id));
+        String error = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseTables.ResponseTable.is_error));
+        Log.d("mylog", "Uid: " + userId + " Mid: " + mid + " Qid: " + qid + " Response: " + response + " Variable: " + qvar + " isError: " + error);
+        HashMap<String, String> params = new HashMap<>();
+        params.put("user_id", "" + userId);
+        params.put("migrant_id", "" + mid);
+        params.put("question_id", "" + qid);
+        params.put("response", response);
+        params.put("response_variable", qvar);
+        params.put("tile_id", tileid + "");
+        if (time == null)
+            time = "";
+        params.put("time", time);
+        if (error == null)
+            error = "-";
+        params.put("is_error", error);
+        if (responseQuery == null)
+            responseQuery = "";
+        params.put("question_query", responseQuery);
+        cursor.close();
+        return params;
     }
 
     public String getResponse(int migId, String variable) {
@@ -1181,5 +1244,43 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
 
 
         return totalCount;
+    }
+
+    private void saveResponseToServer(final HashMap<String, String> fParams) {
+        String api = ApplicationClass.getInstance().getAPIROOT() + saveAPI;
+
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, api, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                Log.d("mylog", "Response: " + response);
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                if (error != null) {
+                    String err = error.toString();
+                    if (!err.isEmpty() && err.contains("NoConnection")) {
+                        //showSnackbar("Response cannot be saved at the moment, please check your Intenet connection.");
+                        Log.d("mylog", "Response cannot be saved at the moment, please check your Intenet connection.");
+                    }
+                } else
+                    Log.d("mylog", "Error saving response");
+            }
+        }) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                return fParams;
+            }
+
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                HashMap<String, String> headers = new HashMap<>();
+                headers.put("Authorization", userToken);
+                return headers;
+            }
+        };
+        Log.d("mylog", "Calling: " + api);
+        queue.add(stringRequest);
+        //Log.d("mylog", "Token: " + getSharedPreferences(SharedPrefKeys.sharedPrefName, MODE_PRIVATE).getString(SharedPrefKeys.token, ""));
     }
 }
