@@ -241,7 +241,7 @@
                             app:fonts="gotham_light.ttf" />
 
                         <com.vysh.subairoma.utils.CustomTextView
-                            android:layout_width="106dp"
+                            android:layout_width="92dp"
                             android:layout_height="wrap_content"
                             android:layout_alignTop="@+id/tv1"
                             android:layout_centerVertical="true"
