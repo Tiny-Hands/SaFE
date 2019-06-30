@@ -173,7 +173,7 @@ public class ActivityTileHome extends AppCompatActivity {
             builder.show();
             builder.setCancelable(false);
         }
-        saveMigPercent(percentComp);
+        //saveMigPercent(percentComp);
         FlurryAgent.logEvent("tiles_listing_resumed");
     }
 
