@@ -28,8 +28,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
-                    android:layout_marginBottom="@dimen/medium_margin"
                     android:layout_marginTop="@dimen/default_margin"
+                    android:layout_marginBottom="@dimen/medium_margin"
                     android:text="@string/country"
                     android:textSize="@dimen/tile_title_chooser"
                     android:textStyle="bold" />
@@ -52,10 +52,10 @@
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
-                    android:layout_marginBottom="@dimen/large_margin"
                     android:layout_marginLeft="@dimen/default_margin"
-                    android:layout_marginRight="@dimen/default_margin"
                     android:layout_marginTop="@dimen/large_margin"
+                    android:layout_marginRight="@dimen/default_margin"
+                    android:layout_marginBottom="@dimen/large_margin"
                     android:background="@color/grey" />
 
                 <LinearLayout
@@ -92,8 +92,8 @@
                             android:layout_width="match_parent"
                             android:layout_height="8dp"
                             android:layout_marginLeft="@dimen/large_margin"
-                            android:layout_marginRight="@dimen/large_margin"
                             android:layout_marginTop="@dimen/default_margin"
+                            android:layout_marginRight="@dimen/large_margin"
                             android:progressDrawable="@drawable/progress_drawable"
                             android:visibility="visible" />
 
@@ -145,8 +145,8 @@
                             android:layout_width="match_parent"
                             android:layout_height="8dp"
                             android:layout_marginLeft="@dimen/large_margin"
-                            android:layout_marginRight="@dimen/large_margin"
                             android:layout_marginTop="@dimen/default_margin"
+                            android:layout_marginRight="@dimen/large_margin"
                             android:progressDrawable="@drawable/progress_drawable"
                             android:visibility="visible" />
 
@@ -162,18 +162,18 @@
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
-                    android:layout_marginBottom="@dimen/large_margin"
                     android:layout_marginLeft="@dimen/default_margin"
-                    android:layout_marginRight="@dimen/default_margin"
                     android:layout_marginTop="@dimen/large_margin"
+                    android:layout_marginRight="@dimen/default_margin"
+                    android:layout_marginBottom="@dimen/large_margin"
                     android:background="@color/grey" />
 
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
-                    android:layout_marginBottom="@dimen/default_margin"
                     android:layout_marginTop="@dimen/large_margin"
+                    android:layout_marginBottom="@dimen/default_margin"
                     android:gravity="center|bottom"
                     android:orientation="vertical">
 
@@ -233,8 +233,8 @@
                             android:layout_height="wrap_content"
                             android:layout_centerVertical="true"
                             android:layout_marginLeft="@dimen/default_margin"
-                            android:paddingBottom="@dimen/default_margin"
                             android:paddingRight="@dimen/medium_margin"
+                            android:paddingBottom="@dimen/default_margin"
                             android:text="1."
                             android:textColor="@color/infoTextWhite"
                             android:textSize="24sp"
@@ -248,6 +248,7 @@
                             android:layout_toRightOf="@+id/tv1"
                             android:lineSpacingExtra="2dp"
                             android:paddingBottom="@dimen/default_margin"
+                            android:elevation="2dp"
                             android:text="@string/infostep1"
                             android:textColor="@color/infoTextWhite"
                             android:textSize="@dimen/info_desc_text"
@@ -262,8 +263,8 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="center_horizontal"
-                                android:layout_marginBottom="@dimen/medium_margin"
                                 android:layout_marginTop="@dimen/default_margin"
+                                android:layout_marginBottom="@dimen/medium_margin"
                                 android:text="@string/j_country"
                                 android:textColor="@color/infoTextWhite"
                                 android:textSize="@dimen/tile_title_chooser"
@@ -287,10 +288,10 @@
                             <View
                                 android:layout_width="match_parent"
                                 android:layout_height="1dp"
-                                android:layout_marginBottom="@dimen/large_margin"
                                 android:layout_marginLeft="@dimen/default_margin"
-                                android:layout_marginRight="@dimen/default_margin"
                                 android:layout_marginTop="@dimen/large_margin"
+                                android:layout_marginRight="@dimen/default_margin"
+                                android:layout_marginBottom="@dimen/large_margin"
                                 android:background="@color/grey" />
                         </LinearLayout>
                     </RelativeLayout>
@@ -306,8 +307,8 @@
                             android:layout_height="wrap_content"
                             android:layout_centerVertical="true"
                             android:layout_marginLeft="136dp"
-                            android:paddingRight="@dimen/medium_margin"
                             android:paddingTop="@dimen/default_margin"
+                            android:paddingRight="@dimen/medium_margin"
                             android:text="2."
                             android:textColor="@color/infoTextWhite"
                             android:textSize="24sp"
@@ -322,6 +323,7 @@
                             android:layout_centerVertical="true"
                             android:layout_toRightOf="@+id/tv2"
                             android:lineSpacingExtra="2dp"
+                            android:elevation="2dp"
                             android:paddingTop="@dimen/default_margin"
                             android:text="@string/infostep2"
                             android:textColor="@color/infoTextWhite"
@@ -335,8 +337,8 @@
                             android:layout_height="wrap_content"
                             android:layout_centerHorizontal="true"
                             android:layout_centerVertical="true"
-                            android:paddingRight="152dp"
                             android:paddingTop="@dimen/default_margin"
+                            android:paddingRight="152dp"
                             android:text="3."
                             android:textColor="@color/infoTextWhite"
                             android:textSize="24sp"
@@ -352,6 +354,7 @@
                             android:lineSpacingExtra="2dp"
                             android:paddingLeft="@dimen/default_margin"
                             android:paddingTop="@dimen/default_margin"
+                            android:elevation="2dp"
                             android:text="@string/infostep3"
                             android:textColor="@color/infoTextWhite"
                             android:textSize="@dimen/info_desc_text"
@@ -376,9 +379,9 @@
                                 <TextView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
+                                    android:layout_marginEnd="@dimen/default_margin"
                                     android:layout_marginBottom="@dimen/medium_margin"
                                     android:text="@string/preparation"
-                                    android:layout_marginEnd="@dimen/default_margin"
                                     android:textColor="@color/infoTextWhite"
                                     android:textSize="@dimen/tile_title_chooser"
                                     android:textStyle="bold" />
@@ -397,9 +400,9 @@
                                     android:layout_width="match_parent"
                                     android:layout_height="8dp"
                                     android:layout_marginLeft="@dimen/large_margin"
-                                    android:layout_marginRight="@dimen/large_margin"
                                     android:layout_marginTop="@dimen/default_margin"
                                     android:layout_marginEnd="@dimen/default_margin"
+                                    android:layout_marginRight="@dimen/large_margin"
                                     android:progressDrawable="@drawable/progress_drawable"
                                     android:visibility="invisible" />
 
@@ -407,8 +410,8 @@
                                     android:id="@+id/firsttvPercentComplete1"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:layout_marginEnd="@dimen/default_margin"
-                                    android:layout_marginTop="@dimen/small_margin" />
+                                    android:layout_marginTop="@dimen/small_margin"
+                                    android:layout_marginEnd="@dimen/default_margin" />
 
                             </LinearLayout>
 
@@ -425,9 +428,9 @@
                                 <TextView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
+                                    android:layout_marginStart="@dimen/default_margin"
                                     android:layout_marginBottom="@dimen/medium_margin"
                                     android:text="@string/travel"
-                                    android:layout_marginStart="@dimen/default_margin"
                                     android:textColor="@color/infoTextWhite"
                                     android:textSize="@dimen/tile_title_chooser"
                                     android:textStyle="bold" />
@@ -444,10 +447,10 @@
                                     style="?android:attr/progressBarStyleHorizontal"
                                     android:layout_width="match_parent"
                                     android:layout_height="8dp"
-                                    android:layout_marginLeft="@dimen/large_margin"
-                                    android:layout_marginRight="@dimen/large_margin"
                                     android:layout_marginStart="@dimen/default_margin"
+                                    android:layout_marginLeft="@dimen/large_margin"
                                     android:layout_marginTop="@dimen/default_margin"
+                                    android:layout_marginRight="@dimen/large_margin"
                                     android:progressDrawable="@drawable/progress_drawable"
                                     android:visibility="invisible" />
 
@@ -465,18 +468,18 @@
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
-                        android:layout_marginBottom="@dimen/large_margin"
                         android:layout_marginLeft="@dimen/default_margin"
-                        android:layout_marginRight="@dimen/default_margin"
                         android:layout_marginTop="@dimen/large_margin"
+                        android:layout_marginRight="@dimen/default_margin"
+                        android:layout_marginBottom="@dimen/large_margin"
                         android:background="@color/grey" />
 
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_horizontal"
-                        android:layout_marginBottom="@dimen/default_margin"
                         android:layout_marginTop="@dimen/large_margin"
+                        android:layout_marginBottom="@dimen/default_margin"
                         android:gravity="center|bottom"
                         android:orientation="vertical"
                         android:visibility="gone">
