@@ -3,6 +3,8 @@ package com.vysh.subairoma.activities;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -12,6 +14,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -30,6 +33,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.facebook.share.Share;
 import com.flurry.android.FlurryAgent;
 import com.google.android.material.navigation.NavigationView;
 import com.vysh.subairoma.ApplicationClass;
@@ -44,6 +48,7 @@ import com.vysh.subairoma.utils.PercentHelper;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 import butterknife.BindView;
@@ -209,6 +214,21 @@ public class ActivityTileChooser extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         setPercentCompletion();
+        //For some reason Language changing when back pressed, hence rechecking
+        if (getSharedPreferences(SharedPrefKeys.sharedPrefName, MODE_PRIVATE).getString(SharedPrefKeys.lang, "").equalsIgnoreCase("en")) {
+            setLocale("en");
+        } else {
+            setLocale("np");
+        }
+    }
+
+    private void setLocale(String lang) {
+        Locale myLocale = new Locale(lang);
+        Resources res = getResources();
+        DisplayMetrics dm = res.getDisplayMetrics();
+        Configuration conf = res.getConfiguration();
+        conf.locale = myLocale;
+        res.updateConfiguration(conf, dm);
     }
 
     private void showInformationOverlay() {
