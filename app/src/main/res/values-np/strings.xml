@@ -14,7 +14,7 @@
     <string name="opt_message">तपाईँले दिनुभएको फोनमा हामीले OTP कोड SMS गरेर पठाँउदैछौँ । कृपया त्यो OTP कोड तल राख्नुहोस् । यो कोड प्राप्त हुन १ मिनेट जस्तो लाग्नसक्छ ।</string>
 
     <!-- Generic -->
-    <string name="saving_query">Saving Query</string>
+    <string name="saving_query">प्रश्न सेव हुदैछ </string>
     <string name="next">अगाडि बढ्नु</string>
     <string name="proceed">अगाडि बढ्नु</string>
     <string name="back">फिर्ता</string>
@@ -172,7 +172,7 @@
     <string name="initAnswerConfirmation">तपाईंले मात्र</string>
     <string name="finalAnswerConfirmation">पूरा गर्नुभयो, के तपाईं पक्का गर्न चाहानुहुन्छ?</string>
     <string name="restart_app">कृपया एप पुनः सुरु गर्नुहोस्</string>
-    <string name="saving_response">Saving Response</string>
+    <string name="saving_response">उत्तर सेव हुदैछ</string>
     <string name="updatingToServer">Updating Migrant</string>
 
 </resources>
