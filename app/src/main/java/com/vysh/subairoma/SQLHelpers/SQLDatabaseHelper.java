@@ -455,37 +455,45 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
                 " WHERE " + DatabaseTables.ResponseTable.migrant_id + " = " + "'" + migId + "'"
                 + " AND " + DatabaseTables.ResponseTable.response_variable + " = " + "'" + var + "'";
         //Log.d("mylog", "Query: " + query);
-        Cursor cursor = db.rawQuery(query, null);
-        String response = "", responseQuery = "";
-        Log.d("mylog", "Response for Migrant ID: " + migId);
-        int userId = ApplicationClass.getInstance().getSafeUserId();
-        cursor.moveToFirst();
-        String qvar = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseTables.ResponseTable.response_variable));
-        response = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseTables.ResponseTable.response));
-        String time = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseTables.ResponseTable.response_time));
-        responseQuery = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseTables.ResponseTable.question_query));
-        int mid = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseTables.ResponseTable.migrant_id));
-        int qid = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseTables.ResponseTable.question_id));
-        int tileid = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseTables.ResponseTable.tile_id));
-        String error = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseTables.ResponseTable.is_error));
-        Log.d("mylog", "Uid: " + userId + " Mid: " + mid + " Qid: " + qid + " Response: " + response + " Variable: " + qvar + " isError: " + error);
+        Cursor cursor = null;
         HashMap<String, String> params = new HashMap<>();
-        params.put("user_id", "" + userId);
-        params.put("migrant_id", "" + mid);
-        params.put("question_id", "" + qid);
-        params.put("response", response);
-        params.put("response_variable", qvar);
-        params.put("tile_id", tileid + "");
-        if (time == null)
-            time = "";
-        params.put("time", time);
-        if (error == null)
-            error = "-";
-        params.put("is_error", error);
-        if (responseQuery == null)
-            responseQuery = "";
-        params.put("question_query", responseQuery);
-        cursor.close();
+        try {
+            cursor = db.rawQuery(query, null);
+            String response = "", responseQuery = "";
+            Log.d("mylog", "Response for Migrant ID: " + migId);
+            int userId = ApplicationClass.getInstance().getSafeUserId();
+            cursor.moveToFirst();
+            String qvar = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseTables.ResponseTable.response_variable));
+            response = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseTables.ResponseTable.response));
+            String time = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseTables.ResponseTable.response_time));
+            responseQuery = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseTables.ResponseTable.question_query));
+            int mid = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseTables.ResponseTable.migrant_id));
+            int qid = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseTables.ResponseTable.question_id));
+            int tileid = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseTables.ResponseTable.tile_id));
+            String error = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseTables.ResponseTable.is_error));
+            Log.d("mylog", "Uid: " + userId + " Mid: " + mid + " Qid: " + qid + " Response: " + response + " Variable: " + qvar + " isError: " + error);
+
+            params.put("user_id", "" + userId);
+            params.put("migrant_id", "" + mid);
+            params.put("question_id", "" + qid);
+            params.put("response", response);
+            params.put("response_variable", qvar);
+            params.put("tile_id", tileid + "");
+            if (time == null)
+                time = "";
+            params.put("time", time);
+            if (error == null)
+                error = "-";
+            params.put("is_error", error);
+            if (responseQuery == null)
+                responseQuery = "";
+            params.put("question_query", responseQuery);
+        } catch (Exception ex) {
+            Log.d("mylog", "Error in all resp varible: " + ex.toString());
+        } finally {
+            if (cursor != null)
+                cursor.close();
+        }
         return params;
     }
 
@@ -501,16 +509,18 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
         }
         //Log.d("mylog", "Query: " + query);
         String response = "";
+        Cursor cursor = null;
         try {
-            Cursor cursor = db.rawQuery(query, null);
+            cursor = db.rawQuery(query, null);
             while (cursor.moveToNext()) {
                 response = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseTables.ResponseTable.response));
                 //Log.d("mylog", "Mid: " + mid + " Qid: " + qid + " rvar: " + response);
             }
-            cursor.close();
         } catch (Exception ex) {
             Crashlytics.log(Log.ERROR, "DB-ERROR", "Same Shit Again: " + ex.toString());
         }
+        if (cursor != null)
+            cursor.close();
         return response;
     }
 
@@ -521,15 +531,22 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
                 + " AND " + DatabaseTables.ResponseTable.tile_id + " = " + "'" + tileId + "'";
 
         int count = 0;
-        Cursor cursor = db.rawQuery(query, null);
-        while (cursor.moveToNext()) {
-            String response = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseTables.ResponseTable.response));
-            String responseVar = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseTables.ResponseTable.response_variable));
-            Log.d("mylog", "Response Variable: " + responseVar + " Response: " + response);
-            if (response != null && !responseVar.equalsIgnoreCase("percent_complete") && !response.contains("false"))
-                count++;
+        Cursor cursor = null;
+        try {
+            cursor = db.rawQuery(query, null);
+            while (cursor.moveToNext()) {
+                String response = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseTables.ResponseTable.response));
+                String responseVar = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseTables.ResponseTable.response_variable));
+                Log.d("mylog", "Response Variable: " + responseVar + " Response: " + response);
+                if (response != null && !responseVar.equalsIgnoreCase("percent_complete") && !response.contains("false"))
+                    count++;
+            }
+        } catch (Exception ex) {
+            Log.d("mylog", "Exception getting tile resp: " + ex.toString());
+        } finally {
+            if (cursor != null)
+                cursor.close();
         }
-        cursor.close();
 
         return count;
         //Log.d("mylog", "Query: " + query);
