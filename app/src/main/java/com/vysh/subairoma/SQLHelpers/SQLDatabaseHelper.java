@@ -684,21 +684,26 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
         ArrayList<TilesModel> tileList = new ArrayList<>();
         Cursor cursor = db.rawQuery("SELECT * FROM " + DatabaseTables.TilesTable.TABLE_NAME + " WHERE "
                 + DatabaseTables.TilesTable.tile_type + "=" + "'" + type + "'" + " ORDER BY " + DatabaseTables.TilesTable.tile_order, null);
-        while (cursor.moveToNext()) {
-            int id = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseTables.TilesTable.tile_id));
-            String title = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseTables.TilesTable.tile_title));
-            String desc = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseTables.TilesTable.tile_description));
-            int order = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseTables.TilesTable.tile_order));
-            TilesModel tilesModel = new TilesModel();
-            tilesModel.setTitle(title);
-            tilesModel.setDescription(desc);
-            tilesModel.setTileId(id);
-            tilesModel.setTileOrder(order);
-            tilesModel.setType(type
-            );
-            tileList.add(tilesModel);
+        try {
+            while (cursor.moveToNext()) {
+                int id = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseTables.TilesTable.tile_id));
+                String title = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseTables.TilesTable.tile_title));
+                String desc = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseTables.TilesTable.tile_description));
+                int order = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseTables.TilesTable.tile_order));
+                TilesModel tilesModel = new TilesModel();
+                tilesModel.setTitle(title);
+                tilesModel.setDescription(desc);
+                tilesModel.setTileId(id);
+                tilesModel.setTileOrder(order);
+                tilesModel.setType(type
+                );
+                tileList.add(tilesModel);
+            }
+        } catch (Exception ex) {
+            Crashlytics.log(Log.ERROR, "DB-ERROR", "Same Shit Again in GetTiles: " + ex.toString());
+        } finally {
+            cursor.close();
         }
-        cursor.close();
 
         return tileList;
     }
