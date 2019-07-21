@@ -21,6 +21,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.FileProvider;
+
 import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -82,7 +83,7 @@ public class ActivityRegister extends AppCompatActivity {
     final String apiGetResponses = "/getresponses.php";
     final String apiAlreadyRegistered = "/checkphonenumber.php";
     private final String APIGETMIG = "/getmigrants.php";
-    private int gotDetailCount = 0;
+    private int gotDetailCount = 0, migrantCount = 0;
 
     private final int REQUEST_SELECT_FILE = 1;
     private final int REQUEST_TAKE_PIC = 0;
@@ -300,9 +301,7 @@ public class ActivityRegister extends AppCompatActivity {
                 else
                     Toast.makeText(ActivityRegister.this, error.toString(), Toast.LENGTH_SHORT).show();
             }
-        })
-
-        {
+        }) {
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
                 HashMap<String, String> params = new HashMap<>();
@@ -387,8 +386,6 @@ public class ActivityRegister extends AppCompatActivity {
             public void onResponse(String response) {
                 try {
                     Log.d("mylog", "REs: " + response);
-
-                    startOTPActivity(userType, 1);
                     getAllResponses(userType, ApplicationClass.getInstance().getSafeUserId());
                     parseMigDetailResponse(response);
                     try {
@@ -397,7 +394,6 @@ public class ActivityRegister extends AppCompatActivity {
                         Log.d("mylog", "Exception in progress dis: " + ex.getMessage());
                     }
 
-                    Log.d("mylog", "response : " + response);
                 } catch (Exception ex) {
                     Log.d("mylog", "response exception: " + ex.toString());
                 }
@@ -761,6 +757,7 @@ public class ActivityRegister extends AppCompatActivity {
             } else {
                 JSONArray migrantJSON = jsonObject.getJSONArray("migrants");
                 if (migrantJSON != null) {
+                    migrantCount = migrantJSON.length();
                     JSONObject migrantObj;
                     SQLDatabaseHelper dbHelper = SQLDatabaseHelper.getInstance(ActivityRegister.this);
                     int uid = ApplicationClass.getInstance().getSafeUserId();
@@ -961,6 +958,8 @@ public class ActivityRegister extends AppCompatActivity {
                 Log.d("mylog", "Responses from migrants: " + response);
                 ++gotDetailCount;
                 parseAllResponses(response);
+                if (gotDetailCount == migrantCount)
+                    startOTPActivity(userType, 1);
                 try {
                     pdialog.dismiss();
                 } catch (Exception ex) {

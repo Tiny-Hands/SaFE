@@ -336,8 +336,10 @@ public class ActivitySplash extends AppCompatActivity {
         if (Build.VERSION.SDK_INT >= 19) {
             TransitionManager.beginDelayedTransition((ViewGroup) bottomLayoutMessage.getParent());
         }
-        bottomLayoutMessage.setVisibility(View.VISIBLE);
-        progressBar.setVisibility(View.GONE);
+        if (bottomLayoutMessage.getVisibility() != View.VISIBLE) {
+            bottomLayoutMessage.setVisibility(View.VISIBLE);
+            progressBar.setVisibility(View.GONE);
+        }
     }
 
     private void getQuestions() {
