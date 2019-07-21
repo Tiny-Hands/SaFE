@@ -135,6 +135,7 @@ public class ActivityTileHome extends AppCompatActivity {
         getUserDetails();
         setMigDetails();
         setUpNavigationButtons();
+        setUpRecyclerView();
         FlurryAgent.logEvent("tiles_listing_created");
     }
 
@@ -150,7 +151,7 @@ public class ActivityTileHome extends AppCompatActivity {
         super.onResume();
         finalSection = checkIfVerifiedAnswers();
         setUpListeners();
-        setUpRecyclerView();
+        //setUpRecyclerView();
         //getAllResponses();
         //getAllFeedbackResponses();
         float percentComp = getPercentComplete();
@@ -174,6 +175,8 @@ public class ActivityTileHome extends AppCompatActivity {
             builder.setCancelable(false);
         }
         //saveMigPercent(percentComp);
+        if (tileAdapter != null)
+            tileAdapter.notifyDataSetChanged();
         FlurryAgent.logEvent("tiles_listing_resumed");
     }
 
