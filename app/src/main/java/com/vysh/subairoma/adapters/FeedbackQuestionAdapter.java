@@ -95,10 +95,9 @@ public class FeedbackQuestionAdapter extends RecyclerView.Adapter<FeedbackQuesti
                     if (b) {
                         activityFeedback.count++;
                         String feedbackOption = feedbackQuestionModels.get(getAdapterPosition()).getQuestionOptions();
-                        Log.d("mylog", "FB Options: " + feedbackOption);
                         if (feedbackOption.contains("red")) {
-                            Log.d("mylog", "Show Redflags");
                             //editText.setVisibility(View.VISIBLE);
+                            sqlDatabaseHelper.insertFeedbackResponse(migrantId, feedbackQuestionModels.get(getAdapterPosition()).getQuestionId(), "true", "");
                         } else if (feedbackOption.length() > 5) {
                             try {
                                 JSONArray optionsArray = new JSONArray(feedbackOption);
@@ -111,6 +110,7 @@ public class FeedbackQuestionAdapter extends RecyclerView.Adapter<FeedbackQuesti
                             } catch (JSONException e) {
                                 Log.d("mylog", "Error parsing options: " + e.toString());
                             }
+                            sqlDatabaseHelper.insertFeedbackResponse(migrantId, feedbackQuestionModels.get(getAdapterPosition()).getQuestionId(), "false", "");
                         } else {
                             //editText.setVisibility(View.VISIBLE);
                         }
@@ -149,11 +149,14 @@ public class FeedbackQuestionAdapter extends RecyclerView.Adapter<FeedbackQuesti
 
     private class OptionsListViewAdapter extends ArrayAdapter<String> {
         ArrayList<String> options;
+        int questionId;
+        String resp = "";
 
         public OptionsListViewAdapter(List<String> objects, int questionId) {
             super(mContext, R.layout.listview_feedback_options_row, objects);
             options = new ArrayList<>();
             options.addAll(objects);
+            this.questionId = questionId;
 
         }
 
@@ -179,10 +182,15 @@ public class FeedbackQuestionAdapter extends RecyclerView.Adapter<FeedbackQuesti
                     public void onCheckedChanged(CompoundButton buttonView, boolean ischecked) {
                         if (ischecked) {
                             //et.setVisibility(View.VISIBLE);
+                            resp = resp + options.get(position) + ", ";
                         } else {
                             /*if (et.getVisibility() == View.VISIBLE)
                                 et.setVisibility(View.GONE);*/
+                            if (resp.contains(options.get(position)))
+                                resp.replace(options.get(position) + ", ", "");
                         }
+                        Log.d("mylog", "Feedback options: " + resp);
+                        sqlDatabaseHelper.insertFeedbackResponse(migrantId, questionId, "true", resp);
                     }
                 });
 

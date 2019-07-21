@@ -744,13 +744,12 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
 
     }
 
-    public void insertFeedbackResponse(int migrantId, int questionId, String response, String optResponse, String responseFeedback) {
+    public void insertFeedbackResponse(int migrantId, int questionId, String response, String optResponse) {
         // Gets the data repository in write mode
 
         // Create a new map of values, where column names are the keys
         ContentValues values = new ContentValues();
         values.put(DatabaseTables.FeedbackQuestionsResponseTable.response, response);
-        values.put(DatabaseTables.FeedbackQuestionsResponseTable.response_feedback, responseFeedback);
         values.put(DatabaseTables.FeedbackQuestionsResponseTable.option_response, optResponse);
         //If already exist the Update
         String whereClause = DatabaseTables.FeedbackQuestionsResponseTable.migrant_id + " = " + migrantId + " AND " +
@@ -787,11 +786,10 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
             int qid = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseTables.FeedbackQuestionsResponseTable.question_id));
 
             HashMap<String, String> params = new HashMap<>();
-            params.put("migrant_id", "" + mid);
+            params.put("user_id", "" + mid);
             params.put("question_id", "" + qid);
             params.put("response", response);
             params.put("opt_response", optResponse);
-            params.put("feedback", resFeedback);
             allResponses.add(params);
         }
         cursor.close();

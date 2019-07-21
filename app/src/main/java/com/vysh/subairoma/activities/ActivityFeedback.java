@@ -124,12 +124,13 @@ public class ActivityFeedback extends AppCompatActivity {
         StringRequest stringRequest = new StringRequest(Request.Method.POST, api, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
-                Log.d("mylog", "Response: " + response);
+                Log.d("mylog", "Response of feedback save: " + response);
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
                 String err = error.toString();
+                Log.d("mylog", "Error saving feedback : " + err);
                 if (!err.isEmpty() && err.contains("NoConnection")) {
                     //showSnackbar("Response cannot be saved at the moment, please check your Intenet connection.");
                     Log.d("mylog", "Feedback couldn't be saved, please check your Intenet connection.");
