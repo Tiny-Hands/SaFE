@@ -75,9 +75,13 @@ public class TileAdapter extends RecyclerView.Adapter<TileAdapter.TileViewHolder
         Log.d("mylog", "Tile Errors: " + errorCount + " For tile ID: " + tileId);
 
 
-        int total = sqlDatabaseHelper.getQuestions(tileId).size();
-        int answered = sqlDatabaseHelper.getTileResponse(ApplicationClass.getInstance().getMigrantId(), tileId);
-        String completeText = answered + " " + context.getResources().getString(R.string.answered) + " /" + total + " " + context.getResources().getString(R.string.questions);
+        //int total = sqlDatabaseHelper.getQuestions(tileId).size();
+        //int answered = sqlDatabaseHelper.getTileResponse(ApplicationClass.getInstance().getMigrantId(), tileId);
+        //String completeText = answered + " " + context.getResources().getString(R.string.answered) + " /" + total + " " + context.getResources().getString(R.string.questions);
+        String completeText;
+        float percent = tileList.get(position).getPercentComplete();
+        DecimalFormat decimalFormat = new DecimalFormat("##");
+        completeText = decimalFormat.format(percent) + " %";
         if (errorCount > 0) {
             for (int i = 0; i < errorCount; i++) {
                 ImageView imgView = new ImageView(holder.llErrorLayout.getContext());
@@ -101,7 +105,6 @@ public class TileAdapter extends RecyclerView.Adapter<TileAdapter.TileViewHolder
         } else {
             holder.tvCompletionStatus.setBackgroundResource(R.color.grey);
         }
-
         holder.tvCompletionStatus.setText(completeText);
 
         //int noRedflagQuestionCount = sqlDatabaseHelper.getNoRedFlagQuestionsCount(tileId);
