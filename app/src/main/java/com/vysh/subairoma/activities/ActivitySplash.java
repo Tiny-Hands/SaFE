@@ -88,6 +88,8 @@ public class ActivitySplash extends AppCompatActivity {
     ImageButton ibEn;
     @BindView(R.id.ibNp)
     ImageButton ibNp;
+    
+    RequestQueue queue;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -95,6 +97,7 @@ public class ActivitySplash extends AppCompatActivity {
         sp = getSharedPreferences(SharedPrefKeys.sharedPrefName, MODE_PRIVATE);
         int currVersion = sp.getInt(SharedPrefKeys.dbVersion, -1);
         dbHelper = SQLDatabaseHelper.getInstance(ActivitySplash.this);
+        queue = Volley.newRequestQueue(ActivitySplash.this);
         if (dbHelper.getVersion() > currVersion && currVersion != -1) {
             Log.d("mylog", "Greater Version dropping");
             dbHelper.dropDB();
@@ -292,8 +295,7 @@ public class ActivitySplash extends AppCompatActivity {
                 return headers;
             }
         };
-        ;
-        RequestQueue queue = Volley.newRequestQueue(ActivitySplash.this);
+        
         queue.add(getRequest);
     }
 
@@ -328,7 +330,7 @@ public class ActivitySplash extends AppCompatActivity {
                 return headers;
             }
         };
-        RequestQueue queue = Volley.newRequestQueue(ActivitySplash.this);
+
         queue.add(getRequest);
     }
 
@@ -373,7 +375,7 @@ public class ActivitySplash extends AppCompatActivity {
                 return headers;
             }
         };
-        RequestQueue queue = Volley.newRequestQueue(ActivitySplash.this);
+        ;
         queue.add(getRequest);
     }
 
@@ -408,7 +410,7 @@ public class ActivitySplash extends AppCompatActivity {
                 return headers;
             }
         };
-        RequestQueue queue = Volley.newRequestQueue(ActivitySplash.this);
+
         queue.add(getRequest);
     }
 
@@ -443,7 +445,7 @@ public class ActivitySplash extends AppCompatActivity {
                 return headers;
             }
         };
-        RequestQueue queue = Volley.newRequestQueue(ActivitySplash.this);
+
         queue.add(getRequest);
     }
 
@@ -473,7 +475,7 @@ public class ActivitySplash extends AppCompatActivity {
                 return headers;
             }
         };
-        RequestQueue queue = Volley.newRequestQueue(ActivitySplash.this);
+
         queue.add(getRequest);
     }
 
@@ -508,7 +510,7 @@ public class ActivitySplash extends AppCompatActivity {
                 return headers;
             }
         };
-        RequestQueue queue = Volley.newRequestQueue(ActivitySplash.this);
+
         queue.add(getRequest);
     }
 
