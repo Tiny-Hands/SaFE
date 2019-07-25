@@ -143,7 +143,7 @@
     <string name="travel">यात्रा</string>
     <string name="section_locked">खण्ड लक छ</string>
     <string name="welcome_info">सेफ एप्प मा स्वागत छ</string>
-    <string name="complete_message">यो भाग पूर्ण छ? के तपाइँ अर्को भागमा सार्न चाहनुहुन्छ?</string>
+    <string name="complete_message">यो खण्ड पुरा भइसक्यो । के तपाईँ अगाडि जान चाहनुहुन्छ?</string>
     <string name="infostep1">तपाईंले जाने योजना बनाउनु भएको देश चयन गर्नुहोस्</string>
     <string name="infostep2">यदि तपाइँ पूर्णतया तयार हुनुहुन्छ भने जाँच्नुहोस्</string>
     <string name="infostep3">यदि तपाईं यात्रा गर्न तयार हुनुहुन्छ भने जाँच्नुहोस्</string>
