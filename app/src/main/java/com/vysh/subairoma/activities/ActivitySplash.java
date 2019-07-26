@@ -60,9 +60,8 @@ public class ActivitySplash extends AppCompatActivity {
     private final String importantContactsAPI = "/getimportantcontacts.php";
     private final String importantContactsDefaultAPI = "/getimportantcontactsdefault.php";
     private final String feedbackQuestions = "/getfeedbackquestions.php";
-    private int savedCount = 0;
+    private int savedCount = 0, apiErrorCount = 0;
     private int apiCount = 8;
-    private long startTime;
     private long sleepTime;
     private String lang;
     private HashMap<String, String> fParams;
@@ -88,7 +87,7 @@ public class ActivitySplash extends AppCompatActivity {
     ImageButton ibEn;
     @BindView(R.id.ibNp)
     ImageButton ibNp;
-    
+
     RequestQueue queue;
 
     @Override
@@ -280,7 +279,13 @@ public class ActivitySplash extends AppCompatActivity {
             @Override
             public void onErrorResponse(VolleyError error) {
                 Log.d("mylog", "Error getting questions: " + error.toString());
-                showErrorResponse();
+                if (apiErrorCount > 8)
+                    showErrorResponse();
+                else {
+                    getContacts(1);
+                    getContacts(2);
+                }
+                apiErrorCount++;
             }
         }) {
             @Override
@@ -295,7 +300,7 @@ public class ActivitySplash extends AppCompatActivity {
                 return headers;
             }
         };
-        
+
         queue.add(getRequest);
     }
 
@@ -315,7 +320,11 @@ public class ActivitySplash extends AppCompatActivity {
             @Override
             public void onErrorResponse(VolleyError error) {
                 Log.d("mylog", "Got Tiles error: " + error.toString());
-                showErrorResponse();
+                if (apiErrorCount > 8)
+                    showErrorResponse();
+                else
+                    getTiles();
+                apiErrorCount++;
             }
         }) {
             @Override
@@ -360,7 +369,11 @@ public class ActivitySplash extends AppCompatActivity {
             @Override
             public void onErrorResponse(VolleyError error) {
                 Log.d("mylog", "Error getting questions: " + error.toString());
-                showErrorResponse();
+                if (apiErrorCount > 8)
+                    showErrorResponse();
+                else
+                    getQuestions();
+                apiErrorCount = 0;
             }
         }) {
             @Override
@@ -395,7 +408,11 @@ public class ActivitySplash extends AppCompatActivity {
             @Override
             public void onErrorResponse(VolleyError error) {
                 Log.d("mylog", "Error getting options: " + error.toString());
-                showErrorResponse();
+                if (apiErrorCount > 8)
+                    showErrorResponse();
+                else
+                    getOptions();
+                apiErrorCount = 0;
             }
         }) {
             @Override
@@ -430,7 +447,11 @@ public class ActivitySplash extends AppCompatActivity {
             @Override
             public void onErrorResponse(VolleyError error) {
                 Log.d("mylog", "Error getting countries: " + error.toString());
-                showErrorResponse();
+                if (apiErrorCount > 8)
+                    showErrorResponse();
+                else
+                    getCountries();
+                apiErrorCount++;
             }
         }) {
             @Override
@@ -465,7 +486,11 @@ public class ActivitySplash extends AppCompatActivity {
             @Override
             public void onErrorResponse(VolleyError error) {
                 Log.d("mylog", "Error getting manpowers: " + error.toString());
-                showErrorResponse();
+                if (apiErrorCount > 8)
+                    showErrorResponse();
+                else
+                    getManpowers();
+                apiErrorCount++;
             }
         }) {
             @Override
@@ -495,7 +520,10 @@ public class ActivitySplash extends AppCompatActivity {
             @Override
             public void onErrorResponse(VolleyError error) {
                 Log.d("mylog", "Error getting countries: " + error.toString());
-                showErrorResponse();
+                if (apiErrorCount > 8)
+                    showErrorResponse();
+                else getFeedbackQuestions();
+                apiErrorCount++;
             }
         }) {
             @Override
@@ -717,21 +745,6 @@ public class ActivitySplash extends AppCompatActivity {
             Log.d("mylog", "Error parsing manpower: " + response);
         }
         incrementCount();
-    }
-
-    private synchronized void checkSleep() {
-        if (savedCount == apiCount) {
-            long currTime = System.currentTimeMillis();
-            sleepTime = currTime - startTime;
-            Log.d("mylog", "Count is 4, Sleep Time: " + sleepTime);
-            if (sleepTime > 2000) {
-                sleepTime = 0;
-                sleepThread.start();
-            } else {
-                sleepTime = 2000 - sleepTime;
-                sleepThread.start();
-            }
-        }
     }
 
     public synchronized void incrementCount() {
