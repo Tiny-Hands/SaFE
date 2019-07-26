@@ -62,7 +62,7 @@ public class ActivitySplash extends AppCompatActivity {
     private final String feedbackQuestions = "/getfeedbackquestions.php";
     private int savedCount = 0, apiErrorCount = 0;
     private int apiCount = 8;
-    private long sleepTime;
+    private long startTime, sleepTime;
     private String lang;
     private HashMap<String, String> fParams;
 
