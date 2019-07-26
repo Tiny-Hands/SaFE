@@ -49,6 +49,7 @@ import com.vysh.subairoma.models.CountryModel;
 import com.vysh.subairoma.models.MigrantModel;
 import com.vysh.subairoma.services.LocationChecker;
 import com.vysh.subairoma.utils.CustomTextView;
+import com.vysh.subairoma.utils.DefaultExceptionHandler;
 import com.vysh.subairoma.utils.InternetConnectionChecker;
 
 import org.json.JSONException;
@@ -119,7 +120,11 @@ public class ActivityMigrantList extends AppCompatActivity implements RecyclerIt
                 startActivity(intent);
             }
         });
+        if (getIntent().hasExtra("message"))
+            Toast.makeText(this, getIntent().getStringExtra("message"), Toast.LENGTH_SHORT).show();
 
+        //To Restart if exits with exception
+        Thread.setDefaultUncaughtExceptionHandler(new DefaultExceptionHandler(this));
         navView = findViewById(R.id.nav_view);
         setUpNavigationButtons();
         setUpListeners();
