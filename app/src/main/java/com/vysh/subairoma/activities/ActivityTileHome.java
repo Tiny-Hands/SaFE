@@ -181,16 +181,10 @@ public class ActivityTileHome extends AppCompatActivity {
     private void saveMigPercent(float percentComp) {
         RequestQueue queue = Volley.newRequestQueue(ActivityTileHome.this);
         String api = ApplicationClass.getInstance().getAPIROOT() + apiURLMigrantPercent;
-        final ProgressDialog progressDialog = new ProgressDialog(ActivityTileHome.this);
-        //progressDialog.setTitle("Please wait");
-        progressDialog.setMessage(getResources().getString(R.string.updatingToServer));
-        progressDialog.setCancelable(false);
-        progressDialog.show();
 
         StringRequest saveRequest = new StringRequest(Request.Method.POST, api, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
-                progressDialog.dismiss();
                 Log.d("mylog", "response : " + response);
             }
         }, new Response.ErrorListener() {
