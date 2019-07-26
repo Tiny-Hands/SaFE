@@ -1186,8 +1186,6 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
     }
 
     private class OptionsListViewAdapter extends ArrayAdapter<String> {
-
-        int questionId;
         ArrayList<String> options;
         Context mContext;
         int mainPos;

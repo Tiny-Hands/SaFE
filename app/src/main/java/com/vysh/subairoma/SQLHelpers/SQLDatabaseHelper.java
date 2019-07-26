@@ -2,7 +2,6 @@ package com.vysh.subairoma.SQLHelpers;
 
 import android.app.AlarmManager;
 import android.app.PendingIntent;
-import android.app.ProgressDialog;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
@@ -24,7 +23,6 @@ import com.crashlytics.android.Crashlytics;
 import com.vysh.subairoma.ApplicationClass;
 import com.vysh.subairoma.SharedPrefKeys;
 import com.vysh.subairoma.activities.ActivitySplash;
-import com.vysh.subairoma.activities.ActivityTileHome;
 import com.vysh.subairoma.models.CountryModel;
 import com.vysh.subairoma.models.FeedbackQuestionModel;
 import com.vysh.subairoma.models.ImportantContactsModel;
@@ -44,10 +42,10 @@ import static android.content.Context.MODE_PRIVATE;
  */
 
 public class SQLDatabaseHelper extends SQLiteOpenHelper {
-    private final String saveAPI = "/saveresponse.php";
     // If you change the database schema, you must increment the database version.
     private static SQLiteDatabase db;
     private static SQLDatabaseHelper sDbHelperInstance;
+    final String saveResponseAPI = "/saveresponse.php";
     Context mContext;
     private static RequestQueue queue;
     private static String userToken;
@@ -296,6 +294,8 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
             long newRowId = db.insert(DatabaseTables.ResponseTable.TABLE_NAME, null, values);
             Log.d("mylog", "Inserted row ID: " + newRowId);
         }
+        if (!variable.equalsIgnoreCase("percent_complete"))
+            saveResponseToServer(getAllResponseForVariable(migrant_id, variable));
 
     }
 
@@ -390,7 +390,6 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
     }
 
     public void insertIsError(int migId, String variable, String isError) {
-        HashMap responseSet = this.getAllResponseForVarialbe(migId, variable);
         Log.d("mylog", "Inserting isError: " + isError);
         ContentValues newValue = new ContentValues();
         if (isError.equalsIgnoreCase("false"))
@@ -404,7 +403,8 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
         int updateCount = db.update(DatabaseTables.ResponseTable.TABLE_NAME, newValue, selection, null);
         Log.d("mylog", "Updated iserror rows: " + updateCount);
 
-
+        HashMap responseSet = this.getAllResponseForVariable(migId, variable);
+        saveResponseToServer(responseSet);
     }
 
     public ArrayList<HashMap> getAllResponse(int migId) {
@@ -449,7 +449,7 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
         return allResponses;
     }
 
-    public HashMap getAllResponseForVarialbe(int migId, String var) {
+    public HashMap getAllResponseForVariable(int migId, String var) {
         String query;
         query = "SELECT * FROM " + DatabaseTables.ResponseTable.TABLE_NAME +
                 " WHERE " + DatabaseTables.ResponseTable.migrant_id + " = " + "'" + migId + "'"
@@ -1261,34 +1261,32 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
                 cursor.close();
             }
         }
-
-
         return totalCount;
     }
 
     private void saveResponseToServer(final HashMap<String, String> fParams) {
-        String api = ApplicationClass.getInstance().getAPIROOT() + saveAPI;
-
+        String api = ApplicationClass.getInstance().getAPIROOT() + saveResponseAPI;
         StringRequest stringRequest = new StringRequest(Request.Method.POST, api, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
-                Log.d("mylog", "Response: " + response);
+                Log.d("mylog", "Response of resp save: " + response);
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                if (error != null) {
-                    String err = error.toString();
-                    if (!err.isEmpty() && err.contains("NoConnection")) {
-                        //showSnackbar("Response cannot be saved at the moment, please check your Intenet connection.");
-                        Log.d("mylog", "Response cannot be saved at the moment, please check your Intenet connection.");
-                    }
-                } else
-                    Log.d("mylog", "Error saving response");
+                String err = error.toString();
+                Log.d("mylog", "Error saving feedback : " + err);
+                if (!err.isEmpty() && err.contains("NoConnection")) {
+                    //showSnackbar("Response cannot be saved at the moment, please check your Intenet connection.");
+                    Log.d("mylog", "Response couldn't be saved, please check your Intenet connection.");
+                }
             }
         }) {
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
+                for (Object key : fParams.keySet()) {
+                    Log.d("mylog", "Saving Responses : " + key + ": " + fParams.get(key));
+                }
                 return fParams;
             }
 
@@ -1299,8 +1297,6 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
                 return headers;
             }
         };
-        Log.d("mylog", "Calling: " + api);
         queue.add(stringRequest);
-        //Log.d("mylog", "Token: " + getSharedPreferences(SharedPrefKeys.sharedPrefName, MODE_PRIVATE).getString(SharedPrefKeys.token, ""));
     }
 }

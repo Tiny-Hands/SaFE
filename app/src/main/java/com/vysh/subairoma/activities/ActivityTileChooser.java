@@ -60,9 +60,6 @@ import de.hdodenhof.circleimageview.CircleImageView;
  */
 
 public class ActivityTileChooser extends AppCompatActivity {
-    private final String saveAPI = "/saveresponse.php";
-    private final String saveFeedbackAPI = "/savefeedbackresponse.php";
-
     @BindView(R.id.ivUserAvatar)
     CircleImageView ivMigrantImage;
     @BindView(R.id.tvMigNumber)
@@ -471,61 +468,5 @@ public class ActivityTileChooser extends AppCompatActivity {
             Toast.makeText(ActivityTileChooser.this, "Completed", Toast.LENGTH_SHORT).show();
         }
         //getAllResponses();
-    }
-
-    private void getAllResponses() {
-        int migId = ApplicationClass.getInstance().getMigrantId();
-        if (migId > 0) {
-            ArrayList<HashMap> allParams = SQLDatabaseHelper.getInstance(ActivityTileChooser.this)
-                    .getAllResponse(migId);
-            for (int i = 0; i < allParams.size(); i++) {
-                //Log.d("mylog", "Saving to server: " + i);
-                saveResponseToServer(allParams.get(i), 1);
-            }
-        } else
-            Log.d("mylog", "MigID: " + migId + " Not saving to server");
-    }
-
-    private void saveResponseToServer(final HashMap<String, String> fParams, int responseType) {
-        String api;
-        if (responseType == 1)
-            api = ApplicationClass.getInstance().getAPIROOT() + saveAPI;
-        else
-            api = ApplicationClass.getInstance().getAPIROOT() + saveFeedbackAPI;
-        final String fapi = api;
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, api, new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-                Log.d("mylog", "Response: " + response);
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                String err = error.toString();
-                if (!err.isEmpty() && err.contains("NoConnection")) {
-                    //showSnackbar("Response cannot be saved at the moment, please check your Intenet connection.");
-                    Log.d("mylog", "Response cannot be saved at the moment, please check your Intenet connection.");
-                } else
-                    Log.d("mylog", "Error saving response: " + err + " \n For: " + fapi);
-            }
-        }) {
-            @Override
-            protected Map<String, String> getParams() throws AuthFailureError {
-                for (Object key : fParams.keySet()) {
-                    Log.d("mylog", "Key Values: " + key + ": " + fParams.get(key));
-                }
-                return fParams;
-            }
-
-            @Override
-            public Map<String, String> getHeaders() throws AuthFailureError {
-                HashMap<String, String> headers = new HashMap<>();
-                headers.put("Authorization", getSharedPreferences(SharedPrefKeys.sharedPrefName, MODE_PRIVATE).getString(SharedPrefKeys.token, ""));
-                return headers;
-            }
-        };
-        Log.d("mylog", "Calling: " + api);
-        RequestQueue queue = Volley.newRequestQueue(ActivityTileChooser.this);
-        queue.add(stringRequest);
     }
 }

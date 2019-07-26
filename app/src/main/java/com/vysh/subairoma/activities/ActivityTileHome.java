@@ -62,8 +62,6 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class ActivityTileHome extends AppCompatActivity {
     final String apiURLMigrantPercent = "/updatepercentcomplete.php";
-    private final String saveAPI = "/saveresponse.php";
-    private final String saveFeedbackAPI = "/savefeedbackresponse.php";
     ArrayList<TilesModel> tiles;
     public String migName, countryName, countryId, migGender = "", migPhone;
     public int blacklist, status, totalResponseCount = 0, currentSavedCount = 0;
@@ -349,6 +347,7 @@ public class ActivityTileHome extends AppCompatActivity {
         progressPercent.setVisibility(View.VISIBLE);
         progressPercent.setProgress((int) percent);
         rvTiles.getAdapter().notifyDataSetChanged();
+        saveMigPercent(percent);
         return percent;
     }
 
@@ -371,19 +370,6 @@ public class ActivityTileHome extends AppCompatActivity {
             return false;
         }
         return false;
-    }
-
-    private void getAllFeedbackResponses() {
-        int migId = ApplicationClass.getInstance().getMigrantId();
-        SQLDatabaseHelper sqlDatabaseHelper = SQLDatabaseHelper.getInstance(ActivityTileHome.this);
-        if (migId > 0) {
-            ArrayList<HashMap> responses = sqlDatabaseHelper.getAllFeedbackResponses(migId);
-            for (int i = 0; i < responses.size(); i++) {
-                responses.get(i).put("user_id", ApplicationClass.getInstance().getSafeUserId() + "");
-                responses.get(i).put("migrant_id", ApplicationClass.getInstance().getMigrantId() + "");
-                saveResponseToServer(responses.get(i), 2, null);
-            }
-        } else Log.d("mylog", "MigID: " + migId + " Not saving to server");
     }
 
     private void setUpListeners() {
@@ -534,72 +520,4 @@ public class ActivityTileHome extends AppCompatActivity {
         rvTiles.smoothScrollToPosition(0);
         nsv.scrollTo(0, 0);
     }
-
-    private void getAllResponses() {
-        int migId = ApplicationClass.getInstance().getMigrantId();
-        if (migId > 0) {
-            ArrayList<HashMap> allParams = SQLDatabaseHelper.getInstance(ActivityTileHome.this)
-                    .getAllResponse(migId);
-            totalResponseCount = allParams.size();
-            ProgressDialog progressDialog = new ProgressDialog(ActivityTileHome.this);
-            progressDialog.setMessage(getResources().getString(R.string.saving_response));
-            progressDialog.setCancelable(false);
-            progressDialog.show();
-            for (int i = 0; i < allParams.size(); i++) {
-                allParams.get(i).put("user_id", ApplicationClass.getInstance().getSafeUserId() + "");
-                allParams.get(i).put("migrant_id", ApplicationClass.getInstance().getMigrantId() + "");
-                saveResponseToServer(allParams.get(i), 1, progressDialog);
-            }
-        } else
-            Log.d("mylog", "MigID: " + migId + " Not saving to server");
-    }
-
-    private void saveResponseToServer(final HashMap<String, String> fParams, int responseType, ProgressDialog progressDialog) {
-        String api;
-        if (responseType == 1)
-            api = ApplicationClass.getInstance().getAPIROOT() + saveAPI;
-        else
-            api = ApplicationClass.getInstance().getAPIROOT() + saveFeedbackAPI;
-        final String fapi = api;
-
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, api, new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-                ++currentSavedCount;
-                if (progressDialog != null && (currentSavedCount == totalResponseCount))
-                    progressDialog.dismiss();
-                Log.d("mylog", "Response: " + response + " Count: " + currentSavedCount + " Total: " + totalResponseCount);
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                ++currentSavedCount;
-                if (progressDialog != null && (currentSavedCount == totalResponseCount))
-                    progressDialog.dismiss();
-                Log.d("mylog", "Error response Count: " + currentSavedCount + " Total: " + totalResponseCount);
-                String err = error.toString();
-                if (!err.isEmpty() && err.contains("NoConnection")) {
-                    //showSnackbar("Response cannot be saved at the moment, please check your Intenet connection.");
-                    Log.d("mylog", "Response cannot be saved at the moment, please check your Intenet connection.");
-                } else
-                    Log.d("mylog", "Error saving response: " + err + " \n For: " + fapi);
-            }
-        }) {
-            @Override
-            protected Map<String, String> getParams() throws AuthFailureError {
-                return fParams;
-            }
-
-            @Override
-            public Map<String, String> getHeaders() throws AuthFailureError {
-                HashMap<String, String> headers = new HashMap<>();
-                headers.put("Authorization", userToken);
-                return headers;
-            }
-        };
-        Log.d("mylog", "Calling: " + api);
-        queue.add(stringRequest);
-        //Log.d("mylog", "Token: " + getSharedPreferences(SharedPrefKeys.sharedPrefName, MODE_PRIVATE).getString(SharedPrefKeys.token, ""));
-    }
-
 }
