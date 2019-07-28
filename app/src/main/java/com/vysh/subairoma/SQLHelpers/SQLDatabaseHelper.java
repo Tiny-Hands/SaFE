@@ -518,9 +518,10 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
             }
         } catch (Exception ex) {
             Crashlytics.log(Log.ERROR, "DB-ERROR", "Same Shit Again: " + ex.toString());
+        } finally {
+            if (cursor != null)
+                cursor.close();
         }
-        if (cursor != null)
-            cursor.close();
         return response;
     }
 
