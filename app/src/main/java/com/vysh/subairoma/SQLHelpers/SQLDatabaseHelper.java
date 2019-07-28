@@ -49,7 +49,7 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
     Context mContext;
     private static RequestQueue queue;
     private static String userToken;
-    public static final int DATABASE_VERSION = 17;
+    public static final int DATABASE_VERSION = 18;
     public static final String DATABASE_NAME = "SubairomaLocal.db";
     final String SQL_CREATE_ResponseTable =
             "CREATE TABLE IF NOT EXISTS " + DatabaseTables.ResponseTable.TABLE_NAME + " (" +
@@ -163,6 +163,7 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
             "CREATE TABLE IF NOT EXISTS " + DatabaseTables.FeedbackQuestionsTable.TABLE_NAME + " (" +
                     DatabaseTables.FeedbackQuestionsTable.question_id + " INTEGER PRIMARY KEY," +
                     DatabaseTables.FeedbackQuestionsTable.question_title + " TEXT," +
+                    DatabaseTables.FeedbackQuestionsTable.question_type + " TEXT," +
                     DatabaseTables.FeedbackQuestionsTable.question_option + " TEXT" + ");";
     final String SQL_CREATE_FeedbackQuestionResponseTable =
             "CREATE TABLE IF NOT EXISTS " + DatabaseTables.FeedbackQuestionsResponseTable.TABLE_NAME + " (" +
@@ -733,12 +734,13 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
 
     }
 
-    public void insertFeedbackQuestions(int qid, String qTitle, String qOption) {
+    public void insertFeedbackQuestions(int qid, String qTitle, String qOption, String questionType) {
 
         ContentValues values = new ContentValues();
         values.put(DatabaseTables.FeedbackQuestionsTable.question_id, qid);
         values.put(DatabaseTables.FeedbackQuestionsTable.question_title, qTitle);
         values.put(DatabaseTables.FeedbackQuestionsTable.question_option, qOption);
+        values.put(DatabaseTables.FeedbackQuestionsTable.question_type, questionType);
 
         long newRowId = db.insert(DatabaseTables.FeedbackQuestionsTable.TABLE_NAME, null, values);
         Log.d("mylog", "Inserted Feedback row ID; " + newRowId);
@@ -798,11 +800,11 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
         return allResponses;
     }
 
-    public ArrayList<FeedbackQuestionModel> getFeedbackQuestions() {
+    public ArrayList<FeedbackQuestionModel> getFeedbackQuestions(String questionType) {
 
         ArrayList<FeedbackQuestionModel> feedbackQuestions = new ArrayList<>();
         //SELECT * FROM `feedback_questions_table` ORDER BY question_group, question_type DESC
-        String statement = "SELECT * FROM " + DatabaseTables.FeedbackQuestionsTable.TABLE_NAME;
+        String statement = "SELECT * FROM " + DatabaseTables.FeedbackQuestionsTable.TABLE_NAME + " WHERE " + DatabaseTables.FeedbackQuestionsTable.question_type + " = '" + questionType + "';";
         Cursor cursor = db.rawQuery(statement, null);
         while (cursor.moveToNext()) {
             int id = cursor.getInt(cursor.getColumnIndex(DatabaseTables.FeedbackQuestionsTable.question_id));

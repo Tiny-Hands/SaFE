@@ -134,6 +134,7 @@ public final class DatabaseTables {
         public static final String question_id = "question_id";
         public static final String question_title = "question_title";
         public static final String question_option = "question_option";
+        public static String question_type = "question_type";
     }
 
     public static class FeedbackQuestionsResponseTable {

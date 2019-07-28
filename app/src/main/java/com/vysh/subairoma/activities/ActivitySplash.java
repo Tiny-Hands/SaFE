@@ -560,9 +560,10 @@ public class ActivitySplash extends AppCompatActivity {
                     }
                     String qTitle = questionObject.getString("question_title");
                     String qOption = questionObject.getString("question_option");
+                    String qType = questionObject.getString("question_type");
 
                     Log.d("mylog", "Feedback qid: " + qid);
-                    dbHelper.insertFeedbackQuestions(qid, qTitle, qOption);
+                    dbHelper.insertFeedbackQuestions(qid, qTitle, qOption, qType);
                 }
                 incrementCount();
             }
