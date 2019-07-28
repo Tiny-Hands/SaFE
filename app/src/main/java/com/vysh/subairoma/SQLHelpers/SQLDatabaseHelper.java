@@ -1234,7 +1234,7 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
         Cursor cursor = db.rawQuery(statement, null);
         while (cursor.moveToNext()) {
             String name = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseTables.ManpowersTable.manpower_name));
-            Log.d("mylog", "Got Manpower from DB:" + name);
+            //Log.d("mylog", "Got Manpower from DB:" + name);
             names.add(name);
         }
         cursor.close();
