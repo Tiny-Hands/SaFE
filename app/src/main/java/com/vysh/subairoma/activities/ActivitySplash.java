@@ -477,7 +477,7 @@ public class ActivitySplash extends AppCompatActivity {
             public void onResponse(String response) {
                 //SAVE RESPONSE IN LOCAL DB
                 parseAndSaveManpowers(response);
-                //Log.d("mylog", "Got Manpowers: " + response);
+                Log.d("mylog", "Got Manpowers: " + response);
                 SharedPreferences.Editor editor = sp.edit();
                 editor.putBoolean(SharedPrefKeys.savedManpowers, true);
                 editor.commit();
