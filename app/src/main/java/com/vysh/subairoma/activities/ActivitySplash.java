@@ -61,7 +61,7 @@ public class ActivitySplash extends AppCompatActivity {
     private final String importantContactsDefaultAPI = "/getimportantcontactsdefault.php";
     private final String feedbackQuestions = "/getfeedbackquestions.php";
     private int savedCount = 0, apiErrorCount = 0;
-    private int apiCount = 8;
+    private int apiCount = 7;
     private long startTime, sleepTime;
     private String lang;
     private HashMap<String, String> fParams;
@@ -749,7 +749,7 @@ public class ActivitySplash extends AppCompatActivity {
     }
 
     public synchronized void incrementCount() {
-        savedCount++;
+        ++savedCount;
         Log.d("mylog", "Incremented Count: " + savedCount);
         SharedPreferences.Editor editor = sp.edit();
         editor.putInt("savedcount", savedCount);

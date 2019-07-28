@@ -49,7 +49,7 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
     Context mContext;
     private static RequestQueue queue;
     private static String userToken;
-    public static final int DATABASE_VERSION = 18;
+    public static final int DATABASE_VERSION = 23;
     public static final String DATABASE_NAME = "SubairomaLocal.db";
     final String SQL_CREATE_ResponseTable =
             "CREATE TABLE IF NOT EXISTS " + DatabaseTables.ResponseTable.TABLE_NAME + " (" +
@@ -242,6 +242,7 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + DatabaseTables.MigrantsTable.TABLE_NAME);
         db.execSQL("DROP TABLE IF EXISTS " + DatabaseTables.TilesTable.TABLE_NAME);
         db.execSQL("DROP TABLE IF EXISTS " + DatabaseTables.ImportantContacts.TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + DatabaseTables.ImportantContactsDefault.TABLE_NAME);
         mContext.deleteDatabase(DATABASE_NAME);
         allowReloadData();
         Toast.makeText(mContext, "Reloading Data, Please Wait", Toast.LENGTH_LONG).show();

@@ -69,6 +69,7 @@ public class ActivityTileHome extends AppCompatActivity {
     TileAdapter tileAdapter;
     public static Boolean finalSection, showIndia;
     String uname, unumber, uage, uimg, uavatar, tileType, userToken;
+    public String section;
 
     @BindView(R.id.ivUserAvatar)
     CircleImageView ivMigrantImage;
@@ -360,6 +361,16 @@ public class ActivityTileHome extends AppCompatActivity {
             intent.putExtra("countryName", this.countryName);
             intent.putExtra("countryStatus", this.status);
             intent.putExtra("countryBlacklist", this.blacklist);
+            if (tileType.equalsIgnoreCase("fep")) {
+                intent.putExtra("section", "FEP");
+                section = "FEP";
+            } else if (tileType.equalsIgnoreCase("gas")) {
+                intent.putExtra("section", "GAS");
+                section = "GAS";
+            } else if (tileType.equalsIgnoreCase("in")) {
+                intent.putExtra("section", "GIS");
+                section = "GIS";
+            }
             startActivity(intent);
             return false;
         }
@@ -486,12 +497,10 @@ public class ActivityTileHome extends AppCompatActivity {
     }
 
     private void setUpRecyclerView() {
-        Log.d("mylog", "Received Country ID: " + countryId + " And showIndia: " + showIndia);
         if (showIndia) {
             tiles = SQLDatabaseHelper.getInstance(ActivityTileHome.this).getTiles("GIS");
             //tilesGAS = new ArrayList<>();
         } else if (tileType.equalsIgnoreCase("fep")) {
-            Log.d("mylog", "Should Get: " + tileType);
             tiles = SQLDatabaseHelper.getInstance(ActivityTileHome.this).getTiles("FEP");
             //tilesGAS = new ArrayList<>();
         } else {

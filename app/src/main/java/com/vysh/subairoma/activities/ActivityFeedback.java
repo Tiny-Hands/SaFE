@@ -52,8 +52,9 @@ public class ActivityFeedback extends AppCompatActivity {
         rvFeedback = findViewById(R.id.rvFeedbackQuestions);
         btnNext = findViewById(R.id.btnNext);
 
-        setUpMigrantCountryData(getIntent());
-        setUpRecyclerView();
+        Intent intent = getIntent();
+        setUpMigrantCountryData(intent);
+        setUpRecyclerView(intent.getStringExtra("section"));
         btnNext.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -93,9 +94,9 @@ public class ActivityFeedback extends AppCompatActivity {
         startActivity(intent);
     }
 
-    private void setUpRecyclerView() {
+    private void setUpRecyclerView(String section) {
         SQLDatabaseHelper helper = SQLDatabaseHelper.getInstance(this);
-        ArrayList<FeedbackQuestionModel> questionModels = helper.getFeedbackQuestions();
+        ArrayList<FeedbackQuestionModel> questionModels = helper.getFeedbackQuestions(section);
         rvFeedback.setLayoutManager(new LinearLayoutManager(this));
         rvFeedback.setAdapter(new FeedbackQuestionAdapter(this, questionModels));
     }

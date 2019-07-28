@@ -84,15 +84,16 @@ public class DialogAnswersVerification extends DialogFragment implements View.On
             intent.putExtra("countryName", activity.countryName);
             intent.putExtra("countryStatus", activity.countryStatus);
             intent.putExtra("countryBlacklist", activity.countryBlacklist);
+            intent.putExtra("section", "FEP");
             dismiss();
-        }
-        else if(getActivity() instanceof ActivityTileHome) {
+        } else if (getActivity() instanceof ActivityTileHome) {
             ActivityTileHome activity = (ActivityTileHome) getActivity();
             intent.putExtra("countryId", activity.countryId);
             intent.putExtra("migrantName", activity.migName);
             intent.putExtra("countryName", activity.countryName);
             intent.putExtra("countryStatus", activity.status);
             intent.putExtra("countryBlacklist", activity.blacklist);
+            intent.putExtra("section", activity.section);
             dismiss();
         }
 
