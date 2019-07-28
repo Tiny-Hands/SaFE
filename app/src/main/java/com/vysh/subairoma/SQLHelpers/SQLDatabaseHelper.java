@@ -284,7 +284,7 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
                 DatabaseTables.ResponseTable.migrant_id + " = " + migrant_id + " AND " +
                 DatabaseTables.ResponseTable.question_id + " = " + question_id;
         long updateCount = db.update(DatabaseTables.ResponseTable.TABLE_NAME, values, whereClause, null);
-        Log.d("mylog", "Updated row count: " + updateCount);
+        //Log.d("mylog", "Updated row count: " + updateCount);
         //If not update then insert
         if (updateCount < 1) {
             // Insert the new row, returning the primary key value of the new row
@@ -538,7 +538,7 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
             while (cursor.moveToNext()) {
                 String response = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseTables.ResponseTable.response));
                 String responseVar = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseTables.ResponseTable.response_variable));
-                Log.d("mylog", "Response Variable: " + responseVar + " Response: " + response);
+                //Log.d("mylog", "Response Variable: " + responseVar + " Response: " + response);
                 if (response != null && !responseVar.equalsIgnoreCase("percent_complete") && !response.contains("false"))
                     count++;
             }
@@ -1148,7 +1148,7 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
         int totalCount = 0;
 
         for (int i = 0; i < questionIdsToGetAnswers.size(); i++) {
-            Log.d("mylog", "Curr question ID: " + questionIdsToGetAnswers.get(i));
+            //Log.d("mylog", "Curr question ID: " + questionIdsToGetAnswers.get(i));
             String query = "SELECT * FROM " + DatabaseTables.ResponseTable.TABLE_NAME +
                     " WHERE " + DatabaseTables.ResponseTable.migrant_id + " = " + "'" + migrantId + "'"
                     + " AND " + DatabaseTables.ResponseTable.question_id + " = " + "'" + questionIdsToGetAnswers.get(i) + "'";
@@ -1158,7 +1158,7 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
                 cursor.moveToFirst();
                 String response = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseTables.ResponseTable.response));
                 String responseVar = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseTables.ResponseTable.response_variable));
-                Log.d("mylog", "Response Variable: " + responseVar + " Response: " + response);
+                //Log.d("mylog", "Response Variable: " + responseVar + " Response: " + response);
                 if (!response.equalsIgnoreCase("false"))
                     totalCount++;
                 //}
@@ -1179,7 +1179,7 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
         //Changing in MigrantTable first
         String whereClause = DatabaseTables.MigrantsTable.migrant_id + " = " + migrantIdOld;
         long updateCount = db.update(DatabaseTables.MigrantsTable.TABLE_NAME, values, whereClause, null);
-        Log.d("mylog", "Updated row count: " + updateCount);
+        //Log.d("mylog", "Updated row count: " + updateCount);
         if (updateCount < 1) {
             Log.d("mylog", "Not Updated in Mig Table");
         }
@@ -1187,7 +1187,7 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
         //Changing in MigrantTable first
         String whereClause2 = DatabaseTables.ResponseTable.migrant_id + " = " + migrantIdOld;
         long updateCount2 = db.update(DatabaseTables.ResponseTable.TABLE_NAME, values, whereClause2, null);
-        Log.d("mylog", "Updated row count: " + updateCount);
+        //Log.d("mylog", "Updated row count: " + updateCount);
         if (updateCount2 < 1) {
             Log.d("mylog", "Not Updated in Responses");
         }
