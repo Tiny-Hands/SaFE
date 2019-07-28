@@ -28,6 +28,7 @@ import com.google.android.gms.location.LocationServices;
 import com.vysh.subairoma.ApplicationClass;
 import com.vysh.subairoma.R;
 import com.vysh.subairoma.SQLHelpers.SQLDatabaseHelper;
+import com.vysh.subairoma.SharedPrefKeys;
 import com.vysh.subairoma.activities.ActivityMigrantList;
 import com.vysh.subairoma.models.MigrantModel;
 
@@ -126,10 +127,10 @@ public class LocationChecker extends Service {
         }) {
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
-                for (Object key : fParams.keySet()) {
-                    Log.d("mylog", key + ": " + fParams.get(key));
-                }
-                return fParams;
+                HashMap<String, String> headers = new HashMap<>();
+                String userToken = getSharedPreferences(SharedPrefKeys.sharedPrefName, MODE_PRIVATE).getString(SharedPrefKeys.token, "");
+                headers.put("Authorization", userToken);
+                return headers;
             }
         };
 

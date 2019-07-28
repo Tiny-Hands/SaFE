@@ -345,9 +345,9 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
         int answersCount = sqlDatabaseHelper.getQuestionResponse(migrantId, questionIdsToGetAnswers);
         int redflagsCount = sqlDatabaseHelper.getRedflagsQuestionCount(migrantId, questionIdsWithPossibleRedflags);
         float percent = ((float) answersCount / (float) (totalQuestion + redflagsCount)) * 100;
-        /*Log.d("mylog", "Calculating Percent for : " +
+        Log.d("mylog", "Calculating Percent for : " +
                 totalQuestion + " Questions & " + answersCount + " Answers" + " Redflags to consider: " + redflagsCount);
-     */
+
         sqlDatabaseHelper.insertResponseTableData(percent + "", SharedPrefKeys.percentComplete, questionsListDisplay.get(0).getTileId(),
                 migrantId, "percent_complete", Calendar.getInstance().getTimeInMillis() + "");
     }
