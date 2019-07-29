@@ -174,5 +174,6 @@
     <string name="restart_app">कृपया एप पुनः सुरु गर्नुहोस्</string>
     <string name="saving_response">उत्तर सेव हुदैछ</string>
     <string name="updatingToServer">Updating Migrant</string>
+    <string name="section_complete_message">This section is complete, would you like to provide feedback?</string>
 
 </resources>

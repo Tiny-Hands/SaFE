@@ -175,5 +175,6 @@
     <string name="restart_app">Please restart the app</string>
     <string name="saving_response">Saving Response</string>
     <string name="updatingToServer">Updating Migrants</string>
+    <string name="section_complete_message">This section is complete, would you like to provide feedback?</string>
 
 </resources>

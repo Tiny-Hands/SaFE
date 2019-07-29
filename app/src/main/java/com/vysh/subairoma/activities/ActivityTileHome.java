@@ -169,7 +169,10 @@ public class ActivityTileHome extends AppCompatActivity {
                 }
             });
             builder.setTitle(R.string.complete);
-            builder.setMessage(R.string.complete_message);
+            if (showIndia || finalSection)
+                builder.setMessage(R.string.section_complete_message);
+            else
+                builder.setMessage(R.string.complete_message);
             builder.show();
             builder.setCancelable(false);
         }
