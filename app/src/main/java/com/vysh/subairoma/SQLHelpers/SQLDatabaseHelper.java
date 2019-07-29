@@ -1282,14 +1282,14 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
                 Log.d("mylog", "Error saving feedback : " + err);
                 if (!err.isEmpty() && err.contains("NoConnection")) {
                     //showSnackbar("Response cannot be saved at the moment, please check your Intenet connection.");
-                    Log.d("mylog", "Response couldn't be saved, please check your Intenet connection.");
+                    //Log.d("mylog", "Response couldn't be saved, please check your Intenet connection.");
                 }
             }
         }) {
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
                 for (Object key : fParams.keySet()) {
-                    Log.d("mylog", "Saving Responses : " + key + ": " + fParams.get(key));
+                    //Log.d("mylog", "Saving Responses : " + key + ": " + fParams.get(key));
                 }
                 return fParams;
             }
@@ -1298,6 +1298,7 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
             public Map<String, String> getHeaders() throws AuthFailureError {
                 HashMap<String, String> headers = new HashMap<>();
                 headers.put("Authorization", userToken);
+                //Log.d("mylog", "User token: " + userToken);
                 return headers;
             }
         };

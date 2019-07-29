@@ -61,7 +61,7 @@ public class ActivitySplash extends AppCompatActivity {
     private final String importantContactsDefaultAPI = "/getimportantcontactsdefault.php";
     private final String feedbackQuestions = "/getfeedbackquestions.php";
     private int savedCount = 0, apiErrorCount = 0;
-    private int apiCount = 7;
+    private int apiCount = 8;
     private long startTime, sleepTime;
     private String lang;
     private HashMap<String, String> fParams;
@@ -560,7 +560,7 @@ public class ActivitySplash extends AppCompatActivity {
                     }
                     String qTitle = questionObject.getString("question_title");
                     String qOption = questionObject.getString("question_option");
-                    String qType = questionObject.getString("question_type");
+                    String qType = questionObject.getString("feedback_type");
 
                     Log.d("mylog", "Feedback qid: " + qid);
                     dbHelper.insertFeedbackQuestions(qid, qTitle, qOption, qType);

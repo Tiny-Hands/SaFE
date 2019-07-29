@@ -145,6 +145,13 @@ public class ActivityFeedback extends AppCompatActivity {
                 }
                 return fParams;
             }
+
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                HashMap<String, String> headers = new HashMap<>();
+                headers.put("Authorization", ApplicationClass.getInstance().getAppToken());
+                return headers;
+            }
         };
 
         queue.add(stringRequest);

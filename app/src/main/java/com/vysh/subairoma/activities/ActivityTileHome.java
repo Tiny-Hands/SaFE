@@ -154,7 +154,7 @@ public class ActivityTileHome extends AppCompatActivity {
         //getAllResponses();
         //getAllFeedbackResponses();
         float percentComp = getPercentComplete();
-        if (!finalSection && percentComp > 99.0) {
+        if (percentComp > 99.0) {
             AlertDialog.Builder builder = new AlertDialog.Builder(ActivityTileHome.this);
             builder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
                 @Override
@@ -220,7 +220,9 @@ public class ActivityTileHome extends AppCompatActivity {
         FlurryAgent.logEvent("next_section_click");
         if (!checkIfVerifiedAnswers())
             new DialogAnswersVerification().show(getSupportFragmentManager(), "dialog");
-        else {
+        else if (section.equalsIgnoreCase("gas")) {
+            new DialogAnswersVerification().show(getSupportFragmentManager(), "dialog");
+        } else {
             Toast.makeText(ActivityTileHome.this, "Completed", Toast.LENGTH_SHORT).show();
         }
         //getAllResponses();
@@ -353,6 +355,11 @@ public class ActivityTileHome extends AppCompatActivity {
                 "mg_feedback_saved");
         Log.d("mylog", "VERIFIED ans: " + verified + " SAVED Feedback: " + isFeedbackSaved);
         if (verified.equalsIgnoreCase("true") && isFeedbackSaved.equalsIgnoreCase("true")) {
+            if (showIndia) {
+                section = "GIS";
+            } else {
+                section = "GAS";
+            }
             return true;
         } else if (verified.equalsIgnoreCase("true")) {
             Intent intent = new Intent(ActivityTileHome.this, ActivityFeedback.class);
@@ -361,19 +368,23 @@ public class ActivityTileHome extends AppCompatActivity {
             intent.putExtra("countryName", this.countryName);
             intent.putExtra("countryStatus", this.status);
             intent.putExtra("countryBlacklist", this.blacklist);
-            if (tileType.equalsIgnoreCase("fep")) {
-                intent.putExtra("section", "FEP");
-                section = "FEP";
-            } else if (tileType.equalsIgnoreCase("gas")) {
-                intent.putExtra("section", "GAS");
-                section = "GAS";
-            } else if (tileType.equalsIgnoreCase("in")) {
+            if (showIndia) {
                 intent.putExtra("section", "GIS");
                 section = "GIS";
+            } else {
+                intent.putExtra("section", "FEP");
+                section = "FEP";
             }
             startActivity(intent);
             return false;
+        } else {
+            if (showIndia) {
+                section = "GIS";
+            } else {
+                section = "FEP";
+            }
         }
+
         return false;
     }
 
