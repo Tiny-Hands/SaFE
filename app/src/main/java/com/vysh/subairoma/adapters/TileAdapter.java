@@ -82,6 +82,7 @@ public class TileAdapter extends RecyclerView.Adapter<TileAdapter.TileViewHolder
         float percent = tileList.get(position).getPercentComplete();
         DecimalFormat decimalFormat = new DecimalFormat("##");
         completeText = decimalFormat.format(percent) + " %";
+        holder.llErrorLayout.removeAllViews();
         if (errorCount > 0) {
             for (int i = 0; i < errorCount; i++) {
                 ImageView imgView = new ImageView(holder.llErrorLayout.getContext());
