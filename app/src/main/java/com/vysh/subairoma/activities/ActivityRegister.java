@@ -605,6 +605,10 @@ public class ActivityRegister extends AppCompatActivity {
                     //If it's a helper user registering a migrant, then no need to redirect to OTPActivity,
                     //But Register and then redirect to migrant list.
                     if (userRegistered) {
+                        String api = ApplicationClass.getInstance().getAPIROOT() + apiURLMigrant;
+                        registerMigrant(api);
+
+                        /*
                         if (InternetConnectionChecker.isNetworkConnected(ActivityRegister.this)) {
                             String api = ApplicationClass.getInstance().getAPIROOT() + apiURLMigrant;
                             registerMigrant(api);
@@ -626,7 +630,7 @@ public class ActivityRegister extends AppCompatActivity {
                             Intent intent = new Intent(ActivityRegister.this, ActivityMigrantList.class);
                             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                             startActivity(intent);
-                        }
+                        }*/
                         //Start Migrant List Activity
                     } else {
                         startOTPActivity(userType, 0);

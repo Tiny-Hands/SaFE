@@ -169,18 +169,14 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
                             } else {
                                 //Remove question from display list if visible
                                 if (questionsListDisplay.contains(question)) {
-                                    Log.d("mylog", "Removing from display list");
+                                    //Log.d("mylog", "Removing from display list");
                                     questionsListDisplay.remove(question);
-                                } else {
-                                    Log.d("mylog", "Question doesn't exist in the Display list");
                                 }
                             }
                         } else {
                             if (!questionsListDisplay.contains(question)) {
                                 //Log.d("mylog", "Added to display list");
                                 questionsListDisplay.add(question);
-                            } else {
-                                //Log.d("mylog", "Question already exists in the Display list");
                             }
                         }
                     }
@@ -216,21 +212,8 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
         holder.question.setText(question.getQuestion());
         holder.details.setText(question.getDescription());
         holder.ivPointer.setImageResource(R.drawable.ic_pointerarrow);
-        //Log.d("mylog", "Response type: " + question.getResponseType());
-        //Check else if for every view as notifyItemChanged giving problems otherwise
-        if (question.getResponseType() == 0) {
-            //holder.checkbox.setVisibility(View.VISIBLE);
-           /*holder.spinnerOptions.setVisibility(View.GONE);
-            holder.etResponse.setVisibility(View.GONE);
-            holder.listViewOptions.setVisibility(View.GONE);
-            holder.rbGroup.setVisibility(View.GONE);*/
-        } else if (question.getResponseType() == 1) {
-           /* holder.checkbox.setVisibility(GONE);
-            holder.spinnerOptions.setVisibility(View.GONE);
-            holder.listViewOptions.setVisibility(View.GONE);
-            //holder.etResponse.setVisibility(View.VISIBLE);
-            holder.rbGroup.setVisibility(View.GONE);*/
-        } else if (question.getResponseType() == 2) {
+
+        if (question.getResponseType() == 2) {
             /*holder.checkbox.setVisibility(GONE);
             holder.etResponse.setVisibility(View.GONE);
             holder.listViewOptions.setVisibility(View.GONE);
@@ -286,7 +269,7 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
         holder.spinnerOptions.setVisibility(View.GONE);
         holder.listViewOptions.setVisibility(View.GONE);
 
-        holder.helpLayout.setVisibility(GONE);
+        holder.btnHelp.setVisibility(GONE);
         holder.question.setVisibility(GONE);
         holder.details.setVisibility(GONE);
 
@@ -345,8 +328,8 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
         int answersCount = sqlDatabaseHelper.getQuestionResponse(migrantId, questionIdsToGetAnswers);
         int redflagsCount = sqlDatabaseHelper.getRedflagsQuestionCount(migrantId, questionIdsWithPossibleRedflags);
         float percent = ((float) answersCount / (float) (totalQuestion + redflagsCount)) * 100;
-        Log.d("mylog", "Calculating Percent for : " +
-                totalQuestion + " Questions & " + answersCount + " Answers" + " Redflags to consider: " + redflagsCount);
+//        Log.d("mylog", "Calculating Percent for : " +
+//                totalQuestion + " Questions & " + answersCount + " Answers" + " Redflags to consider: " + redflagsCount);
 
         sqlDatabaseHelper.insertResponseTableData(percent + "", SharedPrefKeys.percentComplete, questionsListDisplay.get(0).getTileId(),
                 migrantId, "percent_complete", Calendar.getInstance().getTimeInMillis() + "");
@@ -406,7 +389,7 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
             holder.checkbox.setVisibility(View.GONE);
         } else if (responseType == 1) {
             if (response == null || response.isEmpty()) {
-                Log.d("mylog", "1 Response: " + response);
+                //Log.d("mylog", "1 Response: " + response);
                 holder.question.setVisibility(GONE);
                 holder.etResponse.setVisibility(GONE);
             } else {
@@ -425,7 +408,7 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
                     CountryModel cm = SQLDatabaseHelper.getInstance(context).getCountry(response);
                     response = cm.getCountryName();
                     orgCountryId = cm.getCountryId();
-                   // Log.d("mylog", "cname: " + response + " cid: " + orgCountryId);
+                    // Log.d("mylog", "cname: " + response + " cid: " + orgCountryId);
                 }
                 fromSetView = true;
                 for (int i = 0; i < holder.spinnerOptions.getCount(); i++) {
@@ -506,7 +489,7 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
         conditionVariableValues = new HashMap<>();
         for (int i = 0; i < conditionVariables.size(); i++) {
             String response = sqlDatabaseHelper.getResponse(migrantId, conditionVariables.get(i));
-           // Log.d("mylog", "Condition variable to get value for: " + conditionVariables.get(i));
+            // Log.d("mylog", "Condition variable to get value for: " + conditionVariables.get(i));
             if (response == null || response.isEmpty()) {
                 //response = "false";
                 //Log.d("mylog", "Not filled yet: " + conditionVariables.get(i));
@@ -577,7 +560,8 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
                                 //Insert no error for the question(changedId) not the key(variable)
                              /*   Log.d("mylog", "Inserting no error for: " + migrantId + " and " +
                                         " Question: " + questionsListDisplay.get(changedId).getVariable());
-                             */   sqlDatabaseHelper.insertIsError(migrantId, questionsListDisplay.get(changedId).getVariable(), "false");
+                             */
+                                sqlDatabaseHelper.insertIsError(migrantId, questionsListDisplay.get(changedId).getVariable(), "false");
                                 try {
                                     notifyItemChanged(changedId);
                                 } catch (Exception ex) {
@@ -606,9 +590,7 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
                                 break;
                             }
                         }
-                        if (alreadyVisible)
-                            Log.d("mylog", "Question already exists with display index: " + mainIndex);
-                        else {
+                        if (!alreadyVisible) {
                             //Log.d("mylog", "Question doesn't already exist, adding in display index: " + mainIndex);
                             questionsListDisplay.add(mainIndex, questionsList.get(mainIndex));
                             notifyItemChanged(mainIndex);
@@ -629,7 +611,7 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
                         boolean alreadyVisible = false;
                         for (int j = 0; j < questionsListDisplay.size(); j++) {
                             int currIdToCompare = questionsListDisplay.get(j).getQuestionId();
-                            Log.d("mylog", "Main List Index: " + mainIndex + " Display List Index: " + j);
+                            //Log.d("mylog", "Main List Index: " + mainIndex + " Display List Index: " + j);
                             if (mainListIdCompare == currIdToCompare) {
                                 //Question is visible
                                 //Log.d("mylog", "Take action for question with display index: " + j);
@@ -718,7 +700,7 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
         RadioButton rb2;
 
         RelativeLayout rlResponse;
-        LinearLayout helpLayout, titleLayout;
+        LinearLayout titleLayout;
         RelativeLayout rootLayout;
         View disabledView;
 
@@ -752,7 +734,6 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
             //  details.setVisibility(GONE);
             question = itemView.findViewById(R.id.tvQuestion);
             checkbox = itemView.findViewById(R.id.cbResponse);
-            helpLayout = itemView.findViewById(R.id.llHelp);
             btnHelp = itemView.findViewById(R.id.btnNeedHelp);
             btnHelp.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -873,8 +854,8 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
                                 String cname = country.getCountryName();
                                 int blacklist = country.getCountryBlacklist();
                                 int status = country.getCountrySatus();
-                                Log.d("mylog", "Country code: " + cid + " Status: " + status
-                                        + " Blacklist: " + blacklist);
+                                /*Log.d("mylog", "Country code: " + cid + " Status: " + status
+                                        + " Blacklist: " + blacklist);*/
                                 if (blacklist == 1) {
                                     showDialog(context.getResources().getString(R.string.blacklisted),
                                             context.getResources().getString(R.string.blacklisted_message), questionsListDisplay.get(getAdapterPosition()).getTileId(),
@@ -887,7 +868,7 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
                                     showDialog(context.getResources().getString(R.string.confirm),
                                             context.getResources().getString(R.string.confirm_message) + " " + cname + "?", questionsListDisplay.get(getAdapterPosition()).getTileId(),
                                             questionsListDisplay.get(getAdapterPosition()).getQuestionId(), cid, cname, 1);
-                                    Log.d("mylog", "Saving country for MID: " + ApplicationClass.getInstance().getMigrantId());
+                                    //Log.d("mylog", "Saving country for MID: " + ApplicationClass.getInstance().getMigrantId());
                                 }
                                 if (!initialStep)
                                     showCountryChangeDialog();
@@ -902,7 +883,7 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
                                     migrantId, variable, time);
                         }
                         if (conditionVariables.contains(variable)) {
-                            Log.d("mylog", "From Set View spinner: " + fromSetViewSpinner);
+                            //Log.d("mylog", "From Set View spinner: " + fromSetViewSpinner);
                             if (!fromSetViewSpinner) {
                                 ArrayList<Integer> questionIds = conditionOnQuestions.get(variable);
                                 notifyConditionVariableChange(questionIds);
@@ -1062,7 +1043,7 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
             if (previousClickedPos != currentClickedPos && previousClickedPos != -1) {
                 notifyItemChanged(previousClickedPos);
             } else if (previousClickedPos == currentClickedPos) {
-                if (helpLayout.getVisibility() == View.VISIBLE) {
+                if (btnHelp.getVisibility() == View.VISIBLE) {
                     FlurryAgent.logEvent("question_minimized");
                     notifyItemChanged(currentClickedPos);
                 } else {
@@ -1079,7 +1060,7 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
                 TransitionManager.beginDelayedTransition((ViewGroup) details.getParent());
             }
             details.setVisibility(View.VISIBLE);
-            helpLayout.setVisibility(View.VISIBLE);
+            btnHelp.setVisibility(View.VISIBLE);
             if (!question.getText().toString().equalsIgnoreCase("null"))
                 question.setVisibility(View.VISIBLE);
             ivPointer.setImageBitmap(BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_pointerarrow_down));

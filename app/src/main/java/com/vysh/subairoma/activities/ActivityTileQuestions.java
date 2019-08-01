@@ -140,7 +140,9 @@ public class ActivityTileQuestions extends AppCompatActivity {
     private void setUpRecyclerView() {
         rvQuestions.setLayoutManager(new LinearLayoutManager(ActivityTileQuestions.this));
         questionsAdapter = new TileQuestionsAdapter(questionList, stateDisabled, ActivityTileQuestions.this);
+        //questionsAdapter.setHasStableIds(true);
         rvQuestions.setAdapter(questionsAdapter);
+        rvQuestions.setItemViewCacheSize(20);
     }
 
     public void showDoneButton(boolean i) {

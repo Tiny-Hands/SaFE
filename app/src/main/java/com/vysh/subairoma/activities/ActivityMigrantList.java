@@ -262,6 +262,7 @@ public class ActivityMigrantList extends AppCompatActivity implements RecyclerIt
                     params.put("age", currModel.getMigrantAge() + "");
                     params.put("gender", currModel.getMigrantSex());
                     params.put("user_id", currModel.getUserId() + "");
+                    params.put("user_img", currModel.getMigImg() + "");
                     return params;
                 }
 

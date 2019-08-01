@@ -15,16 +15,16 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingLeft="@dimen/medium_large_margin"
-        android:paddingRight="@dimen/medium_large_margin"
-        android:paddingTop="@dimen/medium_large_margin">
+        android:paddingTop="@dimen/medium_large_margin"
+        android:paddingRight="@dimen/medium_large_margin">
 
         <LinearLayout
             android:id="@+id/llTitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_toStartOf="@+id/questionMarker"
-            android:orientation="horizontal"
             android:gravity="center_vertical"
+            android:orientation="horizontal"
             android:padding="@dimen/small_margin">
 
             <ImageView
@@ -39,8 +39,8 @@
                 android:id="@+id/tvStep"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="18dp"
                 android:layout_marginStart="@dimen/small_margin"
+                android:layout_marginEnd="18dp"
                 android:text="काम छान्ने र आवेदन दिने"
                 android:textColor="@color/colorPrimary"
                 android:textSize="@dimen/tile_step_text" />
@@ -78,8 +78,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/llTitle"
-            android:layout_marginBottom="@dimen/medium_margin"
-            android:layout_marginTop="@dimen/small_margin">
+            android:layout_marginTop="@dimen/small_margin"
+            android:layout_marginBottom="@dimen/medium_margin">
 
             <com.wordpress.priyankvex.smarttextview.SmartTextView
                 android:id="@+id/tvDetail"
@@ -96,8 +96,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/tvDetail"
-                android:layout_marginEnd="18dp"
                 android:layout_marginTop="12dp"
+                android:layout_marginEnd="18dp"
                 android:layout_toStartOf="@+id/cbResponse"
                 android:paddingLeft="@dimen/small_margin"
                 android:text="तपाईँले काम छानेर आवेदन याहाँ चिनो लगाउनुहोस् ।"
@@ -114,10 +114,10 @@
                 android:hint="@string/write_here"
                 android:imeOptions="actionDone"
                 android:inputType="text"
-                android:paddingBottom="@dimen/small_margin"
                 android:paddingLeft="@dimen/medium_margin"
-                android:paddingRight="@dimen/medium_margin"
                 android:paddingTop="@dimen/small_margin"
+                android:paddingRight="@dimen/medium_margin"
+                android:paddingBottom="@dimen/small_margin"
                 android:visibility="gone" />
 
             <Spinner
@@ -140,8 +140,8 @@
                 android:id="@+id/cbResponse"
                 android:layout_width="wrap_content"
                 android:layout_height="@dimen/card_view_markers_dimen"
-                android:layout_alignParentEnd="true"
                 android:layout_alignTop="@id/tvQuestion"
+                android:layout_alignParentEnd="true"
                 android:visibility="gone" />
 
             <RadioGroup
@@ -166,29 +166,22 @@
             </RadioGroup>
         </RelativeLayout>
 
-        <LinearLayout
-            android:id="@+id/llHelp"
+
+        <!--<View
             android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:layout_marginTop="@dimen/question_row_help_top_margin"
+            android:background="#363636" />-->
+
+        <Button
+            android:id="@+id/btnNeedHelp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/rlResponse"
-            android:gravity="bottom|center"
-            android:orientation="vertical"
-            android:visibility="gone">
-
-            <!--<View
-                android:layout_width="match_parent"
-                android:layout_height="2dp"
-                android:layout_marginTop="@dimen/question_row_help_top_margin"
-                android:background="#363636" />-->
-
-            <Button
-                android:id="@+id/btnNeedHelp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="?attr/selectableItemBackground"
-                android:text="@string/need_help"
-                android:textColor="@color/colorNeutral" />
-        </LinearLayout>
+            android:layout_centerHorizontal="true"
+            android:background="?attr/selectableItemBackground"
+            android:text="@string/need_help"
+            android:textColor="@color/colorNeutral" />
     </RelativeLayout>
 
     <View

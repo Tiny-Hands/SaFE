@@ -1137,6 +1137,7 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
         //Log.d("mylog", "Query: " + query);
         Cursor cursor = db.rawQuery(query, null);
         float response = 0f;
+//Try/catch this
         while (cursor.moveToNext()) {
             response = cursor.getFloat(cursor.getColumnIndexOrThrow(DatabaseTables.ResponseTable.response));
             Log.d("mylog", "Got percent complete for MID: " + migrantId + " Tile ID: " + tileId + " : " + response);
@@ -1234,6 +1235,7 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
         ArrayList<String> names = new ArrayList<>();
         String statement = "SELECT * FROM " + DatabaseTables.ManpowersTable.TABLE_NAME;
         //Log.d("mylog", "Query: " + statement);
+        //  Put this is try/catch too
         Cursor cursor = db.rawQuery(statement, null);
         while (cursor.moveToNext()) {
             String name = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseTables.ManpowersTable.manpower_name));
