@@ -40,6 +40,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.cardview.widget.CardView;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.flurry.android.FlurryAgent;
@@ -190,7 +191,7 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
 
     @Override
     public QuestionHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(context).inflate(R.layout.recycler_view_tile_question, parent, false);
+        View view = LayoutInflater.from(context).inflate(R.layout.recycler_view_tile_question_cl, parent, false);
         return new QuestionHolder(view);
     }
 
@@ -350,26 +351,28 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
         //Log.d("mylog", "Response is: " + response);
         if (isError.equalsIgnoreCase("true")) {
             holder.ivError.setVisibility(View.VISIBLE);
+            holder.ivError.setImageResource(R.drawable.ic_error);
             holder.rootLayout.setBackgroundColor(context.getResources().getColor(R.color.colorErrorFaded));
             holder.title.setTextColor(Color.DKGRAY);
-            holder.ivDone.setVisibility(GONE);
             holder.btnShowMore.setVisibility(GONE);
         } else {
             //Show green checkmark only if checkbox is checked and no error
             if (response.equalsIgnoreCase("true")) {
-                holder.ivDone.setVisibility(View.VISIBLE);
+                holder.ivError.setVisibility(VISIBLE);
+                holder.ivError.setImageResource(R.drawable.ic_checkmark);
                 holder.title.setTextColor(context.getResources().getColor(R.color.colorPrimary));
                 holder.btnShowMore.setVisibility(GONE);
             } else if (!response.isEmpty() && !response.equalsIgnoreCase("false") && !response.contains("---")) {
-                holder.ivDone.setVisibility(View.VISIBLE);
+                holder.ivError.setVisibility(VISIBLE);
+                holder.ivError.setImageResource(R.drawable.ic_checkmark);
                 holder.title.setTextColor(context.getResources().getColor(R.color.colorPrimary));
                 holder.btnShowMore.setVisibility(GONE);
             } else {
-                holder.ivDone.setVisibility(View.GONE);
+                holder.ivError.setVisibility(View.INVISIBLE);
                 holder.title.setTextColor(Color.GRAY);
                 holder.btnShowMore.setVisibility(VISIBLE);
             }
-            holder.ivError.setVisibility(View.INVISIBLE);
+            //holder.ivError.setVisibility(View.INVISIBLE);
             holder.rootLayout.setBackgroundColor(Color.TRANSPARENT);
         }
 
@@ -688,7 +691,7 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
         SmartTextView details;
         CheckBox checkbox;
         AutoCompleteTextView etResponse;
-        ImageView ivError, ivDone, ivPointer;
+        ImageView ivError, ivPointer;
         Spinner spinnerOptions;
         ListView listViewOptions;
         Button btnHelp;
@@ -700,25 +703,15 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
         RadioButton rb2;
 
         RelativeLayout rlResponse;
-        LinearLayout titleLayout;
-        RelativeLayout rootLayout;
+        ConstraintLayout rootLayout;
         View disabledView;
 
         public QuestionHolder(final View itemView) {
             super(itemView);
-
-            titleLayout = itemView.findViewById(R.id.llTitle);
-            titleLayout.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    toggleExpandView();
-                }
-            });
             rlResponse = itemView.findViewById(R.id.rlResponse);
             disabledView = itemView.findViewById(R.id.viewDisabled);
             rootLayout = itemView.findViewById(R.id.rlRoot);
             ivError = itemView.findViewById(R.id.questionMarker);
-            ivDone = itemView.findViewById(R.id.questionDone);
             cardView = itemView.findViewById(R.id.cv);
             btnShowMore = itemView.findViewById(R.id.btnShowMore);
             details = itemView.findViewById(R.id.tvDetail);
@@ -752,6 +745,12 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
                 }
             });
             title = itemView.findViewById(R.id.tvStep);
+            title.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    toggleExpandView();
+                }
+            });
             listViewOptions = itemView.findViewById(R.id.listViewMultipleOptions);
             listViewOptions.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE);
             listViewOptions.setOnTouchListener(new ListView.OnTouchListener() {
