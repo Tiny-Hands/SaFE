@@ -705,7 +705,8 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
         } catch (Exception ex) {
             Crashlytics.log(Log.ERROR, "DB-ERROR", "Same Shit Again in GetTiles: " + ex.toString());
         } finally {
-            cursor.close();
+            if (cursor != null)
+                cursor.close();
         }
 
         return tileList;
@@ -1137,13 +1138,17 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
         //Log.d("mylog", "Query: " + query);
         Cursor cursor = db.rawQuery(query, null);
         float response = 0f;
-//Try/catch this
-        while (cursor.moveToNext()) {
-            response = cursor.getFloat(cursor.getColumnIndexOrThrow(DatabaseTables.ResponseTable.response));
-            Log.d("mylog", "Got percent complete for MID: " + migrantId + " Tile ID: " + tileId + " : " + response);
-            //Log.d("mylog", "Mid: " + mid + " Qid: " + qid + " rvar: " + response);
+        try {
+            while (cursor.moveToNext()) {
+                response = cursor.getFloat(cursor.getColumnIndexOrThrow(DatabaseTables.ResponseTable.response));
+                Log.d("mylog", "Got percent complete for MID: " + migrantId + " Tile ID: " + tileId + " : " + response);
+                //Log.d("mylog", "Mid: " + mid + " Qid: " + qid + " rvar: " + response);
+            }
+        } catch (Exception ex) {
+        } finally {
+            if (cursor != null)
+                cursor.close();
         }
-        cursor.close();
 
         return response;
     }
@@ -1237,12 +1242,17 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
         //Log.d("mylog", "Query: " + statement);
         //  Put this is try/catch too
         Cursor cursor = db.rawQuery(statement, null);
-        while (cursor.moveToNext()) {
-            String name = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseTables.ManpowersTable.manpower_name));
-            //Log.d("mylog", "Got Manpower from DB:" + name);
-            names.add(name);
+        try {
+            while (cursor.moveToNext()) {
+                String name = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseTables.ManpowersTable.manpower_name));
+                //Log.d("mylog", "Got Manpower from DB:" + name);
+                names.add(name);
+            }
+        } catch (Exception ex) {
+        } finally {
+            if (cursor != null)
+                cursor.close();
         }
-        cursor.close();
 
         return names;
     }
