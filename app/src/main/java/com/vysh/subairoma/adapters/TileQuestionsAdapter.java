@@ -282,6 +282,13 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
         holder.question.setVisibility(GONE);
         holder.details.setVisibility(GONE);
 
+
+        //If Manpower Question then set adapter
+        if (questionsListDisplay.get(position).getVariable().equalsIgnoreCase("mg_mpa_name")) {
+            ArrayList<String> manpowerNames = SQLDatabaseHelper.getInstance(context).getManpowers();
+            ArrayAdapter<String> adapter = new ArrayAdapter<>(context, android.R.layout.simple_list_item_1, manpowerNames);
+            holder.etResponse.setAdapter(adapter);
+        }
         setValue(holder, position);
 
         if (disabled) {
@@ -711,11 +718,12 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
                 @Override
                 public void onClick(View view) {
                     FlurryAgent.logEvent("question_help_chosen");
-                    int qid = questionsListDisplay.get(getAdapterPosition()).getQuestionId();
+                    TileQuestionsModel question = questionsListDisplay.get(getAdapterPosition());
+                    int qid = question.getQuestionId();
                     //Log.d("mylog", "Getting for QID: " + qid);
-                    int tileId = questionsListDisplay.get(getAdapterPosition()).getTileId();
-                    String number = questionsListDisplay.get(getAdapterPosition()).getNumber();
-                    String link = questionsListDisplay.get(getAdapterPosition()).getVideoLinke();
+                    int tileId = question.getTileId();
+                    String number = question.getNumber();
+                    String link = question.getVideoLinke();
                     //Log.d("mylog", "Got Number Local: " + number);
                     //Log.d("mylog", "Got Link Local for qid: " + link + qid);
                     DialogNeedHelp dialogNeedHelp = new DialogNeedHelp();
@@ -754,7 +762,7 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
                 }
             });
             etResponse = itemView.findViewById(R.id.etResponse);
-            setAdapter();
+
             etResponse.setOnKeyListener(new View.OnKeyListener() {
                 @Override
                 public boolean onKey(View view, int i, KeyEvent keyEvent) {
@@ -835,15 +843,15 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
                                         + " Blacklist: " + blacklist);*/
                                 if (blacklist == 1) {
                                     showDialog(context.getResources().getString(R.string.blacklisted),
-                                            context.getResources().getString(R.string.blacklisted_message), questionsListDisplay.get(getAdapterPosition()).getTileId(),
+                                            context.getResources().getString(R.string.blacklisted_message),
                                             questionsListDisplay.get(getAdapterPosition()).getQuestionId(), cid, cname, 0);
                                 } else if (status == 1) {
                                     showDialog(context.getResources().getString(R.string.not_open),
-                                            context.getResources().getString(R.string.not_open_message), questionsListDisplay.get(getAdapterPosition()).getTileId(),
+                                            context.getResources().getString(R.string.not_open_message),
                                             questionsListDisplay.get(getAdapterPosition()).getQuestionId(), cid, cname, 0);
                                 } else {
                                     showDialog(context.getResources().getString(R.string.confirm),
-                                            context.getResources().getString(R.string.confirm_message) + " " + cname + "?", questionsListDisplay.get(getAdapterPosition()).getTileId(),
+                                            context.getResources().getString(R.string.confirm_message) + " " + cname + "?",
                                             questionsListDisplay.get(getAdapterPosition()).getQuestionId(), cid, cname, 1);
                                     //Log.d("mylog", "Saving country for MID: " + ApplicationClass.getInstance().getMigrantId());
                                 }
@@ -883,11 +891,13 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
                         if (b) {
                             Calendar cal = Calendar.getInstance();
                             String time = cal.getTimeInMillis() + "";
+                            TileQuestionsModel question = questionsListDisplay.get(getAdapterPosition());
                             sqlDatabaseHelper.insertResponseTableData("true",
-                                    questionsListDisplay.get(getAdapterPosition()).getQuestionId(),
-                                    questionsListDisplay.get(getAdapterPosition()).getTileId(),
-                                    migrantId, questionsListDisplay.get(getAdapterPosition()).getVariable(), time);
-                            sqlDatabaseHelper.insertIsError(migrantId, questionsListDisplay.get(getAdapterPosition()).getVariable(), "false");
+                                    question.getQuestionId(),
+                                    question.getTileId(),
+                                    migrantId, question.getVariable(), time)
+                            ;
+                            sqlDatabaseHelper.insertIsError(migrantId, question.getVariable(), "false");
                             notifyItemChanged(getAdapterPosition());
                         } else {
                         }
@@ -904,11 +914,12 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
                             showErrorDialog(-1, message);
                             Calendar cal = Calendar.getInstance();
                             String time = cal.getTimeInMillis() + "";
+                            TileQuestionsModel question = questionsListDisplay.get(getAdapterPosition());
                             sqlDatabaseHelper.insertResponseTableData("false",
-                                    questionsListDisplay.get(getAdapterPosition()).getQuestionId(),
-                                    questionsListDisplay.get(getAdapterPosition()).getTileId(),
-                                    migrantId, questionsListDisplay.get(getAdapterPosition()).getVariable(), time);
-                            sqlDatabaseHelper.insertIsError(migrantId, questionsListDisplay.get(getAdapterPosition()).getVariable(), "true");
+                                    question.getQuestionId(),
+                                    question.getTileId(),
+                                    migrantId, question.getVariable(), time);
+                            sqlDatabaseHelper.insertIsError(migrantId, question.getVariable(), "true");
                             notifyItemChanged(getAdapterPosition());
                         } else {
                         }
@@ -941,9 +952,10 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
 
                                 Calendar cal = Calendar.getInstance();
                                 String time = cal.getTimeInMillis() + "";
+                                TileQuestionsModel question = questionsListDisplay.get(getAdapterPosition());
                                 sqlDatabaseHelper.insertResponseTableData("true",
-                                        questionsListDisplay.get(getAdapterPosition()).getQuestionId(),
-                                        questionsListDisplay.get(getAdapterPosition()).getTileId(),
+                                        question.getQuestionId(),
+                                        question.getTileId(),
                                         migrantId, variable, time);
                             }
                         }
@@ -953,12 +965,12 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
                         }
                     } else {
                         if (!fromSetView) {
-
                             Calendar cal = Calendar.getInstance();
                             String time = cal.getTimeInMillis() + "";
+                            TileQuestionsModel question = questionsListDisplay.get(getAdapterPosition());
                             sqlDatabaseHelper.insertResponseTableData("false",
-                                    questionsListDisplay.get(getAdapterPosition()).getQuestionId(),
-                                    questionsListDisplay.get(getAdapterPosition()).getTileId(),
+                                    question.getQuestionId(),
+                                    question.getTileId(),
                                     migrantId, variable, time);
                         }
 
@@ -983,17 +995,6 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
 
                 }
             });
-        }
-
-        public void setAdapter() {/*
-        labelNames = labels;
-        labelIds = ids;
-        Log.d("mylog", "Label: " + labelNames[2]);
-        Log.d("mylog", "Labels: " + labels[2]);
-        Log.d("mylog", "Label size: " + labelNames.length);*/
-            ArrayList<String> manpowerNames = SQLDatabaseHelper.getInstance(context).getManpowers();
-            ArrayAdapter<String> adapter = new ArrayAdapter<String>(context, android.R.layout.simple_list_item_1, manpowerNames);
-            etResponse.setAdapter(adapter);
         }
 
         private void saveTextInput() {
@@ -1082,7 +1083,7 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
         return true;
     }
 
-    private void showDialog(String title, String message, final int tileId, final int questionID, final String cid, final String cname, final int cType) {
+    private void showDialog(String title, String message, final int questionID, final String cid, final String cname, final int cType) {
         AlertDialog.Builder mBuilder = new AlertDialog.Builder(context);
         mBuilder.setTitle(title);
         mBuilder.setMessage(message);
@@ -1173,8 +1174,8 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
             rowView = inflater.inflate(R.layout.listview_options_row, parent, false);
             //Configure viewHolder
             ViewHolder viewHolder = new ViewHolder();
-            viewHolder.text = (TextView) rowView.findViewById(R.id.tvListViewOptions);
-            viewHolder.checkBox = (CheckBox) rowView.findViewById(R.id.cbListViewOptions);
+            viewHolder.text = rowView.findViewById(R.id.tvListViewOptions);
+            viewHolder.checkBox = rowView.findViewById(R.id.cbListViewOptions);
             rowView.setTag(viewHolder);
             //}// fill data
             ViewHolder holder = (ViewHolder) rowView.getTag();
