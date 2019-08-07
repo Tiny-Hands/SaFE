@@ -78,6 +78,8 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
 
     int previousClickedPos = -1;
     int currentClickedPos = -1;
+    int importantCount = 0;
+    CountryDropdownList countryListAdapter;
     boolean fromSetView, fromSetViewSpinner, disabled;
     ArrayList<TileQuestionsModel> questionsList;
     ArrayList<TileQuestionsModel> questionsListDisplay;
@@ -93,6 +95,8 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
     ArrayList<String> multiOptions;
     Boolean initialStep = false;
 
+    ArrayList<CountryModel> countries;
+
     Context context;
 
     public TileQuestionsAdapter(ArrayList<TileQuestionsModel> questions,
@@ -101,8 +105,11 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
         this.context = context;
         this.disabled = disabled;
         questionsList = questions;
+
+        countries = SQLDatabaseHelper.getInstance(context).getCountries();
         setConditionVariables();
         setConditionVariableValues();
+        createCountryListAdapter();
 
         questionsListDisplay = new ArrayList<>();
         //questionsListDisplay.addAll(questions);
@@ -189,6 +196,21 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
         }
     }
 
+    private void createCountryListAdapter() {
+        ArrayList<String> countryNameList = new ArrayList<>();
+        countryNameList.add("-------");
+        for (CountryModel country : countries) {
+            //Log.d("mylog", "Country name: " + country.getCountryName());
+            countryNameList.add(country.getCountryName().toUpperCase());
+            if (country.getOrder() >= 1)
+                importantCount++;
+        }
+        if (!countryNameList.get(0).contains("-----"))
+            countryNameList.add(0, "---------");
+        countryListAdapter = new CountryDropdownList(context, R.layout.support_simple_spinner_dropdown_item, countryNameList, importantCount);
+
+    }
+
     @Override
     public QuestionHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(context).inflate(R.layout.recycler_view_tile_question_cl, parent, false);
@@ -212,7 +234,6 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
         holder.title.setText(question.getTitle());
         holder.question.setText(question.getQuestion());
         holder.details.setText(question.getDescription());
-        holder.ivPointer.setImageResource(R.drawable.ic_pointerarrow);
 
         if (question.getResponseType() == 2) {
             /*holder.checkbox.setVisibility(GONE);
@@ -249,20 +270,7 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
                 holder.rb2.setText(rbOptions.get(1));
             }
         } else if (question.getResponseType() == 5) {
-            int importantCount = 0;
-            final ArrayList<CountryModel> countries = SQLDatabaseHelper.getInstance(context).getCountries();
-            ArrayList<String> countryNameList = new ArrayList<>();
-            countryNameList.add("-------");
-            for (CountryModel country : countries) {
-                //Log.d("mylog", "Country name: " + country.getCountryName());
-                countryNameList.add(country.getCountryName().toUpperCase());
-                if (country.getOrder() >= 1)
-                    importantCount++;
-            }
-            if (!countryNameList.get(0).contains("-----"))
-                countryNameList.add(0, "---------");
-            CountryDropdownList adapter = new CountryDropdownList(context, R.layout.support_simple_spinner_dropdown_item, countryNameList, importantCount);
-            holder.spinnerOptions.setAdapter(adapter);
+            holder.spinnerOptions.setAdapter(countryListAdapter);
         }
         holder.rbGroup.setVisibility(View.GONE);
         holder.checkbox.setVisibility(GONE);
@@ -342,11 +350,12 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
 
         //For showing/hiding error on condition variable change
         //Log.d("mylog", "Setting value now");
+        TileQuestionsModel currQuestion = questionsListDisplay.get(position);
         String isError = sqlDatabaseHelper.getIsError(migrantId, questionsListDisplay.get(position).getVariable());
         //Log.d("mylog", "Should show error for: " + questionsListDisplay.get(position).getVariable() + " : " + isError);
-        String variable = questionsListDisplay.get(position).getVariable();
+        String variable = currQuestion.getVariable();
         //Log.d("mylog", "Getting response for Migrant: " + migrantId + " Variable: " + variable);
-        int responseType = questionsListDisplay.get(position).getResponseType();
+        int responseType = currQuestion.getResponseType();
         String response = sqlDatabaseHelper.getResponse(migrantId, variable);
         //Log.d("mylog", "Response is: " + response);
         if (isError.equalsIgnoreCase("true")) {
