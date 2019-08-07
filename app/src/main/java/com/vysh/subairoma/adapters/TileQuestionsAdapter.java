@@ -9,6 +9,7 @@ import android.graphics.Color;
 import android.os.Build;
 import android.transition.TransitionManager;
 import android.util.Log;
+import android.util.SparseIntArray;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -88,7 +89,7 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
     ArrayList<String> conditionVariables;
     HashMap<String, String> conditionVariableValues;
     HashMap<String, ArrayList<Integer>> conditionOnQuestions;
-    HashMap<Integer, Integer> conditionQuestionIndex;
+    SparseIntArray conditionQuestionIndex;
 
     String multiResponse = "";
     String orgCountryId = "";
@@ -318,25 +319,28 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
 
     private void calculateAndSavePercentComplete() {
         int totalQuestion = questionsListDisplay.size();
+        int totalCountQuestion = totalQuestion;
         //Log.d("mylog", "Total Questions:" + totalQuestion);
         ArrayList<Integer> questionIdsToGetAnswers = new ArrayList<>();
         ArrayList<Integer> questionIdsWithPossibleRedflags = new ArrayList<>();
-        for (int i = 0; i < questionsListDisplay.size(); i++) {
+        TileQuestionsModel questionsModel;
+        for (int i = 0; i < totalCountQuestion; i++) {
            /* Log.d("mylog", "Normal Question ID: " + questionsListDisplay.get(i).getQuestionId() +
                     "Variable: " + questionsListDisplay.get(i).getVariable() + " Condition: " + questionsListDisplay.get(i).getCondition());
          */
-            if (questionsListDisplay.get(i).getCondition().contains("error")) {
+            questionsModel = questionsListDisplay.get(i);
+            if (questionsModel.getCondition().contains("error")) {
                 totalQuestion--;
                 //Log.d("mylog", "Redflag Question: " + questionsListDisplay.get(i).getVariable());
-                questionIdsWithPossibleRedflags.add(questionsListDisplay.get(i).getQuestionId());
+                questionIdsWithPossibleRedflags.add(questionsModel.getQuestionId());
             } else {
-                questionIdsToGetAnswers.add(questionsListDisplay.get(i).getQuestionId());
+                questionIdsToGetAnswers.add(questionsModel.getQuestionId());
             }
         }
         //int answersCount = sqlDatabaseHelper.getTileResponse(migrantId, questionsList.get(0).getTileId());
         int answersCount = sqlDatabaseHelper.getQuestionResponse(migrantId, questionIdsToGetAnswers);
         int redflagsCount = sqlDatabaseHelper.getRedflagsQuestionCount(migrantId, questionIdsWithPossibleRedflags);
-        float percent = ((float) answersCount / (float) (totalQuestion + redflagsCount)) * 100;
+        float percent = ((float) answersCount / (totalQuestion + redflagsCount)) * 100;
 //        Log.d("mylog", "Calculating Percent for : " +
 //                totalQuestion + " Questions & " + answersCount + " Answers" + " Redflags to consider: " + redflagsCount);
 
@@ -454,7 +458,7 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
         JSONObject condition;
         conditionVariables = new ArrayList<>();
         conditionOnQuestions = new HashMap<>();
-        conditionQuestionIndex = new HashMap<>();
+        conditionQuestionIndex = new SparseIntArray();
         for (int i = 0; i < questionsList.size(); i++) {
             TileQuestionsModel question = questionsList.get(i);
             conditionString = question.getCondition();
