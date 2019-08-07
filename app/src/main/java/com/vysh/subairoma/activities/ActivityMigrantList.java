@@ -124,7 +124,7 @@ public class ActivityMigrantList extends AppCompatActivity implements RecyclerIt
             Toast.makeText(this, getIntent().getStringExtra("message"), Toast.LENGTH_SHORT).show();
 
         //To Restart if exits with exception
-        Thread.setDefaultUncaughtExceptionHandler(new DefaultExceptionHandler(this));
+        //Thread.setDefaultUncaughtExceptionHandler(new DefaultExceptionHandler(this));
         navView = findViewById(R.id.nav_view);
         setUpNavigationButtons();
         setUpListeners();
