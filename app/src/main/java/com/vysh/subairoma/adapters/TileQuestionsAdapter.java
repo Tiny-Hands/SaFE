@@ -351,9 +351,9 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
         //For showing/hiding error on condition variable change
         //Log.d("mylog", "Setting value now");
         TileQuestionsModel currQuestion = questionsListDisplay.get(position);
-        String isError = sqlDatabaseHelper.getIsError(migrantId, questionsListDisplay.get(position).getVariable());
-        //Log.d("mylog", "Should show error for: " + questionsListDisplay.get(position).getVariable() + " : " + isError);
         String variable = currQuestion.getVariable();
+        String isError = sqlDatabaseHelper.getIsError(migrantId, variable);
+        //Log.d("mylog", "Should show error for: " + questionsListDisplay.get(position).getVariable() + " : " + isError);
         //Log.d("mylog", "Getting response for Migrant: " + migrantId + " Variable: " + variable);
         int responseType = currQuestion.getResponseType();
         String response = sqlDatabaseHelper.getResponse(migrantId, variable);
