@@ -528,12 +528,13 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
                 String key = "";
                 String reqValue;
                 String currValue;
+                TileQuestionsModel mainQuestion = questionsList.get(mainIndex);
                 while (iter.hasNext()) {
                     key = iter.next().toString();
                     reqValue = varsJson.getString(key);
                     currValue = conditionVariableValues.get(key);
 
-                    if (questionsList.get(mainIndex).getResponseType() == 3) {
+                    if (mainQuestion.getResponseType() == 3) {
                         //Means that it's a multi options question. Show error even if one is selected
                         if (currValue != null && currValue.length() > 5)
                             currValue = "true";
@@ -543,7 +544,7 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
                         //Log.d("mylog", "Condition failed, do not perform the action");
                         //If the question is already visible, then removing it
                         int changedId = -1;
-                        int id = questionsList.get(mainIndex).getQuestionId();
+                        int id = mainQuestion.getQuestionId();
                         for (int j = 0; j < questionsListDisplay.size(); j++) {
                             int k = questionsListDisplay.get(j).getQuestionId();
                             //Log.d("mylog", "index In Main List: " + mainIndex + " index In Display List: " + j);
@@ -561,8 +562,8 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
                                 questionsListDisplay.remove(changedId);
                                 //Log.d("mylog", "Removing question: " + changedId);
                                 notifyItemRemoved(changedId);
+                                return;
                             }
-                            return;
                         } else if (conditionType.equalsIgnoreCase("error")) {
                             //There was already an error in previous condition so don't hide error
                             //if (!errorAlready)
@@ -588,57 +589,37 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
                 //Reached Here mean condition is true
                 if (conditionType.equalsIgnoreCase("visibility")) {
                     //Log.d("mylog", "All variables match, showing view");
-                    int mainListIdCompare = questionsList.get(mainIndex).getQuestionId();
-                    boolean alreadyVisible = false;
+                    int mainListIdCompare = mainQuestion.getQuestionId();
                     for (int j = 0; j < questionsListDisplay.size(); j++) {
-                        int currIdToCompare = questionsListDisplay.get(j).getQuestionId();
                         //Log.d("mylog", "Main List Index: " + mainIndex + " Display List Index: " + j);
-                        if (mainListIdCompare == currIdToCompare) {
+                        if (mainListIdCompare == questionsListDisplay.get(j).getQuestionId()) {
                             //Question is visible
                             //Log.d("mylog", "Take action for question with display index: " + j);
-                            alreadyVisible = true;
-                            break;
+                            return;
                         }
                     }
-                    if (!alreadyVisible) {
-                        //Log.d("mylog", "Question doesn't already exist, adding in display index: " + mainIndex);
-                        questionsListDisplay.add(mainIndex, questionsList.get(mainIndex));
-                        notifyItemChanged(mainIndex);
-                    }
+                    //Log.d("mylog", "Question doesn't already exist, adding in display index: " + mainIndex);
+                    questionsListDisplay.add(mainIndex, mainQuestion);
+                    notifyItemChanged(mainIndex);
+                    return;
                     //If any further conditions just check but do now remove error if no error
                     //errorAlready = true;
                 } else if (conditionType.equalsIgnoreCase("error")) {
-                    int displayListIndex = -1;
-                    //Log.d("mylog", "All variables match, showing error");
-
                     sqlDatabaseHelper.insertIsError(migrantId, key, "true");
                     //Check if question is visible
                     showErrorDialog(mainIndex, "");
                     //Log.d("mylog", "All variables match, showing view");
-                    int mainListIdCompare = questionsList.get(mainIndex).getQuestionId();
-                    boolean alreadyVisible = false;
+                    int mainListIdCompare = mainQuestion.getQuestionId();
                     for (int j = 0; j < questionsListDisplay.size(); j++) {
-                        int currIdToCompare = questionsListDisplay.get(j).getQuestionId();
                         //Log.d("mylog", "Main List Index: " + mainIndex + " Display List Index: " + j);
-                        if (mainListIdCompare == currIdToCompare) {
+                        if (mainListIdCompare == questionsListDisplay.get(j).getQuestionId()) {
                             //Question is visible
                             //Log.d("mylog", "Take action for question with display index: " + j);
-                            displayListIndex = j;
-                            alreadyVisible = true;
-                            break;
+                            notifyItemChanged(j);
+                            return;
                         }
                     }
 
-                    // }
-
-                    //Checking if question is visible, then only notifying item changed
-                    if (alreadyVisible) {
-                        //Log.d("mylog", "Question is visible, showing error");
-                        if (displayListIndex != -1)
-                            notifyItemChanged(displayListIndex);
-                        else
-                            Log.d("mylog", "Display list index is -1");
-                    }
                     //If any further conditions just check but do now remove error if no error
                 }
             }
