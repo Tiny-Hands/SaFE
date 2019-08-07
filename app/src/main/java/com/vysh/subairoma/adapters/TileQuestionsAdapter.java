@@ -528,7 +528,6 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
                 String key = "";
                 String reqValue;
                 String currValue;
-                boolean conditionValid = false;
                 while (iter.hasNext()) {
                     key = iter.next().toString();
                     reqValue = varsJson.getString(key);
@@ -536,7 +535,7 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
 
                     if (questionsList.get(mainIndex).getResponseType() == 3) {
                         //Means that it's a multi options question. Show error even if one is selected
-                        if (currValue.length() > 5)
+                        if (currValue != null && currValue.length() > 5)
                             currValue = "true";
                     }
                     //Log.d("mylog", "Current Value: " + currValue + " Required Value: " + reqValue);
@@ -560,17 +559,15 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
                             //ChangedId is -1 if the question to hide is not in the questions display list
                             if (changedId != -1) {
                                 questionsListDisplay.remove(changedId);
-                                conditionValid = false;
                                 //Log.d("mylog", "Removing question: " + changedId);
                                 notifyItemRemoved(changedId);
                             }
-                            break;
+                            return;
                         } else if (conditionType.equalsIgnoreCase("error")) {
                             //There was already an error in previous condition so don't hide error
                             //if (!errorAlready)
                             //showError = false;
                             //showError = false;
-                            conditionValid = false;
                             //ChangeId == -1 Means that question is not visible, no no need to show error
                             if (changedId != -1) {
                                 //Insert no error for the question(changedId) not the key(variable)
@@ -584,71 +581,65 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
                                     Log.d("mylog", "Cannot notify on condition");
                                 }
                             }
-                            break;
+                            return;
                         }
-                    } else {
-                        //Log.d("mylog", "Current condition variable value match");
-                        conditionValid = true;
                     }
                 }
+                //Reached Here mean condition is true
                 if (conditionType.equalsIgnoreCase("visibility")) {
-                    if (conditionValid) {
-                        //Log.d("mylog", "All variables match, showing view");
-                        int mainListIdCompare = questionsList.get(mainIndex).getQuestionId();
-                        boolean alreadyVisible = false;
-                        for (int j = 0; j < questionsListDisplay.size(); j++) {
-                            int currIdToCompare = questionsListDisplay.get(j).getQuestionId();
-                            //Log.d("mylog", "Main List Index: " + mainIndex + " Display List Index: " + j);
-                            if (mainListIdCompare == currIdToCompare) {
-                                //Question is visible
-                                //Log.d("mylog", "Take action for question with display index: " + j);
-                                alreadyVisible = true;
-                                break;
-                            }
+                    //Log.d("mylog", "All variables match, showing view");
+                    int mainListIdCompare = questionsList.get(mainIndex).getQuestionId();
+                    boolean alreadyVisible = false;
+                    for (int j = 0; j < questionsListDisplay.size(); j++) {
+                        int currIdToCompare = questionsListDisplay.get(j).getQuestionId();
+                        //Log.d("mylog", "Main List Index: " + mainIndex + " Display List Index: " + j);
+                        if (mainListIdCompare == currIdToCompare) {
+                            //Question is visible
+                            //Log.d("mylog", "Take action for question with display index: " + j);
+                            alreadyVisible = true;
+                            break;
                         }
-                        if (!alreadyVisible) {
-                            //Log.d("mylog", "Question doesn't already exist, adding in display index: " + mainIndex);
-                            questionsListDisplay.add(mainIndex, questionsList.get(mainIndex));
-                            notifyItemChanged(mainIndex);
-                        }
-                        //If any further conditions just check but do now remove error if no error
-                        //errorAlready = true;
                     }
+                    if (!alreadyVisible) {
+                        //Log.d("mylog", "Question doesn't already exist, adding in display index: " + mainIndex);
+                        questionsListDisplay.add(mainIndex, questionsList.get(mainIndex));
+                        notifyItemChanged(mainIndex);
+                    }
+                    //If any further conditions just check but do now remove error if no error
+                    //errorAlready = true;
                 } else if (conditionType.equalsIgnoreCase("error")) {
                     int displayListIndex = -1;
-                    if (conditionValid) {
-                        //Log.d("mylog", "All variables match, showing error");
+                    //Log.d("mylog", "All variables match, showing error");
 
-                        sqlDatabaseHelper.insertIsError(migrantId, key, "true");
-                        //Check if question is visible
-                        showErrorDialog(mainIndex, "");
-                        //Log.d("mylog", "All variables match, showing view");
-                        int mainListIdCompare = questionsList.get(mainIndex).getQuestionId();
-                        boolean alreadyVisible = false;
-                        for (int j = 0; j < questionsListDisplay.size(); j++) {
-                            int currIdToCompare = questionsListDisplay.get(j).getQuestionId();
-                            //Log.d("mylog", "Main List Index: " + mainIndex + " Display List Index: " + j);
-                            if (mainListIdCompare == currIdToCompare) {
-                                //Question is visible
-                                //Log.d("mylog", "Take action for question with display index: " + j);
-                                displayListIndex = j;
-                                alreadyVisible = true;
-                                break;
-                            }
+                    sqlDatabaseHelper.insertIsError(migrantId, key, "true");
+                    //Check if question is visible
+                    showErrorDialog(mainIndex, "");
+                    //Log.d("mylog", "All variables match, showing view");
+                    int mainListIdCompare = questionsList.get(mainIndex).getQuestionId();
+                    boolean alreadyVisible = false;
+                    for (int j = 0; j < questionsListDisplay.size(); j++) {
+                        int currIdToCompare = questionsListDisplay.get(j).getQuestionId();
+                        //Log.d("mylog", "Main List Index: " + mainIndex + " Display List Index: " + j);
+                        if (mainListIdCompare == currIdToCompare) {
+                            //Question is visible
+                            //Log.d("mylog", "Take action for question with display index: " + j);
+                            displayListIndex = j;
+                            alreadyVisible = true;
+                            break;
                         }
-
-                        // }
-
-                        //Checking if question is visible, then only notifying item changed
-                        if (alreadyVisible) {
-                            //Log.d("mylog", "Question is visible, showing error");
-                            if (displayListIndex != -1)
-                                notifyItemChanged(displayListIndex);
-                            else
-                                Log.d("mylog", "Display list index is -1");
-                        }
-                        //If any further conditions just check but do now remove error if no error
                     }
+
+                    // }
+
+                    //Checking if question is visible, then only notifying item changed
+                    if (alreadyVisible) {
+                        //Log.d("mylog", "Question is visible, showing error");
+                        if (displayListIndex != -1)
+                            notifyItemChanged(displayListIndex);
+                        else
+                            Log.d("mylog", "Display list index is -1");
+                    }
+                    //If any further conditions just check but do now remove error if no error
                 }
             }
         } catch (JSONException e) {
