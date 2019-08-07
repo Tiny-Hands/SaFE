@@ -209,7 +209,6 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
         if (!countryNameList.get(0).contains("-----"))
             countryNameList.add(0, "---------");
         countryListAdapter = new CountryDropdownList(context, R.layout.support_simple_spinner_dropdown_item, countryNameList, importantCount);
-
     }
 
     @Override
@@ -825,7 +824,6 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
                         if (questionsListDisplay.get(getAdapterPosition()).getResponseType() == 5) {
                             //Log.d("mylog", "Country position: " + position);
                             if (position != 0) {
-                                final ArrayList<CountryModel> countries = SQLDatabaseHelper.getInstance(context).getCountries();
                                 //ArrayList<String> countryNameList = new ArrayList<>();
                                 //Subtracted one because countryNameList has 1 extra default item but countries array doesn't
                                 CountryModel country = countries.get(position - 1);
