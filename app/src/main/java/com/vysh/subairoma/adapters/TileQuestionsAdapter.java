@@ -370,20 +370,15 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
             holder.btnShowMore.setVisibility(GONE);
         } else {
             //Show green checkmark only if checkbox is checked and no error
-            if (response.equalsIgnoreCase("true")) {
-                holder.ivError.setVisibility(VISIBLE);
-                holder.ivError.setImageResource(R.drawable.ic_checkmark);
-                holder.title.setTextColor(context.getResources().getColor(R.color.colorPrimary));
-                holder.btnShowMore.setVisibility(GONE);
-            } else if (!response.isEmpty() && !response.equalsIgnoreCase("false") && !response.contains("---")) {
-                holder.ivError.setVisibility(VISIBLE);
-                holder.ivError.setImageResource(R.drawable.ic_checkmark);
-                holder.title.setTextColor(context.getResources().getColor(R.color.colorPrimary));
-                holder.btnShowMore.setVisibility(GONE);
-            } else {
+            if (response == null || response.equalsIgnoreCase("false") || response.isEmpty() || response.contains("--")) {
                 holder.ivError.setVisibility(View.INVISIBLE);
                 holder.title.setTextColor(Color.GRAY);
                 holder.btnShowMore.setVisibility(VISIBLE);
+            } else {
+                holder.ivError.setVisibility(VISIBLE);
+                holder.ivError.setImageResource(R.drawable.ic_checkmark);
+                holder.title.setTextColor(context.getResources().getColor(R.color.colorPrimary));
+                holder.btnShowMore.setVisibility(GONE);
             }
             //holder.ivError.setVisibility(View.INVISIBLE);
             holder.rootLayout.setBackgroundColor(Color.TRANSPARENT);
