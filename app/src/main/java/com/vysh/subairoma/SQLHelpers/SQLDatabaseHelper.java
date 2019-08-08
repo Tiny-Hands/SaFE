@@ -10,6 +10,7 @@ import android.database.Cursor;
 import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.provider.ContactsContract;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -1222,20 +1223,11 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
 
         for (int i = 0; i < questionIdsWithPossibleRedflags.size(); i++) {
             Log.d("mylog", "Curr question ID: " + questionIdsWithPossibleRedflags.get(i));
-            String query = "SELECT * FROM " + DatabaseTables.ResponseTable.TABLE_NAME +
-                    " WHERE " + DatabaseTables.ResponseTable.migrant_id + " = " + "'" + migrantId + "'"
+            String query = DatabaseTables.ResponseTable.migrant_id + " = " + "'" + migrantId + "'"
+                    + " AND " + DatabaseTables.ResponseTable.is_error + " = " + "'true'"
                     + " AND " + DatabaseTables.ResponseTable.question_id + " = " + "'" + questionIdsWithPossibleRedflags.get(i) + "'";
 
-            Cursor cursor = db.rawQuery(query, null);
-            if (cursor.getCount() > 0) {
-                cursor.moveToFirst();
-                String isError = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseTables.ResponseTable.is_error));
-                Log.d("mylog", "Percent is error: " + isError);
-                if (isError != null)
-                    if (isError.equalsIgnoreCase("true"))
-                        totalCount++;
-                cursor.close();
-            }
+            totalCount = totalCount + (int) DatabaseUtils.queryNumEntries(db, DatabaseTables.ResponseTable.TABLE_NAME, query);
         }
         return totalCount;
     }
