@@ -315,11 +315,6 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
 
     @Override
     public int getItemCount() {
-        try {
-            calculateAndSavePercentComplete();
-        } catch (Exception ex) {
-            //Log.d("mylog", "Error in calculating & saving percent");
-        }
         return questionsListDisplay.size();
     }
 
@@ -866,6 +861,8 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
                                     questionsListDisplay.get(getAdapterPosition()).getQuestionId(),
                                     questionsListDisplay.get(getAdapterPosition()).getTileId(),
                                     migrantId, variable, time);
+
+                            calculateAndSavePercentComplete();
                         }
                         if (conditionVariables.contains(variable)) {
                             //Log.d("mylog", "From Set View spinner: " + fromSetViewSpinner);
@@ -898,6 +895,7 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
                                     migrantId, question.getVariable(), time)
                             ;
                             sqlDatabaseHelper.insertIsError(migrantId, question.getVariable(), "false");
+                            calculateAndSavePercentComplete();
                             notifyItemChanged(getAdapterPosition());
                         } else {
                         }
@@ -920,6 +918,8 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
                                     question.getTileId(),
                                     migrantId, question.getVariable(), time);
                             sqlDatabaseHelper.insertIsError(migrantId, question.getVariable(), "true");
+
+                            calculateAndSavePercentComplete();
                             notifyItemChanged(getAdapterPosition());
                         } else {
                         }
@@ -957,6 +957,8 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
                                         question.getQuestionId(),
                                         question.getTileId(),
                                         migrantId, variable, time);
+
+                                calculateAndSavePercentComplete();
                             }
                         }
                         if (conditionVariables.contains(variable)) {
@@ -972,6 +974,8 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
                                     question.getQuestionId(),
                                     question.getTileId(),
                                     migrantId, variable, time);
+
+                            calculateAndSavePercentComplete();
                         }
 
                         if (conditionVariables.contains(variable)) {
@@ -1012,6 +1016,8 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
                         questionsListDisplay.get(getAdapterPosition()).getQuestionId(),
                         questionsListDisplay.get(getAdapterPosition()).getTileId(),
                         migrantId, variable, time);
+
+                calculateAndSavePercentComplete();
             }
         }
 
@@ -1210,6 +1216,8 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
                             tempQuestion.getQuestionId(),
                             tempQuestion.getTileId(),
                             migrantId, tempQuestion.getVariable(), time);
+
+                    calculateAndSavePercentComplete();
 
                     //Log.d("mylog", "Multi Response Length: " + multiResponse.length());
                     if (conditionVariables.contains(tempQuestion.getVariable())) {
