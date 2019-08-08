@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
@@ -527,35 +528,6 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
         return response;
     }
 
-    public int getTileResponse(int migId, int tileId) {
-
-        String query = "SELECT * FROM " + DatabaseTables.ResponseTable.TABLE_NAME +
-                " WHERE " + DatabaseTables.ResponseTable.migrant_id + " = " + "'" + migId + "'"
-                + " AND " + DatabaseTables.ResponseTable.tile_id + " = " + "'" + tileId + "'";
-
-        int count = 0;
-        Cursor cursor = null;
-        try {
-            cursor = db.rawQuery(query, null);
-            while (cursor.moveToNext()) {
-                String response = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseTables.ResponseTable.response));
-                String responseVar = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseTables.ResponseTable.response_variable));
-                //Log.d("mylog", "Response Variable: " + responseVar + " Response: " + response);
-                if (response != null && !responseVar.equalsIgnoreCase("percent_complete") && !response.contains("false"))
-                    count++;
-            }
-        } catch (Exception ex) {
-            Log.d("mylog", "Exception getting tile resp: " + ex.toString());
-        } finally {
-            if (cursor != null)
-                cursor.close();
-        }
-
-        return count;
-        //Log.d("mylog", "Query: " + query);
-
-    }
-
     public String getIsError(int migId, String variable) {
 
         String query;
@@ -977,21 +949,11 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
     }
 
     public int getTileErrorCount(int migId, int tileId) {
-
-        String query = "SELECT * FROM " + DatabaseTables.ResponseTable.TABLE_NAME + " WHERE "
-                + DatabaseTables.ResponseTable.migrant_id + "=" + "'" + migId + "'" +
+        String query = DatabaseTables.ResponseTable.migrant_id + "=" + "'" + migId + "'" +
                 " AND " + DatabaseTables.ResponseTable.tile_id + "=" + "'" + tileId + "'" +
                 " AND " + DatabaseTables.ResponseTable.is_error + "='true'";
-        Cursor cursor = db.rawQuery(query, null);
-        while (cursor.moveToNext()) {
-            String isError = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseTables.ResponseTable.is_error));
-            String variable = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseTables.ResponseTable.response_variable));
-            Log.d("mylog", "Got error: " + isError + " FOR: " + variable);
-        }
-        int count = cursor.getCount();
-        cursor.close();
+        return (int) DatabaseUtils.queryNumEntries(db, DatabaseTables.ResponseTable.TABLE_NAME, query);
 
-        return count;
     }
 
     public ArrayList<MigrantModel> getMigrants() {
@@ -1020,7 +982,6 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
             migrantModel.setInactiveDate(status);
             migrantModel.setPercentComp(percentComp);
 
-            Log.d("mylog", "Migrant Status: " + status);
             migrantModels.add(migrantModel);
         }
         cursor.close();
@@ -1030,7 +991,6 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
 
     public String getMigrantImg(int migId) {
 
-        ArrayList<MigrantModel> migrantModels = new ArrayList<>();
         Cursor cursor = db.rawQuery("SELECT " + DatabaseTables.MigrantsTable.migrant_img + " FROM " +
                 DatabaseTables.MigrantsTable.TABLE_NAME + " WHERE " +
                 DatabaseTables.MigrantsTable.migrant_id + "=" + "'" + migId + "'", null);
