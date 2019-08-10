@@ -36,10 +36,11 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="18dp"
             android:paddingStart="@dimen/small_margin"
-            android:text="काम छान्ने र आवेदन दिने"
+            android:text="lfsjldkfjsdkl jflkds fl;dskf;l jlskdfjdsklfjlkjkdsjfk lkfjdklsj fkldsj lkj kdslfj lkj lkjldj l jkldjfkl"
             android:textColor="@color/colorPrimary"
             android:textSize="@dimen/tile_step_text"
             app:layout_constraintLeft_toRightOf="@id/pointerImg"
+            app:layout_constraintRight_toLeftOf="@+id/questionMarker"
             app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
