@@ -67,6 +67,9 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
+import static android.text.InputType.TYPE_CLASS_NUMBER;
+import static android.text.InputType.TYPE_CLASS_PHONE;
+import static android.text.InputType.TYPE_CLASS_TEXT;
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
 
@@ -288,6 +291,10 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
             ArrayList<String> manpowerNames = SQLDatabaseHelper.getInstance(context).getManpowers();
             ArrayAdapter<String> adapter = new ArrayAdapter<>(context, android.R.layout.simple_list_item_1, manpowerNames);
             holder.etResponse.setAdapter(adapter);
+        } else if (questionsListDisplay.get(position).getVariable().equalsIgnoreCase("mg_agent_phone")) {
+            holder.etResponse.setInputType(TYPE_CLASS_PHONE);
+        } else {
+            holder.etResponse.setInputType(TYPE_CLASS_TEXT);
         }
         setValue(holder, position);
 
