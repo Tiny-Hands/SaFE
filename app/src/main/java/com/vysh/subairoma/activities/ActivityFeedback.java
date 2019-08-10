@@ -41,7 +41,7 @@ public class ActivityFeedback extends AppCompatActivity {
 
     RecyclerView rvFeedback;
     Button btnNext;
-    String countryId, migName, countryName, status, blacklist;
+    String countryId, migName, countryName, status, blacklist, section;
 
     public int count = 0;
 
@@ -53,8 +53,9 @@ public class ActivityFeedback extends AppCompatActivity {
         btnNext = findViewById(R.id.btnNext);
 
         Intent intent = getIntent();
+        section = intent.getStringExtra("section");
         setUpMigrantCountryData(intent);
-        setUpRecyclerView(intent.getStringExtra("section"));
+        setUpRecyclerView();
         btnNext.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -82,19 +83,24 @@ public class ActivityFeedback extends AppCompatActivity {
     }
 
     private void openTileHomeActivity() {
-        Intent intent = new Intent(ActivityFeedback.this, ActivityTileHome.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-        intent.putExtra("countryId", countryId);
-        intent.putExtra("migrantName", migName);
-        intent.putExtra("countryName", countryName);
-        intent.putExtra("countryStatus", status);
-        intent.putExtra("countryBlacklist", blacklist);
-        intent.putExtra("tiletype", "gas");
-
-        startActivity(intent);
+        if (section.equalsIgnoreCase("gas")) {
+            Intent intent = new Intent(ActivityFeedback.this, ActivityMigrantList.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+            startActivity(intent);
+        } else {
+            Intent intent = new Intent(ActivityFeedback.this, ActivityTileHome.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+            intent.putExtra("countryId", countryId);
+            intent.putExtra("migrantName", migName);
+            intent.putExtra("countryName", countryName);
+            intent.putExtra("countryStatus", status);
+            intent.putExtra("countryBlacklist", blacklist);
+            intent.putExtra("tiletype", "gas");
+            startActivity(intent);
+        }
     }
 
-    private void setUpRecyclerView(String section) {
+    private void setUpRecyclerView() {
         SQLDatabaseHelper helper = SQLDatabaseHelper.getInstance(this);
         ArrayList<FeedbackQuestionModel> questionModels = helper.getFeedbackQuestions(section);
         rvFeedback.setLayoutManager(new LinearLayoutManager(this));
