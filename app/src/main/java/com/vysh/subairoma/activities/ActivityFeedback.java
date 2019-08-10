@@ -83,7 +83,7 @@ public class ActivityFeedback extends AppCompatActivity {
     }
 
     private void openTileHomeActivity() {
-        if (section.equalsIgnoreCase("gas")) {
+        if (section.equalsIgnoreCase("gas") || countryId.equalsIgnoreCase("in")) {
             Intent intent = new Intent(ActivityFeedback.this, ActivityMigrantList.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
             startActivity(intent);
