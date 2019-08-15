@@ -1252,9 +1252,6 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
         }) {
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
-                for (Object key : fParams.keySet()) {
-                    //Log.d("mylog", "Saving Responses : " + key + ": " + fParams.get(key));
-                }
                 return fParams;
             }
 

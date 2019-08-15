@@ -1,11 +1,13 @@
 package com.vysh.subairoma.activities;
 
 import android.Manifest;
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 
@@ -57,6 +59,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import butterknife.BindView;
@@ -70,6 +73,7 @@ public class ActivityMigrantList extends AppCompatActivity implements RecyclerIt
     private final String APIGetMig = "/getmigrants.php";
     private final String ApiDISABLE = "/deactivatemigrant.php";
     final String apiURLMigrant = "/savemigrant.php";
+    final String saveResponseAPI = "/saveresponse.php";
     private final int REQUEST_LOCATION = 1;
     private String userToken;
 
@@ -194,9 +198,77 @@ public class ActivityMigrantList extends AppCompatActivity implements RecyclerIt
             //Mig Percent
         } else {
             getSavedMigrants();
+            new ReponseSaver(this).execute();
         }
         //getMigrants();
     }
+
+    private class ReponseSaver extends AsyncTask<Void, Void, ArrayList<ArrayList<HashMap>>> {
+
+        private ProgressDialog dialog;
+
+        public ReponseSaver(Activity activity) {
+            this.dialog = new ProgressDialog(activity);
+            this.dialog.setMessage(getString(R.string.updatingToServer));
+        }
+
+        @Override
+        protected ArrayList<ArrayList<HashMap>> doInBackground(Void... voids) {
+
+            dialog.show();
+            ArrayList<ArrayList<HashMap>> allMigResponses = new ArrayList();
+            for (MigrantModel migrant : migrantModels) {
+                allMigResponses.add(dbHelper.getAllResponse(migrant.getMigrantId()));
+            }
+            return allMigResponses;
+        }
+
+        @Override
+        protected void onPostExecute(ArrayList<ArrayList<HashMap>> arrayLists) {
+            super.onPostExecute(arrayLists);
+            for (ArrayList<HashMap> arrayItem : arrayLists) {
+                dialog.dismiss();
+                for (HashMap itemResponse : arrayItem) {
+                    saveResponseToServer(itemResponse);
+                }
+            }
+        }
+    }
+
+    private void saveResponseToServer(final HashMap<String, String> fParams) {
+        String api = ApplicationClass.getInstance().getAPIROOT() + saveResponseAPI;
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, api, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                Log.d("mylog", "Response of resp save: " + response);
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                String err = error.toString();
+                Log.d("mylog", "Error saving feedback : " + err);
+                if (!err.isEmpty() && err.contains("NoConnection")) {
+                    //showSnackbar("Response cannot be saved at the moment, please check your Intenet connection.");
+                    //Log.d("mylog", "Response couldn't be saved, please check your Intenet connection.");
+                }
+            }
+        }) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                return fParams;
+            }
+
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                HashMap<String, String> headers = new HashMap<>();
+                headers.put("Authorization", userToken);
+                //Log.d("mylog", "User token: " + userToken);
+                return headers;
+            }
+        };
+        requestQueue.add(stringRequest);
+    }
+
 
     private void saveLocalDataToServer() {
         migrantModels = getMigrantsToDisplay(dbHelper.getMigrants());
