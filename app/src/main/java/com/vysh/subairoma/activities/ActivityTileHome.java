@@ -249,7 +249,7 @@ public class ActivityTileHome extends AppCompatActivity {
         if (intent.hasExtra("tiletype")) {
             tileType = intent.getStringExtra("tiletype");
             section = tileType.toUpperCase();
-            
+
             setUpRecyclerView();
         }
 

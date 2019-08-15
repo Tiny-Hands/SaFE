@@ -88,7 +88,7 @@
         <com.vysh.subairoma.utils.CustomTextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Language"
+            android:text="Choose Language/भाषा छनौट गर्नुहोस्"
             app:fonts="gotham_bold.ttf" />
 
         <LinearLayout
@@ -102,8 +102,8 @@
                 android:id="@+id/ibEn"
                 android:layout_width="48dp"
                 android:layout_height="48dp"
-                android:layout_marginEnd="@dimen/default_margin"
                 android:layout_marginStart="@dimen/default_margin"
+                android:layout_marginEnd="@dimen/default_margin"
                 android:background="@null"
                 android:scaleType="centerInside"
                 android:src="@drawable/ic_lang_en" />
@@ -112,8 +112,8 @@
                 android:id="@+id/ibNp"
                 android:layout_width="48dp"
                 android:layout_height="48dp"
-                android:layout_marginEnd="@dimen/default_margin"
                 android:layout_marginStart="@dimen/default_margin"
+                android:layout_marginEnd="@dimen/default_margin"
                 android:background="@null"
                 android:scaleType="centerInside"
                 android:src="@drawable/ic_lang_np" />
