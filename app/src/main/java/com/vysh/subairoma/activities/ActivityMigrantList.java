@@ -21,6 +21,8 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -57,6 +59,7 @@ import com.vysh.subairoma.utils.InternetConnectionChecker;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -195,10 +198,10 @@ public class ActivityMigrantList extends AppCompatActivity implements RecyclerIt
             //Migrant that's not registered is being registered
             //This will save to server then display migrant list
             saveLocalDataToServer();
+            new ReponseSaver(this).execute();
             //Mig Percent
         } else {
             getSavedMigrants();
-            new ReponseSaver(this).execute();
         }
         //getMigrants();
     }
@@ -214,8 +217,12 @@ public class ActivityMigrantList extends AppCompatActivity implements RecyclerIt
 
         @Override
         protected ArrayList<ArrayList<HashMap>> doInBackground(Void... voids) {
-
-            dialog.show();
+            new Handler(Looper.getMainLooper()).post(new Runnable() {
+                @Override
+                public void run() {
+                    dialog.show();
+                }
+            });
             ArrayList<ArrayList<HashMap>> allMigResponses = new ArrayList();
             for (MigrantModel migrant : migrantModels) {
                 allMigResponses.add(dbHelper.getAllResponse(migrant.getMigrantId()));
@@ -262,7 +269,6 @@ public class ActivityMigrantList extends AppCompatActivity implements RecyclerIt
             public Map<String, String> getHeaders() throws AuthFailureError {
                 HashMap<String, String> headers = new HashMap<>();
                 headers.put("Authorization", userToken);
-                //Log.d("mylog", "User token: " + userToken);
                 return headers;
             }
         };

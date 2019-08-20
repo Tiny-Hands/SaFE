@@ -44,6 +44,7 @@ import java.util.Map;
 public class LocationChecker extends Service {
     private final String saveAPI = "/updatemigrantcountry.php";
     private final int LOCATION_VALIDITY_DURATION_MS = 2000;
+    private String userId, userToken;
 
     @Nullable
     @Override
@@ -54,6 +55,8 @@ public class LocationChecker extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         requestLocation();
+        userId = ApplicationClass.getInstance().getSafeUserId() + "";
+        userToken = getSharedPreferences(SharedPrefKeys.sharedPrefName, MODE_PRIVATE).getString(SharedPrefKeys.token, "");
         return super.onStartCommand(intent, flags, startId);
     }
 
@@ -109,11 +112,12 @@ public class LocationChecker extends Service {
         final HashMap<String, String> fParams = new HashMap<>();
         fParams.put("migrant_id", migrantId);
         fParams.put("country", country);
+        fParams.put("user_id", userId);
 
         StringRequest stringRequest = new StringRequest(Request.Method.POST, api, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
-                Log.d("mylog", "Response: " + response);
+                Log.d("mylog", "Country Response: " + response);
             }
         }, new Response.ErrorListener() {
             @Override
@@ -127,8 +131,12 @@ public class LocationChecker extends Service {
         }) {
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
+                return fParams;
+            }
+
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
                 HashMap<String, String> headers = new HashMap<>();
-                String userToken = getSharedPreferences(SharedPrefKeys.sharedPrefName, MODE_PRIVATE).getString(SharedPrefKeys.token, "");
                 headers.put("Authorization", userToken);
                 return headers;
             }
