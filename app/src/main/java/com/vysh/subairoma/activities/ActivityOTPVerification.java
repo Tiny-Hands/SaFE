@@ -51,7 +51,6 @@ public class ActivityOTPVerification extends AppCompatActivity implements View.O
 
     final String apiOTP = "/twiliosender.php";
     final String apiSaveUser = "/saveuser.php";
-    final String apiURLMigrant = "/savemigrant.php";
 
     @BindView(R.id.btnVerify)
     Button btnVerify;

@@ -18,13 +18,14 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:padding="@dimen/small_medium_margin"
-            android:text="This app redirecteunsafe situation"
+            android:text="This app redirecte unsafe situation"
             android:textSize="16sp" />
 
-        <androidx.appcompat.widget.AppCompatCheckBox
+        <CheckBox
             android:id="@+id/cbQ"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:checked="false" />
     </LinearLayout>
 
     <ListView
@@ -52,9 +53,9 @@
         android:id="@+id/row_bottom_line"
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:layout_marginBottom="@dimen/small_margin"
         android:layout_marginLeft="@dimen/medium_margin"
-        android:layout_marginRight="@dimen/medium_margin"
         android:layout_marginTop="@dimen/small_margin"
+        android:layout_marginRight="@dimen/medium_margin"
+        android:layout_marginBottom="@dimen/small_margin"
         android:background="@color/translucentGrey" />
 </LinearLayout>
