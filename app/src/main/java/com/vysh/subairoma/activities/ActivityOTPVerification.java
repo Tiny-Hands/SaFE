@@ -81,6 +81,7 @@ public class ActivityOTPVerification extends AppCompatActivity implements View.O
         if (intent.hasExtra("otpnumber")) {
             isLogginIn = true;
             phoneNumber = intent.getStringExtra("otpnumber");
+            Log.d("mylog", " Logging in, send OTP to: " + phoneNumber);
             if (InternetConnectionChecker.isNetworkConnected(ActivityOTPVerification.this)) {
                 //Sending the OTP To the mentioned number;
                 lastTime = System.currentTimeMillis();
@@ -231,7 +232,7 @@ public class ActivityOTPVerification extends AppCompatActivity implements View.O
             @Override
             public void onResponse(String response) {
                 progressDialog.dismiss();
-                Log.d("mylog", "response : " + response);
+                Log.d("mylog", "otp response : " + response);
             }
         }, new Response.ErrorListener() {
             @Override
