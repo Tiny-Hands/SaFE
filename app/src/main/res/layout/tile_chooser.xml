@@ -15,18 +15,20 @@
 
         <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_gravity="center">
 
-            <LinearLayout
+            <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:gravity="center"
                 android:orientation="vertical">
 
                 <TextView
+                    android:id="@+id/tvDestCountLabel"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
                     android:layout_gravity="center_horizontal"
                     android:layout_marginTop="@dimen/default_margin"
                     android:layout_marginBottom="@dimen/medium_margin"
@@ -38,6 +40,8 @@
                     android:id="@+id/ivCountry"
                     android:layout_width="@dimen/tile_selection_size"
                     android:layout_height="@dimen/tile_selection_size"
+                    android:layout_below="@+id/tvDestCountLabel"
+                    android:layout_centerHorizontal="true"
                     android:layout_gravity="center_horizontal"
                     android:src="@drawable/ic_country" />
 
@@ -45,31 +49,40 @@
                     android:id="@+id/tvCountryName"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_below="@id/ivCountry"
+                    android:layout_centerHorizontal="true"
                     android:layout_gravity="center_horizontal"
                     android:layout_marginTop="@dimen/medium_margin"
                     android:text="Malayasia" />
 
                 <View
+                    android:id="@+id/separator1"
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
+                    android:layout_below="@id/tvCountryName"
                     android:layout_marginLeft="@dimen/default_margin"
                     android:layout_marginTop="@dimen/large_margin"
                     android:layout_marginRight="@dimen/default_margin"
                     android:layout_marginBottom="@dimen/large_margin"
                     android:background="@color/grey" />
 
-                <LinearLayout
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/llMainSec"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal">
+                    android:layout_below="@id/separator1"
+                    android:gravity="center">
 
                     <LinearLayout
+                        android:id="@+id/llFEP"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/default_margin"
-                        android:layout_weight="1"
                         android:gravity="center"
-                        android:orientation="vertical">
+                        android:orientation="vertical"
+                        app:layout_constraintEnd_toStartOf="@id/llTravel"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent">
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -102,7 +115,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="@dimen/small_margin"
-                            android:text="50% Complete" />
+                            android:text="@string/section_locked" />
 
                     </LinearLayout>
 
@@ -114,16 +127,22 @@
                         android:layout_marginTop="@dimen/large_margin"
                         android:background="@null"
                         android:src="@drawable/ic_next"
-                        android:visibility="gone" />
+                        android:visibility="gone"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
 
                     <LinearLayout
                         android:id="@+id/llTravel"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/default_margin"
-                        android:layout_weight="1"
+                        android:layout_toRightOf="@+id/llFEP"
                         android:gravity="center"
-                        android:orientation="vertical">
+                        android:orientation="vertical"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toEndOf="@id/llFEP"
+                        app:layout_constraintTop_toTopOf="parent">
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -157,11 +176,13 @@
                             android:layout_marginTop="@dimen/small_margin"
                             android:text="@string/section_locked" />
                     </LinearLayout>
-                </LinearLayout>
+                </androidx.constraintlayout.widget.ConstraintLayout>
 
                 <View
+                    android:id="@+id/divider2"
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
+                    android:layout_below="@+id/llMainSec"
                     android:layout_marginLeft="@dimen/default_margin"
                     android:layout_marginTop="@dimen/large_margin"
                     android:layout_marginRight="@dimen/default_margin"
@@ -171,6 +192,8 @@
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_below="@id/divider2"
+                    android:layout_centerHorizontal="true"
                     android:layout_gravity="center_horizontal"
                     android:layout_marginTop="@dimen/large_margin"
                     android:layout_marginBottom="@dimen/default_margin"
@@ -190,7 +213,7 @@
                         android:text="@string/important_contacts"
                         android:textSize="@dimen/tile_title_chooser" />
                 </LinearLayout>
-            </LinearLayout>
+            </RelativeLayout>
         </androidx.core.widget.NestedScrollView>
     </LinearLayout>
 
@@ -198,7 +221,8 @@
         android:id="@+id/rlInfoScreen"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#f06b6b6b">
+        android:background="#B56B6B6B"
+        android:visibility="invisible">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -246,9 +270,9 @@
                             android:layout_alignTop="@+id/tv1"
                             android:layout_centerVertical="true"
                             android:layout_toRightOf="@+id/tv1"
+                            android:elevation="2dp"
                             android:lineSpacingExtra="2dp"
                             android:paddingBottom="@dimen/default_margin"
-                            android:elevation="2dp"
                             android:text="@string/infostep1"
                             android:textColor="@color/infoTextWhite"
                             android:textSize="@dimen/info_desc_text"
@@ -322,8 +346,8 @@
                             android:layout_alignTop="@+id/tv2"
                             android:layout_centerVertical="true"
                             android:layout_toRightOf="@+id/tv2"
-                            android:lineSpacingExtra="2dp"
                             android:elevation="2dp"
+                            android:lineSpacingExtra="2dp"
                             android:paddingTop="@dimen/default_margin"
                             android:text="@string/infostep2"
                             android:textColor="@color/infoTextWhite"
@@ -351,10 +375,10 @@
                             android:layout_height="wrap_content"
                             android:layout_centerHorizontal="true"
                             android:layout_centerVertical="true"
+                            android:elevation="2dp"
                             android:lineSpacingExtra="2dp"
                             android:paddingLeft="@dimen/default_margin"
                             android:paddingTop="@dimen/default_margin"
-                            android:elevation="2dp"
                             android:text="@string/infostep3"
                             android:textColor="@color/infoTextWhite"
                             android:textSize="@dimen/info_desc_text"
@@ -371,7 +395,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="@dimen/default_margin"
-                                android:layout_weight="1"
+                                android:layout_marginRight="@dimen/default_margin"
                                 android:gravity="center"
                                 android:orientation="vertical"
                                 android:visibility="visible">
@@ -419,8 +443,8 @@
                                 android:id="@+id/llinfo3"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
+                                android:layout_marginLeft="@dimen/default_margin"
                                 android:layout_marginTop="@dimen/default_margin"
-                                android:layout_weight="1"
                                 android:gravity="center"
                                 android:orientation="vertical"
                                 android:visibility="visible">
