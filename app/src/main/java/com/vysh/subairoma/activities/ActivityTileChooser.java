@@ -230,12 +230,14 @@ public class ActivityTileChooser extends AppCompatActivity {
 
     private void showInformationOverlay() {
         rlInfo1.setVisibility(View.VISIBLE);
-        tvinfo2.setVisibility(View.INVISIBLE);
-        tvInfo3.setVisibility(View.INVISIBLE);
-        tvDesc2.setVisibility(View.INVISIBLE);
-        tvDesc3.setVisibility(View.INVISIBLE);
+
         llinfo2.setVisibility(View.INVISIBLE);
+        tvinfo2.setVisibility(View.INVISIBLE);
+        tvDesc2.setVisibility(View.INVISIBLE);
+
         llinfo3.setVisibility(View.INVISIBLE);
+        tvInfo3.setVisibility(View.INVISIBLE);
+        tvDesc3.setVisibility(View.INVISIBLE);
         btnFirstInfo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
