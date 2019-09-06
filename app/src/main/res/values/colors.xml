@@ -21,4 +21,7 @@
     <color name="white_tr">#c8ffffff</color>
     <color name="darkGreen">#558b2f</color>
     <color name="infoTextWhite">#fff</color>
+    <color name="colorInfo1">#FFE774</color>
+    <color name="colorInfo2">#FDEB9C</color>
+    <color name="colorInfo3">#FFF2AE</color>
 </resources>

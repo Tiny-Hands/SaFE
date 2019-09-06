@@ -61,4 +61,6 @@
     <dimen name="inner_dialog_title_text_size">20sp</dimen>
     <dimen name="default_line_spacing">2dp</dimen>
     <dimen name="inner_support_dialog_action_btn_text_size">18sp</dimen>
+    <dimen name="dots_height">14dp</dimen>
+    <dimen name="dots_margin_bottom">8dp</dimen>
 </resources>

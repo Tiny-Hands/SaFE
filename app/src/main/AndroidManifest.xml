@@ -10,12 +10,12 @@
     <application
         android:name=".ApplicationClass"
         android:allowBackup="true"
-        android:largeHeap="true"
-        android:usesCleartextTraffic="true"
         android:icon="@drawable/logo_org_launcher"
         android:label="@string/app_name"
+        android:largeHeap="true"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppTheme"
+        android:usesCleartextTraffic="true">
 
         <provider
             android:name="androidx.core.content.FileProvider"
@@ -37,6 +37,10 @@
         </activity>
 
         <activity android:name=".activities.ActivityFeedback" />
+
+        <activity
+            android:name=".activities.ActivityInfoSlider"
+            android:screenOrientation="portrait" />
 
         <activity
             android:name=".activities.ActivityTileHome"

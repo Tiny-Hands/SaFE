@@ -756,8 +756,14 @@ public class ActivitySplash extends AppCompatActivity {
         editor.commit();
         if (savedCount == apiCount) {
             //checkSleep();
-            startRegisterActivity();
+            startInfoActivity();
         }
+    }
+
+    private void startInfoActivity() {
+        Intent intent = new Intent(ActivitySplash.this, ActivityInfoSlider.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
     }
 
     private void hideLangOptions() {

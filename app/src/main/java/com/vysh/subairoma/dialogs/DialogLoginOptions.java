@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -55,7 +56,7 @@ public class DialogLoginOptions extends DialogFragment {
     }
 
     private void setUpListeners() {
-       /* loginButton.setReadPermissions("email");
+        loginButton.setReadPermissions("email");
         // Callback registration
         loginButton.registerCallback(activityRegister.callbackManager, new FacebookCallback<LoginResult>() {
             @Override
@@ -89,7 +90,7 @@ public class DialogLoginOptions extends DialogFragment {
                 Log.d("mylog", "Error: " + exception.toString());
             }
         });
-*/
+
         btnPhoneLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

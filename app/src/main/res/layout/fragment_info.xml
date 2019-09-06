@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/llbg"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#CA7777"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <TextView
+        android:id="@+id/tvInfoHeader"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/default_margin"
+        android:gravity="center"
+        android:text="fsdfsd"
+        android:textSize="24sp"
+        android:textStyle="bold" />
+
+    <ImageView
+        android:id="@+id/ivInfo"
+        android:layout_width="152dp"
+        android:layout_height="152dp"
+        android:src="@drawable/ic_traveltile" />
+
+    <TextView
+        android:id="@+id/tvInfoDetails"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/default_margin"
+        android:gravity="center"
+        android:lineSpacingExtra="2dp"
+        android:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit."
+        android:textSize="16sp" />
+
+</LinearLayout>
