@@ -56,6 +56,11 @@ public class DialogLoginOptions extends DialogFragment {
     }
 
     private void setUpListeners() {
+        if (loginButton == null)
+            return;
+        if (activityRegister == null)
+            activityRegister = (ActivityRegister) getActivity();
+
         loginButton.setReadPermissions("email");
         // Callback registration
         loginButton.registerCallback(activityRegister.callbackManager, new FacebookCallback<LoginResult>() {
