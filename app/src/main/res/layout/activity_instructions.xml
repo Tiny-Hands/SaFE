@@ -27,9 +27,11 @@
         android:layout_height="wrap_content"
         android:layout_above="@+id/viewPagerCountDots"
         android:layout_centerHorizontal="true"
-        android:background="?android:attr/selectableItemBackground"
-        android:padding="@dimen/medium_margin"
+        android:background="@drawable/default_rounded_button"
+        android:paddingLeft="@dimen/default_margin"
+        android:paddingRight="@dimen/default_margin"
         android:text="@string/proceed"
+        android:textColor="#fff"
         android:textSize="18sp"
         android:textStyle="normal" />
 
