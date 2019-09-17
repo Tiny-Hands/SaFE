@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.Build;
+import android.text.InputType;
 import android.transition.TransitionManager;
 import android.util.Log;
 import android.util.SparseIntArray;
@@ -274,6 +275,9 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
             }
         } else if (question.getResponseType() == 5) {
             holder.spinnerOptions.setAdapter(countryListAdapter);
+        }
+        else if(question.getResponseType() == 6){
+            holder.etResponse.setInputType(InputType.TYPE_CLASS_NUMBER);
         }
         holder.rbGroup.setVisibility(View.GONE);
         holder.checkbox.setVisibility(GONE);
