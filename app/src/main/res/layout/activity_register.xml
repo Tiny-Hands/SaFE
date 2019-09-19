@@ -119,7 +119,7 @@
                         android:hint="@string/phone_number"
                         android:imeOptions="actionNext"
                         android:inputType="number"
-                        android:maxLength="10" />
+                        android:maxLength="15" />
 
                     <View
                         android:layout_width="match_parent"

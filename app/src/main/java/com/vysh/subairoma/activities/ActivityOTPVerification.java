@@ -251,7 +251,10 @@ public class ActivityOTPVerification extends AppCompatActivity implements View.O
                 trueOTP = generateOTP();
                 HashMap<String, String> params = new HashMap<>();
                 params.put("otp", "Subairoma OTP: " + trueOTP);
-                params.put("phone_number", "+977" + phoneNumber);
+                if (phoneNumber.length() < 11)
+                    params.put("phone_number", "+977" + phoneNumber);
+                else
+                    params.put("phone_number", phoneNumber);
                 return params;
             }
         };

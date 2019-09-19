@@ -276,9 +276,6 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
         } else if (question.getResponseType() == 5) {
             holder.spinnerOptions.setAdapter(countryListAdapter);
         }
-        else if(question.getResponseType() == 6){
-            holder.etResponse.setInputType(InputType.TYPE_CLASS_NUMBER);
-        }
         holder.rbGroup.setVisibility(View.GONE);
         holder.checkbox.setVisibility(GONE);
         holder.etResponse.setVisibility(View.GONE);
@@ -297,6 +294,9 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
             holder.etResponse.setAdapter(adapter);
         } else if (questionsListDisplay.get(position).getVariable().equalsIgnoreCase("mg_agent_phone")) {
             holder.etResponse.setInputType(TYPE_CLASS_PHONE);
+        } else if (question.getResponseType() == 6) {
+            Log.d("mylog", "Setting Type Number Here");
+            holder.etResponse.setInputType(TYPE_CLASS_NUMBER);
         } else {
             holder.etResponse.setInputType(TYPE_CLASS_TEXT);
         }
@@ -410,7 +410,7 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
             //Hiding visibility No Matter what as If checked showing Checkmark
             holder.question.setVisibility(View.GONE);
             holder.checkbox.setVisibility(View.GONE);
-        } else if (responseType == 1) {
+        } else if (responseType == 1 || responseType == 6) {
             if (response == null || response.isEmpty()) {
                 //Log.d("mylog", "1 Response: " + response);
                 holder.question.setVisibility(GONE);
@@ -1062,7 +1062,7 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
             int responseType = questionsListDisplay.get(currentClickedPos).getResponseType();
             if (responseType == 0) {
                 checkbox.setVisibility(View.VISIBLE);
-            } else if (responseType == 1) {
+            } else if (responseType == 1 || responseType == 6) {
                 etResponse.setVisibility(View.VISIBLE);
             } else if (responseType == 2 || responseType == 5) {
                 spinnerOptions.setVisibility(View.VISIBLE);
