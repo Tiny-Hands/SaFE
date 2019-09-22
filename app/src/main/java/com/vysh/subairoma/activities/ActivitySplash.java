@@ -219,32 +219,39 @@ public class ActivitySplash extends AppCompatActivity {
             if (!sp.getBoolean(SharedPrefKeys.savedTiles, false)) {
                 Log.d("mylog", "Getting tiles");
                 getTiles();
-            }
+            } else
+                incrementCount();
             if (!sp.getBoolean(SharedPrefKeys.savedQuestions, false)) {
                 Log.d("mylog", "Getting questions");
                 getQuestions();
-            }
+            } else
+                incrementCount();
             if (!sp.getBoolean(SharedPrefKeys.savedOptions, false)) {
                 Log.d("mylog", "Getting options");
                 getOptions();
-            }
+            } else
+                incrementCount();
             if (!sp.getBoolean(SharedPrefKeys.savedCountries, false)) {
                 Log.d("mylog", "Getting countries");
                 getCountries();
-            }
+            } else
+                incrementCount();
             if (!sp.getBoolean(SharedPrefKeys.savedContacts, false)) {
                 Log.d("mylog", "Getting contacts");
                 getContacts(1);
                 getContacts(2);
-            }
+            } else
+                incrementCount();
             if (!sp.getBoolean(SharedPrefKeys.savedFeedbackQuestions, false)) {
                 Log.d("mylog", "Getting feedback questions");
                 getFeedbackQuestions();
-            }
+            } else
+                incrementCount();
             if (!sp.getBoolean(SharedPrefKeys.savedManpowers, false)) {
-                Log.d("mylog", "Getting feedback questions");
+                Log.d("mylog", "Getting manpowers");
                 getManpowers();
-            }
+            } else
+                incrementCount();
 
         } else {
             Log.d("mylog", "Saved already, starting");

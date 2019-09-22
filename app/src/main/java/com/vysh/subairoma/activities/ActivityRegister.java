@@ -388,7 +388,7 @@ public class ActivityRegister extends AppCompatActivity {
             public void onResponse(String response) {
                 try {
                     Log.d("mylog", "REs: " + response);
-                    getAllResponses(userType, ApplicationClass.getInstance().getSafeUserId());
+                    //getAllResponses(ApplicationClass.getInstance().getSafeUserId());
                     parseMigDetailResponse(response);
                     try {
                         progressDialog.dismiss();
@@ -793,7 +793,7 @@ public class ActivityRegister extends AppCompatActivity {
                             //Saving in Database
                             dbHelper.insertMigrants(id, name, age, phone, sex, uid, migImg, percentComp);
                             //Getting responses
-                            getAllResponses(userType, id);
+                            getAllResponses(id);
                         }
                     }
                 }
@@ -947,7 +947,7 @@ public class ActivityRegister extends AppCompatActivity {
         startActivity(intent);
     }
 
-    public void getAllResponses(final String uType, final int id) {
+    public void getAllResponses(final int id) {
         String api = ApplicationClass.getInstance().getAPIROOT() + apiGetAllResponses;
         final ProgressDialog pdialog = new ProgressDialog(ActivityRegister.this);
         //pdialog.setTitle("Setting Up");
@@ -964,7 +964,7 @@ public class ActivityRegister extends AppCompatActivity {
                 Log.d("mylog", "Responses from migrants: " + response);
                 ++gotDetailCount;
                 parseAllResponses(response);
-                if (gotDetailCount == migrantCount)
+                if (gotDetailCount == migrantCount || gotDetailCount <= migrantCount - 1)
                     startOTPActivity(userType, 1);
                 try {
                     pdialog.dismiss();
@@ -988,8 +988,6 @@ public class ActivityRegister extends AppCompatActivity {
             protected Map<String, String> getParams() throws AuthFailureError {
                 HashMap<String, String> params = new HashMap<>();
                 params.put("user_id", id + "");
-                if (uType.equalsIgnoreCase(SharedPrefKeys.migrantUser))
-                    params.put("user_id", id + "");
                 return params;
             }
 

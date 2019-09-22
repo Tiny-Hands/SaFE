@@ -51,7 +51,7 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
     Context mContext;
     private static RequestQueue queue;
     private static String userToken;
-    public static final int DATABASE_VERSION = 26;
+    public static final int DATABASE_VERSION = 32;
     public static final String DATABASE_NAME = "SubairomaLocal.db";
     final String SQL_CREATE_ResponseTable =
             "CREATE TABLE IF NOT EXISTS " + DatabaseTables.ResponseTable.TABLE_NAME + " (" +
@@ -241,35 +241,39 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + DatabaseTables.QuestionsTable.TABLE_NAME);
         db.execSQL("DROP TABLE IF EXISTS " + DatabaseTables.OptionsTable.TABLE_NAME);
         db.execSQL("DROP TABLE IF EXISTS " + DatabaseTables.CountriesTable.TABLE_NAME);
-        db.execSQL("DROP TABLE IF EXISTS " + DatabaseTables.MigrantsTable.TABLE_NAME);
         db.execSQL("DROP TABLE IF EXISTS " + DatabaseTables.TilesTable.TABLE_NAME);
         db.execSQL("DROP TABLE IF EXISTS " + DatabaseTables.ImportantContacts.TABLE_NAME);
         db.execSQL("DROP TABLE IF EXISTS " + DatabaseTables.ImportantContactsDefault.TABLE_NAME);
-        mContext.deleteDatabase(DATABASE_NAME);
+        //mContext.deleteDatabase(DATABASE_NAME);
         allowReloadData();
-        Toast.makeText(mContext, "Reloading Data, Please Wait", Toast.LENGTH_LONG).show();
-        //restartApp();
-    }
+        Toast.makeText(mContext, "Reload Data", Toast.LENGTH_LONG).show();
 
-    private void restartApp() {
-        Intent intent = new Intent(mContext, ActivitySplash.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-        //mContext.startActivity(intent);
-        PendingIntent pendingIntent = PendingIntent.getActivity(
-                ApplicationClass.getInstance().getBaseContext(), 0, intent, PendingIntent.FLAG_ONE_SHOT);
-
-        Log.d("mylog", "Reloading in 1 second");
-        //Restart your app after 1 seconds
-        AlarmManager mgr = (AlarmManager) ApplicationClass.getInstance().getBaseContext()
-                .getSystemService(Context.ALARM_SERVICE);
-        mgr.set(AlarmManager.RTC, System.currentTimeMillis() + 100,
-                pendingIntent);
+        db.execSQL(SQL_CREATE_ResponseTable);
+        db.execSQL(SQL_CREATE_TilesTable);
+        db.execSQL(SQL_CREATE_QuestionsTable);
+        db.execSQL(SQL_CREATE_OptionsTable);
+        db.execSQL(SQL_CREATE_CountriesTable);
+        db.execSQL(SQL_CREATE_MigrantsTable);
+        db.execSQL(SQL_CREATE_ContactsTable);
+        db.execSQL(SQL_CREATE_ContactsTableDefault);
+        db.execSQL(SQL_CREATE_FeedbackQuestionTable);
+        db.execSQL(SQL_CREATE_FeedbackQuestionResponseTable);
+        db.execSQL(SQL_CREATE_MigrantsTempTable);
+        db.execSQL(SQL_CREATE_ResponseTempTable);
+        db.execSQL(SQL_CREATE_ManpowerTable);
     }
 
     public void allowReloadData() {
         SharedPreferences sp = mContext.getSharedPreferences(SharedPrefKeys.sharedPrefName, MODE_PRIVATE);
         SharedPreferences.Editor editor = sp.edit();
-        editor.putInt("savedcount", 0);
+        editor.putInt(SharedPrefKeys.savedTableCount, 0);
+        editor.putBoolean(SharedPrefKeys.savedManpowers, false);
+        editor.putBoolean(SharedPrefKeys.savedContacts, false);
+        editor.putBoolean(SharedPrefKeys.savedCountries, false);
+        editor.putBoolean(SharedPrefKeys.savedFeedbackQuestions, false);
+        editor.putBoolean(SharedPrefKeys.savedOptions, false);
+        editor.putBoolean(SharedPrefKeys.savedQuestions, false);
+        editor.putBoolean(SharedPrefKeys.savedTiles, false);
         editor.commit();
     }
 
