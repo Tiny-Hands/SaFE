@@ -1,6 +1,7 @@
 package com.vysh.subairoma.activities;
 
 import android.Manifest;
+import android.app.Application;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -331,6 +332,7 @@ public class ActivityRegister extends AppCompatActivity {
             //editor.putInt(SharedPrefKeys.userId, id);
             if (!loggedInFromPhone)
                 editor.putInt(SharedPrefKeys.userId, id);
+            ApplicationClass.getInstance().setUserType(userType);
             ApplicationClass.getInstance().setSafeUserId(id);
             if (userType.equalsIgnoreCase(SharedPrefKeys.helperUser)) {
                 ApplicationClass.getInstance().setSafeUserId(id);

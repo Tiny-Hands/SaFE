@@ -207,40 +207,45 @@ public class ActivitySplash extends AppCompatActivity {
             dbHelper = SQLDatabaseHelper.getInstance(ActivitySplash.this);
             dbHelper.getWritableDatabase();
             savedCount = 0;
-            getTiles();
+            /*getTiles();
             getQuestions();
             getOptions();
             getCountries();
             getContacts(1);
             getContacts(2);
             getFeedbackQuestions();
-            getManpowers();
-            /*
+            getManpowers();*/
+
             if (!sp.getBoolean(SharedPrefKeys.savedTiles, false)) {
                 Log.d("mylog", "Getting tiles");
                 getTiles();
-            } else incrementCount();
+            }
             if (!sp.getBoolean(SharedPrefKeys.savedQuestions, false)) {
                 Log.d("mylog", "Getting questions");
                 getQuestions();
-            } else incrementCount();
+            }
             if (!sp.getBoolean(SharedPrefKeys.savedOptions, false)) {
                 Log.d("mylog", "Getting options");
                 getOptions();
-            } else incrementCount();
+            }
             if (!sp.getBoolean(SharedPrefKeys.savedCountries, false)) {
                 Log.d("mylog", "Getting countries");
                 getCountries();
-            } else incrementCount();
+            }
             if (!sp.getBoolean(SharedPrefKeys.savedContacts, false)) {
                 Log.d("mylog", "Getting contacts");
-                getContacts();
-            } else incrementCount();
+                getContacts(1);
+                getContacts(2);
+            }
             if (!sp.getBoolean(SharedPrefKeys.savedFeedbackQuestions, false)) {
                 Log.d("mylog", "Getting feedback questions");
                 getFeedbackQuestions();
-            } else incrementCount();
-            */
+            }
+            if (!sp.getBoolean(SharedPrefKeys.savedManpowers, false)) {
+                Log.d("mylog", "Getting feedback questions");
+                getManpowers();
+            }
+
         } else {
             Log.d("mylog", "Saved already, starting");
             //Start activity directly or show splash
