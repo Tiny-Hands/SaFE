@@ -767,6 +767,17 @@ public class ActivityRegister extends AppCompatActivity {
                     JSONObject migrantObj;
                     SQLDatabaseHelper dbHelper = SQLDatabaseHelper.getInstance(ActivityRegister.this);
                     int uid = ApplicationClass.getInstance().getSafeUserId();
+
+                    final ProgressDialog pdialog = new ProgressDialog(ActivityRegister.this);
+                    //pdialog.setTitle("Setting Up");
+                    pdialog.setMessage(getResources().getString(R.string.getting_mig_responses));
+                    pdialog.setCancelable(false);
+                    try {
+                        pdialog.show();
+                    } catch (Exception ex) {
+                        Log.d("mylog", "Couldn't show dialgo: " + ex.getMessage());
+                    }
+
                     for (int i = 0; i < migrantJSON.length(); i++) {
                         migrantObj = migrantJSON.getJSONObject(i);
                         MigrantModel migrantModel = new MigrantModel();
@@ -793,7 +804,7 @@ public class ActivityRegister extends AppCompatActivity {
                             //Saving in Database
                             dbHelper.insertMigrants(id, name, age, phone, sex, uid, migImg, percentComp);
                             //Getting responses
-                            getAllResponses(id);
+                            getAllResponses(id, pdialog, i);
                         }
                     }
                 }
@@ -947,37 +958,39 @@ public class ActivityRegister extends AppCompatActivity {
         startActivity(intent);
     }
 
-    public void getAllResponses(final int id) {
+    public void getAllResponses(final int id, ProgressDialog dialog, int currentMig) {
         String api = ApplicationClass.getInstance().getAPIROOT() + apiGetAllResponses;
-        final ProgressDialog pdialog = new ProgressDialog(ActivityRegister.this);
-        //pdialog.setTitle("Setting Up");
-        pdialog.setMessage(getResources().getString(R.string.getting_mig_responses));
-        pdialog.setCancelable(false);
-        try {
-            pdialog.show();
-        } catch (Exception ex) {
-            Log.d("mylog", "Couldn't show dialgo: " + ex.getMessage());
-        }
+
+        if (!dialog.isShowing())
+            dialog.show();
         StringRequest stringRequest = new StringRequest(Request.Method.POST, api, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 Log.d("mylog", "Responses from migrants: " + response);
                 ++gotDetailCount;
                 parseAllResponses(response);
-                if (gotDetailCount == migrantCount || gotDetailCount <= migrantCount - 1)
+                if (gotDetailCount == migrantCount) {
                     startOTPActivity(userType, 1);
-                try {
-                    pdialog.dismiss();
-                } catch (Exception ex) {
-                    Log.d("mylog", "Dialog dismissing error or : " + ex.toString());
+                    try {
+                        dialog.dismiss();
+                    } catch (Exception ex) {
+                        Log.d("mylog", "Dialog dismissing error or : " + ex.toString());
+                    }
+                } else if (migrantCount == (currentMig + 1)) {
+                    // This means failed to get responses for some migrants
+                    try {
+                        dialog.dismiss();
+                    } catch (Exception ex) {
+                        Log.d("mylog", "Dialog dismissing error or : " + ex.toString());
+                    }
+                    Toast.makeText(ActivityRegister.this, "Failed to get some responses, please try again", Toast.LENGTH_LONG).show();
                 }
-                //startMigrantistActivity();
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
                 try {
-                    pdialog.dismiss();
+                    dialog.dismiss();
                 } catch (Exception ex) {
                     Log.d("mylog", "Dialog dismissing error or : " + ex.toString());
                 }
