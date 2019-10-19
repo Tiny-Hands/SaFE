@@ -217,12 +217,12 @@ public class ActivityMigrantList extends AppCompatActivity implements RecyclerIt
 
         @Override
         protected ArrayList<ArrayList<HashMap>> doInBackground(Void... voids) {
-            new Handler(Looper.getMainLooper()).post(new Runnable() {
+            /*new Handler(Looper.getMainLooper()).post(new Runnable() {
                 @Override
                 public void run() {
                     dialog.show();
                 }
-            });
+            });*/
             ArrayList<ArrayList<HashMap>> allMigResponses = new ArrayList();
             for (MigrantModel migrant : migrantModels) {
                 allMigResponses.add(dbHelper.getAllResponse(migrant.getMigrantId()));
@@ -234,7 +234,7 @@ public class ActivityMigrantList extends AppCompatActivity implements RecyclerIt
         protected void onPostExecute(ArrayList<ArrayList<HashMap>> arrayLists) {
             super.onPostExecute(arrayLists);
             for (ArrayList<HashMap> arrayItem : arrayLists) {
-                dialog.dismiss();
+                //dialog.dismiss();
                 for (HashMap itemResponse : arrayItem) {
                     saveResponseToServer(itemResponse);
                 }

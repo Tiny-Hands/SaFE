@@ -78,6 +78,7 @@ import butterknife.ButterKnife;
 public class ActivityRegister extends AppCompatActivity {
     final String checkFbId = "/checkfbuid.php";
     final String apiURLMigrant = "/savemigrant.php";
+    final String apiSaveUser = "/saveuser.php";
     //For Helper
     final String apiGetAllResponses = "/getallresponses.php";
     //For Migrant
@@ -153,6 +154,7 @@ public class ActivityRegister extends AppCompatActivity {
         //Checking if user is registering a new migrant
         if (getIntent().hasExtra("migrantmode")) {
             userRegistered = true;
+            userType = ((ApplicationClass) getApplication()).getUserType();
             Log.d("mylog", "Loading migrant view");
             loadMigrantView();
         }
@@ -330,8 +332,7 @@ public class ActivityRegister extends AppCompatActivity {
             SharedPreferences.Editor editor = sharedPreferences.edit();
             //Not saving here as OTP is still not entered, send to OTP Activity and save there
             //editor.putInt(SharedPrefKeys.userId, id);
-            if (!loggedInFromPhone)
-                editor.putInt(SharedPrefKeys.userId, id);
+            editor.putInt(SharedPrefKeys.userId, id);
             ApplicationClass.getInstance().setUserType(userType);
             ApplicationClass.getInstance().setSafeUserId(id);
             if (userType.equalsIgnoreCase(SharedPrefKeys.helperUser)) {
@@ -635,14 +636,17 @@ public class ActivityRegister extends AppCompatActivity {
                         }*/
                         //Start Migrant List Activity
                     } else {
-                        startOTPActivity(userType, 0);
+                        registerUser(apiSaveUser, userType);
+                        //startOTPActivity(userType, 0);
                     }
                 } else {
                     if (userRegistered) {
                         String api = ApplicationClass.getInstance().getAPIROOT() + apiURLMigrant;
                         registerMigrant(api);
-                    } else
-                        startOTPActivity(userType, 0);
+                    } else {
+                        registerUser(apiSaveUser, userType);
+                        //startOTPActivity(userType, 0);
+                    }
                 }
             }
         });
@@ -751,6 +755,130 @@ public class ActivityRegister extends AppCompatActivity {
         } catch (JSONException e) {
             Log.d("mylog", "Error in parsing migrant result: " + e.toString());
         }
+    }
+
+    private void parseResponseNewReg(String response, String uType) {
+        try {
+            JSONObject jsonResponse = new JSONObject(response);
+            Boolean error = jsonResponse.getBoolean("error");
+            if (!error) {
+                SharedPreferences sharedPreferences = getSharedPreferences(SharedPrefKeys.sharedPrefName, MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                if (uType.equalsIgnoreCase(SharedPrefKeys.migrantUser)) {
+                    //ApplicationClass.getInstance().setSafeUserId(-1);
+                    editor.putString(SharedPrefKeys.userType, SharedPrefKeys.migrantUser);
+                    //int mig_id = jsonResponse.getInt("migrant_id");
+                    int user_id = jsonResponse.getInt("user_id");
+                    String token = jsonResponse.getString("token");
+                    Log.d("mylog", "Migrant ID: " + user_id);
+                    ApplicationClass.getInstance().setMigrantId(user_id);
+                    ApplicationClass.getInstance().setSafeUserId(user_id);
+                    editor.putInt(SharedPrefKeys.userId, user_id);
+                    editor.putInt(SharedPrefKeys.defMigID, user_id);
+                    editor.putString(SharedPrefKeys.token, token);
+
+                    //If migrant is already saved and has added a new migrant then don't save again
+                    if (sharedPreferences.getString(SharedPrefKeys.userName, "").length() >= 1) {
+                    } else {
+                        editor.putString(SharedPrefKeys.userPhone, etNumber.getText().toString());
+                        editor.putString(SharedPrefKeys.userSex, sex);
+                        editor.putString(SharedPrefKeys.userAge, etAge.getText().toString());
+                        editor.putString(SharedPrefKeys.userName, etName.getText().toString());
+                    }
+                    editor.commit();
+
+                    Calendar cal = Calendar.getInstance();
+                    String time = cal.getTimeInMillis() + "";
+                    SQLDatabaseHelper.getInstance(ActivityRegister.this).insertResponseTableData(sex, SharedPrefKeys.questionGender, -1,
+                            user_id, "mg_sex", time);
+                    SQLDatabaseHelper.getInstance(ActivityRegister.this).insertMigrants(user_id, etName.getText().toString(), Integer.parseInt(etAge.getText().toString()), etNumber.getText().toString(),
+                            sex, user_id, encodedImage, 0);
+
+                    Intent intent = new Intent(ActivityRegister.this, ActivityMigrantList.class);
+                    //intent.putExtra("migrantmode", true);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    startActivity(intent);
+
+                    return;
+                }
+                //Means the registered person was Helper
+                else {
+                    int user_id = jsonResponse.getInt("user_id");
+                    Log.d("mylog", "Saving user ID: " + user_id);
+
+                    int oldUid = ApplicationClass.getInstance().getSafeUserId();
+                    if (oldUid == -111) {
+                        SQLDatabaseHelper.getInstance(ActivityRegister.this).makeUserIdChanges(-111, user_id);
+                    }
+
+                    ApplicationClass.getInstance().setSafeUserId(user_id);
+                    //Parse Other responses and save in SharedPref
+                    String token = jsonResponse.getString("token");
+                    editor.putString(SharedPrefKeys.token, token);
+                    editor.putString(SharedPrefKeys.userName, etName.getText().toString());
+                    editor.putInt(SharedPrefKeys.userId, user_id);
+                    editor.putString(SharedPrefKeys.userPhone, etNumber.getText().toString());
+                    editor.putString(SharedPrefKeys.userSex, sex);
+                    editor.putString(SharedPrefKeys.userAge, etAge.getText().toString());
+                    editor.putString(SharedPrefKeys.userType, SharedPrefKeys.helperUser);
+                    editor.commit();
+
+                    Intent intent = new Intent(ActivityRegister.this, ActivityRegister.class);
+                    intent.putExtra("migrantmode", true);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    startActivity(intent);
+                }
+            } else {
+                String message = jsonResponse.getString("message");
+                Toast.makeText(ActivityRegister.this, message, Toast.LENGTH_SHORT).show();
+            }
+        } catch (JSONException e) {
+            Log.d("mylog", "Error in parsing: " + e.getMessage());
+        }
+    }
+
+    private void registerUser(String api, final String uType) {
+        Log.d("mylog", "API called: " + api);
+        final ProgressDialog progressDialog = new ProgressDialog(ActivityRegister.this);
+        progressDialog.setMessage(getResources().getString(R.string.registering));
+        progressDialog.setCancelable(false);
+        progressDialog.show();
+        StringRequest saveRequest = new StringRequest(Request.Method.POST, ((ApplicationClass) getApplication()).getAPIROOT() + api, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                progressDialog.dismiss();
+                Log.d("mylog", "response : " + response);
+                parseResponseNewReg(response, uType);
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                progressDialog.dismiss();
+                String err = error.toString();
+                Log.d("mylog", "error : " + err);
+                if (!err.isEmpty() && err.contains("TimeoutError"))
+                    Toast.makeText(ActivityRegister.this, "Failed to connect to server :(", Toast.LENGTH_SHORT).show();
+                else
+                    Toast.makeText(ActivityRegister.this, error.toString(), Toast.LENGTH_SHORT).show();
+            }
+        }) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                HashMap<String, String> params = new HashMap<>();
+
+                params.put("full_name", etName.getText().toString());
+                params.put("phone_number", etNumber.getText().toString());
+                params.put("age", etAge.getText().toString());
+                params.put("user_img", encodedImage);
+                params.put("gender", sex);
+                params.put("user_type", uType);
+                //params.put("user_id", ApplicationClass.getInstance().getSafeUserId() + "");
+                return params;
+            }
+        };
+        RequestQueue queue = Volley.newRequestQueue(ActivityRegister.this);
+        saveRequest.setRetryPolicy(new DefaultRetryPolicy(20 * 1000, 0, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        queue.add(saveRequest);
     }
 
     private ArrayList<MigrantModel> parseMigDetailResponse(String response) {
@@ -970,7 +1098,8 @@ public class ActivityRegister extends AppCompatActivity {
                 ++gotDetailCount;
                 parseAllResponses(response);
                 if (gotDetailCount == migrantCount) {
-                    startOTPActivity(userType, 1);
+                    startMigrantistActivity();
+                    //startOTPActivity(userType, 1);
                     try {
                         dialog.dismiss();
                     } catch (Exception ex) {
@@ -981,7 +1110,7 @@ public class ActivityRegister extends AppCompatActivity {
                     try {
                         dialog.dismiss();
                     } catch (Exception ex) {
-                        Log.d("mylog", "Dialog dismissing error or : " + ex.toString());
+                        Log.d("mylog", "Dialog dismissing : " + ex.toString());
                     }
                     Toast.makeText(ActivityRegister.this, "Failed to get some responses, please try again", Toast.LENGTH_LONG).show();
                 }
