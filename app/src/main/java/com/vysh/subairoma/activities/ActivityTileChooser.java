@@ -92,24 +92,7 @@ public class ActivityTileChooser extends AppCompatActivity {
     DrawerLayout drawerLayout;
     @BindView(R.id.btnBack)
     ImageView btnBack;
-    @BindView(R.id.rlInfoScreen)
-    RelativeLayout rlInstruction;
-    @BindView(R.id.rlInfo1)
-    RelativeLayout rlInfo1;
-    @BindView(R.id.tv2)
-    TextView tvinfo2;
-    @BindView(R.id.tv3)
-    TextView tvInfo3;
-    @BindView(R.id.tv2desc)
-    TextView tvDesc2;
-    @BindView(R.id.tv3desc)
-    TextView tvDesc3;
-    @BindView(R.id.llinfo2)
-    LinearLayout llinfo2;
-    @BindView(R.id.llinfo3)
-    LinearLayout llinfo3;
-    @BindView(R.id.btnFirst)
-    TextView btnFirstInfo;
+
     NavigationView navView;
 
     CustomTextView tvName, tvPhone, tvNavCounty;
@@ -128,10 +111,7 @@ public class ActivityTileChooser extends AppCompatActivity {
         intent = getIntent();
         FlurryAgent.logEvent("tile_type_listing");
         getRequiredData(intent);
-        if (isInitialUse()) {
-            showInformationOverlay();
-        } else
-            rlInstruction.setVisibility(View.GONE);
+
         tvMigName.setText(migName);
         tvMigNumber.setText(migPhone);
         tvCountry.setText(countryName);
@@ -228,52 +208,6 @@ public class ActivityTileChooser extends AppCompatActivity {
         res.updateConfiguration(conf, dm);
     }
 
-    private void showInformationOverlay() {
-        rlInfo1.setVisibility(View.VISIBLE);
-
-        llinfo2.setVisibility(View.INVISIBLE);
-        tvinfo2.setVisibility(View.INVISIBLE);
-        tvDesc2.setVisibility(View.INVISIBLE);
-
-        llinfo3.setVisibility(View.INVISIBLE);
-        tvInfo3.setVisibility(View.INVISIBLE);
-        tvDesc3.setVisibility(View.INVISIBLE);
-        btnFirstInfo.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                switch (infoCount) {
-                    case 0:
-                        infoCount++;
-                        rlInfo1.setVisibility(View.INVISIBLE);
-                        tvinfo2.setVisibility(View.VISIBLE);
-                        tvDesc2.setVisibility(View.VISIBLE);
-                        llinfo2.setVisibility(View.VISIBLE);
-                        break;
-                    case 1:
-                        infoCount++;
-                        tvinfo2.setVisibility(View.INVISIBLE);
-                        tvDesc2.setVisibility(View.INVISIBLE);
-                        llinfo2.setVisibility(View.INVISIBLE);
-
-                        tvInfo3.setVisibility(View.VISIBLE);
-                        tvDesc3.setVisibility(View.VISIBLE);
-                        llinfo3.setVisibility(View.VISIBLE);
-                        break;
-                    case 2:
-                        infoCount++;
-                        rlInstruction.setVisibility(View.GONE);
-
-                        SharedPreferences sp = getSharedPreferences(SharedPrefKeys.sharedPrefName, MODE_PRIVATE);
-                        SharedPreferences.Editor editor = sp.edit();
-                        editor.putBoolean(SharedPrefKeys.initialuser, false);
-                        editor.apply();
-                        Toast.makeText(ActivityTileChooser.this, getResources().getString(R.string.welcome_info), Toast.LENGTH_SHORT).show();
-                        break;
-                }
-            }
-        });
-    }
-
     private boolean isInitialUse() {
         SharedPreferences sp = getSharedPreferences(SharedPrefKeys.sharedPrefName, MODE_PRIVATE);
         return sp.getBoolean(SharedPrefKeys.initialuser, true);
@@ -366,8 +300,8 @@ public class ActivityTileChooser extends AppCompatActivity {
                     case R.id.nav_tutorial:
                         FlurryAgent.logEvent("rewatch_tutorial_selection");
                         drawerLayout.closeDrawer(GravityCompat.END);
-                        rlInstruction.setVisibility(View.VISIBLE);
-                        showInformationOverlay();
+                        //rlInstruction.setVisibility(View.VISIBLE);
+                        //showInformationOverlay();
                         break;
                 }
                 return false;
