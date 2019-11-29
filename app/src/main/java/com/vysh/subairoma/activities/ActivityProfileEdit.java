@@ -116,8 +116,6 @@ public class ActivityProfileEdit extends AppCompatActivity implements View.OnCli
     Button btnAlreadyRegistered;
     @BindView(R.id.login_button_edit)
     LoginButton loginButton;
-    @BindView(R.id.login_button)
-    LoginButton loginButtonToHide;
     @BindView(R.id.tvOR)
     TextView tvOr;
 
@@ -142,7 +140,6 @@ public class ActivityProfileEdit extends AppCompatActivity implements View.OnCli
             FlurryAgent.logEvent("migrant_edit_mode");
             if (ApplicationClass.getInstance().getSafeUserId() != -1) {
                 loginButton.setVisibility(GONE);
-                loginButtonToHide.setVisibility(GONE);
                 tvOr.setVisibility(GONE);
             } else
                 setUpFBLogin();
@@ -252,7 +249,6 @@ public class ActivityProfileEdit extends AppCompatActivity implements View.OnCli
     }
 
     private void setUpFBLogin() {
-        loginButtonToHide.setVisibility(GONE);
         loginButton.setVisibility(View.VISIBLE);
         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT
                 , LinearLayout.LayoutParams.WRAP_CONTENT);

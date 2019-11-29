@@ -210,15 +210,6 @@
                 android:visibility="invisible"
                 facebook:com_facebook_login_text="@string/connect_to_fb"
                 facebook:com_facebook_logout_text="@string/fb_connected" />
-
-            <com.facebook.login.widget.LoginButton xmlns:facebook="http://schemas.android.com/apk/res-auto"
-                android:id="@+id/login_button_edit"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/default_margin"
-                android:visibility="gone"
-                facebook:com_facebook_login_text="@string/connect_to_fb"
-                facebook:com_facebook_logout_text="@string/logout" />
         </LinearLayout>
     </ScrollView>
 
