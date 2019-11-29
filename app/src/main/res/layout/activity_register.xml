@@ -55,8 +55,8 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_alignParentStart="true"
         android:layout_below="@+id/ivRegister"
+        android:layout_alignParentStart="true"
         android:fillViewport="true">
 
         <LinearLayout
@@ -81,8 +81,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_marginEnd="@dimen/default_margin"
                 android:layout_marginStart="@dimen/default_margin"
+                android:layout_marginEnd="@dimen/default_margin"
                 android:padding="@dimen/default_margin"
                 app:cardCornerRadius="@dimen/card_view_tile_radius"
                 app:cardUseCompatPadding="true">
@@ -148,9 +148,9 @@
                         android:id="@+id/rbGroup"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="@dimen/default_margin"
-                        android:layout_marginEnd="@dimen/default_margin"
                         android:layout_marginStart="@dimen/default_margin"
+                        android:layout_marginEnd="@dimen/default_margin"
+                        android:layout_marginBottom="@dimen/default_margin"
                         android:orientation="horizontal">
 
                         <TextView
@@ -207,9 +207,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/default_margin"
-                android:visibility="gone"
-                facebook:com_facebook_login_text="@string/facebook_login"
-                facebook:com_facebook_logout_text="@string/logout" />
+                android:visibility="visible"
+                facebook:com_facebook_login_text="@string/connect_to_fb"
+                facebook:com_facebook_logout_text="@string/fb_connected" />
 
             <com.facebook.login.widget.LoginButton xmlns:facebook="http://schemas.android.com/apk/res-auto"
                 android:id="@+id/login_button_edit"
