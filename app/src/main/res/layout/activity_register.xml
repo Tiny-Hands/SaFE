@@ -207,7 +207,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/default_margin"
-                android:visibility="visible"
+                android:visibility="invisible"
                 facebook:com_facebook_login_text="@string/connect_to_fb"
                 facebook:com_facebook_logout_text="@string/fb_connected" />
 

@@ -1051,6 +1051,8 @@ public class ActivityRegister extends AppCompatActivity {
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
+                    Toast.makeText(ActivityRegister.this, getString(R.string.cannot_login), Toast.LENGTH_SHORT).show();
+
                     Log.d("mylog", "Error in check FB connection: " + e.toString());
                 }
             }

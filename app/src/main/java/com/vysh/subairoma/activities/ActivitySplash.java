@@ -240,8 +240,10 @@ public class ActivitySplash extends AppCompatActivity {
                 Log.d("mylog", "Getting contacts");
                 getContacts(1);
                 getContacts(2);
-            } else
+            } else {
                 incrementCount();
+                incrementCount();
+            }
             if (!sp.getBoolean(SharedPrefKeys.savedFeedbackQuestions, false)) {
                 Log.d("mylog", "Getting feedback questions");
                 getFeedbackQuestions();
