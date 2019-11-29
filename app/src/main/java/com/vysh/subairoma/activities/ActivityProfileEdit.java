@@ -114,7 +114,7 @@ public class ActivityProfileEdit extends AppCompatActivity implements View.OnCli
     RelativeLayout rootLayout;
     @BindView(R.id.btnAlreadyRegistered)
     Button btnAlreadyRegistered;
-    @BindView(R.id.login_button_edit)
+    @BindView(R.id.login_button)
     LoginButton loginButton;
     @BindView(R.id.tvOR)
     TextView tvOr;

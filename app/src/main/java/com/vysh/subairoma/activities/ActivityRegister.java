@@ -1045,8 +1045,6 @@ public class ActivityRegister extends AppCompatActivity {
                     } else {
                         loggedInFromPhone = false;
                         getLoggedInUserDetails(jsonRes);
-                        //Gets Migrant Details and Saves in DB regardless of User Type
-                        //getMigrantDetails();
                         getMigrants();
                     }
                 } catch (JSONException e) {
