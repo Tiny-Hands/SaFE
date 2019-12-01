@@ -50,7 +50,7 @@ public class ActivityOTPVerification extends AppCompatActivity implements View.O
     long lastTime;
 
     final String apiOTP = "/twiliosender.php";
-    final String apiSaveUser = "/saveuser.php";
+    final String apiSaveUser = "/savesafeuser.php";
 
     @BindView(R.id.btnVerify)
     Button btnVerify;

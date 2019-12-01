@@ -116,6 +116,12 @@ public class ActivityRegister extends AppCompatActivity {
     EditText etAge;
     @BindView(R.id.etNumber)
     EditText etNumber;
+    @BindView(R.id.etPwd)
+    EditText etPwd;
+    @BindView(R.id.etPwdRe)
+    EditText etPwdRe;
+    @BindView(R.id.etEmail)
+    EditText etEmail;
     /*@BindView(R.id.tvHint)
     TextView tvHint;*/
     @BindView(R.id.rbMale)
@@ -484,7 +490,6 @@ public class ActivityRegister extends AppCompatActivity {
             public void onClick(View v) {
                 if (validateData()) {
                     Log.d("mylog", "Saving User");
-
                     FlurryAgent.logEvent("user_registration_initiated");
                     saveUser();
                 }
@@ -564,15 +569,7 @@ public class ActivityRegister extends AppCompatActivity {
     }
 
     private void saveUser() {
-        if (!userRegistered) {
-            //Shows user type selection dialog with next button
-            //showDisclaimerDialog();
-            new DialogUsertypeChooser().show(getFragmentManager(), "utypechooser");
-        } else {
-            if (Integer.parseInt(etAge.getText().toString()) < 18) {
-                showErrorDialog();
-            } else showDisclaimerAndContinue();
-        }
+        showDisclaimerAndContinue();
     }
 
     private void showErrorDialog() {
@@ -603,50 +600,12 @@ public class ActivityRegister extends AppCompatActivity {
         builder.setPositiveButton(getResources().getString(R.string.disclaimer_button), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                Log.d("mylog", "User type: " + userType + " User Registered: " + userRegistered.toString());
-                if (userType.equalsIgnoreCase(SharedPrefKeys.helperUser)) {
-                    //If it's a helper user registering a migrant, then no need to redirect to OTPActivity,
-                    //But Register and then redirect to migrant list.
-                    if (userRegistered) {
-                        String api = ApplicationClass.getInstance().getAPIROOT() + apiURLMigrant;
-                        registerMigrant(api);
-
-                        /*
-                        if (InternetConnectionChecker.isNetworkConnected(ActivityRegister.this)) {
-                            String api = ApplicationClass.getInstance().getAPIROOT() + apiURLMigrant;
-                            registerMigrant(api);
-                        } else {
-                            //Save in Temp Database to saveLater
-                            Calendar cal = Calendar.getInstance();
-                            String time = cal.getTimeInMillis() + "";
-
-                            int mid = SQLDatabaseHelper.getInstance(ActivityRegister.this).insertTempMigrants(etName.getText().toString(),
-                                    Integer.parseInt(etAge.getText().toString()), etNumber.getText().toString(), sex, ApplicationClass.getInstance().getSafeUserId(), encodedImage);
-                            //SQLDatabaseHelper.getInstance(ActivityRegister.this).insertTempResponseTableData(sex, SharedPrefKeys.questionGender, -1, mid, "mg_sex", time);
-
-                            //Saving in corresponding real local DB
-                            int fabMigId = Integer.parseInt("-1" + mid);
-                            SQLDatabaseHelper.getInstance(ActivityRegister.this).insertMigrants(fabMigId, etName.getText().toString(),
-                                    Integer.parseInt(etAge.getText().toString()), etNumber.getText().toString(), sex, ApplicationClass.getInstance().getSafeUserId(), encodedImage, 0);
-
-                            SQLDatabaseHelper.getInstance(ActivityRegister.this).insertResponseTableData(sex, SharedPrefKeys.questionGender, -1, fabMigId, "mg_sex", time);
-                            Intent intent = new Intent(ActivityRegister.this, ActivityMigrantList.class);
-                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                            startActivity(intent);
-                        }*/
-                        //Start Migrant List Activity
-                    } else {
-                        registerUser(apiSaveUser, userType);
-                        //startOTPActivity(userType, 0);
-                    }
+                if (userRegistered) {
+                    String api = ApplicationClass.getInstance().getAPIROOT() + apiURLMigrant;
+                    registerMigrant(api);
                 } else {
-                    if (userRegistered) {
-                        String api = ApplicationClass.getInstance().getAPIROOT() + apiURLMigrant;
-                        registerMigrant(api);
-                    } else {
-                        registerUser(apiSaveUser, userType);
-                        //startOTPActivity(userType, 0);
-                    }
+                    registerUser(apiSaveUser);
+                    //startOTPActivity(userType, 0);
                 }
             }
         });
@@ -837,7 +796,42 @@ public class ActivityRegister extends AppCompatActivity {
         }
     }
 
-    private void registerUser(String api, final String uType) {
+    private void parseSafeUser(String response) {
+        try {
+            JSONObject jsonResponse = new JSONObject(response);
+            Boolean error = jsonResponse.getBoolean("error");
+            if (!error) {
+                SharedPreferences sharedPreferences = getSharedPreferences(SharedPrefKeys.sharedPrefName, MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                int user_id = jsonResponse.getInt("user_id");
+                Log.d("mylog", "Saving user ID: " + user_id);
+
+                int oldUid = ApplicationClass.getInstance().getSafeUserId();
+                if (oldUid == -111) {
+                    SQLDatabaseHelper.getInstance(ActivityRegister.this).makeUserIdChanges(-111, user_id);
+                }
+
+                ApplicationClass.getInstance().setSafeUserId(user_id);
+                //Parse Other responses and save in SharedPref
+                String token = jsonResponse.getString("token");
+                editor.putString(SharedPrefKeys.token, token);
+                editor.putString(SharedPrefKeys.userName, etName.getText().toString());
+                editor.putInt(SharedPrefKeys.userId, user_id);
+                editor.putString(SharedPrefKeys.userPhone, etNumber.getText().toString());
+                editor.putString(SharedPrefKeys.userEmail, etEmail.getText().toString());
+                editor.commit();
+
+                startMigrantistActivity();
+            } else {
+                String message = jsonResponse.getString("message");
+                Toast.makeText(ActivityRegister.this, message, Toast.LENGTH_SHORT).show();
+            }
+        } catch (JSONException e) {
+            Log.d("mylog", "Error in parsing: " + e.getMessage());
+        }
+    }
+
+    private void registerUser(String api) {
         Log.d("mylog", "API called: " + api);
         final ProgressDialog progressDialog = new ProgressDialog(ActivityRegister.this);
         progressDialog.setMessage(getResources().getString(R.string.registering));
@@ -848,7 +842,7 @@ public class ActivityRegister extends AppCompatActivity {
             public void onResponse(String response) {
                 progressDialog.dismiss();
                 Log.d("mylog", "response : " + response);
-                parseResponseNewReg(response, uType);
+                parseSafeUser(response);
             }
         }, new Response.ErrorListener() {
             @Override
@@ -868,10 +862,9 @@ public class ActivityRegister extends AppCompatActivity {
 
                 params.put("full_name", etName.getText().toString());
                 params.put("phone_number", etNumber.getText().toString());
-                params.put("age", etAge.getText().toString());
                 params.put("user_img", encodedImage);
-                params.put("gender", sex);
-                params.put("user_type", uType);
+                params.put("email", etEmail.getText().toString());
+                params.put("password", etPwd.getText().toString());
                 //params.put("user_id", ApplicationClass.getInstance().getSafeUserId() + "");
                 return params;
             }
@@ -948,16 +941,16 @@ public class ActivityRegister extends AppCompatActivity {
             etName.setError("Name must be more than 5 characters long");
             return false;
         }
-        if (etAge.getText().toString().isEmpty() || etAge.getText().toString().length() != 2) {
-            etAge.setError("Age must be between 12 - 90");
-            return false;
-        }
-        if (Integer.parseInt(etAge.getText().toString()) < 12 || Integer.parseInt(etAge.getText().toString()) > 90) {
-            etAge.setError("Age must be between 12 - 90");
-            return false;
-        }
         if (etNumber.getText().toString().isEmpty() || etNumber.getText().toString().length() < 10) {
             etNumber.setError("Please enter a valid mobile number");
+            return false;
+        }
+        if (etPwd.getText().toString().isEmpty() || etPwd.getText().length() < 5) {
+            etPwd.setError("Password must be atleast 5 characters long");
+            return false;
+        }
+        if (!etPwd.getText().toString().equals(etPwdRe.getText().toString())) {
+            etPwdRe.setError("Password do not match");
             return false;
         }
         return true;

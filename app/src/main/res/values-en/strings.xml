@@ -179,4 +179,6 @@
     <string name="travel_details">After you successfully completed “Preparation” section and if you are safe now you can move on to “Travel” section. We need you to give us your precious feedback “how did this app helped you?” Please select that is the right one. There are two sections, “Preparation and In Foreign Country” and complete them with cautions.</string>
     <string name="preparation_details">Preparation, is very important and should be completed as accurately as possible. There are eight tiles in the Preparation section. If answered with honesty, they will help guide you to safe and profitable employment abroad. If you answer questions which result in two or more RED FLAGS, don\'t ignore them! If you do, you might find yourself in an exploitative situation or even being trafficked. If you don’t understand any of these steps, please click on "Need Help" in the menu. You\'ll then be able to call us, text us, or send us a Facebook message. Contact details can also be found on the main page.</string>
     <string name="cannot_login">Login Failed</string>
+    <string name="password">Password</string>
+    <string name="repassword">Re-enter Password</string>
 </resources>

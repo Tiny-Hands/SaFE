@@ -28,6 +28,7 @@ public final class SharedPrefKeys {
     public static String lang = "lang";
     public static String token = "token";
     public static String initialuser = "isinitialuser";
+    public static String userEmail = "useremail";
 
 
     //For Shared Pref Values
