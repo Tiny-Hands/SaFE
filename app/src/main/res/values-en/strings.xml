@@ -181,4 +181,5 @@
     <string name="cannot_login">Login Failed</string>
     <string name="password">Password</string>
     <string name="repassword">Re-enter Password</string>
+    <string name="invalid_details">Invalid Details</string>
 </resources>

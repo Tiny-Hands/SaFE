@@ -85,6 +85,7 @@ public class ActivityRegister extends AppCompatActivity {
     final String apiGetResponses = "/getresponses.php";
     final String apiAlreadyRegistered = "/checkphonenumber.php";
     private final String APIGETMIG = "/getmigrants.php";
+    public String entered_pwd = "";
     private int gotDetailCount = 0, migrantCount = 0;
 
     private final int REQUEST_SELECT_FILE = 1;
@@ -268,7 +269,7 @@ public class ActivityRegister extends AppCompatActivity {
                 matrix, true);
     }
 
-    public void checkUserRegistration(String number) {
+    public void checkUserRegistration(String number, String pwd) {
         final String pNumber = number;
         String api = ApplicationClass.getInstance().getAPIROOT() + apiAlreadyRegistered;
         final ProgressDialog progressDialog = new ProgressDialog(ActivityRegister.this);
@@ -315,6 +316,7 @@ public class ActivityRegister extends AppCompatActivity {
             protected Map<String, String> getParams() throws AuthFailureError {
                 HashMap<String, String> params = new HashMap<>();
                 params.put("number", pNumber);
+                params.put("password", pwd);
                 return params;
             }
         };
@@ -325,12 +327,10 @@ public class ActivityRegister extends AppCompatActivity {
 
     private void getLoggedInUserDetails(JSONObject jsonRes) {
         try {
-            userType = jsonRes.getString("user_type");
             int id = jsonRes.getInt("user_id");
             String userName = jsonRes.getString("user_name");
             String userPhone = jsonRes.getString("user_phone");
-            String userSex = jsonRes.getString("user_sex");
-            String age = jsonRes.getString("user_age");
+            String userEmail = jsonRes.getString("user_email");
             String userImg = jsonRes.getString("user_img");
             String token = jsonRes.getString("token");
 
@@ -339,42 +339,19 @@ public class ActivityRegister extends AppCompatActivity {
             //Not saving here as OTP is still not entered, send to OTP Activity and save there
             //editor.putInt(SharedPrefKeys.userId, id);
             editor.putInt(SharedPrefKeys.userId, id);
-            ApplicationClass.getInstance().setUserType(userType);
             ApplicationClass.getInstance().setSafeUserId(id);
-            if (userType.equalsIgnoreCase(SharedPrefKeys.helperUser)) {
-                ApplicationClass.getInstance().setSafeUserId(id);
+            ApplicationClass.getInstance().setSafeUserId(id);
 
-                //Saving Helper Details and Login Status
-                Log.d("mylog", "Saving: " + userName + userPhone + userSex + age);
-                editor.putString(SharedPrefKeys.userName, userName);
-                editor.putString(SharedPrefKeys.userPhone, userPhone);
-                editor.putString(SharedPrefKeys.userSex, userSex);
-                editor.putString(SharedPrefKeys.userAge, age);
-                editor.putString(SharedPrefKeys.userImg, userImg);
-                editor.putString(SharedPrefKeys.userType, "helper");
-                Log.d("mylog", "Saving Token: " + token);
-                editor.putString(SharedPrefKeys.token, token);
-                editor.commit();
-            } else if (userType.equalsIgnoreCase(SharedPrefKeys.migrantUser)) {
-                ApplicationClass.getInstance().setMigrantId(id);
+            //Saving Helper Details and Login Status
+            Log.d("mylog", "Saving: " + userName + userPhone);
+            editor.putString(SharedPrefKeys.userName, userName);
+            editor.putString(SharedPrefKeys.userPhone, userPhone);
+            editor.putString(SharedPrefKeys.userEmail, userEmail);
+            editor.putString(SharedPrefKeys.userImg, userImg);
+            Log.d("mylog", "Saving Token: " + token);
+            editor.putString(SharedPrefKeys.token, token);
+            editor.commit();
 
-                //If migrant is already saved and has added a new migrant then don't save again
-                if (sharedPreferences.getString(SharedPrefKeys.userName, "").length() >= 1) {
-                    return;
-                }
-
-                ApplicationClass.getInstance().setMigrantId(id);
-                //Saving Migrant ID and Login Status
-                editor.putString(SharedPrefKeys.userType, "migrant");
-                editor.putString(SharedPrefKeys.userName, userName);
-                editor.putString(SharedPrefKeys.userPhone, userPhone);
-                editor.putString(SharedPrefKeys.userSex, userSex);
-                editor.putString(SharedPrefKeys.userAge, age);
-                editor.putString(SharedPrefKeys.userImg, userImg);
-                Log.d("mylog", "Saving Token: " + token);
-                editor.putString(SharedPrefKeys.token, token);
-                editor.commit();
-            }
         } catch (JSONException e) {
             Log.d("mylog", "Parsing user details error: " + e.toString());
         }

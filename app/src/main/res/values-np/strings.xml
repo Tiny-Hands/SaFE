@@ -181,5 +181,6 @@
     <string name="cannot_login">लगइन असफल भयो</string>
     <string name="password">पासवर्ड</string>
     <string name="repassword">पुनः पासवर्ड राख्नुहोस्</string>
+    <string name="invalid_details">गलत विवरण</string>
 
 </resources>

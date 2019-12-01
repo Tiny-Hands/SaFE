@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 
@@ -32,7 +33,7 @@ public class DialogLoginOptions extends DialogFragment {
     Context context;
     Button btnPhoneLogin;
     LoginButton loginButton;
-    EditText etPhone;
+    EditText etPhone, etPassword;
 
     ActivityRegister activityRegister;
     ProfileTracker mProfileTracker;
@@ -51,6 +52,7 @@ public class DialogLoginOptions extends DialogFragment {
         btnPhoneLogin = view.findViewById(R.id.btnPhoneLogin);
         loginButton = view.findViewById(R.id.login_button);
         etPhone = view.findViewById(R.id.etInput);
+        etPassword = view.findViewById(R.id.etPwd);
         setUpListeners();
         return view;
     }
@@ -100,11 +102,13 @@ public class DialogLoginOptions extends DialogFragment {
             @Override
             public void onClick(View v) {
                 String number = etPhone.getText().toString();
-                if (!number.isEmpty() && number.length() == 10) {
+                String pwd = etPassword.getText().toString();
+                if (!number.isEmpty() && number.length() == 10 && !pwd.isEmpty() && pwd.length() > 5) {
                     ((ActivityRegister) getActivity()).entered_phone = number;
-                    ((ActivityRegister) getActivity()).checkUserRegistration(number);
+                    ((ActivityRegister) getActivity()).entered_pwd = pwd;
+                    ((ActivityRegister) getActivity()).checkUserRegistration(number, pwd);
                 } else {
-                    etPhone.setError("Please enter a valid number");
+                    Toast.makeText(context, getString(R.string.invalid_details), Toast.LENGTH_SHORT).show();
                 }
             }
         });

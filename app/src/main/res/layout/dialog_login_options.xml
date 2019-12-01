@@ -40,6 +40,21 @@
         android:maxLength="15"
         android:padding="@dimen/small_medium_margin" />
 
+    <EditText
+        android:id="@+id/etPwd"
+        android:layout_width="@dimen/dialog_edittext_width"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/medium_margin"
+        android:layout_marginTop="@dimen/medium_margin"
+        android:layout_marginRight="@dimen/medium_margin"
+        android:background="@drawable/bg_edittext"
+        android:gravity="center"
+        android:hint="@string/password"
+        android:imeOptions="actionDone"
+        android:inputType="number"
+        android:maxLength="15"
+        android:padding="@dimen/small_medium_margin" />
+
     <Button
         android:id="@+id/btnPhoneLogin"
         android:layout_width="@dimen/dialog_edittext_width"
