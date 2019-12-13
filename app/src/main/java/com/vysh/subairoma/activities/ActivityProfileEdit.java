@@ -127,7 +127,7 @@ public class ActivityProfileEdit extends AppCompatActivity implements View.OnCli
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_register);
+        setContentView(R.layout.activity_profile_edit);
         ButterKnife.bind(this);
         userType = getIntent().getStringExtra("userType");
 
