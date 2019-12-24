@@ -43,16 +43,7 @@ public class DialogUsertypeChooser extends DialogFragment {
         btnChosen.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (rbHelper.isChecked()) {
-                    ApplicationClass.getInstance().setUserType(SharedPrefKeys.helperUser);
-                    if (activityRegister == null)
-                        activityRegister = (ActivityRegister) getActivity();
-                    activityRegister.userType = SharedPrefKeys.helperUser;
-                    activityRegister.showDisclaimerAndContinue();
-                } else if (rbMigrant.isChecked()) {
-                    ApplicationClass.getInstance().setUserType(SharedPrefKeys.migrantUser);
-                    showHelperDialog(SharedPrefKeys.migrantUser);
-                }
+
             }
         });
         return view;
@@ -80,8 +71,6 @@ public class DialogUsertypeChooser extends DialogFragment {
                     Toast.makeText(activityRegister, "Helper Added", Toast.LENGTH_SHORT).show();
                     if (activityRegister == null)
                         activityRegister = (ActivityRegister) getActivity();
-                    activityRegister.userType = uType;
-                    activityRegister.showDisclaimerAndContinue();
                 } else {
                     etName.setError("Please enter a valid name");
                 }
@@ -90,10 +79,6 @@ public class DialogUsertypeChooser extends DialogFragment {
         dialogBuilder.setNegativeButton(getResources().getString(R.string.not_being_helped), new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
                 dialog.dismiss();
-                if (activityRegister == null)
-                    activityRegister = (ActivityRegister) getActivity();
-                activityRegister.userType = uType;
-                activityRegister.showDisclaimerAndContinue();
             }
         });
         AlertDialog b = dialogBuilder.create();

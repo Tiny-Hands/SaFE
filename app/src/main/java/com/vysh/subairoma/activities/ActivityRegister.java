@@ -112,6 +112,7 @@ public class ActivityRegister extends AppCompatActivity {
         //Setting View
         setContentView(R.layout.activity_social_login);
 
+        ButterKnife.bind(this);
         setUpComponentListeners();
         callbackManager = CallbackManager.Factory.create();
 
@@ -130,6 +131,7 @@ public class ActivityRegister extends AppCompatActivity {
                                 @Override
                                 public void onCompleted(JSONObject object, GraphResponse response) {
                                     //Do Safe Login Here and Get Details if User Already Exists, Check Using Email
+                                    Log.d("mylog", "Res: " + object.toString());
                                 }
                             });
                             Bundle parameters = new Bundle();
@@ -146,6 +148,7 @@ public class ActivityRegister extends AppCompatActivity {
                         @Override
                         public void onCompleted(JSONObject object, GraphResponse response) {
                             //Do Safe Login Here and Get Details if User Already Exists, Check Using Email
+                            Log.d("mylog", "Res: " + object.toString());
                         }
                     });
                     Bundle parameters = new Bundle();

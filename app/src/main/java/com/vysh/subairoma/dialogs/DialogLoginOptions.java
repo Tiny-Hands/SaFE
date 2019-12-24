@@ -95,18 +95,5 @@ public class DialogLoginOptions extends DialogFragment {
                 Log.d("mylog", "Error: " + exception.toString());
             }
         });
-
-        btnPhoneLogin.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String number = etPhone.getText().toString();
-                if (!number.isEmpty() && number.length() == 10) {
-                    ((ActivityRegister) getActivity()).entered_phone = number;
-                    ((ActivityRegister) getActivity()).checkUserRegistration(number);
-                } else {
-                    etPhone.setError("Please enter a valid number");
-                }
-            }
-        });
     }
 }
