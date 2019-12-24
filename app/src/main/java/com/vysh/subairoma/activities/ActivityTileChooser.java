@@ -183,8 +183,6 @@ public class ActivityTileChooser extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-        hideIfIndia();
-        setUpNavigationButtons();
     }
 
     @Override
@@ -216,10 +214,13 @@ public class ActivityTileChooser extends AppCompatActivity {
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
+        setIntent(intent);
         countryName = intent.getStringExtra("countryName");
         countryStatus = intent.getStringExtra("countryStatus");
         countryId = intent.getStringExtra("countryId");
         countryBlacklist = intent.getStringExtra("countryBlacklist");
+
+        tvCountry.setText(countryName);
         Log.d("mylog", "In new Intent");
     }
 
