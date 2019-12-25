@@ -1,38 +1,17 @@
 package com.vysh.subairoma.activities;
 
-import android.Manifest;
-import android.app.Application;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
-import android.content.res.Resources;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Matrix;
-import android.media.ExifInterface;
-import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
-import android.provider.MediaStore;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.FileProvider;
 
-import android.util.Base64;
 import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.RadioButton;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
@@ -260,7 +239,14 @@ public class ActivityRegister extends AppCompatActivity {
                     if (jsonObject.getString("error").equalsIgnoreCase("true")) {
                         Toast.makeText(ActivityRegister.this, jsonObject.getString("message"), Toast.LENGTH_SHORT).show();
                     } else {
-                        ApplicationClass.getInstance().setSafeUserId(jsonObject.getInt("user_id"));
+                        int userId = jsonObject.getInt("user_id");
+                        String token = jsonObject.getString("token");
+                        ApplicationClass.getInstance().setSafeUserId(userId);
+                        SharedPreferences sharedPreferences = getSharedPreferences(SharedPrefKeys.sharedPrefName, MODE_PRIVATE);
+                        SharedPreferences.Editor editor = sharedPreferences.edit();
+                        editor.putInt(SharedPrefKeys.userId, userId);
+                        editor.putString(SharedPrefKeys.token, token);
+                        editor.commit();
                         startMigrantistActivity();
                     }
 

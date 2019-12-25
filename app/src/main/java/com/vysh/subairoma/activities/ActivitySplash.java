@@ -15,7 +15,6 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
@@ -30,6 +29,7 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.crashlytics.android.Crashlytics;
 import com.flurry.android.FlurryAgent;
+import com.vysh.subairoma.ActivityRegisterMigrant;
 import com.vysh.subairoma.ApplicationClass;
 import com.vysh.subairoma.R;
 import com.vysh.subairoma.SQLHelpers.SQLDatabaseHelper;
@@ -119,7 +119,7 @@ public class ActivitySplash extends AppCompatActivity {
             FlurryAgent.logEvent("locale_nepal_selection");
         }
         if (sp.getInt(SharedPrefKeys.savedTableCount, 0) == apiCount) {
-            startRegisterActivity();
+            startNextActivity();
             return;
         }
         setContentView(R.layout.activity_splash);
@@ -178,16 +178,22 @@ public class ActivitySplash extends AppCompatActivity {
                 } catch (Exception ex) {
                     Log.d("mylog", "Sleeping exception: " + ex.toString());
                 } finally {
-                    startRegisterActivity();
+                    startNextActivity();
                 }
             }
         });
     }
 
-    private void startRegisterActivity() {
-        Intent intent = new Intent(ActivitySplash.this, ActivityRegister.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-        startActivity(intent);
+    private void startNextActivity() {
+        if (sp.getInt(SharedPrefKeys.userId, -10) > 0) {
+            Intent intent = new Intent(ActivitySplash.this, ActivityMigrantList.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
+        } else {
+            Intent intent = new Intent(ActivitySplash.this, ActivityRegister.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
+        }
     }
 
     private void setLocale(String lang) {
@@ -260,7 +266,7 @@ public class ActivitySplash extends AppCompatActivity {
             //Start activity directly or show splash
             //sleepTime = 2000;
             //sleepThread.start();
-            startRegisterActivity();
+            startNextActivity();
         }
     }
 
