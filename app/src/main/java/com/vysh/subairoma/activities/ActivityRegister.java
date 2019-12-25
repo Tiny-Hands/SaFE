@@ -53,15 +53,10 @@ import com.facebook.Profile;
 import com.facebook.ProfileTracker;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
-import com.flurry.android.FlurryAgent;
 import com.vysh.subairoma.ApplicationClass;
 import com.vysh.subairoma.R;
 import com.vysh.subairoma.SQLHelpers.SQLDatabaseHelper;
 import com.vysh.subairoma.SharedPrefKeys;
-import com.vysh.subairoma.dialogs.DialogLoginOptions;
-import com.vysh.subairoma.dialogs.DialogUsertypeChooser;
-import com.vysh.subairoma.imageHelpers.ImageResizer;
-import com.vysh.subairoma.imageHelpers.ImageSaveHelper;
 import com.vysh.subairoma.models.MigrantModel;
 import com.vysh.subairoma.utils.InternetConnectionChecker;
 
@@ -69,11 +64,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -87,7 +78,7 @@ import butterknife.ButterKnife;
 public class ActivityRegister extends AppCompatActivity {
     final String checkFbId = "/checkfbuid.php";
     final String apiURLMigrant = "/savemigrant.php";
-    final String apiSaveUser = "/saveuser.php";
+    final String apiSaveUser = "/savesafeuser.php";
     //For Helper
     final String apiGetAllResponses = "/getallresponses.php";
     //For Migrant
@@ -132,6 +123,11 @@ public class ActivityRegister extends AppCompatActivity {
                                 public void onCompleted(JSONObject object, GraphResponse response) {
                                     //Do Safe Login Here and Get Details if User Already Exists, Check Using Email
                                     Log.d("mylog", "Res: " + object.toString());
+                                    try {
+                                        saveSafeUser(object.getString("id"), object.getString("name"), object.getString("email"), "facebook");
+                                    } catch (JSONException e) {
+                                        Log.d("mylog", "Error parsing fb res: " + e.toString());
+                                    }
                                 }
                             });
                             Bundle parameters = new Bundle();
@@ -149,6 +145,12 @@ public class ActivityRegister extends AppCompatActivity {
                         public void onCompleted(JSONObject object, GraphResponse response) {
                             //Do Safe Login Here and Get Details if User Already Exists, Check Using Email
                             Log.d("mylog", "Res: " + object.toString());
+                            try {
+                                saveSafeUser(object.getString("id"), object.getString("name"), object.getString("email"), "facebook");
+                            } catch (JSONException e) {
+                                Log.d("mylog", "Error parsing fb res 1: " + e.toString());
+                            }
+
                         }
                     });
                     Bundle parameters = new Bundle();
@@ -236,6 +238,70 @@ public class ActivityRegister extends AppCompatActivity {
         } catch (JSONException e) {
             Log.d("mylog", "Parsing user details error: " + e.toString());
         }
+    }
+
+    private void saveSafeUser(String id, String name, String email, String socialnetwork) {
+        String api = ApplicationClass.getInstance().getAPIROOT() + apiSaveUser;
+        final ProgressDialog progressDialog = new ProgressDialog(ActivityRegister.this);
+        progressDialog.setMessage(getResources().getString(R.string.registering));
+        progressDialog.setCancelable(false);
+        try {
+            progressDialog.show();
+        } catch (Exception ex) {
+            Log.d("mylog", "Exception in progress list: " + ex.getMessage());
+        }
+        StringRequest getRequest = new StringRequest(Request.Method.POST, api, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                try {
+                    Log.d("mylog", "res: " + response);
+                    progressDialog.dismiss();
+                    JSONObject jsonObject = new JSONObject(response);
+                    if (jsonObject.getString("error").equalsIgnoreCase("true")) {
+                        Toast.makeText(ActivityRegister.this, jsonObject.getString("message"), Toast.LENGTH_SHORT).show();
+                    } else {
+                        ApplicationClass.getInstance().setSafeUserId(jsonObject.getInt("user_id"));
+                        startMigrantistActivity();
+                    }
+
+                } catch (Exception ex) {
+                    Log.d("mylog", "response exception: " + ex.toString());
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                try {
+                    progressDialog.dismiss();
+                } catch (Exception ex) {
+                    Log.d("mylog", "Exception in progress dis error: " + ex.getMessage());
+                }
+                try {
+                    String err = error.toString();
+                    Log.d("mylog", "error : " + err);
+                    if (!err.isEmpty() && err.contains("TimeoutError"))
+                        Toast.makeText(ActivityRegister.this, getResources().getString(R.string.server_noconnect), Toast.LENGTH_SHORT).show();
+                    else if (!err.isEmpty() && err.contains("NoConnection")) {
+                        Toast.makeText(ActivityRegister.this, getResources().getString(R.string.server_noconnect), Toast.LENGTH_SHORT).show();
+                    } else
+                        Toast.makeText(ActivityRegister.this, error.toString(), Toast.LENGTH_SHORT).show();
+                } catch (Exception ex) {
+                    Log.d("mylog", "Error exception: " + ex.toString());
+                }
+            }
+        }) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                HashMap<String, String> params = new HashMap<>();
+                params.put("id", id);
+                params.put("name", name);
+                params.put("email", email);
+                params.put("social_source", socialnetwork);
+                return params;
+            }
+        };
+        RequestQueue queue = Volley.newRequestQueue(ActivityRegister.this);
+        queue.add(getRequest);
     }
 
     private void getMigrants() {
