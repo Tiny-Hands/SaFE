@@ -19,6 +19,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.FileProvider;
+
 import android.util.Base64;
 import android.util.Log;
 import android.util.TypedValue;
@@ -121,35 +122,20 @@ public class ActivityProfileEdit extends AppCompatActivity implements View.OnCli
 
     CallbackManager callbackManager;
 
-    String userType = "";
-    ProfileTracker mProfileTracker;
-
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_profile_edit);
+        setContentView(R.layout.activity_migrant_add);
         ButterKnife.bind(this);
-        userType = getIntent().getStringExtra("userType");
-
         //tvHint.setText("Edit Details");
         btnAlreadyRegistered.setVisibility(GONE);
         btnNext.setText(R.string.save);
         btnNext.setOnClickListener(this);
-        if (userType.equalsIgnoreCase(SharedPrefKeys.migrantUser)) {
-            tvTitle.setText(getResources().getString(R.string.edit_migrant));
-            FlurryAgent.logEvent("migrant_edit_mode");
-            if (ApplicationClass.getInstance().getSafeUserId() != -1) {
-                loginButton.setVisibility(GONE);
-                tvOr.setVisibility(GONE);
-            } else
-                setUpFBLogin();
-            getData();
-        } else if (userType.equalsIgnoreCase(SharedPrefKeys.helperUser)) {
-            FlurryAgent.logEvent("helper_edit_mode");
-            tvTitle.setText(getResources().getString(R.string.edit_profile));
-            setUpUserData();
-            setUpFBLogin();
-        }
+        tvTitle.setText(getResources().getString(R.string.edit_migrant));
+        FlurryAgent.logEvent("migrant_edit_mode");
+        loginButton.setVisibility(GONE);
+        tvOr.setVisibility(GONE);
+        getData();
         ivRegister.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -246,116 +232,6 @@ public class ActivityProfileEdit extends AppCompatActivity implements View.OnCli
             rbMale.setChecked(true);
         else if (sex.equalsIgnoreCase("female"))
             rbFemale.setChecked(false);
-    }
-
-    private void setUpFBLogin() {
-        loginButton.setVisibility(View.VISIBLE);
-        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT
-                , LinearLayout.LayoutParams.WRAP_CONTENT);
-        float px = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 16, getResources().getDisplayMetrics());
-        layoutParams.setMargins(0, (int) px, 0, 0);
-        loginButton.setReadPermissions("email");
-        loginButton.setLayoutParams(layoutParams);
-        callbackManager = CallbackManager.Factory.create();
-        // Callback registration
-        loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
-            @Override
-            public void onSuccess(LoginResult loginResult) {
-                if (Profile.getCurrentProfile() == null) {
-                    mProfileTracker = new ProfileTracker() {
-                        @Override
-                        protected void onCurrentProfileChanged(Profile oldProfile, Profile currentProfile) {
-                            mProfileTracker.stopTracking();
-                            //get data here
-                            Log.d("mylog", "In profile Tracker, User ID: " + Profile.getCurrentProfile().getId());
-                            addFbIDToUID(Profile.getCurrentProfile().getId());
-                        }
-                    };
-                    // no need to call startTracking() on mProfileTracker
-                    // because it is called by its constructor, internally.
-                } else {
-                    Log.d("mylog", "Successful, User ID: " + Profile.getCurrentProfile().getId());
-                    addFbIDToUID(Profile.getCurrentProfile().getId());
-                }
-            }
-
-            @Override
-            public void onCancel() {
-                Log.d("mylog", "Canceled");
-            }
-
-            @Override
-            public void onError(FacebookException exception) {
-                // App code
-                Log.d("mylog", "Error: " + exception.toString());
-            }
-        });
-    }
-
-    private void addFbIDToUID(String id) {
-        final String fbId = id;
-        String api = ApplicationClass.getInstance().getAPIROOT() + apiaddFbId;
-        final ProgressDialog progressDialog = new ProgressDialog(ActivityProfileEdit.this);
-        progressDialog.setMessage(getResources().getString(R.string.adding_fb_acc));
-        progressDialog.show();
-        StringRequest checkRequest = new StringRequest(Request.Method.POST, api, new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-                progressDialog.dismiss();
-                Log.d("mylog", "response : " + response);
-                try {
-                    JSONObject jsonRes = new JSONObject(response);
-                    boolean error = jsonRes.getBoolean("error");
-                    String message = jsonRes.getString("message");
-                    if (error) {
-                        showSnackbar(message);
-                    } else
-                        showSnackbar(getResources().getString(R.string.fb_connected));
-
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                    Log.d("mylog", "Error in check FB connection: " + e.toString());
-                }
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                progressDialog.dismiss();
-                String err = error.toString();
-                Log.d("mylog", "error : " + err);
-                if (!err.isEmpty() && err.contains("TimeoutError"))
-                    showSnackbar(getResources().getString(R.string.server_noconnect));
-                else
-                    showSnackbar(error.toString());
-            }
-        }) {
-            @Override
-            protected Map<String, String> getParams() throws AuthFailureError {
-                HashMap<String, String> params = new HashMap<>();
-                params.put("fb_id", fbId);
-                if (userType.equalsIgnoreCase(SharedPrefKeys.migrantUser)) {
-                    params.put("user_type", userType + "");
-                    params.put("uid", ApplicationClass.getInstance().getMigrantId() + "");
-                } else {
-                    params.put("user_type", userType + "");
-                    params.put("uid", ApplicationClass.getInstance().getSafeUserId() + "");
-                }
-                for (Object obj : params.keySet()) {
-                    Log.d("mylog", "KEY: " + obj + " VALUE: " + params.get(obj));
-                }
-                return params;
-            }
-
-            @Override
-            public Map<String, String> getHeaders() throws AuthFailureError {
-                HashMap<String, String> headers = new HashMap<>();
-                headers.put("Authorization", getSharedPreferences(SharedPrefKeys.sharedPrefName, MODE_PRIVATE).getString(SharedPrefKeys.token, ""));
-                return headers;
-            }
-        };
-        RequestQueue queue = Volley.newRequestQueue(ActivityProfileEdit.this);
-        checkRequest.setShouldCache(false);
-        queue.add(checkRequest);
     }
 
     private void getData() {
@@ -466,40 +342,21 @@ public class ActivityProfileEdit extends AppCompatActivity implements View.OnCli
     private void updateUser() {
         String API = "";
         int id = -2;
-
-
         String sex = "";
         if (rbFemale.isChecked()) sex = "female";
         else if (rbMale.isChecked()) sex = "male";
 
-        if (userType.equalsIgnoreCase(SharedPrefKeys.helperUser)) {
-            API = ApplicationClass.getInstance().getAPIROOT() + apiUpdateUser;
-            id = ApplicationClass.getInstance().getSafeUserId();
-        } else if (userType.equalsIgnoreCase(SharedPrefKeys.migrantUser)) {
-            API = ApplicationClass.getInstance().getAPIROOT() + apiUpdateMigrant;
-            id = ApplicationClass.getInstance().getMigrantId();
-            SQLDatabaseHelper.getInstance(ActivityProfileEdit.this).insertResponseTableData(sex, SharedPrefKeys.questionGender, -1, id, "mg_sex", "");
-        }
+        API = ApplicationClass.getInstance().getAPIROOT() + apiUpdateMigrant;
+        id = ApplicationClass.getInstance().getMigrantId();
+        SQLDatabaseHelper.getInstance(ActivityProfileEdit.this).insertResponseTableData(sex, SharedPrefKeys.questionGender, -1, id, "mg_sex", "");
+
         String name = etName.getText().toString();
         String age = etAge.getText().toString();
         String number = etNumber.getText().toString();
         if (InternetConnectionChecker.isNetworkConnected(ActivityProfileEdit.this))
             sendToServer(API, id, name, age, number, sex);
         else {
-            if (userType.equalsIgnoreCase(SharedPrefKeys.helperUser)) {
-                //Save the new user info in SharedPrefs
-                SharedPreferences sharedPreferences = getSharedPreferences(SharedPrefKeys.sharedPrefName, MODE_PRIVATE);
-                SharedPreferences.Editor editor = sharedPreferences.edit();
-                editor.putString(SharedPrefKeys.userName, name);
-                editor.putString(SharedPrefKeys.userPhone, number);
-                editor.putString(SharedPrefKeys.userSex, sex);
-                editor.putString(SharedPrefKeys.userAge, age);
-                editor.putString(SharedPrefKeys.userImg, encodedImage);
-                editor.putString(SharedPrefKeys.userType, "helper");
-                editor.commit();
-            } else {
-                showSnackbar(getString(R.string.server_noconnect));
-            }
+            showSnackbar(getString(R.string.server_noconnect));
         }
     }
 
@@ -519,22 +376,9 @@ public class ActivityProfileEdit extends AppCompatActivity implements View.OnCli
                     JSONObject jsonObject = new JSONObject(response);
                     Boolean error = jsonObject.getBoolean("error");
                     if (!error) {
-                        if (userType.equalsIgnoreCase(SharedPrefKeys.helperUser)) {
-                            //Save the new user info in SharedPrefs
-                            SharedPreferences sharedPreferences = getSharedPreferences(SharedPrefKeys.sharedPrefName, MODE_PRIVATE);
-                            SharedPreferences.Editor editor = sharedPreferences.edit();
-                            editor.putString(SharedPrefKeys.userName, name);
-                            editor.putString(SharedPrefKeys.userPhone, number);
-                            editor.putString(SharedPrefKeys.userSex, sex);
-                            editor.putString(SharedPrefKeys.userAge, age);
-                            editor.putString(SharedPrefKeys.userImg, encodedImage);
-                            editor.putString(SharedPrefKeys.userType, "helper");
-                            editor.commit();
-                        } else {
-                            SQLDatabaseHelper.getInstance(ActivityProfileEdit.this).
-                                    insertMigrants(id, name, Integer.parseInt(age), number, sex, ApplicationClass.getInstance().getSafeUserId(),
-                                            encodedImage, -1);
-                        }
+                        SQLDatabaseHelper.getInstance(ActivityProfileEdit.this).
+                                insertMigrants(id, name, Integer.parseInt(age), number, sex, ApplicationClass.getInstance().getSafeUserId(),
+                                        encodedImage, -1);
                         Intent intent = new Intent(ActivityProfileEdit.this, ActivityMigrantList.class);
                         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                         startActivity(intent);
@@ -565,12 +409,9 @@ public class ActivityProfileEdit extends AppCompatActivity implements View.OnCli
                 params.put("age", age);
                 params.put("gender", sex);
                 params.put("user_img", encodedImage);
-                if (userType.equalsIgnoreCase(SharedPrefKeys.helperUser)) {
-                    params.put("user_id", id + "");
-                } else if (userType.equalsIgnoreCase(SharedPrefKeys.migrantUser)) {
-                    params.put("migrant_id", id + "");
-                    params.put("user_id", ApplicationClass.getInstance().getSafeUserId() + "");
-                }
+                params.put("migrant_id", id + "");
+                params.put("user_id", ApplicationClass.getInstance().getSafeUserId() + "");
+
                 for (Object obj : params.keySet()) {
                     Log.d("mylog", "Key: " + obj + " Val: " + params.get(obj));
                 }

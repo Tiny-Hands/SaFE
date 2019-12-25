@@ -42,6 +42,7 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.flurry.android.FlurryAgent;
 import com.google.android.material.navigation.NavigationView;
+import com.vysh.subairoma.ActivityRegisterMigrant;
 import com.vysh.subairoma.ApplicationClass;
 import com.vysh.subairoma.R;
 import com.vysh.subairoma.SQLHelpers.SQLDatabaseHelper;
@@ -122,8 +123,7 @@ public class ActivityMigrantList extends AppCompatActivity implements RecyclerIt
         btnAddMigrant.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(ActivityMigrantList.this, ActivityRegister.class);
-                intent.putExtra("migrantmode", true);
+                Intent intent = new Intent(ActivityMigrantList.this, ActivityRegisterMigrant.class);
                 startActivity(intent);
             }
         });
@@ -431,54 +431,8 @@ public class ActivityMigrantList extends AppCompatActivity implements RecyclerIt
     private void getSavedMigrants() {
         migrantModels = getMigrantsToDisplay(dbHelper.getMigrants());
         migrantListAdapter = new MigrantListAdapter();
-        /*if (userType == 1) {
-            Log.d("mylog", "Usertype: " + userType);
-            setUpRecyclerView(migrantModels);
-        } else {*/
-        Log.d("mylog", "User ID: " + ApplicationClass.getInstance().getSafeUserId() + " Migrant ID: " + ApplicationClass.getInstance().getMigrantId()
-                + " UserType: " + userType);
-        if (userType == null) {
-            Toast.makeText(ActivityMigrantList.this, getString(R.string.restart_app), Toast.LENGTH_SHORT).show();
-        }
-        if (migrantModels.size() == 1 && userType.equalsIgnoreCase(SharedPrefKeys.migrantUser)) {
-            int migId = migrantModels.get(0).getMigrantId();
-            ApplicationClass.getInstance().setMigrantId(migId);
-            String cid = dbHelper.getResponse(migId, "mg_destination");
-            Log.d("mylog", "Country ID: " + cid);
-            if (cid != null && !cid.isEmpty()) {
-                Intent intent = new Intent(ActivityMigrantList.this, ActivityTileChooser.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                intent.putExtra("countryId", cid);
-                intent.putExtra("migrantName", migrantModels.get(0).getMigrantName());
-                intent.putExtra("migrantPhone", migrantModels.get(0).getMigrantPhone());
-                intent.putExtra("migrantGender", migrantModels.get(0).getMigrantSex());
-                CountryModel savedCountry = dbHelper.getCountry(cid);
-                Log.d("mylog", "Country name: " + savedCountry.getCountryName());
-                intent.putExtra("countryName", savedCountry.getCountryName().toUpperCase());
-                intent.putExtra("countryStatus", savedCountry.getCountrySatus());
-                intent.putExtra("countryBlacklist", savedCountry.getCountryBlacklist());
-                startActivity(intent);
-            } else {
-                Intent intent = new Intent(ActivityMigrantList.this, ActivityTileChooser.class);
-                intent.putExtra("countryId", "");
-                intent.putExtra("migrantName", migrantModels.get(0).getMigrantName());
-                intent.putExtra("migrantPhone", migrantModels.get(0).getMigrantPhone());
-                intent.putExtra("migrantGender", migrantModels.get(0).getMigrantSex());
-                intent.putExtra("countryName", "");
-                intent.putExtra("countryStatus", -1);
-                intent.putExtra("countryBlacklist", -1);
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                startActivity(intent);
-            }
-        } else if (migrantModels.size() < 1 && ApplicationClass.getInstance().getMigrantId() == -1) {
-            Intent intent = new Intent(ActivityMigrantList.this, ActivityRegister.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-            intent.putExtra("migrantmode", true);
-            startActivity(intent);
-        } else {
-            FlurryAgent.logEvent("migrant_listing");
-            setUpRecyclerView(migrantModels);
-        }
+        FlurryAgent.logEvent("migrant_listing");
+        setUpRecyclerView(migrantModels);
 
     }
 
