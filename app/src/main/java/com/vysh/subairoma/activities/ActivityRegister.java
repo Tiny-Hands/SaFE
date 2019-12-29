@@ -131,8 +131,6 @@ public class ActivityRegister extends AppCompatActivity {
                         protected void onCurrentProfileChanged(Profile oldProfile, Profile currentProfile) {
                             mProfileTracker.stopTracking();
                             //get data here
-                            String name = currentProfile.getFirstName();
-                            String lastname = currentProfile.getLastName();
                             GraphRequest request = GraphRequest.newMeRequest(AccessToken.getCurrentAccessToken(), new GraphRequest.GraphJSONObjectCallback() {
                                 @Override
                                 public void onCompleted(JSONObject object, GraphResponse response) {
@@ -288,7 +286,11 @@ public class ActivityRegister extends AppCompatActivity {
                     progressDialog.dismiss();
                     JSONObject jsonObject = new JSONObject(response);
                     if (jsonObject.getString("error").equalsIgnoreCase("true")) {
-                        Toast.makeText(ActivityRegister.this, jsonObject.getString("message"), Toast.LENGTH_SHORT).show();
+                        if (jsonObject.getString("message").toLowerCase().contains("already")) {
+                            //Get Safe User Detail Email
+                            //Then call getMigrants() with userId and Token;
+                        } else
+                            Toast.makeText(ActivityRegister.this, jsonObject.getString("message"), Toast.LENGTH_SHORT).show();
                     } else {
                         int userId = jsonObject.getInt("user_id");
                         String token = jsonObject.getString("token");
@@ -394,11 +396,8 @@ public class ActivityRegister extends AppCompatActivity {
             protected Map<String, String> getParams() throws AuthFailureError {
                 HashMap<String, String> params = new HashMap<>();
                 int user_id = ApplicationClass.getInstance().getSafeUserId();
-                int mig_id = ApplicationClass.getInstance().getMigrantId();
                 Log.d("mylog", "User ID: " + user_id);
-                Log.d("mylog", "Mig ID: " + mig_id);
                 params.put("user_id", user_id + "");
-                params.put("migrant_id", mig_id + "");
                 return params;
             }
 
