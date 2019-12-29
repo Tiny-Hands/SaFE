@@ -120,12 +120,9 @@ public class ActivityMigrantList extends AppCompatActivity implements RecyclerIt
             getUpdatedMigrantCounties();
         else
             requestLocationAccess();
-        btnAddMigrant.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(ActivityMigrantList.this, ActivityRegisterMigrant.class);
-                startActivity(intent);
-            }
+        btnAddMigrant.setOnClickListener(v -> {
+            Intent intent = new Intent(ActivityMigrantList.this, ActivityRegisterMigrant.class);
+            startActivity(intent);
         });
         if (getIntent().hasExtra("message"))
             Toast.makeText(this, getIntent().getStringExtra("message"), Toast.LENGTH_SHORT).show();
