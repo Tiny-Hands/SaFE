@@ -1,17 +1,17 @@
 package com.vysh.subairoma.activities;
 
 import android.app.ProgressDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
@@ -32,6 +32,13 @@ import com.facebook.Profile;
 import com.facebook.ProfileTracker;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.common.SignInButton;
+import com.google.android.gms.common.api.ApiException;
+import com.google.android.gms.tasks.Task;
 import com.vysh.subairoma.ApplicationClass;
 import com.vysh.subairoma.R;
 import com.vysh.subairoma.SQLHelpers.SQLDatabaseHelper;
@@ -55,6 +62,7 @@ import butterknife.ButterKnife;
  */
 
 public class ActivityRegister extends AppCompatActivity {
+    final int G_SIGN_IN = 10334;
     final String checkFbId = "/checkfbuid.php";
     final String apiURLMigrant = "/savemigrant.php";
     final String apiSaveUser = "/savesafeuser.php";
@@ -70,8 +78,14 @@ public class ActivityRegister extends AppCompatActivity {
     ProfileTracker mProfileTracker;
     RequestQueue queue;
 
-    @BindView(R.id.login_button)
+    @BindView(R.id.fb_login_button)
     LoginButton loginButton;
+
+    @BindView(R.id.google_login_button)
+    SignInButton signInButton;
+
+    @BindView(R.id.btnFb)
+    Button fbBtn;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -84,8 +98,30 @@ public class ActivityRegister extends AppCompatActivity {
 
         ButterKnife.bind(this);
         setUpComponentListeners();
-        callbackManager = CallbackManager.Factory.create();
 
+        //Setting up Google SignIn
+        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestEmail()
+                .build();
+
+        GoogleSignInClient mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
+
+        // Check for existing Google Sign In account, if the user is already signed in
+        // the GoogleSignInAccount will be non-null.
+        //GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);\
+        TextView tvG = (TextView) signInButton.getChildAt(0);
+        tvG.setText(R.string.google_continue);
+        signInButton.setOnClickListener(v -> {
+            Intent signInIntent = mGoogleSignInClient.getSignInIntent();
+            startActivityForResult(signInIntent, G_SIGN_IN);
+        });
+
+
+        //Setting Up Facebook Login
+        fbBtn.setOnClickListener(v -> {
+            loginButton.performClick();
+        });
+        callbackManager = CallbackManager.Factory.create();
         loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(LoginResult loginResult) {
@@ -117,8 +153,6 @@ public class ActivityRegister extends AppCompatActivity {
                         }
                     };
                 } else {
-                    String name = Profile.getCurrentProfile().getFirstName();
-                    String lastname = Profile.getCurrentProfile().getLastName();
                     GraphRequest request = GraphRequest.newMeRequest(AccessToken.getCurrentAccessToken(), new GraphRequest.GraphJSONObjectCallback() {
                         @Override
                         public void onCompleted(JSONObject object, GraphResponse response) {
@@ -156,9 +190,26 @@ public class ActivityRegister extends AppCompatActivity {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        Log.d("mylog", "On Activity Result");
+        Log.d("mylog", "On Activity Result with Request & Result: " + requestCode + ", " + resultCode);
         if (resultCode == RESULT_OK) {
-            callbackManager.onActivityResult(requestCode, resultCode, data);
+            if (requestCode == G_SIGN_IN) {
+                Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
+                handleSignInResult(task);
+
+            } else
+                callbackManager.onActivityResult(requestCode, resultCode, data);
+        }
+    }
+
+    private void handleSignInResult(Task<GoogleSignInAccount> completedTask) {
+        try {
+            GoogleSignInAccount account = completedTask.getResult(ApiException.class);
+            saveSafeUser(account.getId(), account.getDisplayName(), account.getEmail(), "google");
+            // Signed in successfully, show authenticated UI.
+        } catch (ApiException e) {
+            // The ApiException status code indicates the detailed failure reason.
+            // Please refer to the GoogleSignInStatusCodes class reference for more information.
+            Log.d("mylog", "Google signInResult:failed code=" + e.getStatusCode());
         }
     }
 

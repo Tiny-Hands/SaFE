@@ -53,12 +53,42 @@
         app:civ_border_width="2dp" />
 
     <com.facebook.login.widget.LoginButton xmlns:facebook="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/login_button"
+        android:id="@+id/fb_login_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:layout_marginBottom="@dimen/default_margin"
+        android:visibility="gone"
         facebook:com_facebook_login_text="@string/connect_to_fb"
         facebook:com_facebook_logout_text="@string/fb_connected" />
+
+    <ImageView
+        android:layout_width="46dp"
+        android:layout_height="46dp"
+        android:layout_alignLeft="@id/btnFb"
+        android:layout_alignTop="@id/btnFb"
+        android:layout_alignBottom="@id/btnFb"
+        android:elevation="8dp"
+        android:src="@drawable/ic_fb" />
+
+    <Button
+        android:id="@+id/btnFb"
+        style="@style/FacebookLoginButton"
+        android:layout_width="240dp"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_marginBottom="@dimen/default_margin"
+        android:paddingLeft="58dp"
+        android:text="@string/connect_to_fb"
+        android:textAllCaps="false"
+        android:textColor="#fff" />
+
+    <com.google.android.gms.common.SignInButton
+        android:id="@+id/google_login_button"
+        android:layout_width="246dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/btnFb"
+        android:layout_centerHorizontal="true" />
+
 
 </RelativeLayout>

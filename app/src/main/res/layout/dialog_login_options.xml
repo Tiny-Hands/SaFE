@@ -59,7 +59,7 @@
         android:text="@string/or" />
 
     <com.facebook.login.widget.LoginButton
-        android:id="@+id/login_button"
+        android:id="@+id/fb_login_button"
         style="@style/FacebookLoginButton"
         android:layout_width="@dimen/dialog_edittext_width"
         android:layout_height="@dimen/dialog_button_height"

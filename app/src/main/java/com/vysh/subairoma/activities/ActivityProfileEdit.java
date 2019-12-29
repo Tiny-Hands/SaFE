@@ -22,12 +22,10 @@ import androidx.core.content.FileProvider;
 
 import android.util.Base64;
 import android.util.Log;
-import android.util.TypedValue;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -42,11 +40,6 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.facebook.CallbackManager;
-import com.facebook.FacebookCallback;
-import com.facebook.FacebookException;
-import com.facebook.Profile;
-import com.facebook.ProfileTracker;
-import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 import com.flurry.android.FlurryAgent;
 import com.vysh.subairoma.ApplicationClass;
@@ -115,7 +108,7 @@ public class ActivityProfileEdit extends AppCompatActivity implements View.OnCli
     RelativeLayout rootLayout;
     @BindView(R.id.btnAlreadyRegistered)
     Button btnAlreadyRegistered;
-    @BindView(R.id.login_button)
+    @BindView(R.id.fb_login_button)
     LoginButton loginButton;
     @BindView(R.id.tvOR)
     TextView tvOr;

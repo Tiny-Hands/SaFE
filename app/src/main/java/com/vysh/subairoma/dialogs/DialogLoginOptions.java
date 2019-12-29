@@ -2,8 +2,6 @@ package com.vysh.subairoma.dialogs;
 
 import android.app.DialogFragment;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -14,7 +12,6 @@ import android.widget.EditText;
 
 import androidx.annotation.Nullable;
 
-import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
 import com.facebook.Profile;
@@ -49,7 +46,7 @@ public class DialogLoginOptions extends DialogFragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.dialog_login_options, container, false);
         btnPhoneLogin = view.findViewById(R.id.btnPhoneLogin);
-        loginButton = view.findViewById(R.id.login_button);
+        loginButton = view.findViewById(R.id.fb_login_button);
         etPhone = view.findViewById(R.id.etInput);
         setUpListeners();
         return view;

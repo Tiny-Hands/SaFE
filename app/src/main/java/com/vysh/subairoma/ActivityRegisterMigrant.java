@@ -28,12 +28,10 @@ import com.android.volley.toolbox.Volley;
 import com.facebook.login.widget.LoginButton;
 import com.flurry.android.FlurryAgent;
 import com.vysh.subairoma.activities.ActivityMigrantList;
-import com.vysh.subairoma.models.MigrantModel;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -68,7 +66,7 @@ public class ActivityRegisterMigrant extends AppCompatActivity {
     RelativeLayout rootLayout;
     @BindView(R.id.btnAlreadyRegistered)
     Button btnAlreadyRegistered;
-    @BindView(R.id.login_button)
+    @BindView(R.id.fb_login_button)
     LoginButton loginButton;
     @BindView(R.id.tvOR)
     TextView tvOr;

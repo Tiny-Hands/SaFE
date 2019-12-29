@@ -126,6 +126,11 @@
     <string name="call">Call</string>
     <string name="need_support">Support</string>
 
+
+    <!-- Google Login -->
+    <string name="server_client_id">314459802718-g7h1afueob225oa9pe1v6vgh8si7uro9.apps.googleusercontent.com</string>
+    <string name="google_continue">Continue with Google</string>
+
     <!-- Required for facebook Login -->
     <string name="facebook_app_id">118900038809550</string>
     <string name="fb_login_protocol_scheme">fb118900038809550</string>
