@@ -286,11 +286,7 @@ public class ActivityRegister extends AppCompatActivity {
                     progressDialog.dismiss();
                     JSONObject jsonObject = new JSONObject(response);
                     if (jsonObject.getString("error").equalsIgnoreCase("true")) {
-                        if (jsonObject.getString("message").toLowerCase().contains("already")) {
-                            //Get Safe User Detail Email
-                            //Then call getMigrants() with userId and Token;
-                        } else
-                            Toast.makeText(ActivityRegister.this, jsonObject.getString("message"), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(ActivityRegister.this, jsonObject.getString("message"), Toast.LENGTH_SHORT).show();
                     } else {
                         int userId = jsonObject.getInt("user_id");
                         String token = jsonObject.getString("token");
@@ -300,7 +296,9 @@ public class ActivityRegister extends AppCompatActivity {
                         editor.putInt(SharedPrefKeys.userId, userId);
                         editor.putString(SharedPrefKeys.token, token);
                         editor.commit();
-                        startMigrantistActivity();
+
+                        getMigrants();
+                        //startMigrantistActivity();
                     }
 
                 } catch (Exception ex) {
@@ -465,7 +463,8 @@ public class ActivityRegister extends AppCompatActivity {
             JSONObject jsonObject = new JSONObject(response);
             Boolean error = jsonObject.getBoolean("error");
             if (error) {
-                Toast.makeText(ActivityRegister.this, jsonObject.getString("message"), Toast.LENGTH_SHORT).show();
+                //Toast.makeText(ActivityRegister.this, jsonObject.getString("message"), Toast.LENGTH_SHORT).show();
+                startMigrantistActivity();
             } else {
                 JSONArray migrantJSON = jsonObject.getJSONArray("migrants");
                 if (migrantJSON != null) {
