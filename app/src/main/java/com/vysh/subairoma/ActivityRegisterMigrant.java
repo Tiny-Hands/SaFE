@@ -63,7 +63,7 @@ import butterknife.ButterKnife;
 import static android.view.View.GONE;
 
 public class ActivityRegisterMigrant extends AppCompatActivity {
-    final String apiURLMigrant = "/savemigrant.php";
+    final String apiURLMigrant = "/savesafemigrant.php";
     @BindView(R.id.ivRegister)
     ImageView ivRegister;
     @BindView(R.id.btnBack)
@@ -107,6 +107,7 @@ public class ActivityRegisterMigrant extends AppCompatActivity {
         setContentView(R.layout.activity_migrant_add);
 
         ButterKnife.bind(this);
+        Log.d("mylog", "Register Activity for Migrants");
         FlurryAgent.logEvent("register_migrant");
         btnNext.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -114,13 +115,14 @@ public class ActivityRegisterMigrant extends AppCompatActivity {
                 if (validateData()) {
                     HashMap<String, String> params = new HashMap<>();
                     params.put("full_name", etName.getText().toString());
-                    params.put("phone_number", etName.getText().toString());
+                    params.put("phone_number", etNumber.getText().toString());
                     params.put("age", etAge.getText().toString());
                     gender = "male";
                     if (rbFemale.isChecked())
                         gender = "female";
                     params.put("gender", gender);
                     params.put("user_id", ApplicationClass.getInstance().getSafeUserId() + "");
+                    Log.d("mylog", "Using User ID: " + ApplicationClass.getInstance().getSafeUserId());
                     params.put("user_img", encodedImage);
                     saveMigrant(params);
                 }
@@ -196,7 +198,7 @@ public class ActivityRegisterMigrant extends AppCompatActivity {
                         parseResponse(response);
                     }
                 } catch (JSONException e) {
-                    Toast.makeText(ActivityRegisterMigrant.this, getString(R.string.failed_user_update), Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(ActivityRegisterMigrant.this, getString(R.string.), Toast.LENGTH_SHORT).show();
                     Log.d("mylog", "Exceptions: " + e.getMessage());
                 }
             }
@@ -216,7 +218,7 @@ public class ActivityRegisterMigrant extends AppCompatActivity {
             public Map<String, String> getHeaders() throws AuthFailureError {
                 HashMap<String, String> headers = new HashMap<>();
                 SharedPreferences sp = getSharedPreferences(SharedPrefKeys.sharedPrefName, MODE_PRIVATE);
-                Log.d("mylog", "putting authheader" + sp.getString(SharedPrefKeys.token, ""));
+                Log.d("mylog", "putting authheader " + sp.getString(SharedPrefKeys.token, ""));
                 headers.put("Authorization", sp.getString(SharedPrefKeys.token, ""));
                 return headers;
             }

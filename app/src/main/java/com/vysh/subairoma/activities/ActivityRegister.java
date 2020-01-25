@@ -130,7 +130,7 @@ public class ActivityRegister extends AppCompatActivity {
                                 @Override
                                 public void onCompleted(JSONObject object, GraphResponse response) {
                                     //Do Safe Login Here and Get Details if User Already Exists, Check Using Email
-                                    Log.d("mylog", "Res: " + object.toString());
+                                    Log.d("mylog", "Res FB: " + object.toString());
                                     try {
                                         saveSafeUser(object.getString("id"), object.getString("name"), object.getString("email"), "facebook");
                                     } catch (JSONException e) {
@@ -277,7 +277,7 @@ public class ActivityRegister extends AppCompatActivity {
             @Override
             public void onResponse(String response) {
                 try {
-                    Log.d("mylog", "res: " + response);
+                    Log.d("mylog", "Res Server: " + response);
                     progressDialog.dismiss();
                     JSONObject jsonObject = new JSONObject(response);
                     if (jsonObject.getString("error").equalsIgnoreCase("true")) {

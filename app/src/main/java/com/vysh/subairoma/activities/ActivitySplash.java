@@ -186,6 +186,7 @@ public class ActivitySplash extends AppCompatActivity {
 
     private void startNextActivity() {
         if (sp.getInt(SharedPrefKeys.userId, -10) > 0) {
+            ApplicationClass.getInstance().setSafeUserId(sp.getInt(SharedPrefKeys.userId, -10));
             Intent intent = new Intent(ActivitySplash.this, ActivityMigrantList.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(intent);
