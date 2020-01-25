@@ -71,10 +71,7 @@ import static android.view.View.GONE;
  */
 
 public class ActivityProfileEdit extends AppCompatActivity implements View.OnClickListener {
-
-    final String apiUpdateUser = "/updateuser.php";
-    final String apiUpdateMigrant = "/updatemigrant.php";
-    final String apiaddFbId = "/savefbid.php";
+    final String apiUpdateMigrant = "/updatesafemigrant.php";
 
     private final int REQUEST_SELECT_FILE = 1;
     private final int REQUEST_TAKE_PIC = 0;

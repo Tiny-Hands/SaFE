@@ -64,14 +64,9 @@ import butterknife.ButterKnife;
 public class ActivityRegister extends AppCompatActivity {
     final int G_SIGN_IN = 10334;
     final String checkFbId = "/checkfbuid.php";
-    final String apiURLMigrant = "/savemigrant.php";
     final String apiSaveUser = "/savesafeuser.php";
-    //For Helper
     final String apiGetAllResponses = "/getallresponses.php";
-    //For Migrant
-    final String apiGetResponses = "/getresponses.php";
-    final String apiAlreadyRegistered = "/checkphonenumber.php";
-    private final String APIGETMIG = "/getmigrants.php";
+    private final String APIGETMIG = "/getsafemigrants.php";
     private int gotDetailCount = 0, migrantCount = 0;
 
     public CallbackManager callbackManager;

@@ -74,9 +74,8 @@ import butterknife.ButterKnife;
  */
 
 public class ActivityMigrantList extends AppCompatActivity implements RecyclerItemTouchHelper.RecyclerItemTouchHelperListener {
-    private final String APIGetMig = "/getmigrants.php";
-    private final String ApiDISABLE = "/deactivatemigrant.php";
-    final String apiURLMigrant = "/savemigrant.php";
+    private final String ApiDISABLE = "/deactivatesafemigrant.php";
+    final String apiURLMigrant = "/savesafemigrant.php";
     final String saveResponseAPI = "/saveresponse.php";
     private final int REQUEST_LOCATION = 1;
     private String userToken;
