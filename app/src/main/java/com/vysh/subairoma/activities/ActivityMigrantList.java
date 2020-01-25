@@ -120,8 +120,17 @@ public class ActivityMigrantList extends AppCompatActivity implements RecyclerIt
         else
             requestLocationAccess();
         btnAddMigrant.setOnClickListener(v -> {
-            Intent intent = new Intent(ActivityMigrantList.this, ActivityRegisterMigrant.class);
-            startActivity(intent);
+            AlertDialog.Builder builder = new AlertDialog.Builder(ActivityMigrantList.this);
+            builder.setView(R.layout.dialog_disclaimer);
+            builder.setPositiveButton(R.string.understand, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                    Intent intent = new Intent(ActivityMigrantList.this, ActivityRegisterMigrant.class);
+                    startActivity(intent);
+                }
+            });
+            builder.show();
         });
         if (getIntent().hasExtra("message"))
             Toast.makeText(this, getIntent().getStringExtra("message"), Toast.LENGTH_SHORT).show();
