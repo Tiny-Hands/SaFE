@@ -8,9 +8,7 @@
     <androidx.viewpager.widget.ViewPager
         android:id="@+id/vpPager"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_above="@id/viewPagerCountDots"
-        android:layout_marginBottom="@dimen/default_margin" />
+        android:layout_height="match_parent" />
 
     <LinearLayout
         android:id="@+id/viewPagerCountDots"
