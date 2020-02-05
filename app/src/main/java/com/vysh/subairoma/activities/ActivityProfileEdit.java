@@ -72,6 +72,7 @@ import static android.view.View.GONE;
 
 public class ActivityProfileEdit extends AppCompatActivity implements View.OnClickListener {
     final String apiUpdateMigrant = "/updatesafemigrant.php";
+    final String apiUpdateHelper = "/updatesafeuser.php";
 
     private final int REQUEST_SELECT_FILE = 1;
     private final int REQUEST_TAKE_PIC = 0;
@@ -81,6 +82,7 @@ public class ActivityProfileEdit extends AppCompatActivity implements View.OnCli
             Manifest.permission.WRITE_EXTERNAL_STORAGE,
             Manifest.permission.CAMERA};
 
+    boolean editingHelper = false;
     @BindView(R.id.ivRegister)
     ImageView ivRegister;
     @BindView(R.id.btnBack)
@@ -117,15 +119,25 @@ public class ActivityProfileEdit extends AppCompatActivity implements View.OnCli
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_migrant_add);
         ButterKnife.bind(this);
+        Intent intent = getIntent();
+        String uType = intent.getStringExtra("userType");
+        if (uType.equalsIgnoreCase(SharedPrefKeys.helperUser)) {
+            tvTitle.setText(getResources().getString(R.string.edit_profile));
+            FlurryAgent.logEvent("safe_user_edit_mode");
+            setUpUserData();
+            editingHelper = true;
+        } else {
+            tvTitle.setText(getResources().getString(R.string.edit_migrant));
+            FlurryAgent.logEvent("migrant_edit_mode");
+            editingHelper = false;
+            getData();
+        }
         //tvHint.setText("Edit Details");
         btnAlreadyRegistered.setVisibility(GONE);
         btnNext.setText(R.string.save);
         btnNext.setOnClickListener(this);
-        tvTitle.setText(getResources().getString(R.string.edit_migrant));
-        FlurryAgent.logEvent("migrant_edit_mode");
         loginButton.setVisibility(GONE);
         tvOr.setVisibility(GONE);
-        getData();
         ivRegister.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -222,6 +234,16 @@ public class ActivityProfileEdit extends AppCompatActivity implements View.OnCli
             rbMale.setChecked(true);
         else if (sex.equalsIgnoreCase("female"))
             rbFemale.setChecked(false);
+    }
+
+    private void saveUserData(String sex) {
+        SharedPreferences sharedPreferences = getSharedPreferences(SharedPrefKeys.sharedPrefName, MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString(SharedPrefKeys.userAge, etAge.getText().toString());
+        editor.putString(SharedPrefKeys.userName, etName.getText().toString());
+        editor.putString(SharedPrefKeys.userPhone, etNumber.getText().toString());
+        editor.putString(SharedPrefKeys.userSex, sex);
+        editor.commit();
     }
 
     private void getData() {
@@ -330,33 +352,33 @@ public class ActivityProfileEdit extends AppCompatActivity implements View.OnCli
     }
 
     private void updateUser() {
-        String API = "";
         int id = -2;
         String sex = "";
         if (rbFemale.isChecked()) sex = "female";
         else if (rbMale.isChecked()) sex = "male";
 
-        API = ApplicationClass.getInstance().getAPIROOT() + apiUpdateMigrant;
-        id = ApplicationClass.getInstance().getMigrantId();
-        SQLDatabaseHelper.getInstance(ActivityProfileEdit.this).insertResponseTableData(sex, SharedPrefKeys.questionGender, -1, id, "mg_sex", "");
-
         String name = etName.getText().toString();
         String age = etAge.getText().toString();
         String number = etNumber.getText().toString();
         if (InternetConnectionChecker.isNetworkConnected(ActivityProfileEdit.this))
-            sendToServer(API, id, name, age, number, sex);
+            sendToServer(id, name, age, number, sex);
         else {
             showSnackbar(getString(R.string.server_noconnect));
         }
     }
 
-    private void sendToServer(String API, final int id, final String name, final String age,
+    private void sendToServer(final int id, final String name, final String age,
                               final String number, final String sex) {
         final ProgressDialog progressDialog = new ProgressDialog(ActivityProfileEdit.this);
         //progressDialog.setTitle("Please wait");
         progressDialog.setMessage(getResources().getString(R.string.updating));
         progressDialog.setCancelable(false);
         progressDialog.show();
+        String API;
+        if (editingHelper)
+            API = apiUpdateHelper;
+        else
+            API = apiUpdateMigrant;
         StringRequest saveRequest = new StringRequest(Request.Method.POST, API, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
@@ -366,9 +388,12 @@ public class ActivityProfileEdit extends AppCompatActivity implements View.OnCli
                     JSONObject jsonObject = new JSONObject(response);
                     Boolean error = jsonObject.getBoolean("error");
                     if (!error) {
-                        SQLDatabaseHelper.getInstance(ActivityProfileEdit.this).
-                                insertMigrants(id, name, Integer.parseInt(age), number, sex, ApplicationClass.getInstance().getSafeUserId(),
-                                        encodedImage, -1);
+                        if (!editingHelper) {
+                            SQLDatabaseHelper.getInstance(ActivityProfileEdit.this).
+                                    insertMigrants(id, name, Integer.parseInt(age), number, sex, ApplicationClass.getInstance().getSafeUserId(),
+                                            encodedImage, -1);
+                        } else
+                            saveUserData(sex);
                         Intent intent = new Intent(ActivityProfileEdit.this, ActivityMigrantList.class);
                         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                         startActivity(intent);

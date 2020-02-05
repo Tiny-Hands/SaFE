@@ -1,4 +1,4 @@
-package com.vysh.subairoma;
+package com.vysh.subairoma.activities;
 
 import android.Manifest;
 import android.app.ProgressDialog;
@@ -41,9 +41,10 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.facebook.login.widget.LoginButton;
 import com.flurry.android.FlurryAgent;
+import com.vysh.subairoma.ApplicationClass;
+import com.vysh.subairoma.R;
 import com.vysh.subairoma.SQLHelpers.SQLDatabaseHelper;
-import com.vysh.subairoma.activities.ActivityMigrantList;
-import com.vysh.subairoma.activities.ActivityRegister;
+import com.vysh.subairoma.SharedPrefKeys;
 import com.vysh.subairoma.imageHelpers.ImageResizer;
 import com.vysh.subairoma.imageHelpers.ImageSaveHelper;
 

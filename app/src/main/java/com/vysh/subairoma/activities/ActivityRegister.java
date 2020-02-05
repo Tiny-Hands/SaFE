@@ -92,8 +92,6 @@ public class ActivityRegister extends AppCompatActivity {
         setContentView(R.layout.activity_social_login);
 
         ButterKnife.bind(this);
-        setUpComponentListeners();
-
         //Setting up Google SignIn
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestEmail()
@@ -405,52 +403,6 @@ public class ActivityRegister extends AppCompatActivity {
         queue.add(getRequest);
     }
 
-    private void setUpComponentListeners() {
-
-    }
-
-    private void registerUser(String api, final String uType) {
-        Log.d("mylog", "API called: " + api);
-        final ProgressDialog progressDialog = new ProgressDialog(ActivityRegister.this);
-        progressDialog.setMessage(getResources().getString(R.string.registering));
-        progressDialog.setCancelable(false);
-        progressDialog.show();
-        StringRequest saveRequest = new StringRequest(Request.Method.POST, ((ApplicationClass) getApplication()).getAPIROOT() + api, new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-                progressDialog.dismiss();
-                Log.d("mylog", "response : " + response);
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                progressDialog.dismiss();
-                String err = error.toString();
-                Log.d("mylog", "error : " + err);
-                if (!err.isEmpty() && err.contains("TimeoutError"))
-                    Toast.makeText(ActivityRegister.this, "Failed to connect to server :(", Toast.LENGTH_SHORT).show();
-                else
-                    Toast.makeText(ActivityRegister.this, error.toString(), Toast.LENGTH_SHORT).show();
-            }
-        }) {
-            @Override
-            protected Map<String, String> getParams() throws AuthFailureError {
-                HashMap<String, String> params = new HashMap<>();
-/*
-                params.put("full_name", etName.getText().toString());
-                params.put("phone_number", etNumber.getText().toString());
-                params.put("age", etAge.getText().toString());
-                params.put("user_img", encodedImage);
-                params.put("gender", sex);
-                params.put("user_type", uType);*/
-                //params.put("user_id", ApplicationClass.getInstance().getSafeUserId() + "");
-                return params;
-            }
-        };
-        RequestQueue queue = Volley.newRequestQueue(ActivityRegister.this);
-        saveRequest.setRetryPolicy(new DefaultRetryPolicy(20 * 1000, 0, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
-        queue.add(saveRequest);
-    }
 
     private ArrayList<MigrantModel> parseMigDetailResponse(String response) {
         ArrayList<MigrantModel> migrantModelsTemp = new ArrayList<>();
@@ -515,36 +467,6 @@ public class ActivityRegister extends AppCompatActivity {
         return migrantModelsTemp;
     }
 
-    private boolean checkUserExists() {
-        SharedPreferences sharedPreferences = getSharedPreferences(SharedPrefKeys.sharedPrefName, MODE_PRIVATE);
-        int userId = sharedPreferences.getInt(SharedPrefKeys.userId, -10);
-        String type = sharedPreferences.getString(SharedPrefKeys.userType, "");
-        Log.d("mylog", "User id: " + userId + " Type: " + type);
-        if (userId != -10) {
-            if (userId < 0 && InternetConnectionChecker.isNetworkConnected(ActivityRegister.this)) {
-                //Just need to save user to server and change the UserId in migrant table to new IDs
-                //Migrants will be saved to server on Activity Migrant List;
-                Log.d("mylog", "Saving User to Server");
-                saveUserToServer();
-                return false;
-            } else {
-                if (type.equalsIgnoreCase(SharedPrefKeys.helperUser)) {
-                    Log.d("mylog", "User already exists with ID: " + userId);
-                    //userType = SharedPrefKeys.helperUser;
-                    ApplicationClass.getInstance().setSafeUserId(userId);
-                    ApplicationClass.getInstance().setUserType(SharedPrefKeys.helperUser);
-                } else {
-                    Log.d("mylog", "Migrant already exists, Setting user ID: ");
-                    //ApplicationClass.getInstance().setMigrantId(userId);
-                    //userType = SharedPrefKeys.migrantUser;
-                    ApplicationClass.getInstance().setUserType(SharedPrefKeys.migrantUser);
-                    ApplicationClass.getInstance().setSafeUserId(userId);
-                    ApplicationClass.getInstance().setMigrantId(sharedPreferences.getInt(SharedPrefKeys.defMigID, -1));
-                }
-            }
-            return true;
-        } else return false;
-    }
 
     private void saveUserToServer() {
         SharedPreferences sp = getSharedPreferences(SharedPrefKeys.sharedPrefName, MODE_PRIVATE);

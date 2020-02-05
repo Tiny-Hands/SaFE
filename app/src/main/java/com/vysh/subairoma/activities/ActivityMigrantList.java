@@ -21,8 +21,6 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.os.Handler;
-import android.os.Looper;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -42,7 +40,6 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.flurry.android.FlurryAgent;
 import com.google.android.material.navigation.NavigationView;
-import com.vysh.subairoma.ActivityRegisterMigrant;
 import com.vysh.subairoma.ApplicationClass;
 import com.vysh.subairoma.R;
 import com.vysh.subairoma.SQLHelpers.SQLDatabaseHelper;
@@ -50,20 +47,16 @@ import com.vysh.subairoma.SharedPrefKeys;
 import com.vysh.subairoma.adapters.MigrantListAdapter;
 import com.vysh.subairoma.adapters.RecyclerItemTouchHelper;
 import com.vysh.subairoma.imageHelpers.ImageEncoder;
-import com.vysh.subairoma.models.CountryModel;
 import com.vysh.subairoma.models.MigrantModel;
 import com.vysh.subairoma.services.LocationChecker;
 import com.vysh.subairoma.utils.CustomTextView;
-import com.vysh.subairoma.utils.DefaultExceptionHandler;
 import com.vysh.subairoma.utils.InternetConnectionChecker;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import butterknife.BindView;
