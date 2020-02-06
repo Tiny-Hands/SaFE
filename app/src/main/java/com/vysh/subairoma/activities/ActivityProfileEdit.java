@@ -426,8 +426,10 @@ public class ActivityProfileEdit extends AppCompatActivity implements View.OnCli
                 params.put("user_img", encodedImage);
                 if (editingHelper)
                     params.put("user_id", ApplicationClass.getInstance().getSafeUserId() + "");
-                else
-                    params.put("user_id", ApplicationClass.getInstance().getMigrantId() + "");
+                else {
+                    params.put("migrant_id", ApplicationClass.getInstance().getMigrantId() + "");
+                    params.put("user_id", ApplicationClass.getInstance().getSafeUserId() + "");
+                }
 
                 for (Object obj : params.keySet()) {
                     Log.d("mylog", "Key: " + obj + " Val: " + params.get(obj));

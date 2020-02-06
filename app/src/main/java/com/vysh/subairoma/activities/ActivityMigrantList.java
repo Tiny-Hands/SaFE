@@ -194,12 +194,11 @@ public class ActivityMigrantList extends AppCompatActivity implements RecyclerIt
         if (InternetConnectionChecker.isNetworkConnected(ActivityMigrantList.this)) {
             //Migrant that's not registered is being registered
             //This will save to server then display migrant list
-            saveLocalDataToServer();
+            //saveLocalDataToServer();
             new ReponseSaver(this).execute();
             //Mig Percent
-        } else {
-            getSavedMigrants();
         }
+        getSavedMigrants();
         //getMigrants();
     }
 
