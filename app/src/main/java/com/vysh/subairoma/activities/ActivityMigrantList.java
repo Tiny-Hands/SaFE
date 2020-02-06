@@ -378,20 +378,28 @@ public class ActivityMigrantList extends AppCompatActivity implements RecyclerIt
 
 
         SharedPreferences sharedPreferences = getSharedPreferences(SharedPrefKeys.sharedPrefName, MODE_PRIVATE);
-        tvPhone.setText(sharedPreferences.getString(SharedPrefKeys.userPhone, ""));
-        tvName.setText(sharedPreferences.getString(SharedPrefKeys.userName, ""));
+        String phone = sharedPreferences.getString(SharedPrefKeys.userPhone, "");
+        if (phone.isEmpty())
+            phone = "Phone: -";
+        tvPhone.setText(phone);
+        String name = sharedPreferences.getString(SharedPrefKeys.userName, "");
+        if (name.isEmpty())
+            name = "Name: -";
+        tvName.setText(name);
         String sex = sharedPreferences.getString(SharedPrefKeys.userSex, "");
         String age = sharedPreferences.getString(SharedPrefKeys.userAge, "");
         String img = sharedPreferences.getString(SharedPrefKeys.userImg, "");
+        if (age.equalsIgnoreCase("null"))
+            age = "-";
         tvNavCounty.setText("Age: " + age);
 
         if (img.length() > 10) {
             ivUserAvatar.setImageBitmap(ImageEncoder.decodeFromBase64(img));
         } else {
-            if (sex.equals("male"))
-                ivUserAvatar.setImageResource(R.drawable.ic_male);
-            else
+            if (sex.equals("female"))
                 ivUserAvatar.setImageResource(R.drawable.ic_female);
+            else
+                ivUserAvatar.setImageResource(R.drawable.ic_male);
         }
     }
 

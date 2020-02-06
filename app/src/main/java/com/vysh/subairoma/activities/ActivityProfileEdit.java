@@ -376,9 +376,9 @@ public class ActivityProfileEdit extends AppCompatActivity implements View.OnCli
         progressDialog.show();
         String API;
         if (editingHelper)
-            API = apiUpdateHelper;
+            API = ApplicationClass.getInstance().getAPIROOT() + apiUpdateHelper;
         else
-            API = apiUpdateMigrant;
+            API = ApplicationClass.getInstance().getAPIROOT() + apiUpdateMigrant;
         StringRequest saveRequest = new StringRequest(Request.Method.POST, API, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
@@ -421,10 +421,9 @@ public class ActivityProfileEdit extends AppCompatActivity implements View.OnCli
                 HashMap<String, String> params = new HashMap<>();
                 params.put("full_name", name);
                 params.put("phone_number", number);
-                params.put("age", age);
-                params.put("gender", sex);
+                params.put("user_age", age);
+                params.put("user_sex", sex);
                 params.put("user_img", encodedImage);
-                params.put("migrant_id", id + "");
                 params.put("user_id", ApplicationClass.getInstance().getSafeUserId() + "");
 
                 for (Object obj : params.keySet()) {
