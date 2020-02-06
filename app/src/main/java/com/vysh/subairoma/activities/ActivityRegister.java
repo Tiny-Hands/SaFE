@@ -283,11 +283,21 @@ public class ActivityRegister extends AppCompatActivity {
                     } else {
                         int userId = jsonObject.getInt("user_id");
                         String token = jsonObject.getString("token");
+                        String userName = jsonObject.getString("user_name");
+                        String userSex = jsonObject.getString("user_sex");
+                        String user_age = jsonObject.getString("user_age");
+                        String userPhone = jsonObject.getString("user_phone");
+                        String userImg = jsonObject.getString("user_img");
                         ApplicationClass.getInstance().setSafeUserId(userId);
                         SharedPreferences sharedPreferences = getSharedPreferences(SharedPrefKeys.sharedPrefName, MODE_PRIVATE);
                         SharedPreferences.Editor editor = sharedPreferences.edit();
                         editor.putInt(SharedPrefKeys.userId, userId);
                         editor.putString(SharedPrefKeys.token, token);
+                        editor.putString(SharedPrefKeys.userName, userName);
+                        editor.putString(SharedPrefKeys.userSex, userSex);
+                        editor.putString(SharedPrefKeys.userAge, user_age);
+                        editor.putString(SharedPrefKeys.userPhone, userPhone);
+                        editor.putString(SharedPrefKeys.userImg, userImg);
                         editor.commit();
 
                         getMigrants();
