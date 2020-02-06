@@ -175,6 +175,14 @@ public class ActivityTileChooser extends AppCompatActivity {
             ivMigrantImage.setImageBitmap(ImageEncoder.decodeFromBase64(img));
         else if (migrantGender != null && migrantGender.equalsIgnoreCase("female"))
             ivMigrantImage.setImageResource(R.drawable.ic_female);
+        ivMigrantImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(ActivityTileChooser.this, ActivityProfileEdit.class);
+                intent.putExtra("userType", SharedPrefKeys.migrantUser);
+                startActivity(intent);
+            }
+        });
         hideIfIndia();
         setUpNavigationButtons();
     }
