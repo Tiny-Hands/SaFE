@@ -161,8 +161,7 @@ public class ActivityMigrantList extends AppCompatActivity implements RecyclerIt
                         startActivity(intent);
                         break;
                     case R.id.nav_addmigrants:
-                        Intent intentMig = new Intent(ActivityMigrantList.this, ActivityRegister.class);
-                        intentMig.putExtra("migrantmode", true);
+                        Intent intentMig = new Intent(ActivityMigrantList.this, ActivityRegisterMigrant.class);
                         drawerLayout.closeDrawer(GravityCompat.END);
                         startActivity(intentMig);
                         break;

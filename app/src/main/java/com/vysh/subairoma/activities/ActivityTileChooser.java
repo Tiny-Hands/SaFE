@@ -264,8 +264,7 @@ public class ActivityTileChooser extends AppCompatActivity {
                         startActivity(intent);
                         break;
                     case R.id.nav_addmigrants:
-                        Intent intentMig = new Intent(ActivityTileChooser.this, ActivityRegister.class);
-                        intentMig.putExtra("migrantmode", true);
+                        Intent intentMig = new Intent(ActivityTileChooser.this, ActivityRegisterMigrant.class);
                         drawerLayout.closeDrawer(GravityCompat.END);
                         startActivity(intentMig);
                         break;
