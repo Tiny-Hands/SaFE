@@ -259,9 +259,9 @@ public class ActivityTileChooser extends AppCompatActivity {
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 switch (item.getItemId()) {
                     case R.id.nav_profile:
-                        /*Intent intent = new Intent(ActivityTileChooser.this, ActivityProfileEdit.class);
+                        Intent intent = new Intent(ActivityTileChooser.this, ActivityProfileEdit.class);
                         intent.putExtra("userType", SharedPrefKeys.helperUser);
-                        startActivity(intent);*/
+                        startActivity(intent);
                         break;
                     case R.id.nav_addmigrants:
                         Intent intentMig = new Intent(ActivityTileChooser.this, ActivityRegister.class);
