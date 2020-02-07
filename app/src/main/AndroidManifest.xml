@@ -88,6 +88,14 @@
         <meta-data
             android:name="io.fabric.ApiKey"
             android:value="d416cf9892d0588703216335b4e5952e8850e32e" />
+
+        <service
+            android:name=".MyFirebaseMessagingActivity"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
     </application>
 
 </manifest>
