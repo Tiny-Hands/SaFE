@@ -185,4 +185,5 @@
     <string name="preparation_details">Preparation, is very important and should be completed as accurately as possible. There are eight tiles in the Preparation section. If answered with honesty, they will help guide you to safe and profitable employment abroad. If you answer questions which result in two or more RED FLAGS, don\'t ignore them! If you do, you might find yourself in an exploitative situation or even being trafficked. If you don’t understand any of these steps, please click on "Need Help" in the menu. You\'ll then be able to call us, text us, or send us a Facebook message. Contact details can also be found on the main page.</string>
     <string name="cannot_login">Login Failed</string>
     <string name="updateUserType">Update User Type</string>
+    <string name="generic_updating">Updating</string>
 </resources>

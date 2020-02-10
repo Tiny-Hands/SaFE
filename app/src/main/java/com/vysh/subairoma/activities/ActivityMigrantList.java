@@ -170,6 +170,7 @@ public class ActivityMigrantList extends AppCompatActivity implements RecyclerIt
                     case R.id.update_usertype:
                         DialogUsertypeChooser chooser = new DialogUsertypeChooser();
                         chooser.show(getFragmentManager(), "userchooser");
+                        drawerLayout.closeDrawer(GravityCompat.END);
                         break;
                     case R.id.nav_about:
                         Intent intentAbout = new Intent(ActivityMigrantList.this, ActivityAboutUs.class);
@@ -211,7 +212,7 @@ public class ActivityMigrantList extends AppCompatActivity implements RecyclerIt
     public void updateUserType(String userType) {
         final ProgressDialog progressDialog = new ProgressDialog(ActivityMigrantList.this);
         //progressDialog.setTitle("Please wait");
-        progressDialog.setMessage(getResources().getString(R.string.updatingToServer));
+        progressDialog.setMessage(getResources().getString(R.string.generic_updating));
         progressDialog.setCancelable(false);
         progressDialog.show();
 

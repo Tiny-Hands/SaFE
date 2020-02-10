@@ -15,6 +15,7 @@
             android:title="@string/delete_migrant" />
         <item
             android:id="@+id/update_usertype"
+            android:icon="@drawable/ic_user_type"
             android:title="@string/updateUserType" />
 
     </group>

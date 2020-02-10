@@ -185,5 +185,6 @@
     <string name="preparation_details">टुटोरिल ३- तयारीका सबै खण्ड सफलता पुर्वक पुरा गरिसकेपछि तपाइ सुरक्षित हुनुहुन्छ भने यो “यात्रा” खण्डमा जानुहोस् । यहा तपाइको राय-सुझाव मागिने छ र कसरी यो  एपले तपाईलाई सहायता पुर्‍यायो भने मिल्नेमा टिक लगाउनुहोस् । यस यात्रा खण्डमा तयारी र विदेशमा गरी दुईवटा साना खण्डहरू छन् । यि खण्डहरूलाई होसियारी पुर्वक पुरा गर्नुहोस् ।</string>
     <string name="cannot_login">Login Failed</string>
     <string name="updateUserType">Update User Type</string>
+    <string name="generic_updating">Updating</string>
 
 </resources>

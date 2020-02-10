@@ -282,6 +282,7 @@ public class ActivityTileChooser extends AppCompatActivity {
                     case R.id.update_usertype:
                         DialogUsertypeChooser chooser = new DialogUsertypeChooser();
                         chooser.show(getFragmentManager(), "userchooser");
+                        drawerLayout.closeDrawer(GravityCompat.END);
                         break;
                     case R.id.delete_migrant:
                         deleteMigrant();
@@ -415,7 +416,7 @@ public class ActivityTileChooser extends AppCompatActivity {
     public void updateUserType(String userType) {
         final ProgressDialog progressDialog = new ProgressDialog(ActivityTileChooser.this);
         //progressDialog.setTitle("Please wait");
-        progressDialog.setMessage(getResources().getString(R.string.updatingToServer));
+        progressDialog.setMessage(getResources().getString(R.string.generic_updating));
         progressDialog.setCancelable(false);
         progressDialog.show();
         final HashMap<String, String> fParams = new HashMap<>();
