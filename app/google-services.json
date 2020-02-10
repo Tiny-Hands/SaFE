@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "314459802718",
+    "firebase_url": "https://safe-1577609754750.firebaseio.com",
+    "project_id": "safe-1577609754750",
+    "storage_bucket": "safe-1577609754750.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:314459802718:android:9310b8ac6a26c6dfe338cf",
+        "android_client_info": {
+          "package_name": "com.vysh.subairoma"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "314459802718-nud0ruosaskrjfoehva4ovbg7sump98k.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAW9MZ_MnThay-OGyM7EinnOOmztrBpRVM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "314459802718-nud0ruosaskrjfoehva4ovbg7sump98k.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

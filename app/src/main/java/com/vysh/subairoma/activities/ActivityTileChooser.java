@@ -1,5 +1,6 @@
 package com.vysh.subairoma.activities;
 
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -42,6 +43,7 @@ import com.vysh.subairoma.SQLHelpers.SQLDatabaseHelper;
 import com.vysh.subairoma.SharedPrefKeys;
 import com.vysh.subairoma.dialogs.DialogAnswersVerification;
 import com.vysh.subairoma.dialogs.DialogCountryChooser;
+import com.vysh.subairoma.dialogs.DialogUsertypeChooser;
 import com.vysh.subairoma.imageHelpers.ImageEncoder;
 import com.vysh.subairoma.utils.CustomTextView;
 import com.vysh.subairoma.utils.PercentHelper;
@@ -60,6 +62,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
  */
 
 public class ActivityTileChooser extends AppCompatActivity {
+    final String userTypeAPI = "/updateusertype.php";
     @BindView(R.id.ivUserAvatar)
     CircleImageView ivMigrantImage;
     @BindView(R.id.tvMigNumber)
@@ -276,6 +279,10 @@ public class ActivityTileChooser extends AppCompatActivity {
                         drawerLayout.closeDrawer(GravityCompat.END);
                         startActivity(intentMig);
                         break;
+                    case R.id.update_usertype:
+                        DialogUsertypeChooser chooser = new DialogUsertypeChooser();
+                        chooser.show(getFragmentManager(), "userchooser");
+                        break;
                     case R.id.delete_migrant:
                         deleteMigrant();
                         break;
@@ -403,5 +410,53 @@ public class ActivityTileChooser extends AppCompatActivity {
             Toast.makeText(ActivityTileChooser.this, "Completed", Toast.LENGTH_SHORT).show();
         }
         //getAllResponses();
+    }
+
+    public void updateUserType(String userType) {
+        final ProgressDialog progressDialog = new ProgressDialog(ActivityTileChooser.this);
+        //progressDialog.setTitle("Please wait");
+        progressDialog.setMessage(getResources().getString(R.string.updatingToServer));
+        progressDialog.setCancelable(false);
+        progressDialog.show();
+        final HashMap<String, String> fParams = new HashMap<>();
+        fParams.put("user_id", ApplicationClass.getInstance().getSafeUserId() + "");
+        fParams.put("user_type", userType);
+        String api = ApplicationClass.getInstance().getAPIROOT() + userTypeAPI;
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, api, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                progressDialog.dismiss();
+                Log.d("mylog", "Country Response: " + response);
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                String err = error.toString();
+                progressDialog.dismiss();
+                Toast.makeText(ActivityTileChooser.this, getResources().getString(R.string.failed_user_update), Toast.LENGTH_SHORT).show();
+                if (!err.isEmpty() && err.contains("NoConnection")) {
+                    //showSnackbar("Response cannot be saved at the moment, please check your Intenet connection.");
+                    Log.d("mylog", "couldn't save country");
+                }
+            }
+        }) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                return fParams;
+            }
+
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                HashMap<String, String> headers = new HashMap<>();
+
+                String userToken = getSharedPreferences(SharedPrefKeys.sharedPrefName, MODE_PRIVATE).getString(SharedPrefKeys.token, "");
+                headers.put("Authorization", userToken);
+                return headers;
+            }
+        };
+
+        RequestQueue queue = Volley.newRequestQueue(ActivityTileChooser.this);
+        queue.add(stringRequest);
+
     }
 }

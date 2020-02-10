@@ -13,6 +13,9 @@
             android:id="@+id/delete_migrant"
             android:icon="@drawable/ic_delete_nav"
             android:title="@string/delete_migrant" />
+        <item
+            android:id="@+id/update_usertype"
+            android:title="@string/updateUserType" />
 
     </group>
     <group android:id="@+id/secondaryNavOpt">

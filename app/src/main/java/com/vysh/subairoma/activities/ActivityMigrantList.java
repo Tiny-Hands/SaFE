@@ -46,6 +46,7 @@ import com.vysh.subairoma.SQLHelpers.SQLDatabaseHelper;
 import com.vysh.subairoma.SharedPrefKeys;
 import com.vysh.subairoma.adapters.MigrantListAdapter;
 import com.vysh.subairoma.adapters.RecyclerItemTouchHelper;
+import com.vysh.subairoma.dialogs.DialogUsertypeChooser;
 import com.vysh.subairoma.imageHelpers.ImageEncoder;
 import com.vysh.subairoma.models.MigrantModel;
 import com.vysh.subairoma.services.LocationChecker;
@@ -70,6 +71,7 @@ public class ActivityMigrantList extends AppCompatActivity implements RecyclerIt
     private final String ApiDISABLE = "/deactivatesafemigrant.php";
     final String apiURLMigrant = "/savesafemigrant.php";
     final String saveResponseAPI = "/saveresponse.php";
+    final String userTypeAPI = "/updateusertype.php";
     private final int REQUEST_LOCATION = 1;
     private String userToken;
 
@@ -165,6 +167,10 @@ public class ActivityMigrantList extends AppCompatActivity implements RecyclerIt
                         drawerLayout.closeDrawer(GravityCompat.END);
                         startActivity(intentMig);
                         break;
+                    case R.id.update_usertype:
+                        DialogUsertypeChooser chooser = new DialogUsertypeChooser();
+                        chooser.show(getFragmentManager(), "userchooser");
+                        break;
                     case R.id.nav_about:
                         Intent intentAbout = new Intent(ActivityMigrantList.this, ActivityAboutUs.class);
                         drawerLayout.closeDrawer(GravityCompat.END);
@@ -200,6 +206,53 @@ public class ActivityMigrantList extends AppCompatActivity implements RecyclerIt
         }
         getSavedMigrants();
         //getMigrants();
+    }
+
+    public void updateUserType(String userType) {
+        final ProgressDialog progressDialog = new ProgressDialog(ActivityMigrantList.this);
+        //progressDialog.setTitle("Please wait");
+        progressDialog.setMessage(getResources().getString(R.string.updatingToServer));
+        progressDialog.setCancelable(false);
+        progressDialog.show();
+
+        final HashMap<String, String> fParams = new HashMap<>();
+        fParams.put("user_type", userType);
+        fParams.put("user_id", ApplicationClass.getInstance().getSafeUserId() + "");
+        String api = ApplicationClass.getInstance().getAPIROOT() + userTypeAPI;
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, api, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                progressDialog.dismiss();
+                Log.d("mylog", "Country Response: " + response);
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                progressDialog.dismiss();
+                Toast.makeText(ActivityMigrantList.this, getResources().getString(R.string.failed_user_update), Toast.LENGTH_SHORT).show();
+                String err = error.toString();
+                if (!err.isEmpty() && err.contains("NoConnection")) {
+                    //showSnackbar("Response cannot be saved at the moment, please check your Intenet connection.");
+                    Log.d("mylog", "couldn't save country");
+                }
+            }
+        }) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                return fParams;
+            }
+
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                HashMap<String, String> headers = new HashMap<>();
+                headers.put("Authorization", userToken);
+                return headers;
+            }
+        };
+
+        RequestQueue queue = Volley.newRequestQueue(ActivityMigrantList.this);
+        queue.add(stringRequest);
+
     }
 
     private class ReponseSaver extends AsyncTask<Void, Void, ArrayList<ArrayList<HashMap>>> {
