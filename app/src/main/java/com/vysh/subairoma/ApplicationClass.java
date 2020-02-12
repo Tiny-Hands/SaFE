@@ -15,7 +15,7 @@ public class ApplicationClass extends Application {
 
     ///private final String APIROOT = "http://192.168.1.25";
     private final String appTOKEN = "aswqssaadwz1234fs3sqwawf456v";
-    private final String APIROOT = "http://subairoma-mysql.azurewebsites.net";
+    private final String APIROOT = "https://subairoma-mysql.azurewebsites.net";
     private int userId = -1, migrantId = -1;
     private String userType;
     private static ApplicationClass mInstance;
