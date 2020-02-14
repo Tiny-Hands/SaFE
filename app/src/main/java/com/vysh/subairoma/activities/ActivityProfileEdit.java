@@ -243,6 +243,7 @@ public class ActivityProfileEdit extends AppCompatActivity implements View.OnCli
         editor.putString(SharedPrefKeys.userName, etName.getText().toString());
         editor.putString(SharedPrefKeys.userPhone, etNumber.getText().toString());
         editor.putString(SharedPrefKeys.userSex, sex);
+        editor.putString(SharedPrefKeys.userImg, encodedImage);
         editor.commit();
     }
 
