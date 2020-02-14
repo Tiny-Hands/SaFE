@@ -398,7 +398,7 @@ public class ActivityProfileEdit extends AppCompatActivity implements View.OnCli
                         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                         startActivity(intent);
                     } else {
-                        showSnackbar(getResources().getString(R.string.failed_user_update));
+                        showSnackbar(jsonObject.getString("message"));
                     }
                 } catch (JSONException e) {
                     Log.d("mylog", "Error updating: " + e.toString());
