@@ -124,23 +124,7 @@ public class ActivityRegister extends AppCompatActivity {
                         protected void onCurrentProfileChanged(Profile oldProfile, Profile currentProfile) {
                             mProfileTracker.stopTracking();
                             //get data here
-                            GraphRequest request = GraphRequest.newMeRequest(AccessToken.getCurrentAccessToken(), new GraphRequest.GraphJSONObjectCallback() {
-                                @Override
-                                public void onCompleted(JSONObject object, GraphResponse response) {
-                                    //Do Safe Login Here and Get Details if User Already Exists, Check Using Email
-                                    Log.d("mylog", "Res FB: " + object.toString());
-                                    try {
-                                        saveSafeUser(object.getString("id"), object.getString("name"), object.getString("email"), "facebook");
-                                    } catch (JSONException e) {
-                                        Log.d("mylog", "Error parsing fb res: " + e.toString());
-                                    }
-                                }
-                            });
-                            Bundle parameters = new Bundle();
-                            parameters.putString("fields", "id,name,email");
-                            request.setParameters(parameters);
-                            request.setParameters(parameters);
-                            request.executeAsync();
+                            makeGraphRequest();
                         }
                     };
                 } else {
@@ -176,6 +160,37 @@ public class ActivityRegister extends AppCompatActivity {
                 Log.d("mylog", "Error: " + exception.toString());
             }
         });
+    }
+
+    private void makeGraphRequest() {
+        GraphRequest request = GraphRequest.newMeRequest(AccessToken.getCurrentAccessToken(), new GraphRequest.GraphJSONObjectCallback() {
+            @Override
+            public void onCompleted(JSONObject object, GraphResponse response) {
+                //Do Safe Login Here and Get Details if User Already Exists, Check Using Email
+                if (object == null)
+                    return;
+                Log.d("mylog", "Res FB: " + object.toString());
+                try {
+                    saveSafeUser(object.getString("id"), object.getString("name"), object.getString("email"), "facebook");
+                } catch (JSONException e) {
+                    Log.d("mylog", "Error parsing fb res: " + e.toString());
+                }
+            }
+        });
+        Bundle parameters = new Bundle();
+        parameters.putString("fields", "id,name,email");
+        request.setParameters(parameters);
+        request.setParameters(parameters);
+        request.executeAsync();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        AccessToken accessToken = AccessToken.getCurrentAccessToken();
+        if (accessToken != null) {
+            makeGraphRequest();
+        }
     }
 
     @Override
@@ -284,19 +299,19 @@ public class ActivityRegister extends AppCompatActivity {
                         int userId = jsonObject.getInt("user_id");
                         String token = jsonObject.getString("token");
                         String userName = jsonObject.getString("user_name");
-                        if(userName.equalsIgnoreCase("null"))
+                        if (userName.equalsIgnoreCase("null"))
                             userName = "";
                         String userSex = jsonObject.getString("user_sex");
-                        if(userSex.equalsIgnoreCase("null"))
+                        if (userSex.equalsIgnoreCase("null"))
                             userSex = "";
                         String user_age = jsonObject.getString("user_age");
-                        if(user_age.equalsIgnoreCase("null"))
+                        if (user_age.equalsIgnoreCase("null"))
                             user_age = "";
                         String userPhone = jsonObject.getString("user_phone");
-                        if(userPhone.equalsIgnoreCase("null"))
+                        if (userPhone.equalsIgnoreCase("null"))
                             userPhone = "";
                         String userImg = jsonObject.getString("user_img");
-                        if(userImg.equalsIgnoreCase("null"))
+                        if (userImg.equalsIgnoreCase("null"))
                             userImg = "";
                         ApplicationClass.getInstance().setSafeUserId(userId);
                         SharedPreferences sharedPreferences = getSharedPreferences(SharedPrefKeys.sharedPrefName, MODE_PRIVATE);
