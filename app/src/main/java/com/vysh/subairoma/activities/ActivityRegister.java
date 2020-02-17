@@ -112,7 +112,11 @@ public class ActivityRegister extends AppCompatActivity {
 
         //Setting Up Facebook Login
         fbBtn.setOnClickListener(v -> {
-            loginButton.performClick();
+            AccessToken accessToken = AccessToken.getCurrentAccessToken();
+            if (accessToken != null) {
+                makeGraphRequest();
+            } else
+                loginButton.performClick();
         });
         callbackManager = CallbackManager.Factory.create();
         loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
@@ -171,7 +175,12 @@ public class ActivityRegister extends AppCompatActivity {
                     return;
                 Log.d("mylog", "Res FB: " + object.toString());
                 try {
-                    saveSafeUser(object.getString("id"), object.getString("name"), object.getString("email"), "facebook");
+                    String fid = object.getString("id");
+                    String name = object.getString("name");
+                    String email = "";
+                    if (object.has("email"))
+                        email = object.getString("email");
+                    saveSafeUser(fid, name, email, "facebook");
                 } catch (JSONException e) {
                     Log.d("mylog", "Error parsing fb res: " + e.toString());
                 }
@@ -182,15 +191,6 @@ public class ActivityRegister extends AppCompatActivity {
         request.setParameters(parameters);
         request.setParameters(parameters);
         request.executeAsync();
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        AccessToken accessToken = AccessToken.getCurrentAccessToken();
-        if (accessToken != null) {
-            makeGraphRequest();
-        }
     }
 
     @Override
