@@ -460,7 +460,7 @@ public class ActivityMigrantList extends AppCompatActivity implements RecyclerIt
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         switch (requestCode) {
             case REQUEST_LOCATION:
-                if (grantResults[0] == PackageManager.PERMISSION_GRANTED)
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED)
                     getUpdatedMigrantCounties();
                 break;
         }
