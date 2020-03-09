@@ -317,6 +317,7 @@ public class ActivityRegister extends AppCompatActivity {
                         SharedPreferences sharedPreferences = getSharedPreferences(SharedPrefKeys.sharedPrefName, MODE_PRIVATE);
                         SharedPreferences.Editor editor = sharedPreferences.edit();
                         editor.putInt(SharedPrefKeys.userId, userId);
+                        Log.d("mylog", "Saving Users: " + token);
                         editor.putString(SharedPrefKeys.token, token);
                         editor.putString(SharedPrefKeys.userName, userName);
                         editor.putString(SharedPrefKeys.userSex, userSex);

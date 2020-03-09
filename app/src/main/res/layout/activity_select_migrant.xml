@@ -62,9 +62,9 @@
                 android:id="@+id/rvMigrants"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginBottom="@dimen/default_margin"
-                android:layout_marginEnd="@dimen/small_medium_margin"
                 android:layout_marginStart="@dimen/small_medium_margin"
+                android:layout_marginEnd="@dimen/small_medium_margin"
+                android:layout_marginBottom="@dimen/default_margin"
                 android:clipToPadding="false"
                 android:paddingBottom="@dimen/fab_dimen" />
         </LinearLayout>
@@ -73,10 +73,40 @@
             android:id="@+id/btnAddMigrant"
             android:layout_width="@dimen/fab_dimen"
             android:layout_height="@dimen/fab_dimen"
-            android:layout_alignParentBottom="true"
             android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
             android:layout_margin="@dimen/default_margin"
             android:background="@drawable/ic_fab" />
+
+        <LinearLayout
+            android:id="@+id/llBottom"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:background="@color/grey"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:visibility="gone">
+
+            <com.vysh.subairoma.utils.CustomTextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/default_margin"
+                android:layout_weight="1"
+                android:text="Failed to Connect"
+                android:textColor="#f5f5f5"
+                app:fonts="gotham_medium.ttf" />
+
+            <Button
+                android:id="@+id/btnTryAgain"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="@dimen/default_margin"
+                android:background="?android:attr/selectableItemBackground"
+                android:text="Try Again"
+                android:textColor="#ff6d00" />
+        </LinearLayout>
+
     </RelativeLayout>
 
     <com.google.android.material.navigation.NavigationView
