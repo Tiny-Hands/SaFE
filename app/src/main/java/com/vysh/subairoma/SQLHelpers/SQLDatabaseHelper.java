@@ -32,6 +32,11 @@ import com.vysh.subairoma.models.MigrantModel;
 import com.vysh.subairoma.models.TileQuestionsModel;
 import com.vysh.subairoma.models.TilesModel;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -52,7 +57,8 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
     private static RequestQueue queue;
     private static String userToken;
     public static final int DATABASE_VERSION = 33;
-    public static final String DATABASE_NAME = "SubairomaLocal.db";
+    private static String DATABASE_NAME = "safe_db.db";
+    private static String DATABASE_PATH = "";
     final String SQL_CREATE_ResponseTable =
             "CREATE TABLE IF NOT EXISTS " + DatabaseTables.ResponseTable.TABLE_NAME + " (" +
                     DatabaseTables.ResponseTable.migrant_id + " INTEGER," +
@@ -79,63 +85,7 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
                     " UNIQUE (" + DatabaseTables.TempResponseTable.question_id + ", " +
                     DatabaseTables.TempResponseTable.tile_id + ", " +
                     DatabaseTables.TempResponseTable.migrant_id + "));";
-    final String SQL_CREATE_TilesTable =
-            "CREATE TABLE IF NOT EXISTS " + DatabaseTables.TilesTable.TABLE_NAME + " (" +
-                    DatabaseTables.TilesTable.tile_id + " INTEGER PRIMARY KEY," +
-                    DatabaseTables.TilesTable.tile_order + " INTEGER," +
-                    DatabaseTables.TilesTable.tile_description + " TEXT," +
-                    DatabaseTables.TilesTable.tile_type + " TEXT," +
-                    DatabaseTables.TilesTable.tile_title + " TEXT" + ");";
-    final String SQL_CREATE_ManpowerTable =
-            "CREATE TABLE IF NOT EXISTS " + DatabaseTables.ManpowersTable.TABLE_NAME + " (" +
-                    DatabaseTables.ManpowersTable.manpower_id + " INTEGER PRIMARY KEY," +
-                    DatabaseTables.ManpowersTable.manpower_name + " TEXT" + ");";
-    final String SQL_CREATE_QuestionsTable =
-            "CREATE TABLE IF NOT EXISTS " + DatabaseTables.QuestionsTable.TABLE_NAME + " (" +
-                    DatabaseTables.QuestionsTable.question_id + " INTEGER PRIMARY KEY," +
-                    DatabaseTables.QuestionsTable.tile_id + " INTEGER," +
-                    DatabaseTables.QuestionsTable.question_step + " TEXT," +
-                    DatabaseTables.QuestionsTable.question_description + " TEXT," +
-                    DatabaseTables.QuestionsTable.conflict_description + " TEXT," +
-                    DatabaseTables.QuestionsTable.question_title + " TEXT," +
-                    DatabaseTables.QuestionsTable.question_condition + " TEXT," +
-                    DatabaseTables.QuestionsTable.question_variable + " TEXT," +
-                    DatabaseTables.QuestionsTable.question_order + " TEXT," +
-                    DatabaseTables.QuestionsTable.response_type + " TEXT," +
-                    DatabaseTables.QuestionsTable.question_call + " TEXT," +
-                    DatabaseTables.QuestionsTable.question_video + " TEXT" +
-                    ");";
-    final String SQL_CREATE_OptionsTable =
-            "CREATE TABLE IF NOT EXISTS " + DatabaseTables.OptionsTable.TABLE_NAME + " (" +
-                    DatabaseTables.OptionsTable.option_id + " INTEGER PRIMARY KEY," +
-                    DatabaseTables.OptionsTable.question_id + " INTEGER," +
-                    DatabaseTables.OptionsTable.option_text + " TEXT" + ");";
-    final String SQL_CREATE_CountriesTable =
-            "CREATE TABLE IF NOT EXISTS " + DatabaseTables.CountriesTable.TABLE_NAME + " (" +
-                    DatabaseTables.CountriesTable.country_id + " TEXT PRIMARY KEY," +
-                    DatabaseTables.CountriesTable.country_blacklist + " INTEGER," +
-                    DatabaseTables.CountriesTable.country_status + " INTEGER," +
-                    DatabaseTables.CountriesTable.country_order + " INTEGER," +
-                    DatabaseTables.CountriesTable.country_name + " TEXT" + ");";
-    final String SQL_CREATE_ContactsTable =
-            "CREATE TABLE IF NOT EXISTS " + DatabaseTables.ImportantContacts.TABLE_NAME + " (" +
-                    DatabaseTables.ImportantContacts.contact_id + " INT PRIMARY KEY," +
-                    DatabaseTables.ImportantContacts.country_id + " TEXT," +
-                    DatabaseTables.ImportantContacts.title + " TEXT," +
-                    DatabaseTables.ImportantContacts.description + " TEXT," +
-                    DatabaseTables.ImportantContacts.address + " TEXT," +
-                    DatabaseTables.ImportantContacts.phone + " TEXT," +
-                    DatabaseTables.ImportantContacts.email + " TEXT," +
-                    DatabaseTables.ImportantContacts.website + " TEXT" + ");";
-    final String SQL_CREATE_ContactsTableDefault =
-            "CREATE TABLE IF NOT EXISTS " + DatabaseTables.ImportantContactsDefault.TABLE_NAME + " (" +
-                    DatabaseTables.ImportantContactsDefault.contact_id + " INT PRIMARY KEY," +
-                    DatabaseTables.ImportantContactsDefault.title + " TEXT," +
-                    DatabaseTables.ImportantContactsDefault.description + " TEXT," +
-                    DatabaseTables.ImportantContactsDefault.address + " TEXT," +
-                    DatabaseTables.ImportantContactsDefault.phone + " TEXT," +
-                    DatabaseTables.ImportantContactsDefault.email + " TEXT," +
-                    DatabaseTables.ImportantContactsDefault.website + " TEXT" + ");";
+
     final String SQL_CREATE_MigrantsTable =
             "CREATE TABLE IF NOT EXISTS " + DatabaseTables.MigrantsTable.TABLE_NAME + " (" +
                     DatabaseTables.MigrantsTable.migrant_id + " INTEGER PRIMARY KEY," +
@@ -161,12 +111,6 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
                     DatabaseTables.MigrantsTempTable.phone_number + " TEXT," +
                     " UNIQUE (" + DatabaseTables.MigrantsTempTable.migrant_id +
                     ", " + DatabaseTables.MigrantsTempTable.user_id + "));";
-    final String SQL_CREATE_FeedbackQuestionTable =
-            "CREATE TABLE IF NOT EXISTS " + DatabaseTables.FeedbackQuestionsTable.TABLE_NAME + " (" +
-                    DatabaseTables.FeedbackQuestionsTable.question_id + " INTEGER PRIMARY KEY," +
-                    DatabaseTables.FeedbackQuestionsTable.question_title + " TEXT," +
-                    DatabaseTables.FeedbackQuestionsTable.question_type + " TEXT," +
-                    DatabaseTables.FeedbackQuestionsTable.question_option + " TEXT" + ");";
     final String SQL_CREATE_FeedbackQuestionResponseTable =
             "CREATE TABLE IF NOT EXISTS " + DatabaseTables.FeedbackQuestionsResponseTable.TABLE_NAME + " (" +
                     DatabaseTables.FeedbackQuestionsResponseTable.question_id + " INTEGER," +
@@ -193,6 +137,10 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
 
     private SQLDatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
+        DATABASE_PATH = context.getApplicationInfo().dataDir + "/databases/";
+        this.mContext = context;
+
+        copyDataBase();
         if (db == null)
             db = this.getWritableDatabase();
         SharedPreferences sp = context.getSharedPreferences(SharedPrefKeys.sharedPrefName, MODE_PRIVATE);
@@ -206,22 +154,43 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
         Log.d("mylog", "Database created");
     }
 
+    private boolean checkDataBase() {
+        File dbFile = new File(DATABASE_PATH + DATABASE_NAME);
+        return dbFile.exists();
+    }
+
+    private void copyDataBase() {
+        if (!checkDataBase()) {
+            this.getReadableDatabase();
+            this.close();
+            try {
+                copyDBFile();
+            } catch (IOException mIOException) {
+                throw new Error("ErrorCopyingDataBase");
+            }
+        }
+    }
+
+    private void copyDBFile() throws IOException {
+        InputStream mInput = mContext.getAssets().open(DATABASE_NAME);
+        //InputStream mInput = mContext.getResources().openRawResource(R.raw.info);
+        OutputStream mOutput = new FileOutputStream(DATABASE_PATH + DATABASE_NAME);
+        byte[] mBuffer = new byte[1024];
+        int mLength;
+        while ((mLength = mInput.read(mBuffer)) > 0)
+            mOutput.write(mBuffer, 0, mLength);
+        mOutput.flush();
+        mOutput.close();
+        mInput.close();
+    }
 
     @Override
     public void onCreate(SQLiteDatabase db) {
         db.execSQL(SQL_CREATE_ResponseTable);
-        db.execSQL(SQL_CREATE_TilesTable);
-        db.execSQL(SQL_CREATE_QuestionsTable);
-        db.execSQL(SQL_CREATE_OptionsTable);
-        db.execSQL(SQL_CREATE_CountriesTable);
         db.execSQL(SQL_CREATE_MigrantsTable);
-        db.execSQL(SQL_CREATE_ContactsTable);
-        db.execSQL(SQL_CREATE_ContactsTableDefault);
-        db.execSQL(SQL_CREATE_FeedbackQuestionTable);
         db.execSQL(SQL_CREATE_FeedbackQuestionResponseTable);
         db.execSQL(SQL_CREATE_MigrantsTempTable);
         db.execSQL(SQL_CREATE_ResponseTempTable);
-        db.execSQL(SQL_CREATE_ManpowerTable);
     }
 
     @Override
@@ -249,18 +218,10 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
         Toast.makeText(mContext, "Reload Data", Toast.LENGTH_LONG).show();
 
         db.execSQL(SQL_CREATE_ResponseTable);
-        db.execSQL(SQL_CREATE_TilesTable);
-        db.execSQL(SQL_CREATE_QuestionsTable);
-        db.execSQL(SQL_CREATE_OptionsTable);
-        db.execSQL(SQL_CREATE_CountriesTable);
         db.execSQL(SQL_CREATE_MigrantsTable);
-        db.execSQL(SQL_CREATE_ContactsTable);
-        db.execSQL(SQL_CREATE_ContactsTableDefault);
-        db.execSQL(SQL_CREATE_FeedbackQuestionTable);
         db.execSQL(SQL_CREATE_FeedbackQuestionResponseTable);
         db.execSQL(SQL_CREATE_MigrantsTempTable);
         db.execSQL(SQL_CREATE_ResponseTempTable);
-        db.execSQL(SQL_CREATE_ManpowerTable);
     }
 
     public void allowReloadData() {

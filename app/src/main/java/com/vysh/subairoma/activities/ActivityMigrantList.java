@@ -163,7 +163,7 @@ public class ActivityMigrantList extends AppCompatActivity implements RecyclerIt
         btnTryAgain.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                getAllData();
+                //getAllData();
                 //progressBar.setVisibility(View.VISIBLE);
                 bottomLayoutMessage.setVisibility(View.GONE);
             }
@@ -173,7 +173,7 @@ public class ActivityMigrantList extends AppCompatActivity implements RecyclerIt
         if (savedCount != apiCount) {
             fParams = new HashMap<>();
             fParams.put("lang", sp.getString(SharedPrefKeys.lang, ""));
-            getAllData();
+            //getAllData();
         }
     }
 
@@ -1038,7 +1038,7 @@ public class ActivityMigrantList extends AppCompatActivity implements RecyclerIt
 
                     String qidString = questionObject.getString("question_id");
                     int qid = -1;
-                    if (!qidString.equalsIgnoreCase("null")) {
+                    if (qidString != null && !qidString.equalsIgnoreCase("null")) {
                         qid = Integer.parseInt(qidString);
                     }
                     String qTitle = questionObject.getString("question_title");

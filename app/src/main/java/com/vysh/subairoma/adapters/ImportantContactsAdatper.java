@@ -33,32 +33,32 @@ public class ImportantContactsAdatper extends RecyclerView.Adapter<ImportantCont
     @Override
     public void onBindViewHolder(ContactHolder holder, int position) {
         String title = contacts.get(position).getTitle();
-        if (!title.equalsIgnoreCase("null")) {
+        if (title != null && !title.equalsIgnoreCase("null")) {
             holder.tvTitle.setText(title);
         } else holder.tvTitle.setVisibility(View.GONE);
 
         String description = contacts.get(position).getDescription();
-        if (!description.equalsIgnoreCase("null")) {
+        if (description != null && !description.equalsIgnoreCase("null")) {
             holder.tvDescription.setText(description);
         } else holder.tvDescription.setVisibility(View.GONE);
 
         String address = contacts.get(position).getAddress();
-        if (!address.equalsIgnoreCase("null")) {
+        if (address != null && !address.equalsIgnoreCase("null")) {
             holder.tvAddress.setText(address);
         } else holder.tvAddress.setVisibility(View.GONE);
 
         String email = contacts.get(position).getEmail();
-        if (!email.equalsIgnoreCase("null")) {
+        if (email != null && !email.equalsIgnoreCase("null")) {
             holder.tvEmail.setText(email);
         } else holder.tvEmail.setVisibility(View.GONE);
 
         String website = contacts.get(position).getWebsite();
-        if (!website.equalsIgnoreCase("null")) {
+        if (website != null && !website.equalsIgnoreCase("null")) {
             holder.tvWebsite.setText(website);
         } else holder.tvWebsite.setVisibility(View.GONE);
 
         String phone = contacts.get(position).getPhone();
-        if (!phone.equalsIgnoreCase("null")) {
+        if (phone != null && !phone.equalsIgnoreCase("null")) {
             holder.tvPhone.setText(phone);
         } else holder.tvPhone.setVisibility(View.GONE);
     }

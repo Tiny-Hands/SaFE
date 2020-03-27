@@ -39,6 +39,7 @@ public final class DatabaseTables {
         public static final String tile_id = "tile_id";
         public static final String tile_type = "tile_type";
         public static final String tile_title = "tile_title";
+        public static final String tile_title_en = "tile_title_en";
         public static final String tile_description = "tile_description";
         public static final String tile_order = "tile_order";
     }
@@ -47,12 +48,15 @@ public final class DatabaseTables {
         public static final String TABLE_NAME = "tbl_questions";
         public static final String question_id = "question_id";
         public static final String question_step = "question_step";
+        public static final String question_step_en = "question_step_en";
         public static final String question_description = "question_description";
+        public static final String question_description_en = "question_description_en";
         public static final String question_condition = "question_condition";
         public static final String response_type = "response_type";
         public static final String tile_id = "tile_id";
         public static final String question_order = "question_order";
         public static final String question_title = "question_title";
+        public static final String question_title_en = "question_title_en";
         public static final String question_variable = "question_variable";
         public static final String conflict_description = "conflict_description";
         public static final String question_call = "question_call";
@@ -63,9 +67,11 @@ public final class DatabaseTables {
         public static final String TABLE_NAME = "tbl_countries";
         public static final String country_id = "country_id";
         public static final String country_name = "country_name";
+        public static final String country_name_en = "country_name_en";
         public static final String country_status = "country_status";
         public static final String country_blacklist = "country_blacklist";
         public static final String country_order = "country_order";
+        public static final String country_type = "country_type";
     }
 
     public static class ManpowersTable {
@@ -79,8 +85,11 @@ public final class DatabaseTables {
         public static final String contact_id = "contact_id";
         public static final String country_id = "country_id";
         public static final String title = "title";
+        public static final String title_en = "title_en";
         public static final String description = "description";
+        public static final String description_en = "description_en";
         public static final String address = "address";
+        public static final String address_en = "address_en";
         public static final String phone = "phone";
         public static final String email = "email";
         public static final String website = "website";
@@ -90,8 +99,11 @@ public final class DatabaseTables {
         public static final String TABLE_NAME = "tbl_contacts_default";
         public static final String contact_id = "contact_id";
         public static final String title = "title";
+        public static final String title_en = "title_en";
         public static final String description = "description";
+        public static final String description_en = "description_en";
         public static final String address = "address";
+        public static final String address_en = "address_en";
         public static final String phone = "phone";
         public static final String email = "email";
         public static final String website = "website";
@@ -101,6 +113,7 @@ public final class DatabaseTables {
         public static final String TABLE_NAME = "tbl_options";
         public static final String option_id = "option_id";
         public static final String option_text = "option_text";
+        public static final String option_text_en = "option_text_en";
         public static final String question_id = "question_id";
     }
 
@@ -133,7 +146,9 @@ public final class DatabaseTables {
         public static final String TABLE_NAME = "tbl_feedbackquestions";
         public static final String question_id = "question_id";
         public static final String question_title = "question_title";
+        public static final String question_title_en = "question_title_en";
         public static final String question_option = "question_option";
+        public static final String question_option_en = "question_option_en";
         public static String question_type = "question_type";
     }
 

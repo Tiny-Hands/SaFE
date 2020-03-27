@@ -138,7 +138,7 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
 
             //To Display question in beginning or not
             String condition = questionModel.getCondition();
-            if (!condition.equalsIgnoreCase("null") && !condition.isEmpty()) {
+            if (condition != null && !condition.equalsIgnoreCase("null") && !condition.isEmpty()) {
                 try {
                     //Log.d("mylog", "Condition : " + condition);
                     JSONObject jsonObject = new JSONObject(condition);
@@ -341,7 +341,7 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
                     "Variable: " + questionsListDisplay.get(i).getVariable() + " Condition: " + questionsListDisplay.get(i).getCondition());
          */
             questionsModel = questionsListDisplay.get(i);
-            if (questionsModel.getCondition().contains("error")) {
+            if (questionsModel.getCondition() != null && questionsModel.getCondition().contains("error")) {
                 totalQuestion--;
                 //Log.d("mylog", "Redflag Question: " + questionsListDisplay.get(i).getVariable());
                 questionIdsWithPossibleRedflags.add(questionsModel.getQuestionId());
@@ -469,7 +469,7 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
         for (int i = 0; i < questionsList.size(); i++) {
             TileQuestionsModel question = questionsList.get(i);
             conditionString = question.getCondition();
-            if (!conditionString.equalsIgnoreCase("null") && !conditionString.isEmpty()) {
+            if (conditionString != null && !conditionString.equalsIgnoreCase("null") && !conditionString.isEmpty()) {
                 conditionQuestionIndex.put(question.getQuestionId(), i);
                 //Log.d("mylog", "Condition on Question Index: " + i);
                 try {
@@ -1056,7 +1056,7 @@ public class TileQuestionsAdapter extends RecyclerView.Adapter<TileQuestionsAdap
             }
             details.setVisibility(View.VISIBLE);
             btnHelp.setVisibility(View.VISIBLE);
-            if (!question.getText().toString().equalsIgnoreCase("null"))
+            if (question.getText() != null && !question.getText().toString().equalsIgnoreCase("null"))
                 question.setVisibility(View.VISIBLE);
             ivPointer.setImageBitmap(BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_pointerarrow_down));
             int responseType = questionsListDisplay.get(currentClickedPos).getResponseType();

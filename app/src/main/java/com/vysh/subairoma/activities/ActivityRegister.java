@@ -299,19 +299,19 @@ public class ActivityRegister extends AppCompatActivity {
                         int userId = jsonObject.getInt("user_id");
                         String token = jsonObject.getString("token");
                         String userName = jsonObject.getString("user_name");
-                        if (userName.equalsIgnoreCase("null"))
+                        if (userName == null || userName.equalsIgnoreCase("null"))
                             userName = "";
                         String userSex = jsonObject.getString("user_sex");
-                        if (userSex.equalsIgnoreCase("null"))
+                        if (userSex == null || userSex.equalsIgnoreCase("null"))
                             userSex = "";
                         String user_age = jsonObject.getString("user_age");
-                        if (user_age.equalsIgnoreCase("null"))
+                        if (user_age == null || user_age.equalsIgnoreCase("null"))
                             user_age = "";
                         String userPhone = jsonObject.getString("user_phone");
-                        if (userPhone.equalsIgnoreCase("null"))
+                        if (userPhone == null || userPhone.equalsIgnoreCase("null"))
                             userPhone = "";
                         String userImg = jsonObject.getString("user_img");
-                        if (userImg.equalsIgnoreCase("null"))
+                        if (userImg == null || userImg.equalsIgnoreCase("null"))
                             userImg = "";
                         ApplicationClass.getInstance().setSafeUserId(userId);
                         SharedPreferences sharedPreferences = getSharedPreferences(SharedPrefKeys.sharedPrefName, MODE_PRIVATE);
