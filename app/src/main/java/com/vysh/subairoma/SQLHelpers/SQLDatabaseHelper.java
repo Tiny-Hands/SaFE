@@ -59,6 +59,7 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
     public static final int DATABASE_VERSION = 33;
     private static String DATABASE_NAME = "safe_db.db";
     private static String DATABASE_PATH = "";
+    private static String lang = "";
     final String SQL_CREATE_ResponseTable =
             "CREATE TABLE IF NOT EXISTS " + DatabaseTables.ResponseTable.TABLE_NAME + " (" +
                     DatabaseTables.ResponseTable.migrant_id + " INTEGER," +
@@ -132,6 +133,13 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
             userToken = context.getSharedPreferences(SharedPrefKeys.sharedPrefName, MODE_PRIVATE).getString(SharedPrefKeys.token, "");
         if (queue == null)
             queue = Volley.newRequestQueue(context);
+        if (lang.isEmpty()) {
+            lang = ApplicationClass.getInstance().getLocale();
+            if (lang.equalsIgnoreCase("np"))
+                lang = "";
+            else
+                lang = "_en";
+        }
         return sDbHelperInstance;
     }
 
@@ -537,7 +545,7 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
         Cursor cursor = db.rawQuery("SELECT * FROM " + DatabaseTables.CountriesTable.TABLE_NAME + " ORDER BY " + DatabaseTables.CountriesTable.country_order, null);
         while (cursor.moveToNext()) {
             String id = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseTables.CountriesTable.country_id));
-            String name = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseTables.CountriesTable.country_name));
+            String name = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseTables.CountriesTable.country_name + lang));
             int blacklist = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseTables.CountriesTable.country_blacklist));
             int status = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseTables.CountriesTable.country_status));
             int order = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseTables.CountriesTable.country_order));
@@ -628,7 +636,8 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
         try {
             while (cursor.moveToNext()) {
                 int id = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseTables.TilesTable.tile_id));
-                String title = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseTables.TilesTable.tile_title));
+                Log.d("mylog","Getting Title: " + DatabaseTables.TilesTable.tile_title + "_en");
+                String title = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseTables.TilesTable.tile_title + lang));
                 String desc = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseTables.TilesTable.tile_description));
                 int order = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseTables.TilesTable.tile_order));
                 TilesModel tilesModel = new TilesModel();
@@ -748,8 +757,8 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
         Cursor cursor = db.rawQuery(statement, null);
         while (cursor.moveToNext()) {
             int id = cursor.getInt(cursor.getColumnIndex(DatabaseTables.FeedbackQuestionsTable.question_id));
-            String qTitle = cursor.getString(cursor.getColumnIndex(DatabaseTables.FeedbackQuestionsTable.question_title));
-            String qOptions = cursor.getString(cursor.getColumnIndex(DatabaseTables.FeedbackQuestionsTable.question_option));
+            String qTitle = cursor.getString(cursor.getColumnIndex(DatabaseTables.FeedbackQuestionsTable.question_title + lang));
+            String qOptions = cursor.getString(cursor.getColumnIndex(DatabaseTables.FeedbackQuestionsTable.question_option + lang));
             FeedbackQuestionModel tempModel = new FeedbackQuestionModel();
             tempModel.setQuestionId(id);
             tempModel.setQuestionTitle(qTitle);
@@ -769,12 +778,13 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
                 + DatabaseTables.QuestionsTable.tile_id + "=" + "'" + tileId + "'" + " ORDER BY " + DatabaseTables.QuestionsTable.question_order;
         //Log.d("mylog", "Query: " + statement);
         Cursor cursor = db.rawQuery(statement, null);
+
         while (cursor.moveToNext()) {
             int id = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseTables.QuestionsTable.question_id));
-            String question = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseTables.QuestionsTable.question_title));
-            String desc = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseTables.QuestionsTable.question_description));
+            String question = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseTables.QuestionsTable.question_title + lang));
+            String desc = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseTables.QuestionsTable.question_description + lang));
             String confDesc = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseTables.QuestionsTable.conflict_description));
-            String step = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseTables.QuestionsTable.question_step));
+            String step = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseTables.QuestionsTable.question_step + lang));
             String condition = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseTables.QuestionsTable.question_condition));
             int responseType = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseTables.QuestionsTable.response_type));
             String variable = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseTables.QuestionsTable.question_variable));
@@ -826,7 +836,7 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
         String[] options = new String[cursor.getCount()];
         while (cursor.moveToNext()) {
             int id = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseTables.OptionsTable.option_id));
-            String title = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseTables.OptionsTable.option_text));
+            String title = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseTables.OptionsTable.option_text + lang));
             options[i] = title.toUpperCase();
             i++;
         }
@@ -976,9 +986,9 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
         Log.d("mylog", "Raw Data: " + cursor.toString());
         ArrayList<ImportantContactsModel> contactsModels = new ArrayList<>();
         while (cursor.moveToNext()) {
-            String title = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseTables.ImportantContacts.title));
-            String description = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseTables.ImportantContacts.description));
-            String address = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseTables.ImportantContacts.address));
+            String title = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseTables.ImportantContacts.title + lang));
+            String description = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseTables.ImportantContacts.description + lang));
+            String address = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseTables.ImportantContacts.address + lang));
             String phone = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseTables.ImportantContacts.phone));
             String email = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseTables.ImportantContacts.email));
             String website = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseTables.ImportantContacts.website));
@@ -1003,9 +1013,9 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
         ArrayList<ImportantContactsModel> contactsModels = new ArrayList<>();
         //cursor.moveToFirst();
         while (cursor.moveToNext()) {
-            String title = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseTables.ImportantContactsDefault.title));
-            String description = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseTables.ImportantContactsDefault.description));
-            String address = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseTables.ImportantContactsDefault.address));
+            String title = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseTables.ImportantContactsDefault.title + lang));
+            String description = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseTables.ImportantContactsDefault.description + lang));
+            String address = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseTables.ImportantContactsDefault.address + lang));
             String phone = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseTables.ImportantContactsDefault.phone));
             String email = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseTables.ImportantContactsDefault.email));
             String website = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseTables.ImportantContactsDefault.website));

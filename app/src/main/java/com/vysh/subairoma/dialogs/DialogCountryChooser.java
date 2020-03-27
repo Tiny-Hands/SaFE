@@ -62,7 +62,8 @@ public class DialogCountryChooser extends DialogFragment {
         countryNameList.add("-------");
         for (CountryModel country : countries) {
             Log.d("mylog", "Country name: " + country.getCountryName());
-            countryNameList.add(country.getCountryName().toUpperCase());
+            if (country.getCountryName() != null)
+                countryNameList.add(country.getCountryName().toUpperCase());
             if (country.getOrder() >= 1)
                 importantCount++;
         }

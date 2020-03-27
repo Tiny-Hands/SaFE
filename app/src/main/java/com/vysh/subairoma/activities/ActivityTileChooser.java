@@ -369,7 +369,9 @@ public class ActivityTileChooser extends AppCompatActivity {
             String percentComp = PercentHelper.getPercentCompleteBySection(ActivityTileChooser.this,
                     ApplicationClass.getInstance().getMigrantId(), "FEP");
             tvPercentComp1.setText(percentComp + "% " + getResources().getString(R.string.complete));
-            if (Integer.parseInt(percentComp) > 0) {
+            Log.d("mylog", "Percent Complete: " + percentComp);
+
+            if (!percentComp.equalsIgnoreCase("NaN") && Integer.parseInt(percentComp) > 0) {
                 progressBar1.setVisibility(View.VISIBLE);
                 progressBar1.setProgress(Integer.parseInt(percentComp));
             }
