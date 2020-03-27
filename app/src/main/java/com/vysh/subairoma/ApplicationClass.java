@@ -19,6 +19,7 @@ public class ApplicationClass extends Application {
     private int userId = -1, migrantId = -1;
     private String userType;
     private static ApplicationClass mInstance;
+    private String lang = "";
 
     public static ApplicationClass getInstance() {
         return mInstance;
@@ -64,5 +65,13 @@ public class ApplicationClass extends Application {
         new FlurryAgent.Builder()
                 .withLogEnabled(true)
                 .build(this, "2W5WGBPYKS7ZXN2Y684D");
+    }
+
+    public void setLocale(String lang) {
+        this.lang = lang;
+    }
+
+    public String getLocale() {
+        return lang;
     }
 }

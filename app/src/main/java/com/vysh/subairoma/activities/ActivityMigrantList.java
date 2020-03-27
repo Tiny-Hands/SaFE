@@ -170,9 +170,12 @@ public class ActivityMigrantList extends AppCompatActivity implements RecyclerIt
         });
         sp = getSharedPreferences(SharedPrefKeys.sharedPrefName, MODE_PRIVATE);
         savedCount = sp.getInt(SharedPrefKeys.savedCount, 0);
+        String lang = sp.getString(SharedPrefKeys.lang, "");
+        if (lang.isEmpty())
+            lang = "en";
         if (savedCount != apiCount) {
             fParams = new HashMap<>();
-            fParams.put("lang", sp.getString(SharedPrefKeys.lang, ""));
+            fParams.put("lang", lang);
             //getAllData();
         }
     }

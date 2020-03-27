@@ -93,11 +93,14 @@ public class ActivitySplash extends AppCompatActivity {
             startActivity(intent);
             return;
         }
-        if (sp.getString(SharedPrefKeys.lang, "").equalsIgnoreCase("en")) {
+        String setLang = sp.getString(SharedPrefKeys.lang, "");
+        if (setLang.equalsIgnoreCase("en")) {
             setLocale("en");
+            ApplicationClass.getInstance().setLocale(setLang);
             FlurryAgent.logEvent("locale_english_selection");
         } else {
             setLocale("np");
+            ApplicationClass.getInstance().setLocale(setLang);
             FlurryAgent.logEvent("locale_nepal_selection");
         }
 
@@ -106,12 +109,14 @@ public class ActivitySplash extends AppCompatActivity {
         Fabric.with(this, new Crashlytics());
         ButterKnife.bind(this);
 
+        if (!setLang.isEmpty())
+            hideLangOptions();
         ibEn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 setLocale("en");
                 lang = "en";
-                hideLangOptions();
+                //hideLangOptions();
                 startNextActivity();
 
                 SharedPreferences.Editor editor = sp.edit();
@@ -125,7 +130,7 @@ public class ActivitySplash extends AppCompatActivity {
             public void onClick(View view) {
                 setLocale("np");
                 lang = "np";
-                hideLangOptions();
+                //hideLangOptions();
                 startNextActivity();
 
                 SharedPreferences.Editor editor = sp.edit();
@@ -144,7 +149,8 @@ public class ActivitySplash extends AppCompatActivity {
                 } catch (Exception ex) {
                     Log.d("mylog", "Sleeping exception: " + ex.toString());
                 } finally {
-                    startNextActivity();
+                    if (!setLang.isEmpty())
+                        startNextActivity();
                 }
             }
         });
@@ -188,7 +194,7 @@ public class ActivitySplash extends AppCompatActivity {
     }
 
     private void hideLangOptions() {
-        showLoading();
+        //showLoading();
         llLang.setVisibility(View.GONE);
     }
 }
