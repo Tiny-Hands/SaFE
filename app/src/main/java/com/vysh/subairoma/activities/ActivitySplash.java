@@ -78,6 +78,17 @@ public class ActivitySplash extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         sp = getSharedPreferences(SharedPrefKeys.sharedPrefName, MODE_PRIVATE);
         int currVersion = sp.getInt(SharedPrefKeys.dbVersion, -1);
+
+        String setLang = sp.getString(SharedPrefKeys.lang, "");
+        if (setLang.equalsIgnoreCase("en")) {
+            setLocale("en");
+            ApplicationClass.getInstance().setLocale(setLang);
+            FlurryAgent.logEvent("locale_english_selection");
+        } else {
+            setLocale("np");
+            ApplicationClass.getInstance().setLocale(setLang);
+            FlurryAgent.logEvent("locale_nepal_selection");
+        }
         dbHelper = SQLDatabaseHelper.getInstance(ActivitySplash.this);
         if (dbHelper.getVersion() > currVersion && currVersion != -1) {
             Log.d("mylog", "Greater Version dropping");
@@ -92,16 +103,6 @@ public class ActivitySplash extends AppCompatActivity {
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);
             return;
-        }
-        String setLang = sp.getString(SharedPrefKeys.lang, "");
-        if (setLang.equalsIgnoreCase("en")) {
-            setLocale("en");
-            ApplicationClass.getInstance().setLocale(setLang);
-            FlurryAgent.logEvent("locale_english_selection");
-        } else {
-            setLocale("np");
-            ApplicationClass.getInstance().setLocale(setLang);
-            FlurryAgent.logEvent("locale_nepal_selection");
         }
 
         setContentView(R.layout.activity_splash);

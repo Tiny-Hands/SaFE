@@ -56,7 +56,7 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
     Context mContext;
     private static RequestQueue queue;
     private static String userToken;
-    public static final int DATABASE_VERSION = 33;
+    public static final int DATABASE_VERSION = 39;
     private static String DATABASE_NAME = "safe_db.db";
     private static String DATABASE_PATH = "";
     private static String lang = "";
@@ -135,9 +135,10 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
             queue = Volley.newRequestQueue(context);
         if (lang.isEmpty()) {
             lang = ApplicationClass.getInstance().getLocale();
-            if (lang.equalsIgnoreCase("np"))
+            Log.d("mylog", "Fetch from DB: " + lang);
+            if (lang.equalsIgnoreCase("np")) {
                 lang = "";
-            else
+            } else
                 lang = "_en";
         }
         return sDbHelperInstance;
@@ -174,7 +175,7 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
             try {
                 copyDBFile();
             } catch (IOException mIOException) {
-                throw new Error("ErrorCopyingDataBase");
+                Log.d("mylog", "Copying Error " + mIOException.toString());
             }
         }
     }
@@ -211,7 +212,9 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
     }
 
     public void dropDB() {
-        SQLiteDatabase db = getWritableDatabase();
+        mContext.deleteDatabase(DATABASE_NAME);
+        copyDataBase();
+/*        SQLiteDatabase db = getWritableDatabase();
         db.execSQL("DROP TABLE IF EXISTS " + DatabaseTables.FeedbackQuestionsResponseTable.TABLE_NAME);
         db.execSQL("DROP TABLE IF EXISTS " + DatabaseTables.FeedbackQuestionsTable.TABLE_NAME);
         db.execSQL("DROP TABLE IF EXISTS " + DatabaseTables.ResponseTable.TABLE_NAME);
@@ -220,11 +223,11 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + DatabaseTables.CountriesTable.TABLE_NAME);
         db.execSQL("DROP TABLE IF EXISTS " + DatabaseTables.TilesTable.TABLE_NAME);
         db.execSQL("DROP TABLE IF EXISTS " + DatabaseTables.ImportantContacts.TABLE_NAME);
-        db.execSQL("DROP TABLE IF EXISTS " + DatabaseTables.ImportantContactsDefault.TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + DatabaseTables.ImportantContactsDefault.TABLE_NAME);*/
         //mContext.deleteDatabase(DATABASE_NAME);
         allowReloadData();
         Toast.makeText(mContext, "Reload Data", Toast.LENGTH_LONG).show();
-
+        db = getWritableDatabase();
         db.execSQL(SQL_CREATE_ResponseTable);
         db.execSQL(SQL_CREATE_MigrantsTable);
         db.execSQL(SQL_CREATE_FeedbackQuestionResponseTable);
@@ -236,6 +239,7 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
         SharedPreferences sp = mContext.getSharedPreferences(SharedPrefKeys.sharedPrefName, MODE_PRIVATE);
         SharedPreferences.Editor editor = sp.edit();
         editor.putInt(SharedPrefKeys.savedTableCount, 0);
+        editor.putInt(SharedPrefKeys.userId, -1);
         editor.putBoolean(SharedPrefKeys.savedManpowers, false);
         editor.putBoolean(SharedPrefKeys.savedContacts, false);
         editor.putBoolean(SharedPrefKeys.savedCountries, false);
@@ -243,6 +247,7 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
         editor.putBoolean(SharedPrefKeys.savedOptions, false);
         editor.putBoolean(SharedPrefKeys.savedQuestions, false);
         editor.putBoolean(SharedPrefKeys.savedTiles, false);
+        editor.putString(SharedPrefKeys.lang, "");
         editor.commit();
     }
 
@@ -636,7 +641,7 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
         try {
             while (cursor.moveToNext()) {
                 int id = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseTables.TilesTable.tile_id));
-                Log.d("mylog","Getting Title: " + DatabaseTables.TilesTable.tile_title + "_en");
+                Log.d("mylog", "Getting Title: " + DatabaseTables.TilesTable.tile_title + lang);
                 String title = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseTables.TilesTable.tile_title + lang));
                 String desc = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseTables.TilesTable.tile_description));
                 int order = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseTables.TilesTable.tile_order));
@@ -865,7 +870,6 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
     }
 
     public void insertMigrants(int id, String name, int age, String phone, String sex, int userId, String migImg, int percentComp) {
-
         ContentValues values = new ContentValues();
         values.put(DatabaseTables.MigrantsTable.name, name);
         values.put(DatabaseTables.MigrantsTable.age, age);
