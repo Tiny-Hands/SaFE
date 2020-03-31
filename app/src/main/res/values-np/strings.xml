@@ -186,5 +186,6 @@
     <string name="cannot_login">लगइन असफल भयो</string>
     <string name="updateUserType">प्रयोगकर्ता प्रकार अपडेट</string>
     <string name="generic_updating">अपडेट गर्दै</string>
+    <string name="change_language">भाषा परिवर्तन</string>
 
 </resources>

@@ -52,8 +52,6 @@ import io.fabric.sdk.android.Fabric;
 
 public class ActivitySplash extends AppCompatActivity {
     private long startTime, sleepTime = 2000;
-    private String lang;
-
     SharedPreferences sp;
 
     SQLDatabaseHelper dbHelper;
@@ -116,7 +114,7 @@ public class ActivitySplash extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 setLocale("en");
-                lang = "en";
+                ApplicationClass.getInstance().setLocale("en");
                 //hideLangOptions();
                 startNextActivity();
 
@@ -130,7 +128,7 @@ public class ActivitySplash extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 setLocale("np");
-                lang = "np";
+                ApplicationClass.getInstance().setLocale("np");
                 //hideLangOptions();
                 startNextActivity();
 
@@ -178,14 +176,6 @@ public class ActivitySplash extends AppCompatActivity {
         Configuration conf = res.getConfiguration();
         conf.locale = myLocale;
         res.updateConfiguration(conf, dm);
-    }
-
-    private void showLoading() {
-        progressBar.setVisibility(View.VISIBLE);
-        if (lang.equalsIgnoreCase("np"))
-            tvLoadingNepali.setVisibility(View.VISIBLE);
-        else if (lang.equalsIgnoreCase("en"))
-            tvLoadingEng.setVisibility(View.VISIBLE);
     }
 
     private void startInfoActivity() {

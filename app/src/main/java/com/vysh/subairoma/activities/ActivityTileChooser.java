@@ -310,6 +310,33 @@ public class ActivityTileChooser extends AppCompatActivity {
                         //rlInstruction.setVisibility(View.VISIBLE);
                         //showInformationOverlay();
                         break;
+                    case R.id.nav_lang:
+                        AlertDialog.Builder builder = new AlertDialog.Builder(ActivityTileChooser.this);
+                        builder.setTitle("Change Language");
+                        builder.setPositiveButton("English", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                setLocale("en");
+                                ApplicationClass.getInstance().setLocale("en");
+                                SharedPreferences.Editor editor = sp.edit();
+                                editor.putString(SharedPrefKeys.lang, "en");
+                                editor.commit();
+                                recreate();
+                            }
+                        });
+                        builder.setNegativeButton("नेपाली", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                setLocale("np");
+                                ApplicationClass.getInstance().setLocale("np");
+                                SharedPreferences.Editor editor = sp.edit();
+                                editor.putString(SharedPrefKeys.lang, "np");
+                                editor.commit();
+                                recreate();
+                            }
+                        });
+                        builder.show();
+                        break;
                 }
                 return false;
             }
@@ -429,7 +456,7 @@ public class ActivityTileChooser extends AppCompatActivity {
             @Override
             public void onResponse(String response) {
                 progressDialog.dismiss();
-                Log.d("mylog", "Country Response: " + response);
+                Log.d("mylog", "User Type Update Response: " + response);
             }
         }, new Response.ErrorListener() {
             @Override

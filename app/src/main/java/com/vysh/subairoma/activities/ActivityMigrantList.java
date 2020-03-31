@@ -2,11 +2,14 @@ package com.vysh.subairoma.activities;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -22,6 +25,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.transition.TransitionManager;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -62,6 +66,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 import butterknife.BindView;
@@ -232,10 +237,46 @@ public class ActivityMigrantList extends AppCompatActivity implements RecyclerIt
                         drawerLayout.closeDrawer(GravityCompat.END);
                         startActivity(intentFaq);
                         break;
+                    case R.id.nav_lang:
+                        AlertDialog.Builder builder = new AlertDialog.Builder(ActivityMigrantList.this);
+                        builder.setTitle("Change Language");
+                        builder.setPositiveButton("English", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                setLocale("en");
+                                ApplicationClass.getInstance().setLocale("en");
+                                SharedPreferences.Editor editor = sp.edit();
+                                editor.putString(SharedPrefKeys.lang, "en");
+                                editor.commit();
+                                recreate();
+                            }
+                        });
+                        builder.setNegativeButton("नेपाली", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                setLocale("np");
+                                ApplicationClass.getInstance().setLocale("np");
+                                SharedPreferences.Editor editor = sp.edit();
+                                editor.putString(SharedPrefKeys.lang, "np");
+                                editor.commit();
+                                recreate();
+                            }
+                        });
+                        builder.show();
+                        break;
                 }
                 return false;
             }
         });
+    }
+
+    private void setLocale(String lang) {
+        Locale myLocale = new Locale(lang);
+        Resources res = getResources();
+        DisplayMetrics dm = res.getDisplayMetrics();
+        Configuration conf = res.getConfiguration();
+        conf.locale = myLocale;
+        res.updateConfiguration(conf, dm);
     }
 
     @Override
@@ -267,7 +308,7 @@ public class ActivityMigrantList extends AppCompatActivity implements RecyclerIt
             @Override
             public void onResponse(String response) {
                 progressDialog.dismiss();
-                Log.d("mylog", "Country Response: " + response);
+                Log.d("mylog", "User Type Update Response Mig List: " + response);
             }
         }, new Response.ErrorListener() {
             @Override

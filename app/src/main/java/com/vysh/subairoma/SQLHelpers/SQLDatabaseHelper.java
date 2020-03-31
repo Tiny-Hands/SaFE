@@ -133,14 +133,13 @@ public class SQLDatabaseHelper extends SQLiteOpenHelper {
             userToken = context.getSharedPreferences(SharedPrefKeys.sharedPrefName, MODE_PRIVATE).getString(SharedPrefKeys.token, "");
         if (queue == null)
             queue = Volley.newRequestQueue(context);
-        if (lang.isEmpty()) {
-            lang = ApplicationClass.getInstance().getLocale();
-            Log.d("mylog", "Fetch from DB: " + lang);
-            if (lang.equalsIgnoreCase("np")) {
-                lang = "";
-            } else
-                lang = "_en";
-        }
+        lang = ApplicationClass.getInstance().getLocale();
+        Log.d("mylog", "Fetch from DB: " + lang);
+        if (lang.equalsIgnoreCase("np")) {
+            lang = "";
+        } else
+            lang = "_en";
+
         return sDbHelperInstance;
     }
 

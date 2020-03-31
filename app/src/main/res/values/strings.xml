@@ -186,5 +186,6 @@
     <string name="cannot_login">Login Failed</string>
     <string name="updateUserType">Update User Type</string>
     <string name="generic_updating">Updating</string>
+    <string name="change_language">Change Language</string>
 
 </resources>

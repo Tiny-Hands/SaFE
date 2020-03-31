@@ -4,6 +4,8 @@ import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -16,6 +18,7 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -50,6 +53,7 @@ import com.vysh.subairoma.utils.CustomTextView;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 import butterknife.BindView;
@@ -442,10 +446,48 @@ public class ActivityTileHome extends AppCompatActivity {
                         drawerLayout.closeDrawer(GravityCompat.END);
                         startActivity(intentFaq);
                         break;
+                    case R.id.nav_lang:
+                        AlertDialog.Builder builder = new AlertDialog.Builder(ActivityTileHome.this);
+                        builder.setTitle("Change Language");
+                        builder.setPositiveButton("English", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                setLocale("en");
+                                ApplicationClass.getInstance().setLocale("en");
+                                SharedPreferences sp = getSharedPreferences(SharedPrefKeys.sharedPrefName, MODE_PRIVATE);
+                                SharedPreferences.Editor editor = sp.edit();
+                                editor.putString(SharedPrefKeys.lang, "en");
+                                editor.commit();
+                                recreate();
+                            }
+                        });
+                        builder.setNegativeButton("नेपाली", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                setLocale("np");
+                                ApplicationClass.getInstance().setLocale("np");
+                                SharedPreferences sp = getSharedPreferences(SharedPrefKeys.sharedPrefName, MODE_PRIVATE);
+                                SharedPreferences.Editor editor = sp.edit();
+                                editor.putString(SharedPrefKeys.lang, "np");
+                                editor.commit();
+                                recreate();
+                            }
+                        });
+                        builder.show();
+                        break;
                 }
                 return false;
             }
         });
+    }
+
+    private void setLocale(String lang) {
+        Locale myLocale = new Locale(lang);
+        Resources res = getResources();
+        DisplayMetrics dm = res.getDisplayMetrics();
+        Configuration conf = res.getConfiguration();
+        conf.locale = myLocale;
+        res.updateConfiguration(conf, dm);
     }
 
     public void goToNextSection() {
